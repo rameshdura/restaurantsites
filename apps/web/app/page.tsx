@@ -1,19 +1,51 @@
-import { Button } from "@workspace/ui/components/button"
+import { getAllRestaurantSlugs, getRestaurant } from "@/lib/restaurant"
+import Link from "next/link"
 
-export default function Page() {
+export default async function Page() {
+  const slugs = await getAllRestaurantSlugs()
+  const restaurants = await Promise.all(
+    slugs.map(async (slug) => {
+      const res = await getRestaurant(slug)
+      return res ? { slug, name: res.data.name } : null
+    })
+  )
+
+  const activeRestaurants = restaurants.filter(Boolean) as { slug: string, name: string }[]
+
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
+    <div className="flex min-h-svh flex-col items-center justify-center p-6 text-center">
+      <div className="max-w-2xl">
+        <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
+          RestaurantSite Platform
+        </h1>
+        <p className="text-xl text-muted-foreground mb-10">
+          A high-performance, multi-tenant platform powering the next generation of restaurant websites.
+        </p>
+        
+        <div className="grid gap-4 sm:grid-cols-2">
+          {activeRestaurants.map((restaurant) => (
+            <Link 
+              key={restaurant.slug}
+              href={`/${restaurant.slug}`}
+              className="group relative flex flex-col items-center justify-center rounded-xl border bg-card p-6 shadow-sm transition-all hover:shadow-md hover:border-primary/50"
+            >
+              <span className="text-lg font-semibold group-hover:text-primary transition-colors">
+                {restaurant.name}
+              </span>
+              <span className="text-xs text-muted-foreground mt-1">
+                {restaurant.slug}.localhost:3000
+              </span>
+            </Link>
+          ))}
         </div>
-        <div className="text-muted-foreground font-mono text-xs">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
+
+        {activeRestaurants.length === 0 && (
+          <p className="text-muted-foreground italic">
+            No restaurants found in the /restaurants directory.
+          </p>
+        )}
       </div>
     </div>
   )
 }
+

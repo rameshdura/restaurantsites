@@ -1,0 +1,56 @@
+{
+  "name": "Sushi Yama",
+  "description": "Premium sushi and sashimi experience in Tokyo.",
+  "address": "123 Sushi Street, Tokyo",
+  "phone": "+81 3-1234-5678",
+  "email": "info@sushiyama.example.com",
+  "menuLink": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+  "hero": {
+    "slides": [
+      {
+        "image": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&q=80&w=2000",
+        "title": "The Art of Sushi",
+        "subtitle": "Impeccable freshness. Precise technique. Unforgettable taste.",
+        "ctaText": "Discover Our Menu",
+        "ctaLink": "#menu"
+      },
+      {
+        "image": "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&q=80&w=2000",
+        "title": "Omakase Experience",
+        "subtitle": "Let our master chef guide you through a seasonal journey.",
+        "ctaText": "Book Now",
+        "ctaLink": "#contact"
+      }
+    ]
+  },
+  "about": {
+    "title": "Zen & Zest",
+    "content": "At Sushi Yama, we believe that sushi is more than just food—it's a form of meditation. Our chefs select the finest catch from Toyosu Market every morning to ensure every bite is a masterpiece.",
+    "images": [
+        "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=1000",
+      "https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&q=80&w=1000",
+      "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&q=80&w=1000"
+    ],
+    "image": "https://images.unsplash.com/photo-1534422298391-e4f8c170db06?auto=format&fit=crop&q=80&w=1000"
+  },
+  "companyInfo": {
+    "name": "Yama Hospitality Group",
+    "registrationNumber": "1010001234567",
+    "address": "1-1-1 Ginza, Chuo City, Tokyo 104-0061, Japan. Representative Director: Tanaka Hiroshi",
+    "phone": "03-1234-5678",
+    "establishedDate": "January 15, 2012",
+    "capital": "10,000,000 JPY",
+    "fiscalYearEnd": "End of December"
+  },
+  "location": {
+    "lat": 35.6762,
+    "lng": 139.7651,
+    "mapsUrl": "https://maps.app.goo.gl/uX3L3S7YfR8Z9G2z7",
+    "address": "123 Sushi Street, Tokyo"
+  },
+  "openingHours": [
+    { "day": "Mon - Thu", "time": "18:00 - 22:30" },
+    { "day": "Fri - Sat", "time": "18:00 - 23:30" },
+    { "day": "Sun", "time": "17:00 - 21:00" }
+  ]
+}

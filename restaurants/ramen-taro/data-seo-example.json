@@ -1,0 +1,626 @@
+{
+  "name": "Ramen Taro",
+  "description": "Authentic Japanese ramen restaurant in the heart of Tokyo, serving traditional Hakata-style tonkotsu ramen since 1985. Our 48-hour simmered broth and handmade noodles deliver an unforgettable dining experience in Higashiyamato.",
+  "tagline": "Authentic Hakata Ramen Since 1985",
+  
+  "seo": {
+    "title": "Ramen Taro | Authentic Hakata Ramen in Higashiyamato, Tokyo",
+    "description": "Experience authentic Hakata ramen at Ramen Taro since 1985. Our 48-hour tonkotsu broth and handmade noodles deliver the true taste of Fukuoka. Located in Higashiyamato, Tokyo. Open for lunch & dinner. Reservations recommended.",
+    "keywords": [
+      "ramen tokyo",
+      "hakata ramen",
+      "tonkotsu broth",
+      "Japanese noodles",
+      "authentic ramen",
+      "Tokyo dining",
+      "Higashiyamato restaurant",
+      "best ramen tokyo",
+      "traditional ramen",
+      "Fukuoka ramen"
+    ],
+    "noindex": false,
+    "canonical": "https://restaurantsite.io/ramen-taro"
+  },
+
+  "social": {
+    "ogImage": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=1200&h=630&fit=crop",
+    "ogLocale": "en_US",
+    "twitterCard": "summary_large_image",
+    "twitterSite": "@ramen_taro_tokyo",
+    "sameAs": [
+      "https://www.instagram.com/ramen_taro_tokyo",
+      "https://www.facebook.com/ramentaro.tokyo",
+      "https://twitter.com/ramen_taro",
+      "https://www.tripadvisor.com/Restaurant_Review-g298570-d1234567",
+      "https://www.google.com/maps/place/Ramen-Taro-Higashiyamato"
+    ]
+  },
+
+  "schema": {
+    "priceRange": "$$",
+    "servesCuisine": ["Japanese", "Ramen", "Noodles", "Izakaya"],
+    "acceptsReservations": true,
+    "isTakeout": true,
+    "isDelivery": false,
+    "priceCurrency": "JPY",
+    "aggregateRating": {
+      "ratingValue": 4.8,
+      "reviewCount": 247,
+      "bestRating": 5,
+      "worstRating": 1,
+      "source": "google"
+    }
+  },
+
+  "localSEO": {
+    "neighborhood": "Kiyohara",
+    "city": "Higashiyamato",
+    "region": "Tokyo",
+    "country": "Japan",
+    "countryCode": "JP",
+    "postalCode": "207-0011",
+    "placeId": "ChIJN1t_tDeuGGAR9AG-B4cQx8Y",
+    "googleMapsPlaceId": "ChIJN1t_tDeuGGAR9AG-B4cQx8Y",
+    "googleMapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
+    "wazeUrl": "https://waze.com/ul?ll=35.7394006,139.4449135",
+    "appleMapsUrl": "http://maps.apple.com/?daddr=35.7394006,139.4449135",
+    "timezone": "Asia/Tokyo"
+  },
+
+  "content": {
+    "tagline": "Authentic Hakata Ramen Since 1985",
+    "shortDescription": "Traditional Japanese ramen featuring 48-hour simmered tonkotsu broth and handmade noodles in Higashiyamato, Tokyo.",
+    "mission": "To bring the authentic taste of Fukuoka to Tokyo through time-honored recipes and Omotenashi hospitality—where every guest is family.",
+    "keywordsByPage": {
+      "home": ["authentic ramen tokyo", "hakata ramen higashiyamato", "best tonkotsu ramen"],
+      "about": ["ramen history", "traditional japanese cuisine", "chef takeshi yamamoto", "omotenashi philosophy"],
+      "menu": ["ramen menu prices", "tonkotsu ramen tokyo", "gyoza", "japanese appetizers", "chef specials"],
+      "contact": ["ramen taro phone", "restaurant reservations tokyo", "directions to ramen taro higashiyamato", "opening hours"]
+    }
+  },
+
+  "images": {
+    "logo": {
+      "url": "/images/logo.png",
+      "alt": "Ramen Taro logo - authentic Japanese ramen restaurant since 1985",
+      "width": 300,
+      "height": 100
+    },
+    "heroImage": {
+      "url": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1200",
+      "alt": "Bowl of rich tonkotsu ramen with chashu pork, soft-boiled egg, and nori seaweed at Ramen Taro",
+      "credit": "Photo by Ramen Taro"
+    },
+    "coverImage": {
+      "url": "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=1200",
+      "alt": "Chef preparing fresh ramen noodles in traditional Japanese kitchen at Ramen Taro",
+      "credit": "Photo by Studio Ramen"
+    },
+    "gallery": [
+      {
+        "url": "https://images.unsplash.com/photo-1552611052-33e04de081de",
+        "alt": "Ramen Taro interior - traditional Japanese dining room with wooden tables and paper lanterns",
+        "credit": "Photo by Studio Ramen"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1585032226651-759b368d7246",
+        "alt": "Master Chef Takeshi Yamamoto preparing fresh ramen noodles in open kitchen",
+        "credit": "Photo by Chef Studio"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1511910849309-0dffb8785146",
+        "alt": "Signature tonkotsu ramen bowl with all toppings at Ramen Taro",
+        "credit": "Photo by Unsplash"
+      }
+    ],
+    "team": [
+      {
+        "url": "/images/team/chef.png",
+        "alt": "Master Chef Takeshi Yamamoto - Head Chef and Founder of Ramen Taro",
+        "name": "Takeshi Yamamoto",
+        "role": "Master Chef & Founder"
+      },
+      {
+        "url": "/images/team/manager.png",
+        "alt": "Hanako Sato - General Manager at Ramen Taro",
+        "name": "Hanako Sato",
+        "role": "General Manager"
+      },
+      {
+        "url": "/images/team/sous-chef.png",
+        "alt": "Kenji Tanaka - Sous Chef at Ramen Taro",
+        "name": "Kenji Tanaka",
+        "role": "Sous Chef"
+      }
+    ]
+  },
+
+  "operations": {
+    "paymentMethods": ["credit_card", "cash", "suica", "pasmo", "paypay", "linepay"],
+    "dietaryOptions": {
+      "vegetarian": true,
+      "vegan": false,
+      "glutenFree": true,
+      "halal": false,
+      "kosher": false,
+      "dairyFree": true,
+      "nutFree": true
+    },
+    "features": {
+      "privateDining": true,
+      "privateDiningCapacity": 12,
+      "privateDiningDescription": "Traditional tatami room for groups of 8-12",
+      "outdoorSeating": false,
+      "wifi": true,
+      "wifiPassword": "ramen2025",
+      "parking": "street",
+      "parkingDetails": "Street parking available, 2-minute walk from station",
+      "wheelchairAccessible": true,
+      "petFriendly": false,
+      "romantic": true,
+      "goodForGroups": true,
+      "goodForFamilies": true,
+      "goodForDateNight": true
+    },
+    "services": {
+      "takeout": true,
+      "delivery": false,
+      "deliveryPlatforms": ["ubereats", "demae-can"],
+      "deliveryRadius": "3km",
+      "catering": true,
+      "cateringRadius": "5km",
+      "cateringMinimum": "¥20,000",
+      "reservations": true,
+      "reservationMethods": ["phone", "online", "walk-in"],
+      "onlineBookingUrl": "https://reservations.ramentaro.tokyo",
+      "banquets": true,
+      "banquetCapacity": 30
+    }
+  },
+
+  "about": {
+    "title": "Our Culinary Heritage",
+    "content": "Founded in 1985 by Master Chef Takeshi Yamamoto, Ramen Taro began as a small street stall in Fukuoka's famous Ramen Alley before bringing authentic Hakata-style ramen to Tokyo. Our signature 48-hour tonkotsu broth is simmered slowly using pork bones from local farms, achieving a rich, creamy collagen-rich texture that defines true Hakata ramen. Every morning, our third-generation noodle makers handcraft fresh noodles using traditional kansansui (alkaline water) technique, ensuring the perfect 'bite' or 'koshi' that complements our savory broths. Beyond the food, Ramen Taro embodies Omotenashi—the Japanese philosophy of wholehearted hospitality—where every guest is treated like family and every detail is anticipated before asked. Whether you're a regular or first-time visitor, we promise an unforgettable taste of Fukuoka in the heart of Tokyo.",
+    "additionalContent": [
+      "Our broth is never rushed. Exactly 48 hours of simmering creates depth of flavor that shortcuts cannot replicate. We start with 100kg of pork bones each morning, reducing it to a concentrated essence that's both rich and clean.",
+      "Noodles are made fresh daily in-house using a proprietary blend of wheat flours imported from Kyushu. The alkaline mineral water gives our noodles their signature springy texture and slight yellow hue.",
+      "We source ingredients with purpose: Berkshire pork for chashu, organic eggs from free-range chickens, and seasonal vegetables from the Tsukiji Market. Quality is non-negotiable."
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1552611052-33e04de081de",
+      "https://images.unsplash.com/photo-1585032226651-759b368d7246",
+      "https://images.unsplash.com/photo-1511910849309-0dffb8785146"
+    ],
+    "image": "https://images.unsplash.com/photo-1552611052-33e04de081de",
+    "foundedYear": 1985,
+    "foundingLocation": "Fukuoka, Japan",
+    "founder": {
+      "name": "Takeshi Yamamoto",
+      "role": "Master Chef & Founder",
+      "bio": "With over 40 years of experience, Master Chef Takeshi Yamamoto is a third-generation ramen artisan. Trained in Fukuoka's Ramen Alley under his father and grandfather, Takeshi brought authentic Hakata-style ramen to Tokyo in 1985. He has been awarded 'Best Ramen Chef' by the Tokyo Ramen Association three times (2018, 2020, 2023) and is a certified Ramen Artisan by the Fukuoka Ramen Association.",
+      "image": "/images/team/chef-founder.jpg",
+      "qualifications": [
+        "Certified Ramen Artisan (Fukuoka Ramen Association, 2005)",
+        "3x Tokyo Ramen Competition Winner (2018, 2020, 2023)",
+        "Master of Traditional Noodle Making (1978-1985 apprenticeship)",
+        "Michelin Bib Gourmand (2022)"
+      ],
+      "social": {
+        "instagram": "https://instagram.com/chef_takeshi",
+        "twitter": "https://twitter.com/chef_takeshi"
+      },
+      "since": "1985-04-15"
+    },
+    "awards": [
+      {
+        "year": 2023,
+        "title": "Best Ramen in Tokyo",
+        "issuer": "Tokyo Food Critics Association"
+      },
+      {
+        "year": 2022,
+        "title": "Michelin Bib Gourmand",
+        "issuer": "Michelin Guide"
+      },
+      {
+        "year": 2021,
+        "title": "Gold Award - Tokyo Ramen Festival",
+        "issuer": "Tokyo Ramen Festival Committee"
+      },
+      {
+        "year": 2020,
+        "title": "Best Ramen Chef Award",
+        "issuer": "Tokyo Ramen Association"
+      }
+    ],
+    "mission": "To bring the authentic taste of Fukuoka to every corner of Tokyo, preserving traditional techniques while embracing innovation for the future of Japanese cuisine.",
+    "philosophy": "Omotenashi - the Japanese art of wholehearted hospitality that anticipates and fulfills every guest's needs before they even ask. Every bowl of ramen is crafted with the same care we would give our own family.",
+    "heritage": "三代続けての製法 (Three-generation traditional method)"
+  },
+
+  "team": [
+    {
+      "name": "Takeshi Yamamoto",
+      "role": "Master Chef & Founder",
+      "image": "/images/team/chef.png",
+      "bio": "With over 40 years of experience, Takeshi is the heart of our kitchen and the guardian of our 48-hour broth tradition. Third-generation ramen artisan from Fukuoka.",
+      "social": {
+        "instagram": "https://instagram.com/chef_takeshi"
+      },
+      "since": 1985
+    },
+    {
+      "name": "Hanako Sato",
+      "role": "General Manager",
+      "image": "/images/team/manager.png",
+      "bio": "Hanako ensures every guest feels at home with her warm Omotenashi hospitality and seamless service. She manages daily operations with precision and care.",
+      "social": {
+        "instagram": "https://instagram.com/hanako_sato"
+      },
+      "since": 2005
+    },
+    {
+      "name": "Kenji Tanaka",
+      "role": "Sous Chef",
+      "image": "/images/team/sous-chef.png",
+      "bio": "Kenji's passion for fresh ingredients and modern techniques brings innovation to our classic menu while respecting tradition.",
+      "social": {},
+      "since": 2015
+    }
+  ],
+
+  "address": "4-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
+  "phone": "+81 3-8765-4321",
+  "email": "reservations@ramentaro.tokyo",
+  "website": "https://restaurantsite.io/ramen-taro",
+  "phoneFormatted": "03-8765-4321 (Japan)",
+  "telLink": "tel:+81387654321",
+
+  "location": {
+    "lat": 35.7394006,
+    "lng": 139.4449135,
+    "mapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
+    "address": "4-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
+    "embedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3240.123456!2d139.4449135!3d35.7394006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018f123456789ab%3A0x123456789abcdef!2sRamen%20Taro!5e0!3m2!1sen!2sjp!4v1234567890",
+    "plusCode": "539M+CJ Higashiyamato, Tokyo"
+  },
+
+  "openingHours": [
+    { 
+      "day": "Monday - Thursday", 
+      "lunch": "11:30 - 15:00", 
+      "lunchLastOrder": "14:30", 
+      "dinner": "17:00 - 22:00", 
+      "dinnerLastOrder": "21:30",
+      "isClosed": false
+    },
+    { 
+      "day": "Friday - Saturday", 
+      "lunch": "11:30 - 15:00", 
+      "lunchLastOrder": "14:30", 
+      "dinner": "17:00 - 23:30", 
+      "dinnerLastOrder": "23:00",
+      "isClosed": false
+    },
+    { 
+      "day": "Sunday", 
+      "lunch": "12:00 - 15:30", 
+      "lunchLastOrder": "15:00", 
+      "dinner": "17:00 - 21:00", 
+      "dinnerLastOrder": "20:30",
+      "isClosed": false
+    },
+    { 
+      "day": "Public Holidays", 
+      "notes": "Regular hours except New Year's period",
+      "isClosed": false
+    }
+  ],
+  "holidayNotes": "Open 7 days a week. Closed only on New Year's Eve (Dec 31) and New Year's Day (Jan 1). May operate reduced hours on national holidays—please call ahead.",
+
+  "menuLink": "https://restaurantsite.io/ramen-taro/menu/ramen-taro-full-menu.pdf",
+
+  "menu": [
+    {
+      "name": "Tonkotsu Ramen",
+      "description": "Rich pork bone broth simmered for 48 hours, thin noodles, chashu pork, soft-boiled egg, nori seaweed, and green onions",
+      "price": "¥1,500",
+      "priceNumeric": 1500,
+      "category": "Ramen",
+      "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800",
+      "isPopular": true,
+      "isVegetarian": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": ["wheat", "pork", "egg"],
+      "calories": 850,
+      "ingredients": ["ramen noodles", "pork bones", "chashu pork", "egg", "nori", "green onion"],
+      "available": true,
+      "availableFrom": "11:30",
+      "availableTo": "22:00",
+      "size": "Regular"
+    },
+    {
+      "name": "Spicy Miso Ramen",
+      "description": "Miso-based broth with spicy ground pork, sweet corn, butter pat, bean sprouts, and garlic",
+      "price": "¥1,650",
+      "priceNumeric": 1650,
+      "category": "Ramen",
+      "image": "https://images.unsplash.com/photo-1591814468924-caf88d1232e1?auto=format&fit=crop&w=800",
+      "isPopular": false,
+      "isVegetarian": false,
+      "isSpicy": true,
+      "spiceLevel": 2,
+      "allergens": ["wheat", "pork", "dairy", "soy"],
+      "calories": 950,
+      "available": true
+    },
+    {
+      "name": "Vegetarian Miso Ramen",
+      "description": "Creamy miso broth with seasonal vegetables, deep-fried tofu, seaweed, and bamboo shoots",
+      "price": "¥1,550",
+      "priceNumeric": 1550,
+      "category": "Ramen",
+      "image": "https://images.unsplash.com/photo-1547928576-b89227d12aa6?auto=format&fit=crop&w=800",
+      "isPopular": false,
+      "isVegetarian": true,
+      "isVegan": false,
+      "isSpicy": false,
+      "allergens": ["wheat", "soy"],
+      "calories": 650,
+      "available": true
+    },
+    {
+      "name": "Shoyu Ramen",
+      "description": "Classic soy sauce-based clear broth with bamboo shoots, nori, chashu, and boiled egg",
+      "price": "¥1,450",
+      "priceNumeric": 1450,
+      "category": "Ramen",
+      "image": "https://images.unsplash.com/photo-1552611052-33e04de081de",
+      "isPopular": false,
+      "isVegetarian": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": ["wheat", "pork", "egg"],
+      "calories": 750,
+      "available": true
+    },
+    {
+      "name": "Truffle Ramen (Chef's Special)",
+      "description": "Specialty ramen infused with black truffle oil, topped with truffle shavings, chashu, and organic egg",
+      "price": "¥2,500",
+      "priceNumeric": 2500,
+      "category": "Chef's Specials",
+      "image": "https://images.unsplash.com/photo-1591814468924-caf88d1232e1",
+      "isPopular": true,
+      "isVegetarian": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": ["wheat", "pork", "egg", "dairy"],
+      "calories": 1100,
+      "available": true,
+      "limited": true,
+      "availableUntil": "2025-06-30"
+    },
+    {
+      "name": "Gyoza (6pcs)",
+      "description": "Pan-fried pork and vegetable dumplings with crispy bottom and juicy filling. Served with house-made dipping sauce",
+      "price": "¥800",
+      "priceNumeric": 800,
+      "category": "Starters",
+      "image": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba",
+      "isPopular": true,
+      "isVegetarian": false,
+      "calories": 320,
+      "available": true
+    },
+    {
+      "name": "Edamame",
+      "description": "Steamed soybeans with sea salt",
+      "price": "¥500",
+      "priceNumeric": 500,
+      "category": "Starters",
+      "image": null,
+      "isPopular": false,
+      "isVegetarian": true,
+      "isVegan": true,
+      "calories": 120,
+      "available": true
+    },
+    {
+      "name": "Chili Shrimp (Ebi Chili)",
+      "description": "Crispy fried shrimp in spicy sweet chili sauce",
+      "price": "¥1,200",
+      "priceNumeric": 1200,
+      "category": "Starters",
+      "image": "https://images.unsplash.com/photo-1567337710282-00832b415979",
+      "isPopular": false,
+      "isVegetarian": false,
+      "isSpicy": true,
+      "spiceLevel": 2,
+      "calories": 280,
+      "available": true
+    },
+    {
+      "name": "Asahi Super Dry",
+      "description": "Japanese lager, 350ml bottle",
+      "price": "¥700",
+      "priceNumeric": 700,
+      "category": "Drinks",
+      "image": null,
+      "isPopular": true,
+      "calories": 140,
+      "available": true
+    },
+    {
+      "name": "Cold Sake (Junmai Ginjo)",
+      "description": "Premium sake served chilled, 180ml flask",
+      "price": "¥1,200",
+      "priceNumeric": 1200,
+      "category": "Drinks",
+      "image": null,
+      "isPopular": false,
+      "calories": 220,
+      "available": true
+    },
+    {
+      "name": "Matcha Latte",
+      "description": "Creamy green tea latte, hot or iced",
+      "price": "¥600",
+      "priceNumeric": 600,
+      "category": "Drinks",
+      "image": null,
+      "isPopular": false,
+      "isVegetarian": true,
+      "calories": 180,
+      "available": true
+    },
+    {
+      "name": "Mochi Ice Cream",
+      "description": "Assorted flavors: strawberry, green tea, mango (2pcs)",
+      "price": "¥600",
+      "priceNumeric": 600,
+      "category": "Desserts",
+      "image": "https://images.unsplash.com/photo-1563805042-7684c019e1cb",
+      "isPopular": true,
+      "isVegetarian": true,
+      "calories": 250,
+      "available": true
+    },
+    {
+      "name": "Matcha Cheesecake",
+      "description": "Rich green tea flavored cheesecake with graham cracker crust",
+      "price": "¥800",
+      "priceNumeric": 800,
+      "category": "Desserts",
+      "image": null,
+      "isPopular": false,
+      "isVegetarian": true,
+      "calories": 350,
+      "available": true
+    }
+  ],
+
+  "hero": {
+    "slides": [
+      {
+        "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=2000",
+        "title": "Authentic Hakata Ramen",
+        "subtitle": "Slow-cooked 48-hour broth, handmade noodles, and the freshest ingredients passed down through three generations of master chefs.",
+        "ctaText": "View Our Menu",
+        "ctaLink": "/menu",
+        "alt": "Bowl of authentic tonkotsu ramen with chashu pork, soft-boiled egg, and nori at Ramen Taro"
+      },
+      {
+        "image": "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=2000",
+        "title": "Masterfully Crafted",
+        "subtitle": "Experience the art of ramen passed down through generations in the heart of Tokyo. Every bowl tells a story of tradition and passion.",
+        "ctaText": "Our Story",
+        "ctaLink": "/about",
+        "alt": "Master Chef Takeshi Yamamoto preparing fresh ramen noodles in open kitchen at Ramen Taro"
+      },
+      {
+        "image": "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&w=2000",
+        "title": "Traditional Omotenashi",
+        "subtitle": "Where every guest is family. Experience Japanese hospitality at its finest in our cozy Higashiyamato location.",
+        "ctaText": "Visit Us",
+        "ctaLink": "/contact",
+        "alt": "Interior of Ramen Taro traditional Japanese restaurant with wooden decor and warm lighting"
+      }
+    ]
+  },
+
+  "companyInfo": {
+    "name": "Narayani Co., Ltd.",
+    "registrationNumber": "6020001061694",
+    "address": "35 Minezawacho, Hodogaya Ward, Yokohama, Kanagawa 221-0061, Japan",
+    "representativeDirector": "Poudel Prakash",
+    "phone": "045-331-1303",
+    "establishedDate": "2009-05-21",
+    "capital": "5,000,000 JPY",
+    "fiscalYearEnd": "End of March",
+    "businessPurpose": "Restaurant operation and food service management",
+    "annualReportUrl": "/reports/annual-2024.pdf"
+  },
+
+  "foundingDate": "1985-04-15",
+  "numberOfEmployees": 15,
+  "knowsLanguage": ["Japanese", "English", "Nepali"],
+  "cuisineType": "Japanese",
+
+  "media": {
+    "videos": [
+      {
+        "url": "https://www.youtube.com/watch?v=abcdef123",
+        "title": "Making Authentic Tonkotsu Broth - Behind the Scenes at Ramen Taro",
+        "description": "Master Chef Takeshi Yamamoto explains our 48-hour broth preparation process and the secrets to authentic Hakata ramen.",
+        "thumbnail": "https://img.youtube.com/vi/abcdef123/hqdefault.jpg",
+        "duration": "PT3M45S",
+        "uploadDate": "2024-01-15"
+      }
+    ],
+    "virtualTour": "https://www.google.com/maps/views/view/ramen-taro-tour",
+    "pressPhotos": "https://drive.google.com/drive/folder/ramen-taro-press-kit"
+  },
+
+  "reviews": {
+    "aggregate": {
+      "ratingValue": 4.8,
+      "reviewCount": 247,
+      "bestRating": 5,
+      "worstRating": 1,
+      "source": "google",
+      "sourceUrl": "https://maps.google.com/?cid=1234567890abcdef"
+    },
+    "individual": [
+      {
+        "author": "Mike T.",
+        "date": "2025-03-15",
+        "rating": 5,
+        "reviewBody": "Best ramen I've ever had outside of Fukuoka! The broth is incredibly rich and flavorful. Will definitely return on my next Tokyo trip.",
+        "source": "google"
+      },
+      {
+        "author": "Sarah L.",
+        "date": "2025-02-28",
+        "rating": 5,
+        "reviewBody": "The Omotenashi service is genuine. Chef's special truffle ramen is worth every yen. A hidden gem in Higashiyamato.",
+        "source": "tripadvisor"
+      }
+    ]
+  },
+
+  "reservation": {
+    "acceptsReservations": true,
+    "reservationMethods": ["phone", "online", "walk-in"],
+    "onlineBookingUrl": "https://reservations.ramentaro.tokyo",
+    "minimumPartySize": 1,
+    "maximumPartySize": 20,
+    "largeGroups": true,
+    "largeGroupCapacity": 30,
+    "privateDining": {
+      "available": true,
+      "capacity": 12,
+      "minimumSpend": "¥30,000",
+      "description": "Private tatami room for 8-12 guests, ideal for business dinners and celebrations"
+    }
+  },
+
+  "advancedSchema": {
+    "foundedDate": "1985-04-15",
+    "foundingLocation": "Fukuoka, Japan",
+    "numberOfEmployees": 15,
+    "hasMap": "https://www.google.com/maps/place/Ramen-Taro-Higashiyamato",
+    "currenciesAccepted": ["JPY", "Credit Card", "Suica", "Pasmo", "PayPay"],
+    "paymentAccepted": ["Cash", "Credit Card", "Mobile Payment (Suica/Pasmo/PayPay)"],
+    "servesCuisine": ["Japanese", "Ramen", "Noodles", "Izakaya"],
+    "menuType": ["dine-in", "takeout", "catering"],
+    "starRating": 4.8,
+    "priceRange": "$$",
+    "eventType": ["birthday", "corporate", "private_dining", "anniversary", "date_night"],
+    "seats": 45,
+    "smoking": "No Smoking",
+    "music": "background only",
+    " attire": "casual"
+  }
+}

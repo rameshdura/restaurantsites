@@ -1,0 +1,241 @@
+{
+  "name": "Ramen Taro",
+  "description": "Authentic Japanese ramen restaurant in the heart of Tokyo.",
+  "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
+  "phone": "+81 3-8765-4321",
+  "email": "kals.future@gmail.com",
+  "menuLink": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+  "foundingDate": "1985-01-01",
+
+  "seo": {
+    "title": "Ramen Taro | Authentic Hakata Ramen in Tokyo",
+    "description": "Savor authentic Hakata-style tonkotsu ramen at Ramen Taro in Higashiyamato, Tokyo. 48-hour slow-cooked broth, handmade noodles, and fresh ingredients since 1985.",
+    "keywords": [
+      "ramen taro", "hakata ramen", "tonkotsu ramen", "tokyo ramen",
+      "japanese ramen", "higashiyamato ramen", "authentic ramen tokyo",
+      "best ramen tokyo", "pork bone broth ramen", "handmade noodles"
+    ],
+    "menuTitle": "Ramen Taro Menu | Ramen, Sushi & Prices",
+    "menuDescription": "Explore Ramen Taro's full menu featuring tonkotsu ramen, miso ramen, gyoza, sushi, and more. View prices and download our menu PDF.",
+    "aboutTitle": "About Ramen Taro | Our Story Since 1985",
+    "aboutDescription": "Discover the heritage of Ramen Taro — from a humble Fukuoka street stall in 1985 to an authentic ramen destination in Tokyo. Meet our team and culinary philosophy.",
+    "contactTitle": "Contact Ramen Taro | Reservations & Directions",
+    "contactDescription": "Contact Ramen Taro for reservations and directions. Located in Higashiyamato, Tokyo. Open daily for lunch and dinner. Call +81 3-8765-4321.",
+    "brandTitle": "Ramen Taro Brand Assets | Marketing Materials",
+    "brandDescription": "Download professional marketing materials for Ramen Taro. Printable business cards, flyers, and brand assets for our partners and marketing teams.",
+    "companyTitle": "Narayani Co., Ltd. | Corporate Information & Governance",
+    "companyDescription": "Official corporate details for Narayani Co., Ltd., the parent company of Ramen Taro. Registration, headquarters in Yokohama, and fiscal information."
+  },
+
+  "social": {
+    "ogImage": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=1200&h=630",
+    "ogLocale": "en_US",
+    "twitterCard": "summary_large_image",
+    "sameAs": [
+      "https://www.instagram.com/ramentaro",
+      "https://www.facebook.com/ramentaro",
+      "https://tabelog.com/tokyo/ramentaro"
+    ]
+  },
+
+  "schema": {
+    "priceRange": "$$",
+    "servesCuisine": ["Japanese Ramen", "Japanese", "Sushi"],
+    "acceptsReservations": true,
+    "isTakeout": true,
+    "isDelivery": false,
+    "priceCurrency": "USD",
+    "aggregateRating": {
+      "ratingValue": 4.6,
+      "reviewCount": 328,
+      "bestRating": 5,
+      "worstRating": 1,
+      "source": "Google Reviews",
+      "sourceUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47"
+    }
+  },
+
+  "localSEO": {
+    "neighborhood": "Kiyohara",
+    "city": "Higashiyamato",
+    "region": "Tokyo",
+    "country": "Japan",
+    "countryCode": "JP",
+    "postalCode": "207-0011",
+    "placeId": "ChIJN1t_tDeuEmsRUsoyg83yJQk",
+    "googleMapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
+    "timezone": "Asia/Tokyo"
+  },
+
+  "images": {
+    "logo": {
+      "url": "/images/logo.png",
+      "alt": "Ramen Taro restaurant logo",
+      "width": 200,
+      "height": 200
+    },
+    "heroImage": {
+      "url": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=2000",
+      "alt": "Authentic Hakata tonkotsu ramen bowl with chashu pork and soft-boiled egg at Ramen Taro"
+    },
+    "coverImage": {
+      "url": "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&q=80&w=1000",
+      "alt": "Inside Ramen Taro restaurant — warm Japanese dining atmosphere"
+    }
+  },
+
+  "hero": {
+    "slides": [
+      {
+        "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=2000",
+        "title": "Authentic Hakata Ramen",
+        "subtitle": "Slow-cooked broth, handmade noodles, and the freshest ingredients.",
+        "ctaText": "View Menu",
+        "ctaLink": "#menu"
+      },
+      {
+        "image": "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&q=80&w=2000",
+        "title": "Masterfully Crafted",
+        "subtitle": "Experience the art of ramen passed down through generations.",
+        "ctaText": "Our Story",
+        "ctaLink": "#about"
+      }
+    ]
+  },
+  "about": {
+    "title": "Our Culinary Heritage & Philosophy",
+    "content": "Founded in 1985, Ramen Taro began as a humble street stall in the vibrant Fukuoka district. Over the decades, we have evolved into a cornerstone of authentic Japanese dining in Tokyo, dedicated to preserving the time-honored traditions of ramen making while selectively embracing modern culinary innovations. Our journey from a small stall to a multi-award winning restaurant is a testament to our commitment to quality, authenticity, and the pursuit of the perfect bowl.",
+    "foundedYear": 1985,
+    "founder": {
+      "name": "Takeshi Yamamoto",
+      "role": "Master Chef & Founder",
+      "bio": "With over 30 years of experience in traditional Japanese ramen making, Takeshi Yamamoto founded Ramen Taro as a humble Fukuoka street stall in 1985. His dedication to the craft of slow-cooked tonkotsu broth has earned the restaurant a loyal following across Tokyo. Chef Yamamoto personally oversees the selection of ingredients and the preparation of our signature 48-hour broth every single day.",
+      "image": "/images/team/chef.png"
+    },
+    "additionalContent": [
+      "Our secret lies in our signature 48-hour tonkotsu broth, which is simmered slowly using premium pork bones to achieve a rich, creamy, and deeply savory texture that has become our trademark. This painstaking process ensures that every spoonful is packed with umami and nutritional value. Every morning, our skilled chefs handcraft fresh alkaline noodles with the perfect 'bite' and texture to complement our various soup bases.",
+      "Beyond the food, Ramen Taro is a deep celebration of Japanese culture and hospitality. We strive to create an atmosphere of 'Omotenashi'—wholehearted hospitality where the needs of the guest are anticipated and met with grace. Whether you're a long-time regular or a first-time visitor from abroad, we want your experience to be more than just a meal; we want it to be an unforgettable journey into the heart of Japanese culinary arts.",
+      "We believe that a great bowl of ramen has the power to bring people together. That's why we maintain an open kitchen concept, allowing our guests to witness the passion and precision that goes into every bowl. From the precise temperature of the water to the exact thickness of the chashu pork, no detail is too small for our attention."
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&q=80&w=1000",
+      "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=1000",
+      "https://images.unsplash.com/photo-1511910849309-0dffb8785146?auto=format&fit=crop&q=80&w=1000"
+    ],
+    "image": "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&q=80&w=1000",
+    "team": [
+      {
+        "name": "Takeshi Yamamoto",
+        "role": "Master Chef",
+        "image": "/images/team/chef.png",
+        "bio": "With over 30 years of experience, Takeshi is the heart of our kitchen."
+      },
+      {
+        "name": "Hanako Sato",
+        "role": "General Manager",
+        "image": "/images/team/manager.png",
+        "bio": "Hanako ensures every guest feels at home with her warm hospitality."
+      },
+      {
+        "name": "Kenji Tanaka",
+        "role": "Sous Chef",
+        "image": "/images/team/sous-chef.png",
+        "bio": "Kenji's passion for fresh ingredients brings innovation to our menu."
+      }
+    ]
+  },
+  "companyInfo": {
+    "name": "Narayani Co., Ltd.",
+    "legalName": "Narayani Company Limited",
+    "registrationNumber": "6020001061694",
+    "address": "35 Minezawacho, Hodogaya Ward, Yokohama, Kanagawa 221-0061, Japan",
+    "phone": "045-331-1303",
+    "establishedDate": "May 21, 2009",
+    "capital": "5,000,000 JPY",
+    "fiscalYearEnd": "End of March",
+    "representative": "Poudel Prakash",
+    "url": "https://restaurantsite.io/ramen-taro/company-information"
+  },
+  "location": {
+    "lat": 35.7394006,
+    "lng": 139.4449135,
+    "mapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
+    "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan"
+  },
+  "openingHours": [
+    { 
+      "day": "Mon - Thu", 
+      "lunch": "11:30 - 15:00", 
+      "lunchLO": "14:30", 
+      "dinner": "17:00 - 22:00", 
+      "dinnerLO": "21:30" 
+    },
+    { 
+      "day": "Fri - Sat", 
+      "lunch": "11:30 - 15:00", 
+      "lunchLO": "14:30", 
+      "dinner": "17:00 - 23:30", 
+      "dinnerLO": "23:00" 
+    },
+    { 
+      "day": "Sun", 
+      "lunch": "12:00 - 15:30", 
+      "lunchLO": "15:00", 
+      "dinner": "17:00 - 21:00", 
+      "dinnerLO": "20:30" 
+    }
+  ],
+  "holidayNotes": "",
+  "menu": [
+    { "name": "Tonkotsu Ramen", "description": "Rich pork bone broth, thin noodles, chashu, soft-boiled egg.", "price": "15.00", "category": "Ramen", "isPopular": true, "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=800" },
+    { "name": "Spicy Miso Ramen", "description": "Miso-based broth with spicy ground pork and sweet corn.", "price": "16.50", "category": "Ramen", "isPopular": true, "image": "https://images.unsplash.com/photo-1591814468924-caf88d1232e1?auto=format&fit=crop&q=80&w=800" },
+    { "name": "Shoyu Ramen", "description": "Soy sauce based clear broth with bamboo shoots and nori.", "price": "14.50", "category": "Ramen", "image": "https://images.unsplash.com/photo-1557872245-741f4c666055?auto=format&fit=crop&q=80&w=800" },
+    { "name": "Vegetarian Miso", "description": "Creamy miso broth with seasonal vegetables and tofu.", "price": "15.50", "category": "Ramen", "image": "https://images.unsplash.com/photo-1623341214825-9f4f963727da?auto=format&fit=crop&q=80&w=800" },
+    { "name": "Black Garlic Ramen", "description": "Classic tonkotsu with a signature burnt garlic oil.", "price": "17.00", "category": "Ramen", "isPopular": true, "image": "https://images.unsplash.com/photo-1591814468924-caf88d1232e1?auto=format&fit=crop&q=80&w=800" },
+    { "name": "Curry Ramen", "description": "Japanese style curry broth with crispy chicken katsu.", "price": "18.00", "category": "Ramen" },
+    { "name": "Tsukemen", "description": "Dipping noodles with a concentrated seafood and pork broth.", "price": "17.50", "category": "Ramen" },
+    { "name": "Cold Soba", "description": "Buckwheat noodles served chilled with dashi dipping sauce.", "price": "13.00", "category": "Ramen" },
+    { "name": "Yaki Udon", "description": "Stir-fried thick noodles with seafood and vegetables.", "price": "16.00", "category": "Ramen" },
+    { "name": "Spicy Seafood Ramen", "description": "Clear broth with shrimp, scallops, and squid.", "price": "19.00", "category": "Ramen" },
+
+    { "name": "Gyoza", "description": "Pan-fried pork and vegetable dumplings (6pcs).", "price": "8.00", "category": "Starters", "isPopular": true, "image": "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&q=80&w=800" },
+    { "name": "Edamame", "description": "Steamed soybeans with sea salt.", "price": "5.00", "category": "Starters", "image": "https://images.unsplash.com/photo-1605334458327-024508e77a10?auto=format&fit=crop&q=80&w=800" },
+    { "name": "Karaage", "description": "Japanese style fried chicken with spicy mayo.", "price": "10.00", "category": "Starters", "isPopular": true, "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=800" },
+    { "name": "Agedashi Tofu", "description": "Deep fried tofu in savory dashi broth.", "price": "7.50", "category": "Starters" },
+    { "name": "Takoyaki", "description": "Octopus balls with bonito flakes and mayo (5pcs).", "price": "9.00", "category": "Starters" },
+    { "name": "Seaweed Salad", "description": "Marinated seaweed with sesame dressing.", "price": "6.00", "category": "Starters" },
+    { "name": "Shrimp Tempura", "description": "Crispy battered shrimp served with tentsuyu (4pcs).", "price": "12.00", "category": "Starters" },
+    { "name": "Spring Rolls", "description": "Crispy vegetable spring rolls with sweet chili sauce.", "price": "7.00", "category": "Starters" },
+    { "name": "Salmon Sashimi", "description": "Freshly sliced premium salmon (5pcs).", "price": "14.00", "category": "Starters" },
+    { "name": "Miso Soup", "description": "Traditional soybean paste soup with tofu and seaweed.", "price": "4.00", "category": "Starters" },
+
+    { "name": "Asahi Super Dry", "description": "Classic Japanese lager.", "price": "7.00", "category": "Drinks" },
+    { "name": "Sapporo Premium", "description": "Golden lager with a crisp finish.", "price": "7.00", "category": "Drinks" },
+    { "name": "Hot Sake", "description": "Traditional rice wine served warm.", "price": "12.00", "category": "Drinks" },
+    { "name": "Cold Sake", "description": "Premium Junmai Ginjo served chilled.", "price": "15.00", "category": "Drinks" },
+    { "name": "Matcha Latte", "description": "Creamy green tea latte, hot or iced.", "price": "6.00", "category": "Drinks" },
+    { "name": "Calpico", "description": "Refreshing non-carbonated milky soft drink.", "price": "4.50", "category": "Drinks" },
+    { "name": "Ramune", "description": "Classic marble-stoppered Japanese soda.", "price": "5.00", "category": "Drinks" },
+    { "name": "Iced Oolong Tea", "description": "Unsweetened traditional Japanese tea.", "price": "4.00", "category": "Drinks" },
+    { "name": "Sparkling Water", "description": "Refreshing carbonated water with lime.", "price": "3.50", "category": "Drinks" },
+    { "name": "Plum Wine", "description": "Sweet and tangy Japanese Umeshu.", "price": "9.00", "category": "Drinks" },
+    { "name": "Mochi Ice Cream", "description": "Assorted flavors of mochi ice cream.", "price": "6.00", "category": "Desserts" },
+    { "name": "Matcha Cheesecake", "description": "Rich green tea cheesecake.", "price": "8.00", "category": "Desserts" },
+    { "name": "Spicy Tuna Roll", "description": "Fresh tuna with spicy mayo.", "price": "12.00", "category": "Specialty Rolls" },
+    { "name": "Dragon Roll", "description": "Eel and cucumber topped with avocado.", "price": "15.00", "category": "Specialty Rolls" },
+    { "name": "Chicken Teriyaki Bento", "description": "Served with rice, salad, and miso soup.", "price": "18.00", "category": "Bento Boxes" },
+    { "name": "Salmon Teriyaki Bento", "description": "Served with rice, salad, and miso soup.", "price": "20.00", "category": "Bento Boxes" },
+    { "name": "Truffle Ramen", "description": "Specialty ramen infused with truffle oil.", "price": "25.00", "category": "Chef's Specials" },
+    { "name": "Wagyu Beef Ramen", "description": "Premium wagyu slices over rich broth.", "price": "35.00", "category": "Chef's Specials" },
+    { "name": "Summer Cold Noodles", "description": "Refreshing cold noodles with sesame dressing.", "price": "14.00", "category": "Seasonal Offers" },
+    { "name": "Winter Hot Pot", "description": "Hearty hot pot for the cold season.", "price": "28.00", "category": "Seasonal Offers" },
+    { "name": "Tuna Nigiri", "description": "Fresh tuna over vinegared rice (2pcs).", "price": "8.00", "category": "Nigiri" },
+    { "name": "Salmon Nigiri", "description": "Fresh salmon over vinegared rice (2pcs).", "price": "7.00", "category": "Nigiri" },
+    { "name": "Yellowtail Sashimi", "description": "Freshly sliced premium yellowtail (5pcs).", "price": "16.00", "category": "Sashimi" },
+    { "name": "Octopus Sashimi", "description": "Freshly sliced premium octopus (5pcs).", "price": "14.00", "category": "Sashimi" },
+    { "name": "California Roll", "description": "Crab stick, avocado, and cucumber.", "price": "8.00", "category": "Maki" },
+    { "name": "Philadelphia Roll", "description": "Smoked salmon, cream cheese, and cucumber.", "price": "10.00", "category": "Maki" },
+    { "name": "Spicy Salmon Hand Roll", "description": "Spicy salmon and cucumber wrapped in a cone.", "price": "7.00", "category": "Temaki" },
+    { "name": "Eel Hand Roll", "description": "BBQ eel and cucumber wrapped in a cone.", "price": "8.00", "category": "Temaki" }
+  ]
+}
