@@ -129,6 +129,9 @@ export function Navbar({ restaurant }: NavbarProps) {
       }
     }
   }, [])
+  const pathname = usePathname()
+  const langDropdownRef = React.useRef<HTMLDivElement>(null)
+  
   const { getLink, slug } = useRestaurantLink()
   const isHomePage = pathname === `/${slug}` || (pathname === "/" && slug !== "")
 
