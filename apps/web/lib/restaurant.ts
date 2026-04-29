@@ -363,7 +363,7 @@ export interface MenuCategory {
   }>
 }
 
-const RESTAURANTS_PATH = path.join(process.cwd(), "../../restaurants")
+const RESTAURANTS_PATH = path.join(process.cwd(), "restaurants")
 
 export async function getRestaurant(slug: string): Promise<Restaurant | null> {
   try {

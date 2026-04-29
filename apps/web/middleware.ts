@@ -32,15 +32,23 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
-  // Extract subdomain
-  if (hostname.endsWith(`.${rootDomain}`)) {
-    slug = hostname.replace(`.${rootDomain}`, "")
-  } else {
-    // If it's a custom domain, we'd need a mapping
-    // For now, let's assume the slug is the first part of the domain or the domain itself
-    // In a real scenario, you might fetch this from a config or database
-    slug = hostname.split(".")[0] || ""
-  }
+    // Extract subdomain
+    if (hostname.endsWith(`.${rootDomain}`)) {
+      slug = hostname.replace(`.${rootDomain}`, "")
+    } else if (hostname.endsWith(".vercel.app")) {
+      // Handle Vercel default domains (e.g. project-name.vercel.app)
+      // If it's exactly the project name or matches a known pattern for the root, skip it
+      const subdomain = hostname.replace(".vercel.app", "")
+      if (subdomain.includes("restaurantsites")) {
+        return NextResponse.next()
+      }
+      slug = subdomain.split(".")[0] || ""
+    } else {
+      // If it's a custom domain, we'd need a mapping
+      // For now, let's assume the slug is the first part of the domain or the domain itself
+      // In a real scenario, you might fetch this from a config or database
+      slug = hostname.split(".")[0] || ""
+    }
 
   if (!slug) {
     return NextResponse.next()
