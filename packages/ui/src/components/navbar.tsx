@@ -13,6 +13,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react"
 import { cn } from "@workspace/ui/lib/utils"
 import { buttonVariants } from "./button"
+import { useRestaurantLink } from "../hooks/use-restaurant-link"
 
 // Google Translate types
 interface GoogleTranslateTranslateElement {
@@ -128,12 +129,8 @@ export function Navbar({ restaurant }: NavbarProps) {
       }
     }
   }, [])
-  const params = useParams()
-  const pathname = usePathname()
-  const langDropdownRef = React.useRef<HTMLDivElement>(null)
-
-  const slug = params?.restaurant as string
-  const isHomePage = pathname === `/${slug}`
+  const { getLink, slug } = useRestaurantLink()
+  const isHomePage = pathname === `/${slug}` || (pathname === "/" && slug !== "")
 
   const phone = restaurant.contact?.phone || restaurant.phone
 
@@ -255,15 +252,15 @@ export function Navbar({ restaurant }: NavbarProps) {
   }
 
   const navLinks = [
-    { name: "Home", href: `/${slug}` },
-    { name: "Menu", href: `/${slug}/menu` },
-    { name: "About", href: `/${slug}/about`, show: !!restaurant.about },
+    { name: "Home", href: getLink("/") },
+    { name: "Menu", href: getLink("/menu") },
+    { name: "About", href: getLink("/about"), show: !!restaurant.about },
     {
       name: "Gallery",
-      href: isHomePage ? "#gallery" : `/${slug}#gallery`,
+      href: isHomePage ? "#gallery" : getLink("#gallery"),
       show: !!restaurant.gallery && restaurant.gallery.length > 0,
     },
-    { name: "Contact", href: `/${slug}/contact` },
+    { name: "Contact", href: getLink("/contact") },
   ].filter((link) => link.show !== false)
 
   return (
@@ -321,7 +318,7 @@ export function Navbar({ restaurant }: NavbarProps) {
         <div className="container mx-auto max-w-7xl px-4 md:px-8">
           <div className="flex items-center justify-between">
             {/* Logo / Name */}
-            <Link href={`/${slug}`} className="group flex items-center gap-2">
+            <Link href={getLink("/")} className="group flex items-center gap-2">
               {restaurant.logo ? (
                 <img
                   src={restaurant.logo}

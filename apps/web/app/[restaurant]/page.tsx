@@ -87,7 +87,12 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
           </section>
         )}
         
-        <GallerySection />
+        <GallerySection 
+          images={
+            data.images?.gallery?.map(img => ({ src: img.url, alt: img.alt })) || 
+            data.about?.images?.map(url => ({ src: url, alt: data.name }))
+          } 
+        />
         
         <ContactSection 
           isHomePage={true}

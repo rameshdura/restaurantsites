@@ -6,6 +6,7 @@ import { useTheme } from "next-themes"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Heart } from "@hugeicons/core-free-icons"
 import { cn } from "@workspace/ui/lib/utils"
+import { useRestaurantLink } from "@workspace/ui/hooks/use-restaurant-link"
 
 interface FooterProps {
   restaurantName: string
@@ -15,6 +16,7 @@ interface FooterProps {
 export function Footer({ restaurantName, restaurantSlug }: FooterProps) {
   const [mounted, setMounted] = useState(false)
   const { setTheme, resolvedTheme } = useTheme()
+  const { getLink } = useRestaurantLink()
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -27,7 +29,7 @@ export function Footer({ restaurantName, restaurantSlug }: FooterProps) {
     <footer className="py-6 border-t text-center text-xs text-muted-foreground bg-background">
       <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
         <Link 
-          href={`/${restaurantSlug}/company-information`}
+          href={getLink("/company-information")}
           className="hover:text-primary transition-colors duration-200"
         >
           Company Information
@@ -36,7 +38,7 @@ export function Footer({ restaurantName, restaurantSlug }: FooterProps) {
         <div className="flex items-center gap-2">
           &copy; {new Date().getFullYear()} {restaurantName}
            <Link
-             href={`/${restaurantSlug}/brand`}
+             href={getLink("/brand")}
              className="hover:scale-110 inline-block transition-transform duration-200 text-foreground/60 hover:text-foreground"
              title="View Brand Assets"
            >

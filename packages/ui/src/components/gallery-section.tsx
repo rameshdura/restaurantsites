@@ -7,7 +7,7 @@ import { useState } from "react"
 import { SectionHeader } from "./section-header"
 import { Lightbox } from "./lightbox"
 
-const galleryItems = [
+const defaultGalleryItems = [
   {
     src: "/images/gallery/cocktail.png",
     alt: "Craft cocktail",
@@ -30,7 +30,15 @@ const galleryItems = [
   },
 ]
 
-export function GallerySection() {
+interface GallerySectionProps {
+  images?: Array<{
+    src: string
+    alt: string
+  }>
+}
+
+export function GallerySection({ images }: GallerySectionProps) {
+  const items = images || defaultGalleryItems
   const [isPaused, setIsPaused] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
 
@@ -59,7 +67,7 @@ export function GallerySection() {
         >
           {/* We need two sets for seamless looping */}
           <div className="flex shrink-0">
-            {galleryItems.map((item, index) => (
+            {items.map((item, index) => (
               <div
                 key={`item-1-${index}`}
                 onClick={() => setSelectedIndex(index)}
@@ -80,7 +88,7 @@ export function GallerySection() {
             ))}
           </div>
           <div className="flex shrink-0">
-            {galleryItems.map((item, index) => (
+            {items.map((item, index) => (
               <div
                 key={`item-2-${index}`}
                 onClick={() => setSelectedIndex(index)}
@@ -104,7 +112,7 @@ export function GallerySection() {
       </div>
 
       <Lightbox 
-        images={galleryItems}
+        images={items}
         currentIndex={selectedIndex ?? 0}
         isOpen={selectedIndex !== null}
         onClose={() => setSelectedIndex(null)}

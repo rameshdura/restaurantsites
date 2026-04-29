@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useParams } from "next/navigation"
 import { cn } from "@workspace/ui/lib/utils"
 import { buttonVariants } from "./button"
+import { useRestaurantLink } from "../hooks/use-restaurant-link"
 
 interface HeroSlide {
   image: string
@@ -21,8 +22,7 @@ interface HeroProps {
 
 export function Hero({ slides }: HeroProps) {
   const [currentSlide, setCurrentSlide] = React.useState(0)
-  const params = useParams()
-  const slug = params?.restaurant as string
+  const { getLink } = useRestaurantLink()
 
   React.useEffect(() => {
     if (slides.length <= 1) return
@@ -99,9 +99,9 @@ export function Hero({ slides }: HeroProps) {
                   <Link
                     href={
                       slide.ctaLink === "#menu"
-                        ? `/${slug}/menu`
+                        ? getLink("/menu")
                         : slide.ctaLink?.startsWith("#")
-                          ? `/${slug}${slide.ctaLink}`
+                          ? getLink(slide.ctaLink)
                           : slide.ctaLink || "#"
                     }
                     className={cn(

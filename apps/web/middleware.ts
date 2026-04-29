@@ -17,18 +17,23 @@ export default async function middleware(req: NextRequest) {
   const url = req.nextUrl
   const hostname = req.headers.get("host") || "localhost:3000"
 
-  // Define your platform's main domain (change this if you deploy to a specific domain)
+  // Define your platform's main domain
   const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
 
-  // Get the restaurant slug from the subdomain or domain
-  // Example: sushi-yama.localhost:3000 -> sushi-yama
-  // Example: sushi-yama.com -> sushi-yama (if configured)
-  
+  // 1. Skip middleware for static files and API routes
+  if (
+    url.pathname.startsWith("/api") ||
+    url.pathname.includes(".") ||
+    url.pathname.startsWith("/_next") ||
+    url.pathname.startsWith("/_static")
+  ) {
+    return NextResponse.next()
+  }
+
   let slug = ""
   
-  if (hostname === rootDomain || hostname === "localhost:3000") {
+  if (hostname === rootDomain || hostname === "localhost:3000" || hostname === "localhost") {
     // If it's the root domain, we might want to show a landing page or something
-    // For now, let's just allow it or redirect
     return NextResponse.next()
   }
 
@@ -37,16 +42,13 @@ export default async function middleware(req: NextRequest) {
       slug = hostname.replace(`.${rootDomain}`, "")
     } else if (hostname.endsWith(".vercel.app")) {
       // Handle Vercel default domains (e.g. project-name.vercel.app)
-      // If it's exactly the project name or matches a known pattern for the root, skip it
       const subdomain = hostname.replace(".vercel.app", "")
       if (subdomain.includes("restaurantsites")) {
         return NextResponse.next()
       }
       slug = subdomain.split(".")[0] || ""
     } else {
-      // If it's a custom domain, we'd need a mapping
-      // For now, let's assume the slug is the first part of the domain or the domain itself
-      // In a real scenario, you might fetch this from a config or database
+      // Custom domain
       slug = hostname.split(".")[0] || ""
     }
 
