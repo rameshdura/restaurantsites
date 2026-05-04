@@ -28,23 +28,40 @@ export default async function ContactPage({ params }: ContactPageProps) {
 
   const { data } = restaurant
 
-  let embedUrl: string | null = null;
+  // Lightweight: directly convert Google Maps URL to embed URL
+  // Avoids heavy dynamic import of google-maps-embed-scraper package
+  let embedUrl: string | null = null
   if (data.location?.mapsUrl) {
     try {
-      const scraperModule = await import('google-maps-embed-scraper');
-      const getEmbedUrl = scraperModule.getEmbedUrl || scraperModule.default?.getEmbedUrl;
-      
-      if (typeof getEmbedUrl === 'function') {
-        const result = await getEmbedUrl(data.location.mapsUrl);
-        // Ensure result is a string or an object with the embed property
-        if (typeof result === 'string') {
-          embedUrl = result;
-        } else if (result && typeof result === 'object') {
-          embedUrl = (result as unknown as { embed?: string; url?: string }).embed || (result as unknown as { embed?: string; url?: string }).url || null;
+      const mapsUrl = data.location.mapsUrl
+      // Handle Google Maps URLs (including short goo.gl links)
+      if (mapsUrl.includes("goo.gl") || mapsUrl.includes("google.com/maps")) {
+        let embedUrlStr = mapsUrl
+
+        if (mapsUrl.includes("/place/")) {
+          embedUrlStr = mapsUrl.replace("/place/", "/embed/").replace(/\/data=!.*$/, "")
+        } else if (mapsUrl.includes("@")) {
+          const match = mapsUrl.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*),(\d+[a-z]?)/)
+          if (match && match[3]) {
+            const zoom = match[3]
+            const cleanZoom = zoom.replace(/[a-z]/, "")
+            embedUrlStr = `https://www.google.com/maps/embed/v1/place?q=${match[1]},${match[2]}&zoom=${cleanZoom}`
+          }
         }
+
+        if (embedUrlStr === mapsUrl || !embedUrlStr.includes("embed")) {
+          // For short goo.gl / maps.app.goo.gl links, build embed URL from lat/lng
+          if ((mapsUrl.includes("goo.gl") || mapsUrl.includes("maps.app.goo.gl")) && data.location?.lat && data.location?.lng) {
+            embedUrlStr = `https://www.google.com/maps/embed/v1/place?key=&q=${data.location.lat},${data.location.lng}&zoom=17`
+          } else {
+            embedUrlStr = mapsUrl.includes("?") ? mapsUrl + "&output=embed" : mapsUrl + "?output=embed"
+          }
+        }
+
+        embedUrl = embedUrlStr
       }
     } catch (error) {
-      console.error("Failed to scrape map URL:", error);
+      console.error("Failed to generate map embed URL:", error)
     }
   }
 
@@ -77,7 +94,6 @@ export default async function ContactPage({ params }: ContactPageProps) {
       </main>
 
       <Footer restaurantName={data.name || slug} restaurantSlug={slug} />
-
     </div>
   )
 }
