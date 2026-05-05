@@ -46,6 +46,7 @@
     "lat": 35.6762,
     "lng": 139.7651,
     "mapsUrl": "https://maps.app.goo.gl/uX3L3S7YfR8Z9G2z7",
+    "embedUrl": "https://www.google.com/maps/embed?q=35.6762,139.7651&zoom=17",
     "address": "123 Sushi Street, Tokyo"
   },
   "openingHours": [

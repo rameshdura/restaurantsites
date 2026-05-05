@@ -160,6 +160,7 @@
     "lat": 35.7394006,
     "lng": 139.4449135,
     "mapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
+    "embedUrl": "https://www.google.com/maps/embed?q=35.7394006,139.4449135&zoom=17",
     "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan"
   },
   "openingHours": [

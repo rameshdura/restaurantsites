@@ -808,7 +808,7 @@ export function generateOrganizationSchema(data: RestaurantData): object {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: info?.name || data.name,
-    legalName: (info as any)?.legalName || info?.name || data.name,
+    legalName: info?.legalName || info?.name || data.name,
     identifier: info?.registrationNumber,
     taxID: info?.registrationNumber,
     address: {
@@ -821,7 +821,7 @@ export function generateOrganizationSchema(data: RestaurantData): object {
     },
     telephone: formatPhone(info?.phone || data.phone),
     email: data.email,
-    url: (info as any)?.url || `${DOMAIN}/${data.name.toLowerCase().replace(/\s+/g, '-')}/company-information`,
+    url: info?.url || `${DOMAIN}/${data.name.toLowerCase().replace(/\s+/g, '-')}/company-information`,
     logo: data.images?.logo?.url || data.logo,
     foundingDate: data.foundingDate || info?.establishedDate,
   }

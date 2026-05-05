@@ -32,7 +32,7 @@ interface JsonLdProps {
  */
 export function JsonLd({ restaurant, slug, pageType }: JsonLdProps) {
   // Build schema based on page type
-  const schemas: Record<string, any> = {}
+  const schemas: Record<string, Record<string, unknown>> = {}
 
   // Always include Restaurant schema (base for all restaurant pages)
   schemas.restaurant = generateRestaurantSchema(restaurant, slug)
@@ -183,7 +183,7 @@ const DOMAIN = process.env.NEXT_PUBLIC_SITE_URL || 'https://restaurantsite.io'
  * Validate structured data against schema.org
  * Use in development for debugging
  */
-export function validateStructuredData(schema: any): { isValid: boolean; errors: string[] } {
+export function validateStructuredData(schema: Record<string, unknown>): { isValid: boolean; errors: string[] } {
   const errors: string[] = []
   
   // Basic validation

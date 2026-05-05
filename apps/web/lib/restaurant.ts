@@ -365,6 +365,47 @@ export interface MenuCategory {
 
 const RESTAURANTS_PATH = path.join(process.cwd(), "restaurants")
 
+// Pre-process/resolve embed URL for Google Maps
+// This runs once per restaurant load instead of on every page render
+function resolveEmbedUrl(location: RestaurantData['location']): string | null {
+  if (!location?.mapsUrl) return null
+  
+  try {
+    const mapsUrl = location.mapsUrl
+    
+    // Handle Google Maps URLs (including short goo.gl links)
+    if (mapsUrl.includes("goo.gl") || mapsUrl.includes("google.com/maps")) {
+      let embedUrlStr = mapsUrl
+
+      if (mapsUrl.includes("/place/")) {
+        embedUrlStr = mapsUrl.replace("/place/", "/embed/").replace(/\/data=!.*$/, "")
+      } else if (mapsUrl.includes("@")) {
+        const match = mapsUrl.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*),(\d+[a-z]?)/)
+        if (match && match[3]) {
+          const zoom = match[3]
+          const cleanZoom = zoom.replace(/[a-z]/, "")
+          embedUrlStr = `https://www.google.com/maps/embed?q=${match[1]},${match[2]}&zoom=${cleanZoom}`
+        }
+      }
+
+      if (embedUrlStr === mapsUrl || !embedUrlStr.includes("embed")) {
+        // For short goo.gl / maps.app.goo.gl links, build embed URL from lat/lng
+        if ((mapsUrl.includes("goo.gl") || mapsUrl.includes("maps.app.goo.gl")) && location.lat && location.lng) {
+          embedUrlStr = `https://www.google.com/maps/embed?q=${location.lat},${location.lng}&zoom=17`
+        } else {
+          embedUrlStr = mapsUrl.includes("?") ? mapsUrl + "&output=embed" : mapsUrl + "?output=embed"
+        }
+      }
+
+      return embedUrlStr
+    }
+  } catch (error) {
+    console.error("Failed to resolve embed URL:", error)
+  }
+  
+  return null
+}
+
 export async function getRestaurant(slug: string): Promise<Restaurant | null> {
   try {
     const restaurantPath = path.join(RESTAURANTS_PATH, slug)
@@ -373,6 +414,11 @@ export async function getRestaurant(slug: string): Promise<Restaurant | null> {
     const dataPath = path.join(restaurantPath, "data.json")
     const dataRaw = await fs.readFile(dataPath, "utf8")
     const data: RestaurantData = JSON.parse(dataRaw)
+    
+    // Pre-resolve embed URL once at load time
+    if (data.location && !data.location.embedUrl) {
+      data.location.embedUrl = resolveEmbedUrl(data.location) || undefined
+    }
     
     // Extract menu from data or default to empty array
     const menu = data.menu || []

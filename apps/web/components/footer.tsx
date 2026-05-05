@@ -13,7 +13,7 @@ interface FooterProps {
   restaurantSlug: string
 }
 
-export function Footer({ restaurantName, restaurantSlug }: FooterProps) {
+export function Footer({ restaurantName }: FooterProps) {
   const [mounted, setMounted] = useState(false)
   const { setTheme, resolvedTheme } = useTheme()
   const { getLink } = useRestaurantLink()
