@@ -55,11 +55,11 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
           <section id="about" className={cn("py-20", !data.hero && "pt-32")}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                <div>
-                 <SectionHeader 
-                   subtitle={translations.home?.about?.subtitle || "Our Story"}
-                   title={data.about?.title || "About Us"}
-                   backgroundTitle={translations.home?.about?.backgroundTitle || "Heritage"}
-                 />
+                  <SectionHeader
+                    subtitle={translations.home?.about?.subtitle || "Our Story"}
+                    title={data.about?.title || translations.home?.about?.title || translations.aboutPage?.title || `About ${data.name}`}
+                    backgroundTitle={translations.home?.about?.backgroundTitle || "Heritage"}
+                  />
                 <p className="text-xl text-muted-foreground mb-10 leading-relaxed">
                   {data.about?.content || data.description}
                 </p>

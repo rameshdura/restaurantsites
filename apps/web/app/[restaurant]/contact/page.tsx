@@ -42,7 +42,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
         <div className="max-w-7xl mx-auto px-6 mb-12">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">{t.contact?.title || "Contact Us"}</h1>
           <p className="text-xl text-muted-foreground">
-            We&apos;d love to hear from you. Get in touch with {data.name} today.
+            {t.contact?.pageSubtitle || "We'd love to hear from you. Get in touch with us today."}
           </p>
         </div>
         

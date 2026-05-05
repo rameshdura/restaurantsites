@@ -80,6 +80,7 @@ interface NavbarTranslations {
 }
 
 const languages = [
+  { code: "default", name: "Default" },
   { code: "en", name: "English" },
   { code: "es", name: "Español" },
   { code: "fr", name: "Français" },
@@ -371,11 +372,9 @@ export function Navbar({ restaurant, translations }: NavbarProps) {
                   translate="no"
                 >
                   <HugeiconsIcon icon={GlobalIcon} className="size-4" />
-                  {currentLang !== "default" && (
-                    <span className="hidden sm:inline">
-                      {languages.find((l) => l.code === currentLang)?.name}
-                    </span>
-                  )}
+                  <span className="hidden sm:inline">
+                    {languages.find((l) => l.code === currentLang)?.name || "Language"}
+                  </span>
                   <HugeiconsIcon
                     icon={ArrowDown01Icon}
                     className={cn(

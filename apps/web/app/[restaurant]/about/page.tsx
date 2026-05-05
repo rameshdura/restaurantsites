@@ -42,9 +42,9 @@ export default async function AboutPage({ params }: AboutPageProps) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
              <div>
                <h4 className="font-bold mb-4 text-primary uppercase tracking-widest text-xs">{translations.aboutPage?.subtitle || "Our Story"}</h4>
-               <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-8">
-                 {data.about?.title || `About ${data.name}`}
-               </h1>
+                <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-8">
+                  {data.about?.title || translations.aboutPage?.title || `About ${data.name}`}
+                </h1>
               <div className="space-y-6">
                 <p className="text-xl text-muted-foreground leading-relaxed">
                   {data.about?.content || data.description}

@@ -1,8 +1,10 @@
 {
-  "contact": {
-    "title": "Contact Us",
-    "subtitle": "Our Contacts",
+   "contact": {
+     "title": "Contact Us",
+     "sectionTitle": "Contact",
+     "subtitle": "Our Contacts",
     "description": "Have a question or want to book a private event? We'd love to hear from you. Reach out through the form or our direct contact details.",
+    "pageSubtitle": "We'd love to hear from you. Get in touch with us today.",
     "location": "Location",
     "phone": "Phone",
     "email": "Email",
@@ -66,11 +68,13 @@
   },
   "home": {
     "about": {
+      "title": "Our Story",
       "subtitle": "Our Story",
       "backgroundTitle": "Heritage"
     }
   },
   "aboutPage": {
+    "title": "Our Culinary Heritage & Philosophy",
     "subtitle": "Our Story"
   },
   "menuPage": {

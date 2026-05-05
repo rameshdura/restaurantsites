@@ -88,6 +88,7 @@ interface ContactTranslations {
   contact?: {
     subtitle?: string
     title?: string
+    sectionTitle?: string
     description?: React.ReactNode
     backgroundTitle?: string
     location?: string
@@ -200,15 +201,15 @@ export function ContactSection({
       })
 
       if (response.ok) {
-        alert("Message sent! We'll get back to you soon.")
+        alert(translations?.contact?.success || "Message sent! We'll get back to you soon.")
         form.reset()
       } else {
         const errorData = await response.json()
-        alert(errorData.error || "Failed to send message. Please try again later.")
+        alert(errorData.error || translations?.contact?.sendError || "Failed to send message. Please try again later.")
       }
     } catch (error) {
       console.error("Error submitting form:", error)
-      alert("An error occurred. Please try again later.")
+      alert(translations?.contact?.error || "An error occurred. Please try again later.")
     } finally {
       setIsSubmitting(false)
     }
@@ -246,9 +247,9 @@ export function ContactSection({
            <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
              {/* Contact Details */}
              <div className="space-y-8">
-               <h3 className="mb-2 text-3xl font-black tracking-tight">
-                 Contact
-               </h3>
+                <h3 className="mb-2 text-3xl font-black tracking-tight">
+                  {translations?.contact?.sectionTitle || "Contact"}
+                </h3>
                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
                <ContactDetail
                  icon={Location01Icon}
@@ -411,151 +412,153 @@ export function ContactSection({
                   onSubmit={handleSubmit}
                   className="relative z-10 space-y-6"
                 >
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div className="space-y-2.5">
-                      <label
-                        htmlFor="name"
-                        className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
-                      >
-                        Your Name
-                      </label>
-                      <div className="group/input relative">
-                        <input
-                          id="name"
-                          name="name"
-                          type="text"
-                          required
-                          placeholder="John Doe"
-                          className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pr-4 pl-12 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
-                        />
-                        <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
-                          <HugeiconsIcon icon={UserIcon} size={20} />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-2.5">
-                      <label
-                        htmlFor="email"
-                        className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
-                      >
-                        Email Address
-                      </label>
-                      <div className="group/input relative">
-                        <input
-                          id="email"
-                          name="email"
-                          type="email"
-                          required
-                          placeholder="john@example.com"
-                          className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pr-4 pl-12 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
-                        />
-                        <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
-                          <HugeiconsIcon icon={Mail01Icon} size={20} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+<div className="grid gap-6 sm:grid-cols-2">
+                     <div className="space-y-2.5">
+                       <label
+                         htmlFor="name"
+                         className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
+                       >
+                         {translations?.contact?.yourName || "Your Name"}
+                       </label>
+                       <div className="group/input relative">
+                         <input
+                           id="name"
+                           name="name"
+                           type="text"
+                           required
+                           placeholder={translations?.contact?.yourName ? undefined : "John Doe"}
+                           className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pr-4 pl-12 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
+                         />
+                         <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
+                           <HugeiconsIcon icon={UserIcon} size={20} />
+                         </div>
+                       </div>
+                     </div>
+                     <div className="space-y-2.5">
+                       <label
+                         htmlFor="email"
+                         className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
+                       >
+                         {translations?.contact?.emailAddress || "Email Address"}
+                       </label>
+                       <div className="group/input relative">
+                         <input
+                           id="email"
+                           name="email"
+                           type="email"
+                           required
+                           placeholder={translations?.contact?.emailAddress ? undefined : "john@example.com"}
+                           className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pr-4 pl-12 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
+                         />
+                         <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
+                           <HugeiconsIcon icon={Mail01Icon} size={20} />
+                         </div>
+                       </div>
+                     </div>
+                   </div>
 
-                  <div className="space-y-2.5">
-                    <label
-                      htmlFor="subject"
-                      className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
-                    >
-                      Subject
-                    </label>
-                    <div className="group/input relative">
-                      <select
-                        id="subject"
-                        name="subject"
-                        required
-                        defaultValue=""
-                        className="w-full appearance-none rounded-2xl border border-white/5 bg-white/5 py-4 pr-12 pl-12 transition-all outline-none focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
-                      >
-                        <option
-                          value=""
-                          disabled
-                          className="bg-[#1a1a1a] text-foreground"
-                        >
-                          Select a subject
-                        </option>
-                        <option
-                          value="reservation"
-                          className="bg-[#1a1a1a] text-foreground"
-                        >
-                          Reservation Inquiry
-                        </option>
-                        <option
-                          value="event"
-                          className="bg-[#1a1a1a] text-foreground"
-                        >
-                          Private Event
-                        </option>
-                        <option
-                          value="feedback"
-                          className="bg-[#1a1a1a] text-foreground"
-                        >
-                          Feedback
-                        </option>
-                        <option
-                          value="other"
-                          className="bg-[#1a1a1a] text-foreground"
-                        >
-                          Other
-                        </option>
-                      </select>
-                      <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
-                        <HugeiconsIcon icon={Message01Icon} size={20} />
-                      </div>
-                      <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-muted-foreground/40 group-focus-within/input:text-primary">
-                        <HugeiconsIcon icon={ArrowDown01Icon} size={18} />
-                      </div>
-                    </div>
-                  </div>
+<div className="space-y-2.5">
+                     <label
+                       htmlFor="subject"
+                       className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
+                     >
+                       {translations?.contact?.subject || "Subject"}
+                     </label>
+                     <div className="group/input relative">
+                       <select
+                         id="subject"
+                         name="subject"
+                         required
+                         defaultValue=""
+                         className="w-full appearance-none rounded-2xl border border-white/5 bg-white/5 py-4 pr-12 pl-12 transition-all outline-none focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
+                       >
+                         <option
+                           value=""
+                           disabled
+                           className="bg-[#1a1a1a] text-foreground"
+                         >
+                           {translations?.contact?.subjectPlaceholder || "Select a subject"}
+                         </option>
+                         <option
+                           value="reservation"
+                           className="bg-[#1a1a1a] text-foreground"
+                         >
+                           {translations?.contact?.subjectReservation || "Reservation Inquiry"}
+                         </option>
+                         <option
+                           value="event"
+                           className="bg-[#1a1a1a] text-foreground"
+                         >
+                           {translations?.contact?.subjectEvent || "Private Event"}
+                         </option>
+                         <option
+                           value="feedback"
+                           className="bg-[#1a1a1a] text-foreground"
+                         >
+                           {translations?.contact?.subjectFeedback || "Feedback"}
+                         </option>
+                         <option
+                           value="other"
+                           className="bg-[#1a1a1a] text-foreground"
+                         >
+                           {translations?.contact?.subjectOther || "Other"}
+                         </option>
+                       </select>
+                       <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
+                         <HugeiconsIcon icon={Message01Icon} size={20} />
+                       </div>
+                       <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-muted-foreground/40 group-focus-within/input:text-primary">
+                         <HugeiconsIcon icon={ArrowDown01Icon} size={18} />
+                       </div>
+                     </div>
+                   </div>
 
-                  <div className="space-y-2.5">
-                    <label
-                      htmlFor="message"
-                      className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
-                    >
-                      Your Message
-                    </label>
-                    <div className="group/input relative">
-                      <textarea
-                        id="message"
-                        name="message"
-                        required
-                        rows={4}
-                        placeholder="Tell us how we can help..."
-                        className="w-full resize-none rounded-2xl border border-white/5 bg-white/5 px-4 py-4 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
-                      />
-                    </div>
-                  </div>
+<div className="space-y-2.5">
+                     <label
+                       htmlFor="message"
+                       className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
+                     >
+                       {translations?.contact?.yourMessage || "Your Message"}
+                     </label>
+                     <div className="group/input relative">
+                       <textarea
+                         id="message"
+                         name="message"
+                         required
+                         rows={4}
+                         placeholder={translations?.contact?.yourMessage ? undefined : "Tell us how we can help..."}
+                         className="w-full resize-none rounded-2xl border border-white/5 bg-white/5 px-4 py-4 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
+                       />
+                     </div>
+                   </div>
 
-                  <Button
-                    type="submit"
-                    className="h-16 w-full rounded-2xl text-lg font-bold shadow-2xl transition-all hover:scale-[1.02] active:scale-95"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center gap-3">
-                        <div className="size-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                        Processing...
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-3">
-                        Send Message
-                        <HugeiconsIcon icon={SentIcon} size={22} />
-                      </span>
-                    )}
-                  </Button>
+<Button
+                     type="submit"
+                     className="h-16 w-full rounded-2xl text-lg font-bold shadow-2xl transition-all hover:scale-[1.02] active:scale-95"
+                     disabled={isSubmitting}
+                   >
+                     {isSubmitting ? (
+                       <span className="flex items-center gap-3">
+                         <div className="size-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                         {translations?.contact?.processing || "Processing..."}
+                       </span>
+                     ) : (
+                       <span className="flex items-center gap-3">
+                         {translations?.contact?.sendMessage || "Send Message"}
+                         <HugeiconsIcon icon={SentIcon} size={22} />
+                       </span>
+                     )}
+                   </Button>
 
-                  <p className="text-center text-xs text-muted-foreground/60">
-                    By clicking send, you agree to our{" "}
-                    <span className="cursor-pointer underline decoration-primary/30 underline-offset-4 transition-colors hover:text-primary">
-                      Privacy Policy
-                    </span>
-                    .
-                  </p>
+                   <p className="text-center text-xs text-muted-foreground/60">
+                     {translations?.contact?.privacyAgreement
+                       ? translations.contact.privacyAgreement
+                       : "By clicking send, you agree to our"}{" "}
+                     <span className="cursor-pointer underline decoration-primary/30 underline-offset-4 transition-colors hover:text-primary">
+                       {translations?.contact?.privacyPolicy || "Privacy Policy"}
+                     </span>
+                     .
+                   </p>
                 </form>
               </div>
             </div>

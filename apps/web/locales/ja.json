@@ -1,8 +1,10 @@
 {
-  "contact": {
-    "title": "お問い合わせ",
-    "subtitle": "お問い合わせ先",
+   "contact": {
+     "title": "お問い合わせ",
+     "sectionTitle": "お問い合わせ",
+     "subtitle": "お問い合わせ先",
     "description": "ご質問やプライベートイベントのご予約はありますか？ご連絡をお待ちしています。フォームまたは直接の連絡先からお問い合わせください。",
+    "pageSubtitle": "ご連絡お待ちしております。お気軽にご相談ください。",
     "location": "所在地",
     "phone": "電話",
     "email": "メール",
@@ -66,11 +68,13 @@
   },
   "home": {
     "about": {
+      "title": "私たちの物語",
       "subtitle": "私たちの物語",
       "backgroundTitle": "伝統"
     }
   },
   "aboutPage": {
+    "title": "私たちの料理の遺産と哲学",
     "subtitle": "私たちの物語"
   },
   "menuPage": {
