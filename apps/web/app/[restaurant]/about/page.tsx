@@ -2,6 +2,7 @@ import Image from "next/image"
 import { Metadata } from "next"
 import { getRestaurant } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
+import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
 import { Footer } from "@/components/footer"
 import { TeamSection } from "@workspace/ui/components/team-section"
@@ -29,20 +30,21 @@ export default async function AboutPage({ params }: AboutPageProps) {
   }
 
   const { data } = restaurant
+  const translations = getTranslations(data.app?.language)
 
   return (
     <div className="flex flex-col min-h-svh">
       <JsonLd data={generateAboutPageSchema(data, slug)} />
-      <Navbar restaurant={{ ...data, name: data.name || slug }} />
+      <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} />
 
       <main className="flex-1 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h4 className="font-bold mb-4 text-primary uppercase tracking-widest text-xs">Our Story</h4>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-8">
-                {data.about?.title || `About ${data.name}`}
-              </h1>
+             <div>
+               <h4 className="font-bold mb-4 text-primary uppercase tracking-widest text-xs">{translations.aboutPage?.subtitle || "Our Story"}</h4>
+               <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-8">
+                 {data.about?.title || `About ${data.name}`}
+               </h1>
               <div className="space-y-6">
                 <p className="text-xl text-muted-foreground leading-relaxed">
                   {data.about?.content || data.description}
@@ -67,36 +69,33 @@ export default async function AboutPage({ params }: AboutPageProps) {
             )}
           </div>
           
-          {/* Mission/Vision or additional sections could go here */}
-          <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-12 border-t pt-24 border-border/40">
-            <div>
-              <h3 className="text-2xl font-bold mb-4">Our Philosophy</h3>
-              <p className="text-muted-foreground">
-                We believe in sourcing the freshest local ingredients to create authentic, 
-                memorable dining experiences for every guest.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-4">Culinary Excellence</h3>
-              <p className="text-muted-foreground">
-                Our chefs bring years of tradition and innovation to the kitchen, 
-                ensuring every dish is a masterpiece of flavor and presentation.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-4">Community Focused</h3>
-              <p className="text-muted-foreground">
-                More than just a restaurant, we are a gathering place for friends and family, 
-                dedicated to enriching our local neighborhood.
-              </p>
-            </div>
-          </div>
+           {/* Mission/Vision or additional sections could go here */}
+           <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-12 border-t pt-24 border-border/40">
+             <div>
+               <h3 className="text-2xl font-bold mb-4">{translations.common?.aboutPhilosophy?.title || "Our Philosophy"}</h3>
+               <p className="text-muted-foreground">
+                 {translations.common?.aboutPhilosophy?.description || "We believe in sourcing the freshest local ingredients to create authentic, memorable dining experiences for every guest."}
+               </p>
+             </div>
+             <div>
+               <h3 className="text-2xl font-bold mb-4">{translations.common?.culinaryExcellence?.title || "Culinary Excellence"}</h3>
+               <p className="text-muted-foreground">
+                 {translations.common?.culinaryExcellence?.description || "Our chefs bring years of tradition and innovation to the kitchen, ensuring every dish is a masterpiece of flavor and presentation."}
+               </p>
+             </div>
+             <div>
+               <h3 className="text-2xl font-bold mb-4">{translations.common?.communityFocused?.title || "Community Focused"}</h3>
+               <p className="text-muted-foreground">
+                 {translations.common?.communityFocused?.description || "More than just a restaurant, we are a gathering place for friends and family, dedicated to enriching our local neighborhood."}
+               </p>
+             </div>
+           </div>
 
-          {data.about?.team && <TeamSection team={data.about.team} />}
+          {data.about?.team && <TeamSection team={data.about.team} translations={translations} />}
         </div>
       </main>
 
-      <Footer restaurantName={data.name || slug} restaurantSlug={slug} />
+      <Footer restaurantName={data.name || slug} restaurantSlug={slug} translations={translations} />
 
     </div>
   )

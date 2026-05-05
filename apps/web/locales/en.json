@@ -1,0 +1,133 @@
+{
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Our Contacts",
+    "description": "Have a question or want to book a private event? We'd love to hear from you. Reach out through the form or our direct contact details.",
+    "location": "Location",
+    "phone": "Phone",
+    "email": "Email",
+    "hours": "Hours",
+    "googleMaps": "Google Maps",
+    "getDirections": "Get Directions →",
+    "availableHours": "Available 11 AM - 10 PM daily",
+    "generalReservations": "General & Reservations",
+    "findUs": "Find us on Google Maps",
+    "openGoogleMap": "Open Google Map →",
+    "followUs": "Follow Us",
+    "backgroundTitle": "Contact",
+    "serviceHours": "Service Hours",
+    "serviceHoursDescription": "Join us for an unforgettable dining experience during our business hours.",
+    "hoursComingSoon": "Hours coming soon...",
+    "holidayNotice": "Holiday Notice",
+    "requestReservation": "Request Reservation",
+    "yourName": "Your Name",
+    "emailAddress": "Email Address",
+    "subject": "Subject",
+    "subjectPlaceholder": "Select a subject",
+    "subjectReservation": "Reservation Inquiry",
+    "subjectEvent": "Private Event",
+    "subjectFeedback": "Feedback",
+    "subjectOther": "Other",
+    "yourMessage": "Your Message",
+    "messagePlaceholder": "Tell us how we can help...",
+    "sendMessage": "Send Message",
+    "processing": "Processing...",
+    "privacyPolicy": "Privacy Policy",
+    "privacyAgreement": "By clicking send, you agree to our Privacy Policy.",
+    "success": "Message sent! We'll get back to you soon.",
+    "error": "An error occurred. Please try again later.",
+    "sendError": "Failed to send message. Please try again later."
+  },
+  "navbar": {
+    "home": "Home",
+    "menu": "Menu",
+    "about": "About",
+    "gallery": "Gallery",
+    "contact": "Contact",
+    "callUs": "Call Us Now",
+    "followUs": "Follow us on social media for updates!"
+  },
+  "footer": {
+    "companyInformation": "Company Information"
+  },
+  "companyInformation": {
+    "title": "Company Information",
+    "subtitle": "Corporate Details",
+    "table": {
+      "companyName": "Company Name",
+      "corporateNumber": "Corporate Number",
+      "headquartersAddress": "Headquarters Address",
+      "phone": "Phone",
+      "establishedDate": "Established Date",
+      "capital": "Capital",
+      "fiscalYearEnd": "Fiscal Year End"
+    },
+    "inquiry": "For any inquiries regarding corporate information, please contact us at {phone}."
+  },
+  "home": {
+    "about": {
+      "subtitle": "Our Story",
+      "backgroundTitle": "Heritage"
+    }
+  },
+  "aboutPage": {
+    "subtitle": "Our Story"
+  },
+  "menuPage": {
+    "title": "Our Menu",
+    "subtitle": "Exquisite Selection",
+    "description": "Discover our curated selection of dishes, prepared with the finest ingredients and culinary passion.",
+    "downloadButton": "Download Menu PDF"
+  },
+  "brandPage": {
+    "subtitle": "Brand Assets",
+    "title": "Marketing Materials",
+    "description": "Download and print professional marketing assets for {restaurantName}. All designs are pre-populated with your restaurant's information.",
+    "ctaTitle": "Need Custom Designs?",
+    "ctaDescription": "Contact our support team for personalized marketing materials and branding consultations.",
+    "contactButton": "Contact Us",
+    "visitingCards": "Visiting Cards",
+    "frontSide": "Front Side",
+    "backSideDark": "Back Side - Dark",
+    "backSideLight": "Back Side - Light",
+    "flyerHeading": "Visit Us Today!",
+    "flyerDescription": "Discover the flavors of {restaurantName}. We serve authentic dishes prepared with fresh, local ingredients.",
+    "flyerLocation": "Location",
+    "flyerContact": "Contact"
+  },
+  "common": {
+    "team": {
+      "subtitle": "Meet the Experts",
+      "title": "Our Dedicated Team",
+      "backgroundTitle": "Experts"
+    },
+    "gallery": {
+      "subtitle": "Gallery",
+      "title": "Moments at {restaurantName}",
+      "backgroundTitle": "Moments"
+    },
+    "foodMenu": {
+      "title": "Our Menu",
+      "subtitle": "Delicacies",
+      "description": "Artisanal dishes crafted with passion.",
+      "backgroundTitle": "Flavors"
+    },
+    "aboutPhilosophy": {
+      "title": "Our Philosophy",
+      "description": "We believe in sourcing the freshest local ingredients to create authentic, memorable dining experiences for every guest."
+    },
+    "culinaryExcellence": {
+      "title": "Culinary Excellence",
+      "description": "Our chefs bring years of tradition and innovation to the kitchen, ensuring every dish is a masterpiece of flavor and presentation."
+    },
+    "communityFocused": {
+      "title": "Community Focused",
+      "description": "More than just a restaurant, we are a gathering place for friends and family, dedicated to enriching our local neighborhood."
+    },
+    "badges": {
+      "popular": "Popular",
+      "vegetarian": "Vegetarian",
+      "spicy": "Spicy"
+    }
+  }
+}

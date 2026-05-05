@@ -570,7 +570,7 @@ export function generateListingMetadata(
 /**
  * Generate Restaurant JSON-LD schema
  */
-export function generateRestaurantSchema(data: RestaurantData, slug: string): object {
+export function generateRestaurantSchema(data: RestaurantData, slug: string): Record<string, unknown> {
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Restaurant',
@@ -642,7 +642,7 @@ export function generateRestaurantSchema(data: RestaurantData, slug: string): ob
 /**
  * Generate Menu schema (simplified for large menus)
  */
-export function generateMenuSchema(data: RestaurantData, slug: string): object {
+export function generateMenuSchema(data: RestaurantData, slug: string): Record<string, unknown> {
   const menuSections = (data.menu || [])
     .reduce((acc, item) => {
       if (!acc[item.category]) {
@@ -684,7 +684,7 @@ export function generateMenuSchema(data: RestaurantData, slug: string): object {
 /**
  * Generate ContactPoint schema
  */
-export function generateContactSchema(data: RestaurantData): object[] {
+export function generateContactSchema(data: RestaurantData): Record<string, unknown>[] {
   const contacts: Record<string, unknown>[] = []
   
   if (data.phone) {
@@ -718,7 +718,7 @@ export function generatePersonSchema(person: {
   bio: string
   image?: string
   social?: Record<string, string>
-}): object {
+}): Record<string, unknown> {
   const schema: Record<string, unknown> = {
     '@type': 'Person',
     name: person.name,
@@ -740,7 +740,7 @@ export function generatePersonSchema(person: {
 /**
  * Generate AboutPage schema
  */
-export function generateAboutPageSchema(data: RestaurantData, slug: string): object {
+export function generateAboutPageSchema(data: RestaurantData, slug: string): Record<string, unknown> {
   const mainEntity: Record<string, unknown> = {
     '@type': 'Organization',
     name: data.name,
@@ -772,7 +772,7 @@ export function generateAboutPageSchema(data: RestaurantData, slug: string): obj
 /**
  * Generate Brand Page schema
  */
-export function generateBrandSchema(data: RestaurantData, slug: string): object {
+export function generateBrandSchema(data: RestaurantData, slug: string): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
@@ -802,13 +802,12 @@ export function generateBrandSchema(data: RestaurantData, slug: string): object 
 /**
  * Generate Organization schema (for company info page)
  */
-export function generateOrganizationSchema(data: RestaurantData): object {
+export function generateOrganizationSchema(data: RestaurantData): Record<string, unknown> {
   const info = data.companyInfo
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: info?.name || data.name,
-    legalName: info?.legalName || info?.name || data.name,
     identifier: info?.registrationNumber,
     taxID: info?.registrationNumber,
     address: {
@@ -821,7 +820,7 @@ export function generateOrganizationSchema(data: RestaurantData): object {
     },
     telephone: formatPhone(info?.phone || data.phone),
     email: data.email,
-    url: info?.url || `${DOMAIN}/${data.name.toLowerCase().replace(/\s+/g, '-')}/company-information`,
+    url: `${DOMAIN}/${(info?.name || data.name).toLowerCase().replace(/\s+/g, '-')}/company-information`,
     logo: data.images?.logo?.url || data.logo,
     foundingDate: data.foundingDate || info?.establishedDate,
   }

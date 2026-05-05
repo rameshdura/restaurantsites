@@ -1,21 +1,24 @@
 "use client"
 
 import { useParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
 
 export function useRestaurantLink() {
   const params = useParams()
   const slug = params?.restaurant as string
-  const [isDedicatedDomain, setIsDedicatedDomain] = useState(false)
 
-  useEffect(() => {
+  const isDedicatedDomain = useMemo(() => {
+    // Guard against window being undefined (SSR)
+    if (typeof window === "undefined") {
+      return false
+    }
+
     const hostname = window.location.hostname
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost"
     const forceMain = process.env.NEXT_PUBLIC_FORCE_MAIN_SITE === "true"
 
     if (forceMain) {
-      setIsDedicatedDomain(false)
-      return
+      return false
     }
     
     // Check if we are on a dedicated domain
@@ -27,7 +30,7 @@ export function useRestaurantLink() {
                   hostname.includes("restaurantsites") ||
                   (rootDomain !== "localhost" && hostname.includes(rootDomain))
 
-    setIsDedicatedDomain(!isMain)
+    return !isMain
   }, [])
 
   const getLink = (path: string) => {

@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { useParams, usePathname } from "next/navigation"
+import { usePathname } from "next/navigation"
 import {
   Menu,
   X,
@@ -64,10 +64,22 @@ interface NavbarProps {
       image?: string
     }
   }
+  translations?: NavbarTranslations
+}
+
+interface NavbarTranslations {
+  navbar?: {
+    home?: string
+    menu?: string
+    about?: string
+    gallery?: string
+    contact?: string
+    callUs?: string
+    followUs?: string
+  }
 }
 
 const languages = [
-  { code: "default", name: "Default" },
   { code: "en", name: "English" },
   { code: "es", name: "Español" },
   { code: "fr", name: "Français" },
@@ -78,7 +90,7 @@ const languages = [
   { code: "ne", name: "नेपाली" },
 ]
 
-export function Navbar({ restaurant }: NavbarProps) {
+export function Navbar({ restaurant, translations }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const [isScrolled, setIsScrolled] = React.useState(false)
   const [isLangOpen, setIsLangOpen] = React.useState(false)
@@ -255,15 +267,15 @@ export function Navbar({ restaurant }: NavbarProps) {
   }
 
   const navLinks = [
-    { name: "Home", href: getLink("/") },
-    { name: "Menu", href: getLink("/menu") },
-    { name: "About", href: getLink("/about"), show: !!restaurant.about },
+    { name: translations?.navbar?.home || "Home", href: getLink("/") },
+    { name: translations?.navbar?.menu || "Menu", href: getLink("/menu") },
+    { name: translations?.navbar?.about || "About", href: getLink("/about"), show: !!restaurant.about },
     {
-      name: "Gallery",
+      name: translations?.navbar?.gallery || "Gallery",
       href: isHomePage ? "#gallery" : getLink("#gallery"),
       show: !!restaurant.gallery && restaurant.gallery.length > 0,
     },
-    { name: "Contact", href: getLink("/contact") },
+    { name: translations?.navbar?.contact || "Contact", href: getLink("/contact") },
   ].filter((link) => link.show !== false)
 
   return (
@@ -460,37 +472,37 @@ export function Navbar({ restaurant }: NavbarProps) {
           </div>
 
           <div className="flex flex-1 flex-col gap-6 overflow-y-auto p-6">
-            <div className="flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="group flex items-center justify-between text-2xl font-semibold text-foreground transition-colors hover:text-primary"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.name}
-                  <span className="h-2 w-2 rounded-full bg-primary opacity-0 transition-opacity group-hover:opacity-100" />
-                </Link>
-              ))}
-            </div>
+<div className="flex flex-col gap-4">
+               {navLinks.map((link) => (
+                 <Link
+                   key={link.name}
+                   href={link.href}
+                   className="group flex items-center justify-between text-2xl font-semibold text-foreground transition-colors hover:text-primary"
+                   onClick={() => setIsMenuOpen(false)}
+                 >
+                   {link.name}
+                   <span className="h-2 w-2 rounded-full bg-primary opacity-0 transition-opacity group-hover:opacity-100" />
+                 </Link>
+               ))}
+             </div>
 
-            <div className="mt-auto flex flex-col gap-4 border-t pt-10">
-              {phone && (
-                <a
-                  href={`tel:${phone}`}
-                  className={cn(
-                    buttonVariants({ variant: "default", size: "lg" }),
-                    "w-full justify-center gap-3 rounded-2xl shadow-xl shadow-primary/20"
-                  )}
-                >
-                  <HugeiconsIcon icon={Call02Icon} className="size-5" />
-                  Call Us Now
-                </a>
-              )}
-              <p className="text-center text-xs text-muted-foreground">
-                Follow us on social media for updates!
-              </p>
-            </div>
+             <div className="mt-auto flex flex-col gap-4 border-t pt-10">
+               {phone && (
+                 <a
+                   href={`tel:${phone}`}
+                   className={cn(
+                     buttonVariants({ variant: "default", size: "lg" }),
+                     "w-full justify-center gap-3 rounded-2xl shadow-xl shadow-primary/20"
+                   )}
+                 >
+                   <HugeiconsIcon icon={Call02Icon} className="size-5" />
+                   {translations?.navbar?.callUs || "Call Us Now"}
+                 </a>
+               )}
+               <p className="text-center text-xs text-muted-foreground">
+                 {translations?.navbar?.followUs || "Follow us on social media for updates!"}
+               </p>
+             </div>
           </div>
         </div>
       </div>

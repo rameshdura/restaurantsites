@@ -1,6 +1,7 @@
 import { Metadata } from "next"
 import { getRestaurant, groupMenuByCategory } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
+import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
 import { FoodMenu } from "@/components/food-menu/food-menu"
 import { Footer } from "@/components/footer"
@@ -31,25 +32,26 @@ export default async function MenuPage({ params }: MenuPageProps) {
 
   const { data, menu } = restaurant
   const categories = groupMenuByCategory(menu)
+  const translations = getTranslations(data.app?.language)
 
   return (
     <div className="flex flex-col min-h-svh">
       <JsonLd data={generateMenuSchema(data, slug)} />
-      <Navbar restaurant={{ ...data, name: data.name || slug }} />
+      <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} />
 
       <main className="flex-1 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6 mb-12 text-center">
-          <h4 className="font-bold mb-4 text-primary uppercase tracking-widest text-xs">Exquisite Selection</h4>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">Our Menu</h1>
+          <h4 className="font-bold mb-4 text-primary uppercase tracking-widest text-xs">{translations.menuPage?.subtitle || "Exquisite Selection"}</h4>
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">{translations.menuPage?.title || "Our Menu"}</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Discover our curated selection of dishes, prepared with the finest ingredients and culinary passion.
+            {translations.menuPage?.description || "Discover our curated selection of dishes, prepared with the finest ingredients and culinary passion."}
           </p>
           {data.menuLink && (
             <div className="mt-8 flex justify-center">
               <Button size="lg" asChild className="rounded-full px-8">
                 <a href={data.menuLink} target="_blank" rel="noopener noreferrer">
                   <Download className="w-5 h-5 mr-2" />
-                  Download Menu PDF
+                  {translations.menuPage?.downloadButton || "Download Menu PDF"}
                 </a>
               </Button>
             </div>
@@ -58,7 +60,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
         
         <section className="bg-accent/5 py-12 border-y border-border/40">
           {categories.length > 0 ? (
-            <FoodMenu categories={categories} hideHeader={true} />
+            <FoodMenu categories={categories} hideHeader={true} translations={translations} />
           ) : (
             <div className="max-w-7xl mx-auto px-6">
               <div className="p-20 text-center border-2 border-dashed rounded-3xl bg-background">
@@ -71,7 +73,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
         </section>
       </main>
 
-      <Footer restaurantName={data.name || slug} restaurantSlug={slug} />
+      <Footer restaurantName={data.name || slug} restaurantSlug={slug} translations={translations} />
 
     </div>
   )

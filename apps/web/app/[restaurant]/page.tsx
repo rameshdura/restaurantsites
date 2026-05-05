@@ -2,6 +2,7 @@ import Image from "next/image"
 import { Metadata } from "next"
 import { getRestaurant, groupMenuByCategory } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
+import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
 import { Hero } from "@workspace/ui/components/hero"
 import { ContactSection } from "@workspace/ui/components/contact-section"
@@ -39,11 +40,12 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
 
   // Group menu items by category
   const categories = groupMenuByCategory(menu)
+  const translations = getTranslations(data.app?.language)
 
   return (
     <div className="flex flex-col min-h-svh">
       <JsonLd data={generateRestaurantSchema(data, slug)} />
-      <Navbar restaurant={{ ...data, name: data.name || slug }} />
+      <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} />
 
       <main className="flex-1">
         {data.hero && <Hero slides={data.hero.slides} />}
@@ -52,12 +54,12 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
           {/* About Section */}
           <section id="about" className={cn("py-20", !data.hero && "pt-32")}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <SectionHeader 
-                  subtitle="Our Story"
-                  title={data.about?.title || "About Us"}
-                  backgroundTitle="Heritage"
-                />
+               <div>
+                 <SectionHeader 
+                   subtitle={translations.home?.about?.subtitle || "Our Story"}
+                   title={data.about?.title || "About Us"}
+                   backgroundTitle={translations.home?.about?.backgroundTitle || "Heritage"}
+                 />
                 <p className="text-xl text-muted-foreground mb-10 leading-relaxed">
                   {data.about?.content || data.description}
                 </p>
@@ -82,33 +84,36 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
         </div>
 
          {categories.length > 0 && (
-          <section className="bg-accent/5 py-12 border-t border-border/40 paper-noise">
-            <FoodMenu categories={categories} menuLink={data.menuLink} />
-          </section>
-        )}
+           <section className="bg-accent/5 py-12 border-t border-border/40 paper-noise">
+             <FoodMenu categories={categories} menuLink={data.menuLink} translations={translations} />
+           </section>
+         )}
         
         <GallerySection 
           images={
             data.images?.gallery?.map(img => ({ src: img.url, alt: img.alt })) || 
             data.about?.images?.map(url => ({ src: url, alt: data.name }))
           } 
+          translations={translations}
+          restaurantName={data.name}
         />
         
-        <ContactSection 
-          isHomePage={true}
-          restaurantSlug={slug}
-          openingHours={data.openingHours}
-          holidayNotes={data.holidayNotes}
-          restaurantName={data.name}
-          address={data.address}
-          phone={data.phone}
-          email={data.email}
-          location={data.location}
-          embedUrl={null}
-        />
+<ContactSection 
+           isHomePage={true}
+           restaurantSlug={slug}
+           openingHours={data.openingHours}
+           holidayNotes={data.holidayNotes}
+           restaurantName={data.name}
+           address={data.address}
+           phone={data.phone}
+           email={data.email}
+           location={data.location}
+           embedUrl={null}
+           translations={translations}
+         />
       </main>
 
-      <Footer restaurantName={data.name || slug} restaurantSlug={slug} />
+      <Footer restaurantName={data.name || slug} restaurantSlug={slug} translations={translations} />
 
     </div>
   )

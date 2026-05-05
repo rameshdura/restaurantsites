@@ -1,6 +1,7 @@
 import { Metadata } from "next"
 import { getRestaurant } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
+import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
 import { Footer } from "@/components/footer"
 import { Button } from "@workspace/ui/components/button"
@@ -30,22 +31,22 @@ export default async function BrandPage({ params }: BrandPageProps) {
   }
 
   const { data } = restaurant
+  const translations = getTranslations(data.app?.language)
 
   return (
     <div className="flex flex-col min-h-svh bg-slate-50/50">
       <JsonLd data={generateBrandSchema(data, slug)} />
-      <Navbar restaurant={{ ...data, name: data.name || slug }} />
+      <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} />
 
       <main className="flex-1 pt-32 pb-20 px-6">
         <div className="max-w-5xl mx-auto">
           <header className="mb-16 text-center">
-            <h4 className="font-bold mb-4 text-primary uppercase tracking-widest text-xs">Brand Assets</h4>
+            <h4 className="font-bold mb-4 text-primary uppercase tracking-widest text-xs">{translations.brandPage?.subtitle || "Brand Assets"}</h4>
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-              Marketing Materials
+              {translations.brandPage?.title || "Marketing Materials"}
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Download and print professional marketing assets for {data.name}. 
-               All designs are pre-populated with your restaurant&apos;s information.
+              {translations.brandPage?.description?.replace('{restaurantName}', data.name) || `Download and print professional marketing assets for ${data.name}. All designs are pre-populated with your restaurant's information.`}
             </p>
           </header>
 
@@ -57,7 +58,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
                   <div className="p-2 bg-primary/10 rounded-lg text-primary">
                     <CreditCard className="w-6 h-6" />
                   </div>
-                  <h2 className="text-2xl font-bold">Visiting Cards</h2>
+                  <h2 className="text-2xl font-bold">{translations.brandPage?.visitingCards || "Visiting Cards"}</h2>
                 </div>
               </div>
 
@@ -65,7 +66,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
                 {/* Front Side */}
                 <div className="flex flex-col items-center gap-4">
                   <div className="w-full">
-                    <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Front Side</p>
+                    <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">{translations.brandPage?.frontSide || "Front Side"}</p>
                     <div 
                       id="card-front"
                       className="bg-[#ffffff] shadow-xl overflow-hidden border border-[#e2e8f0] flex items-center justify-center p-8 relative"
@@ -88,8 +89,8 @@ export default async function BrandPage({ params }: BrandPageProps) {
                 </div>
 
                   <div className="flex flex-col items-center gap-4">
-                    <div className="w-full">
-                      <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Back Side - Dark</p>
+                   <div className="w-full">
+                     <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">{translations.brandPage?.backSideDark || "Back Side - Dark"}</p>
                       <div 
                         id="card-back-dark"
                         className="bg-[#0f172a] shadow-xl overflow-hidden p-8 flex flex-col justify-between text-[#ffffff] relative"
@@ -122,8 +123,8 @@ export default async function BrandPage({ params }: BrandPageProps) {
                   </div>
 
                   <div className="flex flex-col items-center gap-4">
-                    <div className="w-full">
-                      <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">Back Side - Light</p>
+                      <div className="w-full">
+                        <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-2">{translations.brandPage?.backSideLight || "Back Side - Light"}</p>
                       <div 
                         id="card-back-light"
                         className="bg-[#ffffff] shadow-xl overflow-hidden p-8 flex flex-col justify-between text-[#0f172a] relative border border-[#e2e8f0]"
@@ -180,10 +181,9 @@ export default async function BrandPage({ params }: BrandPageProps) {
                     </div>
                     
                     <div className="space-y-4">
-                      <h2 className="text-3xl font-bold text-[#1e293b] underline decoration-[#f46d1b] decoration-4 underline-offset-8">Visit Us Today!</h2>
+                      <h2 className="text-3xl font-bold text-[#1e293b] underline decoration-[#f46d1b] decoration-4 underline-offset-8">{translations.brandPage?.flyerHeading || "Visit Us Today!"}</h2>
                       <p className="text-lg text-[#475569] max-w-md">
-                        Discover the flavors of {data.name}. We serve authentic dishes 
-                        prepared with fresh, local ingredients.
+                        {translations.brandPage?.flyerDescription?.replace('{restaurantName}', data.name) || `Discover the flavors of ${data.name}. We serve authentic dishes prepared with fresh, local ingredients.`}
                       </p>
                     </div>
                   </div>
@@ -191,11 +191,11 @@ export default async function BrandPage({ params }: BrandPageProps) {
                   {/* Flyer Footer */}
                   <div className="mt-12 pt-8 border-t border-[#f1f5f9] grid grid-cols-2 gap-4 text-sm">
                     <div className="space-y-1">
-                      <p className="font-bold text-[#0f172a] uppercase tracking-tighter">Location</p>
+                      <p className="font-bold text-[#0f172a] uppercase tracking-tighter">{translations.brandPage?.flyerLocation || "Location"}</p>
                       <p className="text-[#475569]">{data.address}</p>
                     </div>
                     <div className="space-y-1 text-right">
-                      <p className="font-bold text-[#0f172a] uppercase tracking-tighter">Contact</p>
+                      <p className="font-bold text-[#0f172a] uppercase tracking-tighter">{translations.brandPage?.flyerContact || "Contact"}</p>
                       <p className="text-[#475569]">{data.phone}</p>
                       <p className="text-[#475569]">{data.email}</p>
                     </div>
@@ -213,16 +213,16 @@ export default async function BrandPage({ params }: BrandPageProps) {
           </div>
 
           <div className="mt-20 p-8 bg-primary/5 border border-primary/10 text-center">
-            <h3 className="text-xl font-bold mb-2">Need Custom Designs?</h3>
-            <p className="text-muted-foreground mb-6">Contact our support team for personalized marketing materials and branding consultations.</p>
+            <h3 className="text-xl font-bold mb-2">{translations.brandPage?.ctaTitle || "Need Custom Designs?"}</h3>
+            <p className="text-muted-foreground mb-6">{translations.brandPage?.ctaDescription || "Contact our support team for personalized marketing materials and branding consultations."}</p>
             <Button asChild>
-              <a href={`/${slug}/contact`}>Contact Us</a>
+              <a href={`/${slug}/contact`}>{translations.brandPage?.contactButton || "Contact Us"}</a>
             </Button>
           </div>
         </div>
       </main>
 
-      <Footer restaurantName={data.name || slug} restaurantSlug={slug} />
+      <Footer restaurantName={data.name || slug} restaurantSlug={slug} translations={translations} />
 
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {

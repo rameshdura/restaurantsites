@@ -13,20 +13,31 @@ interface TeamMember {
 
 interface TeamSectionProps {
   team: TeamMember[]
+  translations?: {
+    common?: {
+      team?: {
+        subtitle?: string
+        title?: string
+        backgroundTitle?: string
+      }
+    }
+  }
 }
 
-export function TeamSection({ team }: TeamSectionProps) {
+export function TeamSection({ team, translations }: TeamSectionProps) {
   const membersWithImages = team?.filter(member => member.image) || []
   
   if (membersWithImages.length === 0) return null
+
+  const t = translations?.common?.team || {}
 
   return (
     <section className="py-24">
       <div className="max-w-7xl mx-auto px-6">
         <SectionHeader 
-          subtitle="Meet the Experts"
-          title="Our Dedicated Team"
-          backgroundTitle="Experts"
+          subtitle={t.subtitle || "Meet the Experts"}
+          title={t.title || "Our Dedicated Team"}
+          backgroundTitle={t.backgroundTitle || "Experts"}
         />
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">

@@ -3,7 +3,6 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { useParams } from "next/navigation"
 import { cn } from "@workspace/ui/lib/utils"
 import { buttonVariants } from "./button"
 import { useRestaurantLink } from "../hooks/use-restaurant-link"

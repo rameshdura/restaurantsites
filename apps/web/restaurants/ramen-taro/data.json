@@ -7,6 +7,11 @@
   "menuLink": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   "foundingDate": "1985-01-01",
 
+  "app": {
+    "language": "JA",
+    "currency": "JPY"
+  },
+
   "seo": {
     "title": "Ramen Taro | Authentic Hakata Ramen in Tokyo",
     "description": "Savor authentic Hakata-style tonkotsu ramen at Ramen Taro in Higashiyamato, Tokyo. 48-hour slow-cooked broth, handmade noodles, and fresh ingredients since 1985.",
@@ -160,7 +165,7 @@
     "lat": 35.7394006,
     "lng": 139.4449135,
     "mapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
-    "embedUrl": "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14488!2d139.4449135!3d35.7394006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1s0x0%3A0x0!3e0",
+    "embedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3238.4361275910924!2d139.46013577599766!3d35.74008382673839!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6018e6dc89c4ffff:0x23180e8f95509120!2sSUMITRA%20ASIAN%20DINING!5e0!3m2!1sen!2sus!4v1777957731175!5m2!1sen!2sus",
     "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan"
   },
   "openingHours": [

@@ -5,6 +5,12 @@
   "phone": "+81 3-1234-5678",
   "email": "info@sushiyama.example.com",
   "menuLink": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+
+  "app": {
+    "language": "JA",
+    "currency": "JPY"
+  },
+
   "hero": {
     "slides": [
       {

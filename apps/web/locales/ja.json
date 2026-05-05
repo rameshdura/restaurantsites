@@ -1,0 +1,133 @@
+{
+  "contact": {
+    "title": "お問い合わせ",
+    "subtitle": "お問い合わせ先",
+    "description": "ご質問やプライベートイベントのご予約はありますか？ご連絡をお待ちしています。フォームまたは直接の連絡先からお問い合わせください。",
+    "location": "所在地",
+    "phone": "電話",
+    "email": "メール",
+    "hours": "営業時間",
+    "googleMaps": "グーグルマップ",
+    "getDirections": "道順を見る →",
+    "availableHours": "毎日 11時〜22時まで受付中",
+    "generalReservations": "一般・ご予約",
+    "findUs": "グーグルマップで見る",
+    "openGoogleMap": "グーグルマップを開く →",
+    "followUs": "フォローする",
+    "backgroundTitle": "お問い合わせ",
+    "serviceHours": "サービス時間",
+    "serviceHoursDescription": "営業時間中に、忘れられないダイニング体験をお楽しみください。",
+    "hoursComingSoon": "営業時間は近日公開...",
+    "holidayNotice": "休業日のお知らせ",
+    "requestReservation": "ご予約をリクエスト",
+    "yourName": "お名前",
+    "emailAddress": "メールアドレス",
+    "subject": "件名",
+    "subjectPlaceholder": "件名を選択してください",
+    "subjectReservation": "ご予約について",
+    "subjectEvent": "プライベートイベント",
+    "subjectFeedback": "フィードバック",
+    "subjectOther": "その他",
+    "yourMessage": "メッセージ",
+    "messagePlaceholder": "ご質問やご要望をお聞かせください...",
+    "sendMessage": "メッセージを送る",
+    "processing": "送信中...",
+    "privacyPolicy": "プライバシーポリシー",
+    "privacyAgreement": "送信ボタンをクリックすることで、プライバシーポリシーに同意したことになります。",
+    "success": "メッセージを送信しました！まもなくご返信いたします。",
+    "error": "エラーが発生しました。もう一度お試しください。",
+    "sendError": "メッセージの送信に失敗しました。もう一度お試しください。"
+  },
+  "navbar": {
+    "home": "ホーム",
+    "menu": "メニュー",
+    "about": "概要",
+    "gallery": "ギャラリー",
+    "contact": "お問い合わせ",
+    "callUs": "今すぐ電話",
+    "followUs": "ソーシャルメディアで更新情報をフォローしてください！"
+  },
+  "footer": {
+    "companyInformation": "会社情報"
+  },
+  "companyInformation": {
+    "title": "会社情報",
+    "subtitle": "法人概要",
+    "table": {
+      "companyName": "会社名",
+      "corporateNumber": "法人番号",
+      "headquartersAddress": "本社所在地",
+      "phone": "電話",
+      "establishedDate": "設立日",
+      "capital": "資本金",
+      "fiscalYearEnd": "会計年度末"
+    },
+    "inquiry": "法人情報に関するお問い合わせは、{phone}までお願いいたします。"
+  },
+  "home": {
+    "about": {
+      "subtitle": "私たちの物語",
+      "backgroundTitle": "伝統"
+    }
+  },
+  "aboutPage": {
+    "subtitle": "私たちの物語"
+  },
+  "menuPage": {
+    "title": "メニュー",
+    "subtitle": "厳選メニュー",
+    "description": "最高の食材と料理への情熱で作られた、厳選された料理の数々をご堪能ください。",
+    "downloadButton": "メニューPDFをダウンロード"
+  },
+  "brandPage": {
+    "subtitle": "ブランド資材",
+    "title": "マーケティング資料",
+    "description": "{restaurantName}のプロフェッショナルなマーケティング資材をダウンロードして印刷してください。すべてのデザインはレストランの情報が事前に入力されています。",
+    "ctaTitle": "カスタムデザインが必要ですか？",
+    "ctaDescription": "パーソナライズされたマーケティング資料とブランディングコンサルティングについては、サポートチームまでお問い合わせください。",
+    "contactButton": "お問い合わせ",
+    "visitingCards": "名刺",
+    "frontSide": "表面",
+    "backSideDark": "裏面 - ダーク",
+    "backSideLight": "裏面 - ライト",
+    "flyerHeading": "今すぐご来店！",
+    "flyerDescription": "{restaurantName}の味をご堪能ください。新鮮な地元食材を使った本格的な料理をご提供します。",
+    "flyerLocation": "所在地",
+    "flyerContact": "お問い合わせ"
+  },
+  "common": {
+    "team": {
+      "subtitle": "専門家に会う",
+      "title": "献身的なチーム",
+      "backgroundTitle": "専門家"
+    },
+    "gallery": {
+      "subtitle": "ギャラリー",
+      "title": "{restaurantName}の瞬間",
+      "backgroundTitle": "瞬間"
+    },
+    "foodMenu": {
+      "title": "メニュー",
+      "subtitle": "美食",
+      "description": "情熱と職人技で作られた芸術的な料理。",
+      "backgroundTitle": "味"
+    },
+    "aboutPhilosophy": {
+      "title": "私たちの哲学",
+      "description": "新鮮な地元の食材を調達して、誰にとってもAuthenticで印象に残るダイニング体験を作り上げることを信じています。"
+    },
+    "culinaryExcellence": {
+      "title": "料理の卓越性",
+      "description": "私たちのシェフは何年もの伝統と革新をキッチンに持ち込み、すべての料理が味とプレゼンテーションの傑作となるようにしています。"
+    },
+    "communityFocused": {
+      "title": "地域に根ざした",
+      "description": "単なるレストランではなく、友人や家族の集まる場所として、地域社会を豊かにすることに献身しています。"
+    },
+    "badges": {
+      "popular": "人気",
+      "vegetarian": "ベジタリアン",
+      "spicy": "スパイシー"
+    }
+  }
+}

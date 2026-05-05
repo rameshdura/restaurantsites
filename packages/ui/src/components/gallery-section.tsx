@@ -35,20 +35,35 @@ interface GallerySectionProps {
     src: string
     alt: string
   }>
+  translations?: {
+    common?: {
+      gallery?: {
+        subtitle?: string
+        title?: string
+        backgroundTitle?: string
+      }
+    }
+  }
+  restaurantName?: string
 }
 
-export function GallerySection({ images }: GallerySectionProps) {
+export function GallerySection({ images, translations, restaurantName }: GallerySectionProps) {
   const items = images || defaultGalleryItems
   const [isPaused, setIsPaused] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
+
+  const t = translations?.common?.gallery || {}
+  const title = restaurantName 
+    ? (t.title ? t.title.replace('{restaurantName}', restaurantName) : `Moments at ${restaurantName}`)
+    : (t.title || "Moments")
 
   return (
     <section className="py-20 bg-background overflow-hidden border-t border-border/40">
       <div className="px-6 max-w-7xl mx-auto mb-12">
         <SectionHeader 
-          subtitle="Gallery"
-          title="Moments at Ramen Taro"
-          backgroundTitle="Moments"
+          subtitle={t.subtitle || "Gallery"}
+          title={title}
+          backgroundTitle={t.backgroundTitle || "Moments"}
           align="center"
         />
       </div>

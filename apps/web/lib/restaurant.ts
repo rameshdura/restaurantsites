@@ -334,6 +334,11 @@ export interface RestaurantData {
   numberOfEmployees?: number
   knowsLanguage?: string[]
   cuisineType?: string
+
+  app?: {
+    language?: string
+    currency?: string
+  }
 }
 
 export interface MenuItem {

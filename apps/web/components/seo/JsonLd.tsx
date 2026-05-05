@@ -35,7 +35,7 @@ export function JsonLd({ restaurant, slug, pageType }: JsonLdProps) {
   const schemas: Record<string, Record<string, unknown>> = {}
 
   // Always include Restaurant schema (base for all restaurant pages)
-  schemas.restaurant = generateRestaurantSchema(restaurant, slug)
+  schemas.restaurant = generateRestaurantSchema(restaurant, slug) as Record<string, unknown>
 
   switch (pageType) {
     case 'home':

@@ -7,33 +7,38 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { Heart } from "@hugeicons/core-free-icons"
 import { cn } from "@workspace/ui/lib/utils"
 import { useRestaurantLink } from "@workspace/ui/hooks/use-restaurant-link"
+import { getTranslations } from "@/lib/i18n"
+
+type LocalTranslations = ReturnType<typeof getTranslations>
 
 interface FooterProps {
   restaurantName: string
   restaurantSlug: string
+  translations?: LocalTranslations
 }
 
-export function Footer({ restaurantName }: FooterProps) {
-  const [mounted, setMounted] = useState(false)
-  const { setTheme, resolvedTheme } = useTheme()
-  const { getLink } = useRestaurantLink()
+export function Footer({ restaurantName, translations }: FooterProps) {
+   const [mounted, setMounted] = useState(false)
+   const { setTheme, resolvedTheme } = useTheme()
+   const { getLink } = useRestaurantLink()
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true)
-  }, [])
+   useEffect(() => {
+     // eslint-disable-next-line react-hooks/set-state-in-effect
+     setMounted(true)
+   }, [])
 
-  const isDark = resolvedTheme === "dark"
+   const isDark = resolvedTheme === "dark"
+   const t = translations?.footer || { companyInformation: "Company Information" }
 
   return (
     <footer className="py-6 border-t text-center text-xs text-muted-foreground bg-background">
       <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
-        <Link 
-          href={getLink("/company-information")}
-          className="hover:text-primary transition-colors duration-200"
-        >
-          Company Information
-        </Link>
+<Link 
+           href={getLink("/company-information")}
+           className="hover:text-primary transition-colors duration-200"
+         >
+           {t.companyInformation}
+         </Link>
         <span className="hidden md:inline text-border">|</span>
         <div className="flex items-center gap-2">
           &copy; {new Date().getFullYear()} {restaurantName}
