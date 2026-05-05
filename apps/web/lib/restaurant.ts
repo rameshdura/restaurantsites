@@ -382,16 +382,16 @@ function resolveEmbedUrl(location: RestaurantData['location']): string | null {
       } else if (mapsUrl.includes("@")) {
         const match = mapsUrl.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*),(\d+[a-z]?)/)
         if (match && match[3]) {
-          const zoom = match[3]
-          const cleanZoom = zoom.replace(/[a-z]/, "")
-          embedUrlStr = `https://www.google.com/maps/embed?q=${match[1]},${match[2]}&zoom=${cleanZoom}`
+          // Use pb format for reliable coordinate-based maps without API key
+          embedUrlStr = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14488!2d${match[2]}!3d${match[1]}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1s0x0%3A0x0!3e0`
         }
       }
 
       if (embedUrlStr === mapsUrl || !embedUrlStr.includes("embed")) {
         // For short goo.gl / maps.app.goo.gl links, build embed URL from lat/lng
         if ((mapsUrl.includes("goo.gl") || mapsUrl.includes("maps.app.goo.gl")) && location.lat && location.lng) {
-          embedUrlStr = `https://www.google.com/maps/embed?q=${location.lat},${location.lng}&zoom=17`
+          // Use pb format with proper coordinates - shows map centered on location
+          embedUrlStr = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14488!2d${location.lng}!3d${location.lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1s0x0%3A0x0!3e0`
         } else {
           embedUrlStr = mapsUrl.includes("?") ? mapsUrl + "&output=embed" : mapsUrl + "?output=embed"
         }
