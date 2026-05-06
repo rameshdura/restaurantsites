@@ -44,7 +44,7 @@ export default async function CompanyInformationPage({ params }: CompanyInformat
   return (
     <div className="flex flex-col min-h-svh">
       <JsonLd data={generateOrganizationSchema(data)} />
-      <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} />
+       <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} defaultLanguage={data.app?.language} />
 
       <main className="flex-1 pt-32 pb-20 px-6">
         <div className="max-w-4xl mx-auto">

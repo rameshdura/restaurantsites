@@ -29,16 +29,72 @@
       }
     ]
   },
+  "seo": {
+    "title": "Sushi Yama | Premium Sushi & Sashimi in Tokyo",
+    "description": "Experience premium sushi and sashimi at Sushi Yama in Tokyo. Fresh seafood from Toyosu Market, masterful technique, and an unforgettable omakase journey.",
+    "keywords": [
+      "sushi yama", "premium sushi", "sashimi", "tokyo sushi",
+      "omakase", "japanese sushi", "fresh sushi tokyo"
+    ],
+    "menuTitle": "Sushi Yama Menu | Sushi, Sashimi & Prices",
+    "menuDescription": "Explore Sushi Yama's premium menu featuring sushi, sashimi, and seasonal specialties. View prices and discover our omakase experience.",
+    "aboutTitle": "About Sushi Yama | The Art of Sushi",
+    "aboutDescription": "Discover Sushi Yama's dedication to the art of sushi-making. From Toyosu Market to your plate, experience the zen of Japanese culinary tradition.",
+    "contactTitle": "Contact Sushi Yama | Reservations & Directions",
+    "contactDescription": "Contact Sushi Yama for reservations. Located in Tokyo. Open daily for dinner. Experience our omakase journey."
+  },
+
+  "schema": {
+    "priceRange": "$$$",
+    "servesCuisine": ["Japanese", "Sushi", "Sashimi"],
+    "acceptsReservations": true,
+    "isTakeout": false,
+    "isDelivery": false,
+    "priceCurrency": "USD",
+    "aggregateRating": {
+      "ratingValue": 4.8,
+      "reviewCount": 456,
+      "bestRating": 5,
+      "worstRating": 1,
+      "source": "Google Reviews",
+      "sourceUrl": "https://maps.app.goo.gl/uX3L3S7YfR8Z9G2z7"
+    }
+  },
+
+  "social": {
+    "ogImage": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&q=80&w=1200&h=630",
+    "ogLocale": "en_US",
+    "twitterCard": "summary_large_image",
+    "sameAs": [
+      "https://www.instagram.com/sushiyama",
+      "https://www.facebook.com/sushiyama",
+      "https://tabelog.com/tokyo/sushiyama"
+    ]
+  },
+
   "about": {
     "title": "Zen & Zest",
     "content": "At Sushi Yama, we believe that sushi is more than just food—it's a form of meditation. Our chefs select the finest catch from Toyosu Market every morning to ensure every bite is a masterpiece.",
     "images": [
-        "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=1000",
+      "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=1000",
       "https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&q=80&w=1000",
       "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&q=80&w=1000"
     ],
     "image": "https://images.unsplash.com/photo-1534422298391-e4f8c170db06?auto=format&fit=crop&q=80&w=1000"
   },
+
+  "localSEO": {
+    "neighborhood": "Ginza",
+    "city": "Tokyo",
+    "region": "Tokyo",
+    "country": "Japan",
+    "countryCode": "JP",
+    "postalCode": "104-0061",
+    "placeId": "ChIJLbXArXIqGGARaUeVQ",
+    "googleMapsUrl": "https://maps.app.goo.gl/uX3L3S7YfR8Z9G2z7",
+    "timezone": "Asia/Tokyo"
+  },
+
   "companyInfo": {
     "name": "Yama Hospitality Group",
     "registrationNumber": "1010001234567",
@@ -59,5 +115,50 @@
     { "day": "Mon - Thu", "time": "18:00 - 22:30" },
     { "day": "Fri - Sat", "time": "18:00 - 23:30" },
     { "day": "Sun", "time": "17:00 - 21:00" }
+  ],
+
+  "reviews": [
+    {
+      "author": "Hiroshi Tanaka",
+      "rating": 5,
+      "date": "2026-04-18",
+      "comment": "The omakase experience was extraordinary. Each piece was a masterpiece - the toro melted like butter and the uni was unbelievably fresh. Chef's selection never disappoints.",
+      "source": "Google Reviews"
+    },
+    {
+      "author": "Yuki Nakamura",
+      "rating": 5,
+      "date": "2026-04-12",
+      "comment": "Absolutely sublime sushi. The attention to detail is remarkable. From the warm rice to the precise cut of fish, everything is perfect. The sake pairing was excellent too.",
+      "source": "Google Reviews"
+    },
+    {
+      "author": "Robert Smith",
+      "rating": 4,
+      "date": "2026-04-08",
+      "comment": "Incredible sushi experience. The dragon roll was creative and delicious. Service was impeccable, though a bit pricey for the portion sizes. Still worth it for special occasions.",
+      "source": "Google Reviews"
+    },
+    {
+      "author": "Aiko Yamamoto",
+      "rating": 5,
+      "date": "2026-04-02",
+      "comment": "Best sushi in Tokyo without a doubt. The chef's choice platter was divine. Every bite transported me back to my grandmother's coastal town. A true culinary art form.",
+      "source": "Google Reviews"
+    },
+    {
+      "author": "Thomas Anderson",
+      "rating": 4,
+      "date": "2026-03-29",
+      "comment": "Amazing quality and presentation. The sashimi selection was fresh and flavorful. The restaurant has a wonderful ambiance. Would recommend for date night or special occasions.",
+      "source": "Google Reviews"
+    },
+    {
+      "author": "Maria Garcia",
+      "rating": 5,
+      "date": "2026-03-25",
+      "comment": "The tuna nigiri was simply perfection. You can taste the quality of the fish and the expertise of the chef in every bite. The truffle ramen special was also divine.",
+      "source": "Google Reviews"
+    }
   ]
 }

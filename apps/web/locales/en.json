@@ -100,6 +100,12 @@
     "flyerContact": "Contact"
   },
   "common": {
+    "reviews": {
+      "subtitle": "What Our Customers Say",
+      "title": "Reviews",
+      "backgroundTitle": "Reviews",
+      "viewAllButton": "View All Reviews"
+    },
     "team": {
       "subtitle": "Meet the Experts",
       "title": "Our Dedicated Team",

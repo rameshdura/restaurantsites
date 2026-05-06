@@ -15,6 +15,7 @@ import { SectionHeader } from "@workspace/ui/components/section-header"
 import { ImageSlider } from "@workspace/ui/components/image-slider"
 import { JsonLd } from "@/components/json-ld"
 import { generateHomeMetadata, generateRestaurantSchema } from "@/lib/seo"
+import { ReviewsSection } from "@workspace/ui/components/reviews-section"
 
 
 interface RestaurantPageProps {
@@ -45,7 +46,7 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
   return (
     <div className="flex flex-col min-h-svh">
       <JsonLd data={generateRestaurantSchema(data, slug)} />
-      <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} />
+       <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} defaultLanguage={data.app?.language} />
 
       <main className="flex-1">
         {data.hero && <Hero slides={data.hero.slides} />}
@@ -83,22 +84,42 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
           </section>
         </div>
 
-         {categories.length > 0 && (
-           <section className="bg-accent/5 py-12 border-t border-border/40 paper-noise">
-             <FoodMenu categories={categories} menuLink={data.menuLink} translations={translations} />
-           </section>
-         )}
-        
-        <GallerySection 
-          images={
-            data.images?.gallery?.map(img => ({ src: img.url, alt: img.alt })) || 
-            data.about?.images?.map(url => ({ src: url, alt: data.name }))
-          } 
-          translations={translations}
-          restaurantName={data.name}
-        />
-        
-<ContactSection 
+{categories.length > 0 && (
+            <section className="bg-accent/5 py-12 border-t border-border/40 paper-noise">
+              <FoodMenu categories={categories} menuLink={data.menuLink} translations={translations} />
+            </section>
+          )}
+
+          <GallerySection
+            images={
+              data.images?.gallery?.map(img => ({ src: img.url, alt: img.alt })) || 
+              data.about?.images?.map(url => ({ src: url, alt: data.name }))
+            } 
+            translations={translations}
+            restaurantName={data.name}
+          />
+
+          {data.reviews && (
+            <section className="bg-background py-12">
+              <ReviewsSection
+                reviews={
+                  Array.isArray(data.reviews)
+                    ? data.reviews
+                    : data.reviews.individual?.map(r => ({
+                        author: r.author,
+                        rating: r.rating,
+                        date: r.date,
+                        comment: r.reviewBody,
+                        source: r.source,
+                      })) || []
+                }
+                googleMapsUrl={data.localSEO?.googleMapsUrl || data.schema?.aggregateRating?.sourceUrl}
+                translations={translations}
+              />
+            </section>
+          )}
+
+          <ContactSection
            isHomePage={true}
            restaurantSlug={slug}
            openingHours={data.openingHours}

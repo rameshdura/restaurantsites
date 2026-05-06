@@ -35,7 +35,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
   return (
     <div className="flex flex-col min-h-svh">
       <JsonLd data={generateAboutPageSchema(data, slug)} />
-      <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} />
+       <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} defaultLanguage={data.app?.language} />
 
       <main className="flex-1 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6">

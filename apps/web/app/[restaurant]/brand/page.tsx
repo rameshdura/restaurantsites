@@ -36,7 +36,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
   return (
     <div className="flex flex-col min-h-svh bg-slate-50/50">
       <JsonLd data={generateBrandSchema(data, slug)} />
-      <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} />
+       <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} defaultLanguage={data.app?.language} />
 
       <main className="flex-1 pt-32 pb-20 px-6">
         <div className="max-w-5xl mx-auto">

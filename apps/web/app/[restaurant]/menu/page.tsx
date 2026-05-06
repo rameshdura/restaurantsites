@@ -37,7 +37,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
   return (
     <div className="flex flex-col min-h-svh">
       <JsonLd data={generateMenuSchema(data, slug)} />
-      <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} />
+       <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} defaultLanguage={data.app?.language} />
 
       <main className="flex-1 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6 mb-12 text-center">

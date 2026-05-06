@@ -100,6 +100,12 @@
     "flyerContact": "お問い合わせ"
   },
   "common": {
+    "reviews": {
+      "subtitle": "お客様の声",
+      "title": "レビュー",
+      "backgroundTitle": "レビュー",
+      "viewAllButton": "すべてのレビューを見る"
+    },
     "team": {
       "subtitle": "専門家に会う",
       "title": "献身的なチーム",

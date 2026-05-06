@@ -22,7 +22,7 @@
     ],
     "menuTitle": "Ramen Taro Menu | Ramen, Sushi & Prices",
     "menuDescription": "Explore Ramen Taro's full menu featuring tonkotsu ramen, miso ramen, gyoza, sushi, and more. View prices and download our menu PDF.",
-    "aboutTitle": "About Ramen Taro | Our Story Since 1985",
+    "aboutTitle": "About Ramen Taro",
     "aboutDescription": "Discover the heritage of Ramen Taro — from a humble Fukuoka street stall in 1985 to an authentic ramen destination in Tokyo. Meet our team and culinary philosophy.",
     "contactTitle": "Contact Ramen Taro | Reservations & Directions",
     "contactDescription": "Contact Ramen Taro for reservations and directions. Located in Higashiyamato, Tokyo. Open daily for lunch and dinner. Call +81 3-8765-4321.",
@@ -108,7 +108,6 @@
     ]
   },
   "about": {
-    "title": "About Ramen Taro | Our Story Since 1985",
     "content": "Founded in 1985, Ramen Taro began as a humble street stall in the vibrant Fukuoka district. Over the decades, we have evolved into a cornerstone of authentic Japanese dining in Tokyo, dedicated to preserving the time-honored traditions of ramen making while selectively embracing modern culinary innovations. Our journey from a small stall to a multi-award winning restaurant is a testament to our commitment to quality, authenticity, and the pursuit of the perfect bowl.",
     "foundedYear": 1985,
     "founder": {
@@ -243,5 +242,50 @@
     { "name": "Philadelphia Roll", "description": "Smoked salmon, cream cheese, and cucumber.", "price": "10.00", "category": "Maki" },
     { "name": "Spicy Salmon Hand Roll", "description": "Spicy salmon and cucumber wrapped in a cone.", "price": "7.00", "category": "Temaki" },
     { "name": "Eel Hand Roll", "description": "BBQ eel and cucumber wrapped in a cone.", "price": "8.00", "category": "Temaki" }
+  ],
+
+  "reviews": [
+    {
+      "author": "Sarah Johnson",
+      "rating": 5,
+      "date": "2026-04-15",
+      "comment": "Best ramen I've had outside of Japan! The tonkotsu broth is absolutely incredible - rich, creamy, and perfectly seasoned. The chashu pork melts in your mouth. Will definitely be back!",
+      "source": "Google Reviews"
+    },
+    {
+      "author": "Michael Chen",
+      "rating": 4,
+      "date": "2026-04-10",
+      "comment": "Amazing authentic ramen. The noodles have that perfect chew and the broth is so flavorful. Service was quick even during lunch rush. Only wish they had more vegetarian options.",
+      "source": "Google Reviews"
+    },
+    {
+      "author": "Emma Rodriguez",
+      "rating": 5,
+      "date": "2026-04-05",
+      "comment": "This place exceeded all expectations. The spicy miso ramen was divine - perfect level of heat. The gyoza were crispy perfection. Staff was friendly and attentive. A must-visit!",
+      "source": "Google Reviews"
+    },
+    {
+      "author": "David Kim",
+      "rating": 5,
+      "date": "2026-03-28",
+      "comment": "As a Japanese food enthusiast, I was blown away by the authenticity here. The 48-hour broth really makes a difference. The black garlic ramen is a game-changer. Highly recommend!",
+      "source": "Google Reviews"
+    },
+    {
+      "author": "Lisa Thompson",
+      "rating": 4,
+      "date": "2026-03-22",
+      "comment": "Great atmosphere and even better food. The shoyu ramen was delicious and the portion size was generous. The team was very accommodating with my spice preference. Will come again.",
+      "source": "Google Reviews"
+    },
+    {
+      "author": "James Wilson",
+      "rating": 5,
+      "date": "2026-03-18",
+      "comment": "Wagyu beef ramen is pure luxury. The beef is melt-in-your-mouth tender and the truffle oil adds an elegant touch. Definitely a splurge worth every penny.",
+      "source": "Google Reviews"
+    }
   ]
 }

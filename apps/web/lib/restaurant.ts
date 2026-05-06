@@ -302,7 +302,13 @@ export interface RestaurantData {
       reviewBody: string
       source?: string
     }>
-  }
+  } | Array<{
+    author: string
+    rating: number
+    date: string
+    comment: string
+    source?: string
+  }>
   reservation?: {
     acceptsReservations: boolean
     reservationMethods: string[]

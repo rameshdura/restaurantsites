@@ -49,6 +49,22 @@ function setGoogleTranslateCookie(langCode: string) {
   document.cookie = `googtrans=/en/${langCode}; path=/; domain=${window.location.hostname}; expires=${date.toUTCString()}`
 }
 
+function getInitialLang(defaultLanguage?: string): string {
+  if (typeof document === "undefined") return defaultLanguage || "default"
+  const getCookie = (name: string) => {
+    if (typeof document === "undefined") return undefined
+    const value = `; ${document.cookie}`
+    const parts = value.split(`; ${name}=`)
+    if (parts.length === 2) return parts.pop()?.split(";").shift()
+  }
+  const savedLang = getCookie("googtrans")
+  if (savedLang) {
+    const lang = savedLang.split("/").pop()
+    if (lang) return lang
+  }
+  return defaultLanguage || "default"
+}
+
 interface NavbarProps {
   restaurant: {
     name: string
@@ -65,6 +81,7 @@ interface NavbarProps {
     }
   }
   translations?: NavbarTranslations
+  defaultLanguage?: string // e.g., "EN", "JA"
 }
 
 interface NavbarTranslations {
@@ -91,7 +108,7 @@ const languages = [
   { code: "ne", name: "नेपाली" },
 ]
 
-export function Navbar({ restaurant, translations }: NavbarProps) {
+export function Navbar({ restaurant, translations, defaultLanguage }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const [isScrolled, setIsScrolled] = React.useState(false)
   const [isLangOpen, setIsLangOpen] = React.useState(false)
@@ -99,27 +116,11 @@ export function Navbar({ restaurant, translations }: NavbarProps) {
   const [langTransitionState, setLangTransitionState] = React.useState<"idle" | "in" | "out" | "covering">("idle")
   const [targetLangName, setTargetLangName] = React.useState("")
 
-  const getInitialLang = () => {
-    if (typeof document === "undefined") return "default"
-    const getCookie = (name: string) => {
-      if (typeof document === "undefined") return undefined
-      const value = `; ${document.cookie}`
-      const parts = value.split(`; ${name}=`)
-      if (parts.length === 2) return parts.pop()?.split(";").shift()
-    }
-    const savedLang = getCookie("googtrans")
-    if (savedLang) {
-      const lang = savedLang.split("/").pop()
-      if (lang) return lang
-    }
-    return "default"
-  }
-
   const [currentLang, setCurrentLang] = React.useState("default")
 
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCurrentLang(getInitialLang())
+    setCurrentLang(getInitialLang(defaultLanguage))
     
     // Check for pending language transition from a reload
     const savedLangName = sessionStorage.getItem("lang-transition-name")
@@ -141,14 +142,19 @@ export function Navbar({ restaurant, translations }: NavbarProps) {
         clearTimeout(timer2)
       }
     }
-  }, [])
+  }, [defaultLanguage])
   const pathname = usePathname()
   const langDropdownRef = React.useRef<HTMLDivElement>(null)
-  
-  const { getLink, slug } = useRestaurantLink()
-  const isHomePage = pathname === `/${slug}` || (pathname === "/" && slug !== "")
+   const { getLink, slug } = useRestaurantLink()
+    const isHomePage = pathname === `/${slug}` || (pathname === "/" && slug !== "")
 
-  const phone = restaurant.contact?.phone || restaurant.phone
+    const phone = restaurant.contact?.phone || restaurant.phone
+    
+    // Helper to get language display name (case-insensitive)
+    const getLanguageName = (code: string): string => {
+      const lowerCode = code.toLowerCase()
+      return languages.find((l) => l.code.toLowerCase() === lowerCode)?.name || "Language"
+    }
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -220,7 +226,7 @@ export function Navbar({ restaurant, translations }: NavbarProps) {
   }, [])
 
   const changeLanguage = (langCode: string) => {
-    const langName = languages.find((l) => l.code === langCode)?.name || "Language"
+    const langName = getLanguageName(langCode)
     setIsLangOpen(false)
     setTargetLangName(langName)
     setLangTransitionState("in")
@@ -366,23 +372,23 @@ export function Navbar({ restaurant, translations }: NavbarProps) {
             <div className="flex items-center gap-4">
               {/* Language Selector */}
               <div className="relative" ref={langDropdownRef}>
-                <button
-                  onClick={() => setIsLangOpen(!isLangOpen)}
-                  className="notranslate flex items-center gap-2 rounded-full border border-border/50 px-3 py-2 text-sm font-medium transition-colors hover:bg-accent/50"
-                  translate="no"
-                >
-                  <HugeiconsIcon icon={GlobalIcon} className="size-4" />
-                  <span className="hidden sm:inline">
-                    {languages.find((l) => l.code === currentLang)?.name || "Language"}
-                  </span>
-                  <HugeiconsIcon
-                    icon={ArrowDown01Icon}
-                    className={cn(
-                      "size-3 transition-transform",
-                      isLangOpen && "rotate-180"
-                    )}
-                  />
-                </button>
+                 <button
+                   onClick={() => setIsLangOpen(!isLangOpen)}
+                   className="notranslate flex items-center gap-2 rounded-full border border-border/50 px-3 py-2 text-sm font-medium transition-colors hover:bg-accent/50"
+                   translate="no"
+                 >
+                   <HugeiconsIcon icon={GlobalIcon} className="size-4" />
+                   <span className="hidden sm:inline">
+                     {getLanguageName(currentLang)}
+                   </span>
+                   <HugeiconsIcon
+                     icon={ArrowDown01Icon}
+                     className={cn(
+                       "size-3 transition-transform",
+                       isLangOpen && "rotate-180"
+                     )}
+                   />
+                 </button>
 
                 {isLangOpen && (
                   <div
@@ -390,20 +396,20 @@ export function Navbar({ restaurant, translations }: NavbarProps) {
                     translate="no"
                   >
                     <div className="max-h-[300px] overflow-y-auto py-2">
-                      {languages.map((lang) => (
-                        <button
-                          key={lang.code}
-                          onClick={() => changeLanguage(lang.code)}
-                          className={cn(
-                            "w-full px-4 py-2 text-left text-sm transition-colors hover:bg-accent",
-                            currentLang === lang.code
-                              ? "bg-primary/5 font-bold text-primary"
-                              : "text-foreground"
-                          )}
-                        >
-                          {lang.name}
-                        </button>
-                      ))}
+                       {languages.map((lang) => (
+                         <button
+                           key={lang.code}
+                           onClick={() => changeLanguage(lang.code)}
+                           className={cn(
+                             "w-full px-4 py-2 text-left text-sm transition-colors hover:bg-accent",
+                             currentLang.toLowerCase() === lang.code.toLowerCase()
+                               ? "bg-primary/5 font-bold text-primary"
+                               : "text-foreground"
+                           )}
+                         >
+                           {lang.name}
+                         </button>
+                       ))}
                     </div>
                   </div>
                 )}

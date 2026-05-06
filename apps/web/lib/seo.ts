@@ -276,15 +276,15 @@ export function generateHomeMetadata(
   }
 }
 
-/**
- * Generate metadata for About page (/[slug]/about)
- */
-export function generateAboutMetadata(
-  data: RestaurantData,
-  slug: string
-): Metadata {
-  const title = data.seo?.aboutTitle || 
-    `About ${data.name} | ${data.about?.title || 'Our Story & Heritage'}`
+  /**
+   * Generate metadata for About page (/[slug]/about)
+   */
+  export function generateAboutMetadata(
+    data: RestaurantData,
+    slug: string
+  ): Metadata {
+    const title = data.seo?.aboutTitle || 
+      `About ${data.name}`
   
   const description = data.seo?.aboutDescription || 
     truncate(data.about?.content || `Discover the story of ${data.name}. Learn about our heritage, culinary philosophy, and the team behind our authentic cuisine.`, 160)

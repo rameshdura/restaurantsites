@@ -36,7 +36,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
         generateRestaurantSchema(data, slug),
         ...generateContactSchema(data)
       ]} />
-      <Navbar restaurant={{ ...data, name: data.name || slug }} translations={t} />
+       <Navbar restaurant={{ ...data, name: data.name || slug }} translations={t} defaultLanguage={data.app?.language} />
 
       <main className="flex-1 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6 mb-12">
