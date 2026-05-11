@@ -53,7 +53,7 @@ export function ReviewsSection({
   }
 
   return (
-    <section className={cn("py-16 sm:py-20", className)}>
+    <section className={cn("py-12 sm:py-16", className)}>
       <div className="mx-auto max-w-7xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -120,7 +120,8 @@
       "title": "メニュー",
       "subtitle": "美食",
       "description": "情熱と職人技で作られた芸術的な料理。",
-      "backgroundTitle": "味"
+      "backgroundTitle": "味",
+      "downloadButton": "メニューPDFをダウンロード"
     },
     "aboutPhilosophy": {
       "title": "私たちの哲学",

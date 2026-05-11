@@ -120,7 +120,8 @@
       "title": "Our Menu",
       "subtitle": "Delicacies",
       "description": "Artisanal dishes crafted with passion.",
-      "backgroundTitle": "Flavors"
+      "backgroundTitle": "Flavors",
+      "downloadButton": "Download Menu PDF"
     },
     "aboutPhilosophy": {
       "title": "Our Philosophy",

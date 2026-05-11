@@ -1,0 +1,65 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 710 >>
+stream
+BT
+/F1 26 Tf
+170 790 Td
+(Ramen Taro - Menu) Tj
+/F1 12 Tf
+0 -40 Td
+(PLACEHOLDER - Replace with official menu PDF) Tj
+0 -30 Td
+(4-chome-10-10 Kiyohara, Higashiyamato, Tokyo) Tj
+0 -20 Td
+(Tel: +81 3-8765-4321) Tj
+0 -40 Td
+(== Ramen ==) Tj
+0 -20 Td
+(Tonkotsu Ramen ............ 1,500 yen) Tj
+0 -18 Td
+(Spicy Miso Ramen .......... 1,650 yen) Tj
+0 -18 Td
+(Black Garlic Ramen ........ 1,700 yen) Tj
+0 -18 Td
+(Wagyu Beef Ramen .......... 3,500 yen) Tj
+0 -30 Td
+(== Starters ==) Tj
+0 -20 Td
+(Gyoza (6pcs) ................ 800 yen) Tj
+0 -18 Td
+(Karaage ................... 1,000 yen) Tj
+0 -30 Td
+(== Drinks ==) Tj
+0 -20 Td
+(Asahi Super Dry ............. 700 yen) Tj
+0 -18 Td
+(Matcha Latte ................ 600 yen) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000001002 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1072
+%%EOF

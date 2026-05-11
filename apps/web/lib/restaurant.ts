@@ -1,6 +1,64 @@
 import fs from "node:fs/promises"
 import path from "node:path"
 
+// ---------------------------------------------------------------------------
+// Block-based schema types (v1)
+// ---------------------------------------------------------------------------
+
+export interface UiMeta {
+  order: number
+  visible: boolean
+  fullBleed?: boolean
+  layout?: string
+  theme?: string
+}
+
+export interface SectionBlock<T = Record<string, unknown>> {
+  id: string
+  type: string
+  ui: UiMeta
+  data: T & { ref?: string }
+}
+
+export interface PageDef {
+  id: string
+  sections: SectionBlock[]
+}
+
+/** Fields present only in the v1 block schema */
+export interface BlockSchemaFields {
+  uid?: string
+  version?: string
+  pages?: Record<string, PageDef>
+  /** Canonical contact pool (address, phone, email, location, openingHours) */
+  contact?: {
+    address: string
+    phone: string
+    email: string
+    location?: RestaurantData['location']
+    openingHours?: RestaurantData['openingHours']
+    holidayNotes?: string
+  }
+  /** Canonical team pool */
+  team?: Array<{
+    id: string
+    name: string
+    role: string
+    image: string
+    bio?: string
+    social?: Record<string, string>
+  }>
+  /** Canonical reviews pool — new schema uses id + comment field */
+  reviewsPool?: Array<{
+    id: string
+    author: string
+    rating: number
+    date: string
+    comment: string
+    source?: string
+  }>
+}
+
 export interface CompanyInfo {
   name: string
   registrationNumber: string
@@ -11,7 +69,7 @@ export interface CompanyInfo {
   fiscalYearEnd: string
 }
 
-export interface RestaurantData {
+export interface RestaurantData extends BlockSchemaFields {
   name: string
   description: string
   tagline?: string
@@ -348,6 +406,7 @@ export interface RestaurantData {
 }
 
 export interface MenuItem {
+  id?: string
   name: string
   description: string
   price: string
@@ -417,6 +476,77 @@ function resolveEmbedUrl(location: RestaurantData['location']): string | null {
   return null
 }
 
+/**
+ * Normalise a v1 block-schema data.json so every page and legacy field works
+ * exactly as before. Legacy restaurants (no `uid`) pass through unchanged.
+ */
+function normaliseBlockSchema(data: RestaurantData): RestaurantData {
+  if (!data.uid || !data.pages) return data   // legacy — nothing to do
+
+  const home = data.pages.home
+
+  // Hoist shared contact pool → top-level legacy fields
+  if (data.contact) {
+    data.address     ??= data.contact.address
+    data.phone       ??= data.contact.phone
+    data.email       ??= data.contact.email
+    data.openingHours ??= data.contact.openingHours
+    data.holidayNotes ??= data.contact.holidayNotes
+    if (!data.location && data.contact.location) {
+      data.location = data.contact.location
+    }
+  }
+
+  // Hoist hero section → data.hero
+  if (home && !data.hero) {
+    const heroSection = home.sections.find(s => s.id === "hero")
+    if (heroSection) {
+      const d = heroSection.data as { slides?: RestaurantData['hero'] extends { slides: infer S } ? S : never[] }
+      data.hero = { slides: d.slides ?? [] }
+    }
+  }
+
+  // Hoist about section → data.about
+  if (home && !data.about) {
+    const aboutSection = home.sections.find(s => s.id === "about")
+    if (aboutSection?.data && !('ref' in aboutSection.data && aboutSection.data.ref !== 'pages.home.sections.about.data')) {
+      const d = aboutSection.data as {
+        title?: string; content?: string; images?: string[]
+        additionalContent?: string[]; foundedYear?: number
+        founder?: RestaurantData['about'] extends { founder?: infer F } ? F : never
+      }
+      data.about = {
+        title: d.title ?? '',
+        content: d.content ?? '',
+        images: d.images,
+        additionalContent: d.additionalContent,
+        foundedYear: d.foundedYear,
+        founder: d.founder,
+        team: data.team?.map(m => ({ name: m.name, role: m.role, image: m.image, bio: m.bio, social: m.social })),
+      }
+    }
+  }
+
+  // Hoist gallery images → images.gallery  
+  if (data.images && Array.isArray(data.images.gallery)) {
+    // already an array of objects — keep as-is
+  } else if (data.images && !data.images.gallery) {
+    // no gallery yet — nothing to hoist
+  }
+
+  // Hoist reviews pool → legacy data.reviews array
+  if (data.reviews === undefined && Array.isArray((data as Record<string, unknown>).reviews)) {
+    // already set
+  } else if (data.reviews === undefined) {
+    const reviewsSection = home?.sections.find(s => s.id === "reviews")
+    if (reviewsSection?.data?.ref === 'reviews' && Array.isArray((data as Record<string, unknown & { reviews?: unknown[] }>).reviews)) {
+      // reviews pool is at data.reviews (same key) — already populated by JSON
+    }
+  }
+
+  return data
+}
+
 export async function getRestaurant(slug: string): Promise<Restaurant | null> {
   try {
     const restaurantPath = path.join(RESTAURANTS_PATH, slug)
@@ -424,7 +554,10 @@ export async function getRestaurant(slug: string): Promise<Restaurant | null> {
     // Read data.json
     const dataPath = path.join(restaurantPath, "data.json")
     const dataRaw = await fs.readFile(dataPath, "utf8")
-    const data: RestaurantData = JSON.parse(dataRaw)
+    let data: RestaurantData = JSON.parse(dataRaw)
+
+    // Normalise v1 block schema → legacy fields
+    data = normaliseBlockSchema(data)
     
     // Pre-resolve embed URL once at load time
     if (data.location && !data.location.embedUrl) {

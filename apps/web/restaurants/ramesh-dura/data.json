@@ -1,0 +1,275 @@
+{
+  "uid": "ramesh-dura",
+  "version": "1",
+  "name": "Ramesh Dura",
+  "description": "this is ramesh dura",
+  "foundingDate": "",
+  "menuLink": "",
+  "app": {
+    "language": "EN",
+    "currency": "JPY"
+  },
+  "seo": {
+    "title": "Ramesh Dura | A Restaurant of Ramesh Dura",
+    "description": "this is ramesh dura's restaurant.",
+    "keywords": [
+      "ramesh",
+      "dura",
+      "restaurant"
+    ],
+    "menuTitle": "Our Menu",
+    "menuDescription": "",
+    "aboutTitle": "About Us",
+    "aboutDescription": "",
+    "contactTitle": "Contact Us",
+    "contactDescription": "",
+    "brandTitle": "",
+    "brandDescription": "",
+    "companyTitle": "Company",
+    "companyDescription": ""
+  },
+  "social": {
+    "ogImage": "",
+    "ogLocale": "en_US",
+    "twitterCard": "summary_large_image",
+    "sameAs": []
+  },
+  "schema": {
+    "priceRange": "$$",
+    "servesCuisine": [],
+    "acceptsReservations": true,
+    "isTakeout": true,
+    "isDelivery": false,
+    "priceCurrency": "JPY"
+  },
+  "localSEO": {
+    "neighborhood": "Ogawahigashicho",
+    "city": "Kodaira",
+    "region": "Tokyo",
+    "country": "Japan",
+    "countryCode": "JP",
+    "postalCode": "187-0031",
+    "placeId": "",
+    "googleMapsUrl": "https://www.maps.google.com",
+    "timezone": "Asia/Tokyo"
+  },
+  "images": {
+    "logo": {
+      "id": "logo",
+      "url": "",
+      "alt": "Ramesh Dura restaurant logo",
+      "width": 200,
+      "height": 200
+    },
+    "gallery": []
+  },
+  "companyInfo": {
+    "name": "",
+    "legalName": "",
+    "registrationNumber": "",
+    "address": "",
+    "phone": "",
+    "establishedDate": "",
+    "capital": "",
+    "fiscalYearEnd": "",
+    "representative": "",
+    "url": "/ramesh-dura/company-information"
+  },
+  "pages": {
+    "home": {
+      "id": "home",
+      "sections": [
+        {
+          "id": "hero",
+          "type": "hero",
+          "ui": {
+            "order": 1,
+            "visible": true,
+            "fullBleed": true
+          },
+          "data": {
+            "slides": [
+              {
+                "id": "slide-1",
+                "image": "",
+                "alt": "Ramesh Dura restaurant",
+                "title": "Ramesh Dura",
+                "subtitle": "this is ramesh dura",
+                "ctaText": "View Menu",
+                "ctaLink": "#menu"
+              }
+            ]
+          }
+        },
+        {
+          "id": "about",
+          "type": "about",
+          "ui": {
+            "order": 2,
+            "visible": true,
+            "layout": "image-right"
+          },
+          "data": {
+            "title": "Our Story",
+            "content": "this is the main story paragraph",
+            "additionalContent": [
+              "this is second paragraph in about us page",
+              "this is the third paragraph in about us page"
+            ],
+            "foundedYear": 2026,
+            "founder": {
+              "id": "team-ramesh",
+              "name": "",
+              "role": "",
+              "bio": "",
+              "image": ""
+            },
+            "images": []
+          }
+        },
+        {
+          "id": "menu-preview",
+          "type": "menu",
+          "ui": {
+            "order": 3,
+            "visible": true
+          },
+          "data": {
+            "ref": "menu"
+          }
+        },
+        {
+          "id": "gallery",
+          "type": "gallery",
+          "ui": {
+            "order": 4,
+            "visible": true
+          },
+          "data": {
+            "ref": "images.gallery"
+          }
+        },
+        {
+          "id": "reviews",
+          "type": "reviews",
+          "ui": {
+            "order": 5,
+            "visible": true
+          },
+          "data": {
+            "ref": "reviews"
+          }
+        },
+        {
+          "id": "contact",
+          "type": "contact",
+          "ui": {
+            "order": 6,
+            "visible": true
+          },
+          "data": {
+            "ref": "contact"
+          }
+        }
+      ]
+    },
+    "about": {
+      "id": "about",
+      "sections": [
+        {
+          "id": "about-full",
+          "type": "about",
+          "ui": {
+            "order": 1,
+            "visible": true,
+            "layout": "image-right"
+          },
+          "data": {
+            "ref": "pages.home.sections.about.data"
+          }
+        },
+        {
+          "id": "team",
+          "type": "team",
+          "ui": {
+            "order": 2,
+            "visible": true
+          },
+          "data": {
+            "ref": "team"
+          }
+        }
+      ]
+    },
+    "menu": {
+      "id": "menu",
+      "sections": [
+        {
+          "id": "full-menu",
+          "type": "menu",
+          "ui": {
+            "order": 1,
+            "visible": true
+          },
+          "data": {
+            "ref": "menu"
+          }
+        }
+      ]
+    },
+    "contact": {
+      "id": "contact",
+      "sections": [
+        {
+          "id": "contact-full",
+          "type": "contact",
+          "ui": {
+            "order": 1,
+            "visible": true
+          },
+          "data": {
+            "ref": "contact"
+          }
+        }
+      ]
+    }
+  },
+  "contact": {
+    "address": "",
+    "phone": "+817012341234",
+    "email": "me.rameshdura@gmail.com",
+    "location": {
+      "lat": 0,
+      "lng": 0,
+      "mapsUrl": "https://www.maps.google.com",
+      "embedUrl": ""
+    },
+    "openingHours": [
+      {
+        "day": "Monday - Thursday",
+        "lunch": "11:30 - 15:00",
+        "lunchLO": "14:30",
+        "dinner": "17:00 - 22:00",
+        "dinnerLO": "21:30"
+      },
+      {
+        "day": "Friday - Saturday",
+        "lunch": "11:30 - 15:00",
+        "lunchLO": "14:30",
+        "dinner": "17:00 - 23:30",
+        "dinnerLO": "23:00"
+      },
+      {
+        "day": "Sunday",
+        "lunch": "12:00 - 15:30",
+        "lunchLO": "15:00",
+        "dinner": "17:00 - 21:00",
+        "dinnerLO": "20:30"
+      }
+    ],
+    "holidayNotes": ""
+  },
+  "team": [],
+  "reviews": [],
+  "menu": []
+}

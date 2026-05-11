@@ -50,14 +50,37 @@ export function Hero({ slides }: HeroProps) {
         >
           {/* Background Image */}
           <div className="absolute inset-0 z-0">
-            <Image
-              src={slide.image}
-              alt={slide.title}
-              fill
-              priority={index === 0}
-              className="object-cover"
-              sizes="100vw"
-            />
+            {slide.image ? (
+              <Image
+                src={slide.image}
+                alt={slide.title}
+                fill
+                priority={index === 0}
+                className="object-cover"
+                sizes="100vw"
+              />
+            ) : (
+              /* Grey placeholder shown when no image is provided */
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="100%"
+                height="100%"
+                aria-label="No image available"
+              >
+                <rect width="100%" height="100%" fill="#4b5563" />
+                <text
+                  x="50%"
+                  y="50%"
+                  dominantBaseline="middle"
+                  textAnchor="middle"
+                  fill="#9ca3af"
+                  fontSize="24"
+                  fontFamily="sans-serif"
+                >
+                  No Image
+                </text>
+              </svg>
+            )}
             {/* Overlay */}
             <div className="absolute inset-0 bg-black/40 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
           </div>
