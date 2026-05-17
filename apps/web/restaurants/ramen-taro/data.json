@@ -130,7 +130,7 @@
             "slides": [
               {
                 "id": "slide-1",
-                "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=2000",
+                "image": "/images/homeslider/nepalese-restaurant.jpg",
                 "alt": "Authentic Hakata tonkotsu ramen bowl with chashu pork and soft-boiled egg",
                 "title": "Authentic Hakata Ramen",
                 "subtitle": "Slow-cooked broth, handmade noodles, and the freshest ingredients.",
@@ -139,7 +139,7 @@
               },
               {
                 "id": "slide-2",
-                "image": "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&q=80&w=2000",
+                "image": "/images/homeslider/pathivara-indian-nepali-restaurant-4-162511.jpg",
                 "alt": "Ramen chef masterfully crafting a bowl",
                 "title": "Masterfully Crafted",
                 "subtitle": "Experience the art of ramen passed down through generations.",

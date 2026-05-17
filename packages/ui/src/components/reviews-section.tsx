@@ -41,11 +41,12 @@ export function ReviewsSection({
   translations,
 }: ReviewsSectionProps) {
   const t = translations?.common?.reviews || {}
-  
+
   const validReviews = reviews && Array.isArray(reviews) ? reviews : []
-  const averageRating = validReviews.length > 0 
-    ? validReviews.reduce((sum, r) => sum + r.rating, 0) / validReviews.length 
-    : 0
+  const averageRating =
+    validReviews.length > 0
+      ? validReviews.reduce((sum, r) => sum + r.rating, 0) / validReviews.length
+      : 0
   const displayedReviews = validReviews.slice(0, 3)
 
   if (validReviews.length === 0) {
@@ -75,13 +76,17 @@ export function ReviewsSection({
                   key={i}
                   className={cn(
                     "h-5 w-5",
-                    i < Math.floor(averageRating) ? "fill-yellow-400 text-yellow-400" : "text-muted"
+                    i < Math.floor(averageRating)
+                      ? "fill-yellow-400 text-yellow-400"
+                      : "text-muted"
                   )}
                 />
               ))}
             </div>
             <span className="font-semibold">{averageRating.toFixed(1)}</span>
-            <span className="text-muted-foreground">({validReviews.length} reviews)</span>
+            <span className="text-muted-foreground">
+              ({validReviews.length} reviews)
+            </span>
           </div>
         </motion.div>
 

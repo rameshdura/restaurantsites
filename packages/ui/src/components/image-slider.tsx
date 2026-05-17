@@ -48,7 +48,7 @@ export function ImageSlider({
 
   const variants = {
     enter: (direction: number) => ({
-      x: direction === 0 ? 0 : (direction > 0 ? "100%" : "-100%"),
+      x: direction === 0 ? 0 : direction > 0 ? "100%" : "-100%",
       opacity: direction === 0 ? 1 : 0,
       scale: direction === 0 ? 1 : 1.1,
     }),
@@ -107,14 +107,14 @@ export function ImageSlider({
         <>
           <button
             onClick={prevSlide}
-            className="absolute top-1/2 left-4 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-md transition-all lg:opacity-0 lg:group-hover:opacity-100 hover:bg-black/40"
+            className="absolute top-1/2 left-4 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-md transition-all hover:bg-black/40 lg:opacity-0 lg:group-hover:opacity-100"
             aria-label="Previous slide"
           >
             <HugeiconsIcon icon={ArrowLeft01Icon} size={24} />
           </button>
           <button
             onClick={nextSlide}
-            className="absolute top-1/2 right-4 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-md transition-all lg:opacity-0 lg:group-hover:opacity-100 hover:bg-black/40"
+            className="absolute top-1/2 right-4 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-md transition-all hover:bg-black/40 lg:opacity-0 lg:group-hover:opacity-100"
             aria-label="Next slide"
           >
             <HugeiconsIcon icon={ArrowRight01Icon} size={24} />

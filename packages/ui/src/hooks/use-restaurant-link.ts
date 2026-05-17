@@ -20,15 +20,16 @@ export function useRestaurantLink() {
     if (forceMain) {
       return false
     }
-    
+
     // Check if we are on a dedicated domain
-    // If hostname is not localhost, doesn't contain 'localhost', 
-    // and doesn't contain the root domain or 'restaurantsites', 
+    // If hostname is not localhost, doesn't contain 'localhost',
+    // and doesn't contain the root domain or 'restaurantsites',
     // it's likely a dedicated domain.
-    const isMain = hostname === "localhost" || 
-                  hostname.includes("localhost") || 
-                  hostname.includes("restaurantsites") ||
-                  (rootDomain !== "localhost" && hostname.includes(rootDomain))
+    const isMain =
+      hostname === "localhost" ||
+      hostname.includes("localhost") ||
+      hostname.includes("restaurantsites") ||
+      (rootDomain !== "localhost" && hostname.includes(rootDomain))
 
     return !isMain
   }, [])
@@ -38,7 +39,7 @@ export function useRestaurantLink() {
 
     // Ensure path starts with /
     const normalizedPath = path.startsWith("/") ? path : `/${path}`
-    
+
     // If it's already an anchor on the home page, and we are on a dedicated domain,
     // just return the anchor.
     if (normalizedPath.startsWith("/#") && isDedicatedDomain) {

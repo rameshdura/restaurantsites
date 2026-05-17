@@ -1,17 +1,18 @@
-'use client'
+"use client"
 
-import Link from 'next/link'
-import { Button } from '@workspace/ui/components/button'
-import { ArrowLeft, Download } from 'lucide-react'
-
+import Link from "next/link"
+import { Button } from "@workspace/ui/components/button"
+import { ArrowLeft, Download } from "lucide-react"
 
 interface SiteBuilderHeaderProps {
   showBack?: boolean
   downloadAll?: () => void
 }
 
-export function SiteBuilderHeader({ showBack = true, downloadAll }: SiteBuilderHeaderProps) {
-
+export function SiteBuilderHeader({
+  showBack = true,
+  downloadAll,
+}: SiteBuilderHeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">

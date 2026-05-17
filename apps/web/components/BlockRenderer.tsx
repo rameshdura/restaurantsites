@@ -1,5 +1,9 @@
 import type React from "react"
-import { type SectionBlock, type RestaurantData, type MenuItem } from "@/lib/restaurant"
+import {
+  type SectionBlock,
+  type RestaurantData,
+  type MenuItem,
+} from "@/lib/restaurant"
 import { Hero } from "@workspace/ui/components/hero"
 import { ContactSection } from "@workspace/ui/components/contact-section"
 import { GallerySection } from "@workspace/ui/components/gallery-section"
@@ -23,7 +27,9 @@ interface BlockRendererProps {
 // ---------------------------------------------------------------------------
 
 function HeroBlock({ section }: { section: SectionBlock }) {
-  const d = section.data as { slides?: RestaurantData["hero"] extends { slides: infer S } ? S : never[] }
+  const d = section.data as {
+    slides?: RestaurantData["hero"] extends { slides: infer S } ? S : never[]
+  }
   if (!d.slides?.length) return null
   return <Hero slides={d.slides} />
 }
@@ -37,7 +43,11 @@ function AboutBlock({
   data: RestaurantData
   translations: Record<string, unknown>
 }) {
-  const t = translations as { home?: { about?: { subtitle?: string; title?: string; backgroundTitle?: string } } }
+  const t = translations as {
+    home?: {
+      about?: { subtitle?: string; title?: string; backgroundTitle?: string }
+    }
+  }
   const d = section.data as {
     title?: string
     content?: string
@@ -46,19 +56,19 @@ function AboutBlock({
   }
 
   return (
-    <div className="pb-12 px-6 max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl px-6 pb-12">
       <section
         id="about"
         className={cn("py-20", section.ui.fullBleed && "pt-32")}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
           <div>
             <SectionHeader
               subtitle={t.home?.about?.subtitle ?? "Our Story"}
               title={d.title ?? t.home?.about?.title ?? `About ${data.name}`}
               backgroundTitle={t.home?.about?.backgroundTitle ?? "Heritage"}
             />
-            <p className="text-xl text-muted-foreground mb-10 leading-relaxed">
+            <p className="mb-10 text-xl leading-relaxed text-muted-foreground">
               {d.content ?? data.description}
             </p>
           </div>
@@ -66,12 +76,12 @@ function AboutBlock({
           {d.images ? (
             <ImageSlider images={d.images} />
           ) : d.image ? (
-            <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl">
+            <div className="relative aspect-square overflow-hidden rounded-3xl shadow-2xl">
               <Image
                 src={d.image}
                 alt={d.title ?? "About image"}
                 fill
-                className="object-cover hover:scale-105 transition-transform duration-700"
+                className="object-cover transition-transform duration-700 hover:scale-105"
               />
             </div>
           ) : null}
@@ -91,7 +101,7 @@ function MenuBlock({
   const categories = groupMenuByCategory((data.menu ?? []) as MenuItem[])
   if (!categories.length) return null
   return (
-    <section className="bg-accent/5 py-12 border-t border-border/40 paper-noise">
+    <section className="paper-noise border-t border-border/40 bg-accent/5 py-12">
       <FoodMenu
         categories={categories}
         menuLink={data.menuLink}
@@ -132,7 +142,7 @@ function ReviewsBlock({
 
   const reviews = Array.isArray(data.reviews)
     ? data.reviews
-    : (
+    : ((
         data.reviews as {
           individual?: Array<{
             author: string
@@ -143,12 +153,12 @@ function ReviewsBlock({
           }>
         }
       ).individual?.map((r) => ({
-          author: r.author,
-          rating: r.rating,
-          date: r.date,
-          comment: r.reviewBody,
-          source: r.source,
-        })) ?? []
+        author: r.author,
+        rating: r.rating,
+        date: r.date,
+        comment: r.reviewBody,
+        source: r.source,
+      })) ?? [])
 
   return (
     <ReviewsSection
@@ -229,7 +239,9 @@ const BLOCK_MAP: Record<
 export function BlockRenderer(props: BlockRendererProps) {
   const renderer = BLOCK_MAP[props.section.type]
   if (!renderer) {
-    console.warn(`[BlockRenderer] Unknown section type: "${props.section.type}"`)
+    console.warn(
+      `[BlockRenderer] Unknown section type: "${props.section.type}"`
+    )
     return null
   }
   return renderer(props)

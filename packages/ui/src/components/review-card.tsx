@@ -27,7 +27,9 @@ export function ReviewCard({ review, className }: ReviewCardProps) {
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      <Card className={cn("h-full transition-shadow hover:shadow-lg", className)}>
+      <Card
+        className={cn("h-full transition-shadow hover:shadow-lg", className)}
+      >
         <CardContent className="flex flex-col gap-4 p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
@@ -36,7 +38,9 @@ export function ReviewCard({ review, className }: ReviewCardProps) {
                   key={i}
                   className={cn(
                     "h-4 w-4",
-                    i < review.rating ? "fill-yellow-400 text-yellow-400" : "text-muted"
+                    i < review.rating
+                      ? "fill-yellow-400 text-yellow-400"
+                      : "text-muted"
                   )}
                 />
               ))}
@@ -47,9 +51,11 @@ export function ReviewCard({ review, className }: ReviewCardProps) {
             {review.comment}
           </p>
           <div className="flex items-center justify-between border-t pt-3">
-            <span className="font-medium text-sm">{review.author}</span>
+            <span className="text-sm font-medium">{review.author}</span>
             {review.source && (
-              <span className="text-xs text-muted-foreground">{review.source}</span>
+              <span className="text-xs text-muted-foreground">
+                {review.source}
+              </span>
             )}
           </div>
         </CardContent>

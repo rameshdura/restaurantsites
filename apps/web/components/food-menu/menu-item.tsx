@@ -1,8 +1,8 @@
-import Image from "next/image";
-import { MenuItem } from "./types";
+import Image from "next/image"
+import { MenuItem } from "./types"
 
 interface MenuItemCardProps {
-  item: MenuItem;
+  item: MenuItem
 }
 
 export function MenuItemCard({ item }: MenuItemCardProps) {
@@ -15,12 +15,12 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
     isVegetarian,
     isSpicy,
     isPopular,
-  } = item;
+  } = item
 
   return (
-    <div className="group flex flex-row gap-3 py-3 border-b border-border/40 last:border-0 hover:bg-accent/5 transition-colors px-2 -mx-2">
+    <div className="group -mx-2 flex flex-row gap-3 border-b border-border/40 px-2 py-3 transition-colors last:border-0 hover:bg-accent/5">
       {image && (
-        <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-lg shadow-sm group-hover:shadow-md transition-shadow">
+        <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg shadow-sm transition-shadow group-hover:shadow-md">
           <Image
             src={image}
             alt={name}
@@ -29,51 +29,51 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
           />
         </div>
       )}
-      
-      <div className="flex-grow flex flex-col justify-center min-w-0">
-        <div className="flex justify-between items-start gap-2 mb-0.5">
+
+      <div className="flex min-w-0 flex-grow flex-col justify-center">
+        <div className="mb-0.5 flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <h4 className="text-base font-semibold tracking-tight text-foreground truncate">
+            <h4 className="truncate text-base font-semibold tracking-tight text-foreground">
               {name}
             </h4>
             {secondaryName && (
-              <span className="text-[10px] font-medium text-muted-foreground/70 uppercase tracking-widest block -mt-1">
+              <span className="-mt-1 block text-[10px] font-medium tracking-widest text-muted-foreground/70 uppercase">
                 {secondaryName}
               </span>
             )}
           </div>
-          
+
           {price !== undefined && (
-            <span className="text-base font-medium text-foreground whitespace-nowrap">
+            <span className="text-base font-medium whitespace-nowrap text-foreground">
               {typeof price === "number" ? `$${price}` : price}
             </span>
           )}
         </div>
 
         {description && (
-          <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5 mb-1 max-w-[95%]">
+          <p className="mt-0.5 mb-1 line-clamp-1 max-w-[95%] text-xs text-muted-foreground">
             {description}
           </p>
         )}
 
-        <div className="flex flex-wrap gap-1.5 mt-auto">
+        <div className="mt-auto flex flex-wrap gap-1.5">
           {isPopular && (
-            <span className="inline-flex items-center rounded-full bg-primary/10 px-1.5 py-0 text-[9px] font-bold text-primary uppercase tracking-tighter">
+            <span className="inline-flex items-center rounded-full bg-primary/10 px-1.5 py-0 text-[9px] font-bold tracking-tighter text-primary uppercase">
               Popular
             </span>
           )}
           {isVegetarian && (
-            <span className="inline-flex items-center rounded-full bg-green-500/10 px-1.5 py-0 text-[9px] font-bold text-green-600 uppercase tracking-tighter">
+            <span className="inline-flex items-center rounded-full bg-green-500/10 px-1.5 py-0 text-[9px] font-bold tracking-tighter text-green-600 uppercase">
               Veg
             </span>
           )}
           {isSpicy && (
-            <span className="inline-flex items-center rounded-full bg-red-500/10 px-1.5 py-0 text-[9px] font-bold text-red-600 uppercase tracking-tighter">
+            <span className="inline-flex items-center rounded-full bg-red-500/10 px-1.5 py-0 text-[9px] font-bold tracking-tighter text-red-600 uppercase">
               Spicy
             </span>
           )}
         </div>
       </div>
     </div>
-  );
+  )
 }

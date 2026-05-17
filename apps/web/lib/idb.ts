@@ -1,8 +1,8 @@
 /**
  * A lightweight, Promise-based wrapper for IndexedDB.
  */
-const DB_NAME = 'SiteBuilderDB'
-const STORE_NAME = 'keyval'
+const DB_NAME = "SiteBuilderDB"
+const STORE_NAME = "keyval"
 const DB_VERSION = 1
 
 let dbPromise: Promise<IDBDatabase> | null = null
@@ -30,7 +30,7 @@ function getDB(): Promise<IDBDatabase> {
 export async function get<T>(key: string): Promise<T | null> {
   const db = await getDB()
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, 'readonly')
+    const tx = db.transaction(STORE_NAME, "readonly")
     const store = tx.objectStore(STORE_NAME)
     const request = store.get(key)
 
@@ -42,7 +42,7 @@ export async function get<T>(key: string): Promise<T | null> {
 export async function set<T>(key: string, val: T): Promise<void> {
   const db = await getDB()
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, 'readwrite')
+    const tx = db.transaction(STORE_NAME, "readwrite")
     const store = tx.objectStore(STORE_NAME)
     const request = store.put(val, key)
 
@@ -54,7 +54,7 @@ export async function set<T>(key: string, val: T): Promise<void> {
 export async function del(key: string): Promise<void> {
   const db = await getDB()
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, 'readwrite')
+    const tx = db.transaction(STORE_NAME, "readwrite")
     const store = tx.objectStore(STORE_NAME)
     const request = store.delete(key)
 
@@ -66,7 +66,7 @@ export async function del(key: string): Promise<void> {
 export async function clear(): Promise<void> {
   const db = await getDB()
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, 'readwrite')
+    const tx = db.transaction(STORE_NAME, "readwrite")
     const store = tx.objectStore(STORE_NAME)
     const request = store.clear()
 

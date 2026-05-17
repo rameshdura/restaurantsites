@@ -25,8 +25,8 @@ export function Lightbox({
   onClose,
   onNavigate,
 }: LightboxProps) {
-  const lightboxRef = React.useRef<HTMLDivElement>(null);
-  
+  const lightboxRef = React.useRef<HTMLDivElement>(null)
+
   // Handle keyboard events and focus trapping
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -52,61 +52,67 @@ export function Lightbox({
     if (isOpen) {
       // Prevent body scroll
       document.body.style.overflow = "hidden"
-      document.body.style.paddingRight = `${window.innerWidth - document.documentElement.clientWidth}px`;
-      
+      document.body.style.paddingRight = `${window.innerWidth - document.documentElement.clientWidth}px`
+
       // Focus on close button when lightbox opens
-      const closeButton = lightboxRef.current?.querySelector('button[aria-label="Close"]');
+      const closeButton = lightboxRef.current?.querySelector(
+        'button[aria-label="Close"]'
+      )
       if (closeButton) {
-        (closeButton as HTMLElement).focus();
+        ;(closeButton as HTMLElement).focus()
       }
     } else {
       // Restore body scroll
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
+      document.body.style.overflow = ""
+      document.body.style.paddingRight = ""
     }
-    
+
     return () => {
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
+      document.body.style.overflow = ""
+      document.body.style.paddingRight = ""
     }
   }, [isOpen])
 
   // Focus trap: prevent tabbing out of lightbox when open
   React.useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) return
 
     const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
-      
+      if (e.key !== "Tab") return
+
       const focusableElements = lightboxRef.current?.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      
-      if (!focusableElements || focusableElements.length === 0) return;
-      
-      const firstElement = focusableElements[0] as HTMLElement | null;
-      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement | null;
-      
-      if (e.shiftKey) { // Shift + Tab
+      )
+
+      if (!focusableElements || focusableElements.length === 0) return
+
+      const firstElement = focusableElements[0] as HTMLElement | null
+      const lastElement = focusableElements[
+        focusableElements.length - 1
+      ] as HTMLElement | null
+
+      if (e.shiftKey) {
+        // Shift + Tab
         if (document.activeElement === firstElement) {
-          e.preventDefault();
+          e.preventDefault()
           if (lastElement) {
-            lastElement.focus();
+            lastElement.focus()
           }
         }
-      } else { // Tab
+      } else {
+        // Tab
         if (document.activeElement === lastElement) {
-          e.preventDefault();
+          e.preventDefault()
           if (firstElement) {
-            firstElement.focus();
+            firstElement.focus()
           }
         }
       }
-    };
-    
-    window.addEventListener("keydown", handleTabKey);
-    return () => window.removeEventListener("keydown", handleTabKey);
-  }, [isOpen]);
+    }
+
+    window.addEventListener("keydown", handleTabKey)
+    return () => window.removeEventListener("keydown", handleTabKey)
+  }, [isOpen])
 
   const nextImage = () => {
     onNavigate((currentIndex + 1) % images.length)
@@ -119,16 +125,16 @@ export function Lightbox({
   return (
     <AnimatePresence>
       {isOpen && (
-<motion.div
-  ref={lightboxRef}
-  role="dialog"
-  aria-modal="true"
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  exit={{ opacity: 0 }}
-  className="fixed inset-0 z-200 flex items-center justify-center bg-background/95 backdrop-blur-md"
-  onClick={onClose}
->
+        <motion.div
+          ref={lightboxRef}
+          role="dialog"
+          aria-modal="true"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-200 flex items-center justify-center bg-background/95 backdrop-blur-md"
+          onClick={onClose}
+        >
           {/* Controls */}
           <div className="absolute top-6 right-6 z-10 flex gap-4">
             <button
@@ -191,16 +197,18 @@ export function Lightbox({
                       fill
                       className="object-contain"
                       priority
-                      onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                        console.warn('Image failed to load:', e);
+                      onError={(
+                        e: React.SyntheticEvent<HTMLImageElement, Event>
+                      ) => {
+                        console.warn("Image failed to load:", e)
                       }}
                     />
                   )}
                 </motion.div>
               </AnimatePresence>
             </div>
-            
-            <div className="absolute -bottom-12 left-0 right-0 text-center">
+
+            <div className="absolute right-0 -bottom-12 left-0 text-center">
               <p className="text-sm font-medium text-muted-foreground">
                 {currentIndex + 1} / {images.length}
                 {images[currentIndex] && ` — ${images[currentIndex].alt}`}

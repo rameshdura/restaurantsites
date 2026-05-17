@@ -108,12 +108,18 @@ const languages = [
   { code: "ne", name: "नेपाली" },
 ]
 
-export function Navbar({ restaurant, translations, defaultLanguage }: NavbarProps) {
+export function Navbar({
+  restaurant,
+  translations,
+  defaultLanguage,
+}: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const [isScrolled, setIsScrolled] = React.useState(false)
   const [isLangOpen, setIsLangOpen] = React.useState(false)
-  
-  const [langTransitionState, setLangTransitionState] = React.useState<"idle" | "in" | "out" | "covering">("idle")
+
+  const [langTransitionState, setLangTransitionState] = React.useState<
+    "idle" | "in" | "out" | "covering"
+  >("idle")
   const [targetLangName, setTargetLangName] = React.useState("")
 
   const [currentLang, setCurrentLang] = React.useState("default")
@@ -121,22 +127,22 @@ export function Navbar({ restaurant, translations, defaultLanguage }: NavbarProp
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentLang(getInitialLang(defaultLanguage))
-    
+
     // Check for pending language transition from a reload
     const savedLangName = sessionStorage.getItem("lang-transition-name")
     if (savedLangName) {
       setTargetLangName(savedLangName)
       setLangTransitionState("covering")
       sessionStorage.removeItem("lang-transition-name")
-      
+
       const timer1 = setTimeout(() => {
         setLangTransitionState("out")
       }, 2000)
-      
+
       const timer2 = setTimeout(() => {
         setLangTransitionState("idle")
       }, 2700)
-      
+
       return () => {
         clearTimeout(timer1)
         clearTimeout(timer2)
@@ -145,16 +151,20 @@ export function Navbar({ restaurant, translations, defaultLanguage }: NavbarProp
   }, [defaultLanguage])
   const pathname = usePathname()
   const langDropdownRef = React.useRef<HTMLDivElement>(null)
-   const { getLink, slug } = useRestaurantLink()
-    const isHomePage = pathname === `/${slug}` || (pathname === "/" && slug !== "")
+  const { getLink, slug } = useRestaurantLink()
+  const isHomePage =
+    pathname === `/${slug}` || (pathname === "/" && slug !== "")
 
-    const phone = restaurant.contact?.phone || restaurant.phone
-    
-    // Helper to get language display name (case-insensitive)
-    const getLanguageName = (code: string): string => {
-      const lowerCode = code.toLowerCase()
-      return languages.find((l) => l.code.toLowerCase() === lowerCode)?.name || "Language"
-    }
+  const phone = restaurant.contact?.phone || restaurant.phone
+
+  // Helper to get language display name (case-insensitive)
+  const getLanguageName = (code: string): string => {
+    const lowerCode = code.toLowerCase()
+    return (
+      languages.find((l) => l.code.toLowerCase() === lowerCode)?.name ||
+      "Language"
+    )
+  }
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -205,7 +215,7 @@ export function Navbar({ restaurant, translations, defaultLanguage }: NavbarProp
       if (document.querySelector(".goog-te-combo")) {
         return
       }
-      
+
       try {
         new window.google!.translate.TranslateElement(
           {
@@ -237,18 +247,21 @@ export function Navbar({ restaurant, translations, defaultLanguage }: NavbarProp
       try {
         if (langCode === "default") {
           // Delete Google Translate cookie to revert to browser default
-          document.cookie = "googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC"
+          document.cookie =
+            "googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC"
           document.cookie = `googtrans=; path=/; domain=${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 UTC`
-          
+
           // Force a full reload for default to ensure DOM is perfectly reset
           needsReload = true
         } else {
           setGoogleTranslateCookie(langCode)
 
-          const select = document.querySelector('.goog-te-combo') as HTMLSelectElement
+          const select = document.querySelector(
+            ".goog-te-combo"
+          ) as HTMLSelectElement
           if (select) {
             select.value = langCode
-            select.dispatchEvent(new Event('change'))
+            select.dispatchEvent(new Event("change"))
             needsReload = false
           }
         }
@@ -276,13 +289,20 @@ export function Navbar({ restaurant, translations, defaultLanguage }: NavbarProp
   const navLinks = [
     { name: translations?.navbar?.home || "Home", href: getLink("/") },
     { name: translations?.navbar?.menu || "Menu", href: getLink("/menu") },
-    { name: translations?.navbar?.about || "About", href: getLink("/about"), show: !!restaurant.about },
+    {
+      name: translations?.navbar?.about || "About",
+      href: getLink("/about"),
+      show: !!restaurant.about,
+    },
     {
       name: translations?.navbar?.gallery || "Gallery",
       href: isHomePage ? "#gallery" : getLink("#gallery"),
       show: !!restaurant.gallery && restaurant.gallery.length > 0,
     },
-    { name: translations?.navbar?.contact || "Contact", href: getLink("/contact") },
+    {
+      name: translations?.navbar?.contact || "Contact",
+      href: getLink("/contact"),
+    },
   ].filter((link) => link.show !== false)
 
   return (
@@ -372,23 +392,23 @@ export function Navbar({ restaurant, translations, defaultLanguage }: NavbarProp
             <div className="flex items-center gap-4">
               {/* Language Selector */}
               <div className="relative" ref={langDropdownRef}>
-                 <button
-                   onClick={() => setIsLangOpen(!isLangOpen)}
-                   className="notranslate flex items-center gap-2 rounded-full border border-border/50 px-3 py-2 text-sm font-medium transition-colors hover:bg-accent/50"
-                   translate="no"
-                 >
-                   <HugeiconsIcon icon={GlobalIcon} className="size-4" />
-                   <span className="hidden sm:inline">
-                     {getLanguageName(currentLang)}
-                   </span>
-                   <HugeiconsIcon
-                     icon={ArrowDown01Icon}
-                     className={cn(
-                       "size-3 transition-transform",
-                       isLangOpen && "rotate-180"
-                     )}
-                   />
-                 </button>
+                <button
+                  onClick={() => setIsLangOpen(!isLangOpen)}
+                  className="notranslate flex items-center gap-2 rounded-full border border-border/50 px-3 py-2 text-sm font-medium transition-colors hover:bg-accent/50"
+                  translate="no"
+                >
+                  <HugeiconsIcon icon={GlobalIcon} className="size-4" />
+                  <span className="hidden sm:inline">
+                    {getLanguageName(currentLang)}
+                  </span>
+                  <HugeiconsIcon
+                    icon={ArrowDown01Icon}
+                    className={cn(
+                      "size-3 transition-transform",
+                      isLangOpen && "rotate-180"
+                    )}
+                  />
+                </button>
 
                 {isLangOpen && (
                   <div
@@ -396,20 +416,21 @@ export function Navbar({ restaurant, translations, defaultLanguage }: NavbarProp
                     translate="no"
                   >
                     <div className="max-h-[300px] overflow-y-auto py-2">
-                       {languages.map((lang) => (
-                         <button
-                           key={lang.code}
-                           onClick={() => changeLanguage(lang.code)}
-                           className={cn(
-                             "w-full px-4 py-2 text-left text-sm transition-colors hover:bg-accent",
-                             currentLang.toLowerCase() === lang.code.toLowerCase()
-                               ? "bg-primary/5 font-bold text-primary"
-                               : "text-foreground"
-                           )}
-                         >
-                           {lang.name}
-                         </button>
-                       ))}
+                      {languages.map((lang) => (
+                        <button
+                          key={lang.code}
+                          onClick={() => changeLanguage(lang.code)}
+                          className={cn(
+                            "w-full px-4 py-2 text-left text-sm transition-colors hover:bg-accent",
+                            currentLang.toLowerCase() ===
+                              lang.code.toLowerCase()
+                              ? "bg-primary/5 font-bold text-primary"
+                              : "text-foreground"
+                          )}
+                        >
+                          {lang.name}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -477,37 +498,38 @@ export function Navbar({ restaurant, translations, defaultLanguage }: NavbarProp
           </div>
 
           <div className="flex flex-1 flex-col gap-6 overflow-y-auto p-6">
-<div className="flex flex-col gap-4">
-               {navLinks.map((link) => (
-                 <Link
-                   key={link.name}
-                   href={link.href}
-                   className="group flex items-center justify-between text-2xl font-semibold text-foreground transition-colors hover:text-primary"
-                   onClick={() => setIsMenuOpen(false)}
-                 >
-                   {link.name}
-                   <span className="h-2 w-2 rounded-full bg-primary opacity-0 transition-opacity group-hover:opacity-100" />
-                 </Link>
-               ))}
-             </div>
+            <div className="flex flex-col gap-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="group flex items-center justify-between text-2xl font-semibold text-foreground transition-colors hover:text-primary"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                  <span className="h-2 w-2 rounded-full bg-primary opacity-0 transition-opacity group-hover:opacity-100" />
+                </Link>
+              ))}
+            </div>
 
-             <div className="mt-auto flex flex-col gap-4 border-t pt-10">
-               {phone && (
-                 <a
-                   href={`tel:${phone}`}
-                   className={cn(
-                     buttonVariants({ variant: "default", size: "lg" }),
-                     "w-full justify-center gap-3 rounded-2xl shadow-xl shadow-primary/20"
-                   )}
-                 >
-                   <HugeiconsIcon icon={Call02Icon} className="size-5" />
-                   {translations?.navbar?.callUs || "Call Us Now"}
-                 </a>
-               )}
-               <p className="text-center text-xs text-muted-foreground">
-                 {translations?.navbar?.followUs || "Follow us on social media for updates!"}
-               </p>
-             </div>
+            <div className="mt-auto flex flex-col gap-4 border-t pt-10">
+              {phone && (
+                <a
+                  href={`tel:${phone}`}
+                  className={cn(
+                    buttonVariants({ variant: "default", size: "lg" }),
+                    "w-full justify-center gap-3 rounded-2xl shadow-xl shadow-primary/20"
+                  )}
+                >
+                  <HugeiconsIcon icon={Call02Icon} className="size-5" />
+                  {translations?.navbar?.callUs || "Call Us Now"}
+                </a>
+              )}
+              <p className="text-center text-xs text-muted-foreground">
+                {translations?.navbar?.followUs ||
+                  "Follow us on social media for updates!"}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -517,16 +539,22 @@ export function Navbar({ restaurant, translations, defaultLanguage }: NavbarProp
         className={cn(
           "notranslate fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-primary text-primary-foreground",
           langTransitionState === "idle" && "translate-y-full transition-none",
-          langTransitionState === "in" && "translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          langTransitionState === "in" &&
+            "translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
           langTransitionState === "covering" && "translate-y-0 transition-none",
-          langTransitionState === "out" && "-translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          langTransitionState === "out" &&
+            "-translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
         )}
         translate="no"
       >
         <div className="flex flex-col items-center gap-6">
           <HugeiconsIcon icon={GlobalIcon} className="size-16 animate-pulse" />
-          <span className="text-4xl font-bold tracking-tight md:text-5xl">{targetLangName}</span>
-          <span className="text-sm font-medium opacity-80 md:text-base">Changing Language...</span>
+          <span className="text-4xl font-bold tracking-tight md:text-5xl">
+            {targetLangName}
+          </span>
+          <span className="text-sm font-medium opacity-80 md:text-base">
+            Changing Language...
+          </span>
         </div>
       </div>
     </>

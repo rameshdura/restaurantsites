@@ -10,12 +10,13 @@ import { Download } from "lucide-react"
 import { JsonLd } from "@/components/json-ld"
 import { generateMenuMetadata, generateMenuSchema } from "@/lib/seo"
 
-
 interface MenuPageProps {
   params: Promise<{ restaurant: string }>
 }
 
-export async function generateMetadata({ params }: MenuPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: MenuPageProps): Promise<Metadata> {
   const { restaurant: slug } = await params
   const restaurant = await getRestaurant(slug)
   if (!restaurant) return {}
@@ -35,37 +36,55 @@ export default async function MenuPage({ params }: MenuPageProps) {
   const translations = getTranslations(data.app?.language)
 
   return (
-    <div className="flex flex-col min-h-svh">
+    <div className="flex min-h-svh flex-col">
       <JsonLd data={generateMenuSchema(data, slug)} />
-       <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} defaultLanguage={data.app?.language} />
+      <Navbar
+        restaurant={{ ...data, name: data.name || slug }}
+        translations={translations}
+        defaultLanguage={data.app?.language}
+      />
 
       <main className="flex-1 pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-6 mb-12 text-center">
-          <h4 className="font-bold mb-4 text-primary uppercase tracking-widest text-xs">{translations.menuPage?.subtitle || "Exquisite Selection"}</h4>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">{translations.menuPage?.title || "Our Menu"}</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            {translations.menuPage?.description || "Discover our curated selection of dishes, prepared with the finest ingredients and culinary passion."}
+        <div className="mx-auto mb-12 max-w-7xl px-6 text-center">
+          <h4 className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
+            {translations.menuPage?.subtitle || "Exquisite Selection"}
+          </h4>
+          <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-6xl">
+            {translations.menuPage?.title || "Our Menu"}
+          </h1>
+          <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
+            {translations.menuPage?.description ||
+              "Discover our curated selection of dishes, prepared with the finest ingredients and culinary passion."}
           </p>
           {data.menuLink && (
             <div className="mt-8 flex justify-center">
               <Button size="lg" asChild className="rounded-full px-8">
-                <a href={data.menuLink} target="_blank" rel="noopener noreferrer">
-                  <Download className="w-5 h-5 mr-2" />
+                <a
+                  href={data.menuLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Download className="mr-2 h-5 w-5" />
                   {translations.menuPage?.downloadButton || "Download Menu PDF"}
                 </a>
               </Button>
             </div>
           )}
         </div>
-        
-        <section className="bg-accent/5 py-12 border-y border-border/40">
+
+        <section className="border-y border-border/40 bg-accent/5 py-12">
           {categories.length > 0 ? (
-            <FoodMenu categories={categories} hideHeader={true} translations={translations} />
+            <FoodMenu
+              categories={categories}
+              hideHeader={true}
+              translations={translations}
+            />
           ) : (
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="p-20 text-center border-2 border-dashed rounded-3xl bg-background">
+            <div className="mx-auto max-w-7xl px-6">
+              <div className="rounded-3xl border-2 border-dashed bg-background p-20 text-center">
                 <p className="text-xl text-muted-foreground">
-                  Our menu is currently being reimagined. Please check back soon!
+                  Our menu is currently being reimagined. Please check back
+                  soon!
                 </p>
               </div>
             </div>
@@ -73,8 +92,11 @@ export default async function MenuPage({ params }: MenuPageProps) {
         </section>
       </main>
 
-      <Footer restaurantName={data.name || slug} restaurantSlug={slug} translations={translations} />
-
+      <Footer
+        restaurantName={data.name || slug}
+        restaurantSlug={slug}
+        translations={translations}
+      />
     </div>
   )
 }

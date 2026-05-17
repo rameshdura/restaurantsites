@@ -1,26 +1,31 @@
-"use client";
+"use client"
 
-import { cn } from "@workspace/ui/lib/utils";
+import { cn } from "@workspace/ui/lib/utils"
 
 interface CategoryNavProps {
-  categories: { id: string; title: string }[];
-  activeId: string;
-  onTabChange: (id: string) => void;
-  children?: React.ReactNode;
+  categories: { id: string; title: string }[]
+  activeId: string
+  onTabChange: (id: string) => void
+  children?: React.ReactNode
 }
 
-export function CategoryNav({ categories, activeId, onTabChange, children }: CategoryNavProps) {
+export function CategoryNav({
+  categories,
+  activeId,
+  onTabChange,
+  children,
+}: CategoryNavProps) {
   return (
-    <nav className="sticky top-[72px] z-30 bg-background/80 backdrop-blur-md border-b border-border/40 py-2 -mx-4 px-4 mb-8">
-      <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto w-full">
-        <div className="flex-1 overflow-x-auto no-scrollbar">
-          <div className="flex items-center gap-1 w-max">
+    <nav className="sticky top-[72px] z-30 -mx-4 mb-8 border-b border-border/40 bg-background/80 px-4 py-2 backdrop-blur-md">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4">
+        <div className="no-scrollbar flex-1 overflow-x-auto">
+          <div className="flex w-max items-center gap-1">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => onTabChange(category.id)}
                 className={cn(
-                  "px-4 py-1.5 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                  "rounded-full px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-all",
                   activeId === category.id
                     ? "bg-primary text-primary-foreground shadow-sm"
                     : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
@@ -31,12 +36,8 @@ export function CategoryNav({ categories, activeId, onTabChange, children }: Cat
             ))}
           </div>
         </div>
-        {children && (
-          <div className="shrink-0">
-            {children}
-          </div>
-        )}
+        {children && <div className="shrink-0">{children}</div>}
       </div>
     </nav>
-  );
+  )
 }

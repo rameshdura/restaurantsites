@@ -31,26 +31,30 @@ export default async function proxy(req: NextRequest) {
   }
 
   let slug = ""
-  
-  if (hostname === rootDomain || hostname === "localhost:3000" || hostname === "localhost") {
+
+  if (
+    hostname === rootDomain ||
+    hostname === "localhost:3000" ||
+    hostname === "localhost"
+  ) {
     // If it's the root domain, we might want to show a landing page or something
     return NextResponse.next()
   }
 
-    // Extract subdomain
-    if (hostname.endsWith(`.${rootDomain}`)) {
-      slug = hostname.replace(`.${rootDomain}`, "")
-    } else if (hostname.endsWith(".vercel.app")) {
-      // Handle Vercel default domains (e.g. project-name.vercel.app)
-      const subdomain = hostname.replace(".vercel.app", "")
-      if (subdomain.includes("restaurantsites")) {
-        return NextResponse.next()
-      }
-      slug = subdomain.split(".")[0] || ""
-    } else {
-      // Custom domain
-      slug = hostname.split(".")[0] || ""
+  // Extract subdomain
+  if (hostname.endsWith(`.${rootDomain}`)) {
+    slug = hostname.replace(`.${rootDomain}`, "")
+  } else if (hostname.endsWith(".vercel.app")) {
+    // Handle Vercel default domains (e.g. project-name.vercel.app)
+    const subdomain = hostname.replace(".vercel.app", "")
+    if (subdomain.includes("restaurantsites")) {
+      return NextResponse.next()
     }
+    slug = subdomain.split(".")[0] || ""
+  } else {
+    // Custom domain
+    slug = hostname.split(".")[0] || ""
+  }
 
   if (!slug) {
     return NextResponse.next()

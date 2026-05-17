@@ -1,30 +1,34 @@
-import Link from 'next/link';
-import Image from 'next/image';
+import Link from "next/link"
+import Image from "next/image"
 
 type LogoConfig = {
-  text?: string;
-  link?: string;
-};
+  text?: string
+  link?: string
+}
 
 type LogoImageConfig = {
-  src: string;
-  alt: string;
-};
+  src: string
+  alt: string
+}
 
 type NavLink = {
-  label: string;
-  href: string;
-};
+  label: string
+  href: string
+}
 
 type HeaderConfig = {
-  logo?: LogoConfig;
-  logoImage?: LogoImageConfig;
-  links?: NavLink[];
-};
+  logo?: LogoConfig
+  logoImage?: LogoImageConfig
+  links?: NavLink[]
+}
 
-export default function HeaderConfigurable({ config }: { config: HeaderConfig }) {
+export default function HeaderConfigurable({
+  config,
+}: {
+  config: HeaderConfig
+}) {
   return (
-    <header className="bg-white border-b">
+    <header className="border-b bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
@@ -40,7 +44,9 @@ export default function HeaderConfigurable({ config }: { config: HeaderConfig })
               </Link>
             ) : (
               <Link href={config.logo?.link || "/"}>
-                <span className="text-xl font-semibold">{config.logo?.text}</span>
+                <span className="text-xl font-semibold">
+                  {config.logo?.text}
+                </span>
               </Link>
             )}
           </div>
@@ -60,5 +66,5 @@ export default function HeaderConfigurable({ config }: { config: HeaderConfig })
         </div>
       </div>
     </header>
-  );
+  )
 }

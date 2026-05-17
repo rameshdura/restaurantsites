@@ -23,7 +23,7 @@ export function MapEmbed({ embedUrl }: MapEmbedProps) {
         allowFullScreen
         loading="lazy"
         referrerPolicy="no-referrer-when-downgrade"
-          className={`h-full w-full focus:outline-none ${isDark ? "dark-map-filter" : ""}`}
+        className={`h-full w-full focus:outline-none ${isDark ? "dark-map-filter" : ""}`}
       />
     </div>
   )

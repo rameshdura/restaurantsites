@@ -21,7 +21,9 @@ interface RestaurantPageProps {
   params: Promise<{ restaurant: string }>
 }
 
-export async function generateMetadata({ params }: RestaurantPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: RestaurantPageProps): Promise<Metadata> {
   const { restaurant: slug } = await params
   const restaurant = await getRestaurant(slug)
   if (!restaurant) return {}
@@ -50,7 +52,7 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
       .sort((a, b) => a.ui.order - b.ui.order)
 
     return (
-      <div className="flex flex-col min-h-svh">
+      <div className="flex min-h-svh flex-col">
         <JsonLd data={generateRestaurantSchema(data, slug)} />
         <Navbar
           restaurant={{ ...data, name: data.name || slug }}
@@ -68,7 +70,11 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
             />
           ))}
         </main>
-        <Footer restaurantName={data.name || slug} restaurantSlug={slug} translations={translations} />
+        <Footer
+          restaurantName={data.name || slug}
+          restaurantSlug={slug}
+          translations={translations}
+        />
       </div>
     )
   }
@@ -77,54 +83,86 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
   // Legacy schema: keep existing hardwired layout (backward compat)
   // -------------------------------------------------------------------------
   return (
-    <div className="flex flex-col min-h-svh">
+    <div className="flex min-h-svh flex-col">
       <JsonLd data={generateRestaurantSchema(data, slug)} />
-      <Navbar restaurant={{ ...data, name: data.name || slug }} translations={translations} defaultLanguage={data.app?.language} />
+      <Navbar
+        restaurant={{ ...data, name: data.name || slug }}
+        translations={translations}
+        defaultLanguage={data.app?.language}
+      />
 
       <main className="flex-1">
         {data.hero && <Hero slides={data.hero.slides} />}
 
-        <div className="pb-12 px-6 max-w-7xl mx-auto">
+        <div className="mx-auto max-w-7xl px-6 pb-12">
           {/* About Section */}
           <section id="about" className={cn("py-20", !data.hero && "pt-32")}>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
               <div>
                 <SectionHeader
-                  subtitle={(translations as { home?: { about?: { subtitle?: string } } }).home?.about?.subtitle || "Our Story"}
-                  title={data.about?.title || (translations as { home?: { about?: { title?: string } } }).home?.about?.title || (translations as { aboutPage?: { title?: string } }).aboutPage?.title || `About ${data.name}`}
-                  backgroundTitle={(translations as { home?: { about?: { backgroundTitle?: string } } }).home?.about?.backgroundTitle || "Heritage"}
+                  subtitle={
+                    (
+                      translations as {
+                        home?: { about?: { subtitle?: string } }
+                      }
+                    ).home?.about?.subtitle || "Our Story"
+                  }
+                  title={
+                    data.about?.title ||
+                    (translations as { home?: { about?: { title?: string } } })
+                      .home?.about?.title ||
+                    (translations as { aboutPage?: { title?: string } })
+                      .aboutPage?.title ||
+                    `About ${data.name}`
+                  }
+                  backgroundTitle={
+                    (
+                      translations as {
+                        home?: { about?: { backgroundTitle?: string } }
+                      }
+                    ).home?.about?.backgroundTitle || "Heritage"
+                  }
                 />
-                <p className="text-xl text-muted-foreground mb-10 leading-relaxed">
+                <p className="mb-10 text-xl leading-relaxed text-muted-foreground">
                   {data.about?.content || data.description}
                 </p>
               </div>
 
               {data.about?.images ? (
                 <ImageSlider images={data.about.images} />
-              ) : data.about?.image && (
-                <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl">
-                  <Image
-                    src={data.about.image}
-                    alt={data.about.title || "About image"}
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-700"
-                  />
-                </div>
+              ) : (
+                data.about?.image && (
+                  <div className="relative aspect-square overflow-hidden rounded-3xl shadow-2xl">
+                    <Image
+                      src={data.about.image}
+                      alt={data.about.title || "About image"}
+                      fill
+                      className="object-cover transition-transform duration-700 hover:scale-105"
+                    />
+                  </div>
+                )
               )}
             </div>
           </section>
         </div>
 
         {categories.length > 0 && (
-          <section className="bg-accent/5 py-12 border-t border-border/40 paper-noise">
-            <FoodMenu categories={categories} menuLink={data.menuLink} translations={translations} />
+          <section className="paper-noise border-t border-border/40 bg-accent/5 py-12">
+            <FoodMenu
+              categories={categories}
+              menuLink={data.menuLink}
+              translations={translations}
+            />
           </section>
         )}
 
         <GallerySection
           images={
-            data.images?.gallery?.map(img => ({ src: img.url, alt: img.alt })) ||
-            data.about?.images?.map(url => ({ src: url, alt: data.name }))
+            data.images?.gallery?.map((img) => ({
+              src: img.url,
+              alt: img.alt,
+            })) ||
+            data.about?.images?.map((url) => ({ src: url, alt: data.name }))
           }
           translations={translations}
           restaurantName={data.name}
@@ -136,7 +174,17 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
             reviews={
               Array.isArray(data.reviews)
                 ? data.reviews
-                : (data.reviews as { individual?: Array<{ author: string; rating: number; date: string; reviewBody: string; source?: string }> }).individual?.map(r => ({
+                : (
+                    data.reviews as {
+                      individual?: Array<{
+                        author: string
+                        rating: number
+                        date: string
+                        reviewBody: string
+                        source?: string
+                      }>
+                    }
+                  ).individual?.map((r) => ({
                     author: r.author,
                     rating: r.rating,
                     date: r.date,
@@ -144,7 +192,10 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
                     source: r.source,
                   })) || []
             }
-            googleMapsUrl={data.localSEO?.googleMapsUrl || data.schema?.aggregateRating?.sourceUrl}
+            googleMapsUrl={
+              data.localSEO?.googleMapsUrl ||
+              data.schema?.aggregateRating?.sourceUrl
+            }
             translations={translations}
           />
         )}
@@ -164,7 +215,11 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
         />
       </main>
 
-      <Footer restaurantName={data.name || slug} restaurantSlug={slug} translations={translations} />
+      <Footer
+        restaurantName={data.name || slug}
+        restaurantSlug={slug}
+        translations={translations}
+      />
     </div>
   )
 }

@@ -138,8 +138,8 @@ export function ContactSection({
   restaurantSlug,
   openingHours = [],
   holidayNotes,
-   restaurantName,
-   translations,
+  restaurantName,
+  translations,
 }: {
   hideHeader?: boolean
   address?: string
@@ -162,9 +162,9 @@ export function ContactSection({
     dinner?: string
     dinnerLO?: string
   }[]
-   holidayNotes?: string
-   restaurantName?: string
-   translations?: ContactTranslations
+  holidayNotes?: string
+  restaurantName?: string
+  translations?: ContactTranslations
 }) {
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [mounted, setMounted] = React.useState(false)
@@ -201,15 +201,25 @@ export function ContactSection({
       })
 
       if (response.ok) {
-        alert(translations?.contact?.success || "Message sent! We'll get back to you soon.")
+        alert(
+          translations?.contact?.success ||
+            "Message sent! We'll get back to you soon."
+        )
         form.reset()
       } else {
         const errorData = await response.json()
-        alert(errorData.error || translations?.contact?.sendError || "Failed to send message. Please try again later.")
+        alert(
+          errorData.error ||
+            translations?.contact?.sendError ||
+            "Failed to send message. Please try again later."
+        )
       }
     } catch (error) {
       console.error("Error submitting form:", error)
-      alert(translations?.contact?.error || "An error occurred. Please try again later.")
+      alert(
+        translations?.contact?.error ||
+          "An error occurred. Please try again later."
+      )
     } finally {
       setIsSubmitting(false)
     }
@@ -224,95 +234,107 @@ export function ContactSection({
       <div className="absolute -top-24 -left-24 size-96 rounded-full bg-primary/5 blur-3xl" />
       <div className="absolute -right-24 -bottom-24 size-96 rounded-full bg-primary/10 blur-3xl" />
 
-       <div className="relative z-10 mx-auto max-w-7xl px-6">
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
         {!hideHeader && (
-            <SectionHeader
-              subtitle={translations?.contact?.subtitle || "Our Contacts"}
-              title={translations?.contact?.title || "Get in Touch"}
-              description={
-                translations?.contact?.description || (
-                  <>
-                    Have a question or want to book a private event? We&apos;d love
-                    to hear from you. Reach out through the form or our direct
-                    contact details.
-                  </>
-                )
-              }
-              backgroundTitle={translations?.contact?.backgroundTitle || "Contact"}
-              align="center"
-              className="mb-12 lg:mb-16"
-            />
-          )}
- 
-           <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-             {/* Contact Details */}
-             <div className="space-y-8">
-                <h3 className="mb-2 text-3xl font-black tracking-tight">
-                  {translations?.contact?.sectionTitle || "Contact"}
-                </h3>
-               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
-               <ContactDetail
-                 icon={Location01Icon}
-                 title={translations?.contact?.location || "Location"}
-                 description={
-                   address || "1420 Napa Valley Hwy, St. Helena, CA 94574"
-                 }
-                 subDescription={
-                   location?.mapsUrl ? (
-                     <a
-                       href={location.mapsUrl}
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       className="transition-colors hover:text-primary"
-                     >
-                       {translations?.contact?.getDirections || "Get Directions →"}
-                     </a>
-                   ) : (
-                     translations?.contact?.getDirections || "Get Directions →"
-                   )
-                 }
-               />
-               <ContactDetail
-                 icon={CallIcon}
-                 title={translations?.contact?.phone || "Phone"}
-                 description={phone || "+1 (707) 555-0199"}
-                 subDescription={translations?.contact?.availableHours || "Available 11 AM - 10 PM daily"}
-               />
-               <ContactDetail
-                 icon={Mail01Icon}
-                 title={translations?.contact?.email || "Email"}
-                 description={email || "reservations@oakandhearth.com"}
-                 subDescription={translations?.contact?.generalReservations || "General & Reservations"}
-               />
-               {!isHomePage && (
-                 <ContactDetail
-                   icon={Clock01Icon}
-                   title={translations?.contact?.hours || "Hours"}
-                   description={hours || "Tue - Sat: 5:00 PM - 10:30 PM"}
-                   subDescription={
-                     hours
-                       ? undefined
-                       : "Sun: 11:00 AM - 3:00 PM / 5:00 PM - 10:00 PM"
-                   }
-                 />
-               )}
-               {location?.mapsUrl && (
-                 <ContactDetail
-                   icon={MapsCircle02Icon}
-                   title={translations?.contact?.googleMaps || "Google Maps"}
-                   description={translations?.contact?.findUs || "Find us on Google Maps"}
-                   subDescription={
-                     <a
-                       href={location.mapsUrl}
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       className="transition-colors hover:text-primary"
-                     >
-                       {translations?.contact?.openGoogleMap || "Open Google Map →"}
-                     </a>
-                   }
-                 />
-               )}
+          <SectionHeader
+            subtitle={translations?.contact?.subtitle || "Our Contacts"}
+            title={translations?.contact?.title || "Get in Touch"}
+            description={
+              translations?.contact?.description || (
+                <>
+                  Have a question or want to book a private event? We&apos;d
+                  love to hear from you. Reach out through the form or our
+                  direct contact details.
+                </>
+              )
+            }
+            backgroundTitle={
+              translations?.contact?.backgroundTitle || "Contact"
+            }
+            align="center"
+            className="mb-12 lg:mb-16"
+          />
+        )}
+
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
+          {/* Contact Details */}
+          <div className="space-y-8">
+            <h3 className="mb-2 text-3xl font-black tracking-tight">
+              {translations?.contact?.sectionTitle || "Contact"}
+            </h3>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
+              <ContactDetail
+                icon={Location01Icon}
+                title={translations?.contact?.location || "Location"}
+                description={
+                  address || "1420 Napa Valley Hwy, St. Helena, CA 94574"
+                }
+                subDescription={
+                  location?.mapsUrl ? (
+                    <a
+                      href={location.mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-primary"
+                    >
+                      {translations?.contact?.getDirections ||
+                        "Get Directions →"}
+                    </a>
+                  ) : (
+                    translations?.contact?.getDirections || "Get Directions →"
+                  )
+                }
+              />
+              <ContactDetail
+                icon={CallIcon}
+                title={translations?.contact?.phone || "Phone"}
+                description={phone || "+1 (707) 555-0199"}
+                subDescription={
+                  translations?.contact?.availableHours ||
+                  "Available 11 AM - 10 PM daily"
+                }
+              />
+              <ContactDetail
+                icon={Mail01Icon}
+                title={translations?.contact?.email || "Email"}
+                description={email || "reservations@oakandhearth.com"}
+                subDescription={
+                  translations?.contact?.generalReservations ||
+                  "General & Reservations"
+                }
+              />
+              {!isHomePage && (
+                <ContactDetail
+                  icon={Clock01Icon}
+                  title={translations?.contact?.hours || "Hours"}
+                  description={hours || "Tue - Sat: 5:00 PM - 10:30 PM"}
+                  subDescription={
+                    hours
+                      ? undefined
+                      : "Sun: 11:00 AM - 3:00 PM / 5:00 PM - 10:00 PM"
+                  }
+                />
+              )}
+              {location?.mapsUrl && (
+                <ContactDetail
+                  icon={MapsCircle02Icon}
+                  title={translations?.contact?.googleMaps || "Google Maps"}
+                  description={
+                    translations?.contact?.findUs || "Find us on Google Maps"
+                  }
+                  subDescription={
+                    <a
+                      href={location.mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-primary"
+                    >
+                      {translations?.contact?.openGoogleMap ||
+                        "Open Google Map →"}
+                    </a>
+                  }
+                />
+              )}
             </div>
 
             {/* Social Links */}
@@ -331,10 +353,7 @@ export function ContactSection({
                     className="group relative flex size-11 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary transition-all hover:scale-110 hover:border-primary/40 hover:bg-primary hover:text-white"
                     aria-label={social.label}
                   >
-                    <HugeiconsIcon
-                      icon={social.icon}
-                      size={22}
-                    />
+                    <HugeiconsIcon icon={social.icon} size={22} />
                   </button>
                 ))}
               </div>
@@ -349,7 +368,8 @@ export function ContactSection({
                     {translations?.contact?.serviceHours || "Service Hours"}
                   </h3>
                   <p className="text-muted-foreground/80">
-                    {translations?.contact?.serviceHoursDescription || "Join us for an unforgettable dining experience during our business hours."}
+                    {translations?.contact?.serviceHoursDescription ||
+                      "Join us for an unforgettable dining experience during our business hours."}
                   </p>
                 </div>
 
@@ -362,11 +382,12 @@ export function ContactSection({
                         isLast={idx === openingHours.length - 1}
                       />
                     ))
-                   ) : (
-                     <div className="py-8 text-center text-muted-foreground">
-                       {translations?.contact?.hoursComingSoon || "Hours coming soon..."}
-                     </div>
-                   )}
+                  ) : (
+                    <div className="py-8 text-center text-muted-foreground">
+                      {translations?.contact?.hoursComingSoon ||
+                        "Hours coming soon..."}
+                    </div>
+                  )}
                 </div>
 
                 {holidayNotes && (
@@ -375,14 +396,15 @@ export function ContactSection({
                       <div className="mt-0.5 shrink-0 text-primary">
                         <HugeiconsIcon icon={InformationCircleIcon} size={20} />
                       </div>
-                        <div className="space-y-1">
-                          <h4 className="text-xs font-bold tracking-widest text-primary uppercase">
-                            {translations?.contact?.holidayNotice || "Holiday Notice"}
-                          </h4>
-                          <p className="text-sm leading-relaxed text-muted-foreground/90">
-                            {holidayNotes}
-                          </p>
-                        </div>
+                      <div className="space-y-1">
+                        <h4 className="text-xs font-bold tracking-widest text-primary uppercase">
+                          {translations?.contact?.holidayNotice ||
+                            "Holiday Notice"}
+                        </h4>
+                        <p className="text-sm leading-relaxed text-muted-foreground/90">
+                          {holidayNotes}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -395,7 +417,8 @@ export function ContactSection({
                     href={`/${restaurantSlug}/contact`}
                     className="flex items-center justify-center gap-3"
                   >
-                    {translations?.contact?.requestReservation || "Request Reservation"}
+                    {translations?.contact?.requestReservation ||
+                      "Request Reservation"}
                     <HugeiconsIcon
                       icon={ArrowDown01Icon}
                       size={22}
@@ -412,153 +435,168 @@ export function ContactSection({
                   onSubmit={handleSubmit}
                   className="relative z-10 space-y-6"
                 >
-<div className="grid gap-6 sm:grid-cols-2">
-                     <div className="space-y-2.5">
-                       <label
-                         htmlFor="name"
-                         className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
-                       >
-                         {translations?.contact?.yourName || "Your Name"}
-                       </label>
-                       <div className="group/input relative">
-                         <input
-                           id="name"
-                           name="name"
-                           type="text"
-                           required
-                           placeholder={translations?.contact?.yourName ? undefined : "John Doe"}
-                           className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pr-4 pl-12 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
-                         />
-                         <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
-                           <HugeiconsIcon icon={UserIcon} size={20} />
-                         </div>
-                       </div>
-                     </div>
-                     <div className="space-y-2.5">
-                       <label
-                         htmlFor="email"
-                         className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
-                       >
-                         {translations?.contact?.emailAddress || "Email Address"}
-                       </label>
-                       <div className="group/input relative">
-                         <input
-                           id="email"
-                           name="email"
-                           type="email"
-                           required
-                           placeholder={translations?.contact?.emailAddress ? undefined : "john@example.com"}
-                           className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pr-4 pl-12 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
-                         />
-                         <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
-                           <HugeiconsIcon icon={Mail01Icon} size={20} />
-                         </div>
-                       </div>
-                     </div>
-                   </div>
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    <div className="space-y-2.5">
+                      <label
+                        htmlFor="name"
+                        className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
+                      >
+                        {translations?.contact?.yourName || "Your Name"}
+                      </label>
+                      <div className="group/input relative">
+                        <input
+                          id="name"
+                          name="name"
+                          type="text"
+                          required
+                          placeholder={
+                            translations?.contact?.yourName
+                              ? undefined
+                              : "John Doe"
+                          }
+                          className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pr-4 pl-12 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
+                        />
+                        <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
+                          <HugeiconsIcon icon={UserIcon} size={20} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-2.5">
+                      <label
+                        htmlFor="email"
+                        className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
+                      >
+                        {translations?.contact?.emailAddress || "Email Address"}
+                      </label>
+                      <div className="group/input relative">
+                        <input
+                          id="email"
+                          name="email"
+                          type="email"
+                          required
+                          placeholder={
+                            translations?.contact?.emailAddress
+                              ? undefined
+                              : "john@example.com"
+                          }
+                          className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pr-4 pl-12 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
+                        />
+                        <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
+                          <HugeiconsIcon icon={Mail01Icon} size={20} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-<div className="space-y-2.5">
-                     <label
-                       htmlFor="subject"
-                       className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
-                     >
-                       {translations?.contact?.subject || "Subject"}
-                     </label>
-                     <div className="group/input relative">
-                       <select
-                         id="subject"
-                         name="subject"
-                         required
-                         defaultValue=""
-                         className="w-full appearance-none rounded-2xl border border-white/5 bg-white/5 py-4 pr-12 pl-12 transition-all outline-none focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
-                       >
-                         <option
-                           value=""
-                           disabled
-                           className="bg-[#1a1a1a] text-foreground"
-                         >
-                           {translations?.contact?.subjectPlaceholder || "Select a subject"}
-                         </option>
-                         <option
-                           value="reservation"
-                           className="bg-[#1a1a1a] text-foreground"
-                         >
-                           {translations?.contact?.subjectReservation || "Reservation Inquiry"}
-                         </option>
-                         <option
-                           value="event"
-                           className="bg-[#1a1a1a] text-foreground"
-                         >
-                           {translations?.contact?.subjectEvent || "Private Event"}
-                         </option>
-                         <option
-                           value="feedback"
-                           className="bg-[#1a1a1a] text-foreground"
-                         >
-                           {translations?.contact?.subjectFeedback || "Feedback"}
-                         </option>
-                         <option
-                           value="other"
-                           className="bg-[#1a1a1a] text-foreground"
-                         >
-                           {translations?.contact?.subjectOther || "Other"}
-                         </option>
-                       </select>
-                       <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
-                         <HugeiconsIcon icon={Message01Icon} size={20} />
-                       </div>
-                       <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-muted-foreground/40 group-focus-within/input:text-primary">
-                         <HugeiconsIcon icon={ArrowDown01Icon} size={18} />
-                       </div>
-                     </div>
-                   </div>
+                  <div className="space-y-2.5">
+                    <label
+                      htmlFor="subject"
+                      className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
+                    >
+                      {translations?.contact?.subject || "Subject"}
+                    </label>
+                    <div className="group/input relative">
+                      <select
+                        id="subject"
+                        name="subject"
+                        required
+                        defaultValue=""
+                        className="w-full appearance-none rounded-2xl border border-white/5 bg-white/5 py-4 pr-12 pl-12 transition-all outline-none focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
+                      >
+                        <option
+                          value=""
+                          disabled
+                          className="bg-[#1a1a1a] text-foreground"
+                        >
+                          {translations?.contact?.subjectPlaceholder ||
+                            "Select a subject"}
+                        </option>
+                        <option
+                          value="reservation"
+                          className="bg-[#1a1a1a] text-foreground"
+                        >
+                          {translations?.contact?.subjectReservation ||
+                            "Reservation Inquiry"}
+                        </option>
+                        <option
+                          value="event"
+                          className="bg-[#1a1a1a] text-foreground"
+                        >
+                          {translations?.contact?.subjectEvent ||
+                            "Private Event"}
+                        </option>
+                        <option
+                          value="feedback"
+                          className="bg-[#1a1a1a] text-foreground"
+                        >
+                          {translations?.contact?.subjectFeedback || "Feedback"}
+                        </option>
+                        <option
+                          value="other"
+                          className="bg-[#1a1a1a] text-foreground"
+                        >
+                          {translations?.contact?.subjectOther || "Other"}
+                        </option>
+                      </select>
+                      <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
+                        <HugeiconsIcon icon={Message01Icon} size={20} />
+                      </div>
+                      <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-muted-foreground/40 group-focus-within/input:text-primary">
+                        <HugeiconsIcon icon={ArrowDown01Icon} size={18} />
+                      </div>
+                    </div>
+                  </div>
 
-<div className="space-y-2.5">
-                     <label
-                       htmlFor="message"
-                       className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
-                     >
-                       {translations?.contact?.yourMessage || "Your Message"}
-                     </label>
-                     <div className="group/input relative">
-                       <textarea
-                         id="message"
-                         name="message"
-                         required
-                         rows={4}
-                         placeholder={translations?.contact?.yourMessage ? undefined : "Tell us how we can help..."}
-                         className="w-full resize-none rounded-2xl border border-white/5 bg-white/5 px-4 py-4 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
-                       />
-                     </div>
-                   </div>
+                  <div className="space-y-2.5">
+                    <label
+                      htmlFor="message"
+                      className="ml-1 text-xs font-bold tracking-widest text-muted-foreground/60 uppercase"
+                    >
+                      {translations?.contact?.yourMessage || "Your Message"}
+                    </label>
+                    <div className="group/input relative">
+                      <textarea
+                        id="message"
+                        name="message"
+                        required
+                        rows={4}
+                        placeholder={
+                          translations?.contact?.yourMessage
+                            ? undefined
+                            : "Tell us how we can help..."
+                        }
+                        className="w-full resize-none rounded-2xl border border-white/5 bg-white/5 px-4 py-4 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
+                      />
+                    </div>
+                  </div>
 
-<Button
-                     type="submit"
-                     className="h-16 w-full rounded-2xl text-lg font-bold shadow-2xl transition-all hover:scale-[1.02] active:scale-95"
-                     disabled={isSubmitting}
-                   >
-                     {isSubmitting ? (
-                       <span className="flex items-center gap-3">
-                         <div className="size-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                         {translations?.contact?.processing || "Processing..."}
-                       </span>
-                     ) : (
-                       <span className="flex items-center gap-3">
-                         {translations?.contact?.sendMessage || "Send Message"}
-                         <HugeiconsIcon icon={SentIcon} size={22} />
-                       </span>
-                     )}
-                   </Button>
+                  <Button
+                    type="submit"
+                    className="h-16 w-full rounded-2xl text-lg font-bold shadow-2xl transition-all hover:scale-[1.02] active:scale-95"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center gap-3">
+                        <div className="size-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                        {translations?.contact?.processing || "Processing..."}
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-3">
+                        {translations?.contact?.sendMessage || "Send Message"}
+                        <HugeiconsIcon icon={SentIcon} size={22} />
+                      </span>
+                    )}
+                  </Button>
 
-                   <p className="text-center text-xs text-muted-foreground/60">
-                     {translations?.contact?.privacyAgreement
-                       ? translations.contact.privacyAgreement
-                       : "By clicking send, you agree to our"}{" "}
-                     <span className="cursor-pointer underline decoration-primary/30 underline-offset-4 transition-colors hover:text-primary">
-                       {translations?.contact?.privacyPolicy || "Privacy Policy"}
-                     </span>
-                     .
-                   </p>
+                  <p className="text-center text-xs text-muted-foreground/60">
+                    {translations?.contact?.privacyAgreement
+                      ? translations.contact.privacyAgreement
+                      : "By clicking send, you agree to our"}{" "}
+                    <span className="cursor-pointer underline decoration-primary/30 underline-offset-4 transition-colors hover:text-primary">
+                      {translations?.contact?.privacyPolicy || "Privacy Policy"}
+                    </span>
+                    .
+                  </p>
                 </form>
               </div>
             </div>

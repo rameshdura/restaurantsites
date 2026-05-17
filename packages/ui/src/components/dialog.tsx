@@ -26,11 +26,7 @@ const DialogTrigger = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("cursor-pointer", className)}
-    {...props}
-  />
+  <div ref={ref} className={cn("cursor-pointer", className)} {...props} />
 ))
 DialogTrigger.displayName = "DialogTrigger"
 
@@ -38,7 +34,14 @@ const DialogPortal = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => (
-  <div ref={ref} className={cn("fixed inset-0 z-50 flex items-center justify-center", className)} {...props}>
+  <div
+    ref={ref}
+    className={cn(
+      "fixed inset-0 z-50 flex items-center justify-center",
+      className
+    )}
+    {...props}
+  >
     {children}
   </div>
 ))
@@ -51,7 +54,7 @@ const DialogClose = React.forwardRef<
   <button
     ref={ref}
     className={cn(
-      "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+      "absolute top-4 right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
       className
     )}
     {...props}
@@ -66,7 +69,7 @@ const DialogOverlay = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50 bg-black/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed inset-0 z-50 bg-black/80 backdrop-blur-sm data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -81,7 +84,7 @@ const DialogContentContainer = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "fixed z-50 grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:rounded-lg",
+      "fixed z-50 grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 sm:rounded-lg",
       className
     )}
     {...props}
@@ -91,36 +94,46 @@ DialogContentContainer.displayName = "DialogContentContainer"
 
 const DialogContent = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { open?: boolean; onOpenChange?: (open: boolean) => void }
->(({ className, children, open: propsOpen, onOpenChange: propsOnOpenChange, ...props }, ref) => {
-  const context = React.useContext(DialogContext)
-  const open = propsOpen ?? context.open
-  const onOpenChange = propsOnOpenChange ?? context.onOpenChange
+  React.HTMLAttributes<HTMLDivElement> & {
+    open?: boolean
+    onOpenChange?: (open: boolean) => void
+  }
+>(
+  (
+    {
+      className,
+      children,
+      open: propsOpen,
+      onOpenChange: propsOnOpenChange,
+      ...props
+    },
+    ref
+  ) => {
+    const context = React.useContext(DialogContext)
+    const open = propsOpen ?? context.open
+    const onOpenChange = propsOnOpenChange ?? context.onOpenChange
 
-  if (!open) return null
+    if (!open) return null
 
-  return (
-    <DialogPortal>
-      <DialogOverlay
-        onClick={() => {
-          if (onOpenChange) onOpenChange(false)
-        }}
-      />
-      <DialogContentContainer
-        ref={ref}
-        className={className}
-        {...props}
-      >
-        {children}
-        <DialogClose
+    return (
+      <DialogPortal>
+        <DialogOverlay
           onClick={() => {
             if (onOpenChange) onOpenChange(false)
           }}
         />
-      </DialogContentContainer>
-    </DialogPortal>
-  )
-})
+        <DialogContentContainer ref={ref} className={className} {...props}>
+          {children}
+          <DialogClose
+            onClick={() => {
+              if (onOpenChange) onOpenChange(false)
+            }}
+          />
+        </DialogContentContainer>
+      </DialogPortal>
+    )
+  }
+)
 DialogContent.displayName = "DialogContent"
 
 const DialogHeader = React.forwardRef<
@@ -129,7 +142,10 @@ const DialogHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)}
+    className={cn(
+      "flex flex-col space-y-1.5 text-center sm:text-left",
+      className
+    )}
     {...props}
   />
 ))
@@ -141,7 +157,10 @@ const DialogFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)}
+    className={cn(
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      className
+    )}
     {...props}
   />
 ))
@@ -153,7 +172,10 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+    className={cn(
+      "text-lg leading-none font-semibold tracking-tight",
+      className
+    )}
     {...props}
   />
 ))

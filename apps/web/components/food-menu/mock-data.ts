@@ -1,4 +1,4 @@
-import { MenuCategory } from "./types";
+import { MenuCategory } from "./types"
 
 const generateItems = (category: string, count: number) => {
   return Array.from({ length: count }).map((_, i) => ({
@@ -7,8 +7,8 @@ const generateItems = (category: string, count: number) => {
     description: `Delicious ${category.toLowerCase()} prepared with fresh ingredients.`,
     price: 10 + i,
     image: `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800&sig=${category}-${i}`,
-  }));
-};
+  }))
+}
 
 export const MOCK_MENU: MenuCategory[] = [
   {
@@ -31,4 +31,4 @@ export const MOCK_MENU: MenuCategory[] = [
     title: "Drinks",
     items: generateItems("Drink", 10),
   },
-];
+]

@@ -18,43 +18,45 @@ interface FooterProps {
 }
 
 export function Footer({ restaurantName, translations }: FooterProps) {
-   const [mounted, setMounted] = useState(false)
-   const { setTheme, resolvedTheme } = useTheme()
-   const { getLink } = useRestaurantLink()
+  const [mounted, setMounted] = useState(false)
+  const { setTheme, resolvedTheme } = useTheme()
+  const { getLink } = useRestaurantLink()
 
-   useEffect(() => {
-     // eslint-disable-next-line react-hooks/set-state-in-effect
-     setMounted(true)
-   }, [])
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true)
+  }, [])
 
-   const isDark = resolvedTheme === "dark"
-   const t = translations?.footer || { companyInformation: "Company Information" }
+  const isDark = resolvedTheme === "dark"
+  const t = translations?.footer || {
+    companyInformation: "Company Information",
+  }
 
   return (
-    <footer className="py-6 border-t text-center text-xs text-muted-foreground bg-background">
-      <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
-<Link 
-           href={getLink("/company-information")}
-           className="hover:text-primary transition-colors duration-200"
-         >
-           {t.companyInformation}
-         </Link>
-        <span className="hidden md:inline text-border">|</span>
+    <footer className="border-t bg-background py-6 text-center text-xs text-muted-foreground">
+      <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:gap-6">
+        <Link
+          href={getLink("/company-information")}
+          className="transition-colors duration-200 hover:text-primary"
+        >
+          {t.companyInformation}
+        </Link>
+        <span className="hidden text-border md:inline">|</span>
         <div className="flex items-center gap-2">
           &copy; {new Date().getFullYear()} {restaurantName}
-           <Link
-             href={getLink("/brand")}
-             className="hover:scale-110 inline-block transition-transform duration-200 text-foreground/60 hover:text-foreground"
-             title="View Brand Assets"
-           >
-              <HugeiconsIcon icon={Heart} size={18} />
-           </Link>
+          <Link
+            href={getLink("/brand")}
+            className="inline-block text-foreground/60 transition-transform duration-200 hover:scale-110 hover:text-foreground"
+            title="View Brand Assets"
+          >
+            <HugeiconsIcon icon={Heart} size={18} />
+          </Link>
           <span className="text-border">|</span>
           <span>Dark Mode</span>
           <button
             onClick={() => setTheme(isDark ? "light" : "dark")}
             className={cn(
-              "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
+              "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
               mounted && isDark ? "bg-primary" : "bg-muted"
             )}
             role="switch"

@@ -12,6 +12,9 @@
       "dependsOn": ["^lint"],
       "env": ["RESEND_API_KEY"]
     },
+    "lint:fix": {
+      "dependsOn": ["^lint:fix"]
+    },
     "format": {
       "dependsOn": ["^format"]
     },

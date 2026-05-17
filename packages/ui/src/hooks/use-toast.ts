@@ -24,7 +24,7 @@ const useToastStore = create<ToastStore>((set) => ({
   addToast: (toast) => {
     const id = Math.random().toString(36).substring(2, 9)
     set((state) => ({ toasts: [...state.toasts, { ...toast, id }] }))
-    
+
     // Auto remove after 5 seconds if no duration provided
     const duration = toast.duration || 5000
     setTimeout(() => {
@@ -49,9 +49,8 @@ export const useToast = () => {
   const store = useToastStore()
   return {
     ...store,
-    toast: store.addToast
+    toast: store.addToast,
   }
 }
 
 export { type Toast }
-

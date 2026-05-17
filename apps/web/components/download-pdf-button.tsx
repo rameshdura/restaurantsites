@@ -13,7 +13,12 @@ interface DownloadPdfButtonProps {
   heightMm: number
 }
 
-export function DownloadPdfButton({ elementId, filename, widthMm, heightMm }: DownloadPdfButtonProps) {
+export function DownloadPdfButton({
+  elementId,
+  filename,
+  widthMm,
+  heightMm,
+}: DownloadPdfButtonProps) {
   const [isDownloading, setIsDownloading] = useState(false)
 
   const handleDownload = async () => {
@@ -46,14 +51,14 @@ export function DownloadPdfButton({ elementId, filename, widthMm, heightMm }: Do
   }
 
   return (
-    <Button 
-      variant="outline" 
-      size="sm" 
-      className="gap-2" 
+    <Button
+      variant="outline"
+      size="sm"
+      className="gap-2"
       onClick={handleDownload}
       disabled={isDownloading}
     >
-      <Download className="w-4 h-4" />
+      <Download className="h-4 w-4" />
       {isDownloading ? "Generating..." : "Download PDF"}
     </Button>
   )

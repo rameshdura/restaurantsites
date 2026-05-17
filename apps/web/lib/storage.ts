@@ -1,12 +1,13 @@
-import * as idb from './idb'
+import * as idb from "./idb"
 
 // Local storage keys for Site Builder (retained for migration)
-const STORAGE_PREFIX = 'sitebuilder_v1_'
+const STORAGE_PREFIX = "sitebuilder_v1_"
 
 export const STORAGE_KEYS = {
   SITES: `${STORAGE_PREFIX}sites`,
   CURRENT_SITE: `${STORAGE_PREFIX}currentSite`,
   TEMP_IMAGES: `${STORAGE_PREFIX}tempImages`,
+  SEND_HISTORY: `${STORAGE_PREFIX}sendHistory`,
 }
 
 // Site Builder Data Types
@@ -20,9 +21,11 @@ export interface SiteImageData {
 
 export interface SiteBuilderData {
   // Step 1: Basic Info
+  uid: string
   siteName: string
   siteSlug: string
   description: string
+  tagline: string
   address: string
   phone: string
   email: string
@@ -35,20 +38,22 @@ export interface SiteBuilderData {
   seoTitle: string
   seoDescription: string
   keywords: string[]
-  seoMenuTitle?: string
-  seoMenuDescription?: string
-  seoAboutTitle?: string
-  seoAboutDescription?: string
-  seoContactTitle?: string
-  seoContactDescription?: string
-  seoBrandTitle?: string
-  seoBrandDescription?: string
-  seoCompanyTitle?: string
-  seoCompanyDescription?: string
+  menuTitle: string
+  menuDescription: string
+  aboutTitle: string
+  aboutDescription: string
+  contactTitle: string
+  contactDescription: string
+  brandTitle?: string
+  brandDescription?: string
+  companyTitle?: string
+  companyDescription?: string
   ogLocale?: string
-  twitterCard?: 'summary' | 'summary_large_image'
+  twitterCard?: "summary" | "summary_large_image"
+  twitterSite?: string
+  noindex?: boolean
 
-  // Step 3: Local SEO
+  // Step 3: Local SEO & Schema
   neighborhood?: string
   city?: string
   region?: string
@@ -57,6 +62,25 @@ export interface SiteBuilderData {
   postalCode?: string
   googleMapsUrl?: string
   timezone?: string
+  lat?: number
+  lng?: number
+  embedUrl?: string
+  plusCode?: string
+  placeId?: string
+  priceRange: "$" | "$$" | "$$$" | "$$$$"
+  cuisineTypes: string[]
+  acceptsReservations: boolean
+  isTakeout: boolean
+  isDelivery: boolean
+  priceCurrency: string
+  aggregateRating?: {
+    ratingValue: number
+    reviewCount: number
+    bestRating?: number
+    worstRating?: number
+    source?: string
+    sourceUrl?: string
+  }
 
   // Step 4: Images & Hero
   logoImage: string | null // Base64 data URL
@@ -69,93 +93,215 @@ export interface SiteBuilderData {
     subtitle: string
     ctaText: string
     ctaLink: string
+    alt?: string
   }>
 
   // Step 5: About Us
   aboutContent: string
+  aboutShortDescription: string
+  aboutMission: string
+  aboutPhilosophy: string
   aboutAdditionalContent: string[]
   foundedYear?: number
-  founderName?: string
-  founderRole?: string
-  founderBio?: string
-  founderImage?: string | null
+  foundingLocation?: string
+  founderName: string
+  founderRole: string
+  founderBio: string
+  founderImage: string | null
+  founderQualifications: string[]
+  founderSocial: Record<string, string>
+  founderSince?: string
+  awards: Array<{
+    year: number
+    title: string
+    issuer: string
+  }>
+  keywordsByPage?: {
+    home?: string[]
+    about?: string[]
+    menu?: string[]
+    contact?: string[]
+  }
   team: Array<{
     name: string
     role: string
     image: string | null
     bio: string
+    social?: Record<string, string>
+    since?: string
   }>
 
   // Step 6: Company Info
   companyName: string
   companyLegalName?: string
   registrationNumber?: string
+  representative?: string
   companyAddress?: string
   companyPhone?: string
   establishedDate?: string
   capital?: string
   fiscalYearEnd?: string
-  representative?: string
+  businessPurpose?: string
+  annualReportUrl?: string
+  numberOfEmployees?: number
 
-  // Step 7: Location & Maps
-  lat?: number
-  lng?: number
-  embedUrl?: string
-
-  // Step 8: Operational & Social
+  // Step 7: Operations
   openingHours: Array<{
     day: string
     lunch?: string
     lunchLO?: string
     dinner?: string
     dinnerLO?: string
+    isClosed?: boolean
+    notes?: string
   }>
   holidayNotes?: string
+  paymentMethods: string[]
+  dietaryOptions: {
+    vegetarian: boolean
+    vegan: boolean
+    glutenFree: boolean
+    halal: boolean
+    kosher: boolean
+    dairyFree: boolean
+    nutFree: boolean
+  }
+  features: {
+    privateDining: boolean
+    privateDiningCapacity?: number
+    privateDiningDescription?: string
+    outdoorSeating: boolean
+    wifi: boolean
+    wifiPassword?: string
+    parking?: string
+    parkingDetails?: string
+    wheelchairAccessible: boolean
+    petFriendly: boolean
+    romantic: boolean
+    goodForGroups: boolean
+    goodForFamilies: boolean
+    goodForDateNight: boolean
+  }
+  services: {
+    takeout: boolean
+    delivery: boolean
+    deliveryPlatforms: string[]
+    deliveryRadius?: string
+    catering: boolean
+    cateringRadius?: string
+    cateringMinimum?: string
+    reservations: boolean
+    reservationMethods: string[]
+    onlineBookingUrl?: string
+    banquets: boolean
+    banquetCapacity?: number
+  }
   socialInstagram?: string
   socialFacebook?: string
   socialTwitter?: string
   socialTabelog?: string
-  priceRange: '$' | '$$' | '$$$' | '$$$$'
-  cuisineTypes: string[]
-  acceptsReservations: boolean
-  isTakeout: boolean
-  isDelivery: boolean
-  priceCurrency: string
 
-  // Step 9: Menu & Reviews
+  // Step 8: Menu
   menuCategories: Array<{
     name: string
     items: Array<{
       name: string
+      secondaryName?: string
       description: string
       price: string
-      isPopular?: boolean
+      category: string
       image?: string | null
+      isPopular?: boolean
+      isVegetarian?: boolean
+      isVegan?: boolean
+      isSpicy?: boolean
+      spiceLevel?: number
+      allergens?: string[]
+      calories?: number
+      ingredients?: string[]
+      available?: boolean
+      availableFrom?: string
+      availableTo?: string
+      size?: string
+      limited?: boolean
+      availableUntil?: string
     }>
   }>
+
+  // Step 9: Reviews
   reviews: Array<{
+    id?: string
     author: string
     rating: number
     date: string
     comment: string
     source: string
   }>
+
+  // Media
+  videos: Array<{
+    url: string
+    title: string
+    description: string
+    thumbnail: string
+    duration: string
+    uploadDate: string
+  }>
+  virtualTour?: string
+
+  // Advanced
+  knowLanguages?: string[]
+  cuisineType?: string
+  reservation?: {
+    acceptsReservations: boolean
+    reservationMethods: string[]
+    onlineBookingUrl?: string
+    minimumPartySize?: number
+    maximumPartySize?: number
+    largeGroups?: boolean
+    largeGroupCapacity?: number
+    privateDining?: {
+      available: boolean
+      capacity: number
+      minimumSpend?: string
+      description?: string
+    }
+  }
+  advancedSchema?: {
+    foundedDate?: string
+    foundingLocation?: string
+    numberOfEmployees?: number
+    hasMap?: string
+    currenciesAccepted?: string[]
+    paymentAccepted?: string[]
+    servesCuisine?: string[]
+    menuType?: string[]
+    starRating?: number
+    priceRange?: string
+    eventType?: string[]
+    seats?: number
+    smoking?: string
+    music?: string
+    attire?: string
+  }
 }
 
 /**
  * Migration: Check if data exists in localStorage and move it to IndexedDB
  */
 async function migrateFromLocalStorage() {
-  if (typeof window === 'undefined') return
+  if (typeof window === "undefined") return
 
   try {
     // Migrate Sites
     const localSites = localStorage.getItem(STORAGE_KEYS.SITES)
     if (localSites) {
-      const currentIdbSites = await idb.get<SiteBuilderData[]>(STORAGE_KEYS.SITES)
+      const currentIdbSites = await idb.get<SiteBuilderData[]>(
+        STORAGE_KEYS.SITES
+      )
       if (!currentIdbSites || currentIdbSites.length === 0) {
         await idb.set(STORAGE_KEYS.SITES, JSON.parse(localSites))
-        console.log('Migrated sites from localStorage to IndexedDB')
+        console.log("Migrated sites from localStorage to IndexedDB")
       }
       localStorage.removeItem(STORAGE_KEYS.SITES)
     }
@@ -163,10 +309,12 @@ async function migrateFromLocalStorage() {
     // Migrate Current Site
     const localCurrent = localStorage.getItem(STORAGE_KEYS.CURRENT_SITE)
     if (localCurrent) {
-      const currentIdbCurrent = await idb.get<SiteBuilderData>(STORAGE_KEYS.CURRENT_SITE)
+      const currentIdbCurrent = await idb.get<SiteBuilderData>(
+        STORAGE_KEYS.CURRENT_SITE
+      )
       if (!currentIdbCurrent) {
         await idb.set(STORAGE_KEYS.CURRENT_SITE, JSON.parse(localCurrent))
-        console.log('Migrated current site from localStorage to IndexedDB')
+        console.log("Migrated current site from localStorage to IndexedDB")
       }
       localStorage.removeItem(STORAGE_KEYS.CURRENT_SITE)
     }
@@ -174,20 +322,22 @@ async function migrateFromLocalStorage() {
     // Migrate Temp Images
     const localImages = localStorage.getItem(STORAGE_KEYS.TEMP_IMAGES)
     if (localImages) {
-      const currentIdbImages = await idb.get<Record<string, string>>(STORAGE_KEYS.TEMP_IMAGES)
+      const currentIdbImages = await idb.get<Record<string, string>>(
+        STORAGE_KEYS.TEMP_IMAGES
+      )
       if (!currentIdbImages) {
         await idb.set(STORAGE_KEYS.TEMP_IMAGES, JSON.parse(localImages))
-        console.log('Migrated temp images from localStorage to IndexedDB')
+        console.log("Migrated temp images from localStorage to IndexedDB")
       }
       localStorage.removeItem(STORAGE_KEYS.TEMP_IMAGES)
     }
   } catch (error) {
-    console.error('Migration failed:', error)
+    console.error("Migration failed:", error)
   }
 }
 
 // Initialize migration
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   migrateFromLocalStorage()
 }
 
@@ -224,30 +374,37 @@ export async function deleteCurrentSite(): Promise<void> {
 
 export async function getTempImage(name: string): Promise<string | null> {
   try {
-    const images = await idb.get<Record<string, string>>(STORAGE_KEYS.TEMP_IMAGES)
-    return images ? images[name] : null
+    const images = await idb.get<Record<string, string>>(
+      STORAGE_KEYS.TEMP_IMAGES
+    )
+    return images ? (images[name] ?? null) : null
   } catch {
     return null
   }
 }
 
-export async function saveTempImage(name: string, dataUrl: string): Promise<void> {
+export async function saveTempImage(
+  name: string,
+  dataUrl: string
+): Promise<void> {
   try {
-    const images = (await idb.get<Record<string, string>>(STORAGE_KEYS.TEMP_IMAGES)) || {}
+    const images =
+      (await idb.get<Record<string, string>>(STORAGE_KEYS.TEMP_IMAGES)) || {}
     images[name] = dataUrl
     await idb.set(STORAGE_KEYS.TEMP_IMAGES, images)
   } catch (error) {
-    console.error('Error saving temp image:', error)
+    console.error("Error saving temp image:", error)
   }
 }
 
 export async function deleteTempImage(name: string): Promise<void> {
   try {
-    const images = (await idb.get<Record<string, string>>(STORAGE_KEYS.TEMP_IMAGES)) || {}
+    const images =
+      (await idb.get<Record<string, string>>(STORAGE_KEYS.TEMP_IMAGES)) || {}
     delete images[name]
     await idb.set(STORAGE_KEYS.TEMP_IMAGES, images)
   } catch (error) {
-    console.error('Error deleting temp image:', error)
+    console.error("Error deleting temp image:", error)
   }
 }
 
@@ -256,4 +413,55 @@ export async function clearAllData(): Promise<void> {
   localStorage.removeItem(STORAGE_KEYS.SITES)
   localStorage.removeItem(STORAGE_KEYS.CURRENT_SITE)
   localStorage.removeItem(STORAGE_KEYS.TEMP_IMAGES)
+  localStorage.removeItem(STORAGE_KEYS.SEND_HISTORY)
+}
+
+// Send History
+export interface SendHistoryEntry {
+  id: string
+  siteSlug: string
+  siteName: string
+  to: string[]
+  subject: string
+  sentAt: number // timestamp
+  status: "success" | "failed"
+  errorMessage?: string
+}
+
+export async function getSendHistory(): Promise<SendHistoryEntry[]> {
+  try {
+    const history = await idb.get<SendHistoryEntry[]>(STORAGE_KEYS.SEND_HISTORY)
+    return history || []
+  } catch {
+    return []
+  }
+}
+
+export async function addSendHistory(entry: SendHistoryEntry): Promise<void> {
+  try {
+    const history = await getSendHistory()
+    history.unshift(entry)
+    // Keep only last 50 entries
+    if (history.length > 50) {
+      history.length = 50
+    }
+    await idb.set(STORAGE_KEYS.SEND_HISTORY, history)
+  } catch (error) {
+    console.error("Error saving send history:", error)
+  }
+}
+
+export async function deleteSendHistoryEntry(id: string): Promise<void> {
+  try {
+    if (id === "*") {
+      // Clear all history
+      await idb.set(STORAGE_KEYS.SEND_HISTORY, [])
+      return
+    }
+    const history = await getSendHistory()
+    const filtered = history.filter((entry) => entry.id !== id)
+    await idb.set(STORAGE_KEYS.SEND_HISTORY, filtered)
+  } catch (error) {
+    console.error("Error deleting send history entry:", error)
+  }
 }

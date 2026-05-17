@@ -35,8 +35,8 @@ export interface BlockSchemaFields {
     address: string
     phone: string
     email: string
-    location?: RestaurantData['location']
-    openingHours?: RestaurantData['openingHours']
+    location?: RestaurantData["location"]
+    openingHours?: RestaurantData["openingHours"]
     holidayNotes?: string
   }
   /** Canonical team pool */
@@ -171,18 +171,18 @@ export interface RestaurantData extends BlockSchemaFields {
 
   // Image SEO
   images?: {
-    logo?: { 
+    logo?: {
       url: string
       alt: string
       width?: number
       height?: number
     }
-    heroImage?: { 
+    heroImage?: {
       url: string
       alt: string
       credit?: string
     }
-    coverImage?: { 
+    coverImage?: {
       url: string
       alt: string
       credit?: string
@@ -272,7 +272,7 @@ export interface RestaurantData extends BlockSchemaFields {
     lat: number
     lng: number
     isPrimary: boolean
-    openingHours?: RestaurantData['openingHours']
+    openingHours?: RestaurantData["openingHours"]
     parking?: string
   }>
 
@@ -332,41 +332,43 @@ export interface RestaurantData extends BlockSchemaFields {
     plusCode?: string
   }
 
-  openingHours?: { 
-    day: string; 
-    lunch?: string; 
-    lunchLO?: string; 
-    dinner?: string; 
-    dinnerLO?: string;
-    time?: string;
-    isClosed?: boolean;
-    notes?: string;
+  openingHours?: {
+    day: string
+    lunch?: string
+    lunchLO?: string
+    dinner?: string
+    dinnerLO?: string
+    time?: string
+    isClosed?: boolean
+    notes?: string
   }[]
   holidayNotes?: string
   menu?: MenuItem[]
-  reviews?: {
-    aggregate?: {
-      ratingValue: number
-      reviewCount: number
-      bestRating?: number
-      worstRating?: number
-      source?: string
-      sourceUrl?: string
-    }
-    individual?: Array<{
-      author: string
-      date: string
-      rating: number
-      reviewBody: string
-      source?: string
-    }>
-  } | Array<{
-    author: string
-    rating: number
-    date: string
-    comment: string
-    source?: string
-  }>
+  reviews?:
+    | {
+        aggregate?: {
+          ratingValue: number
+          reviewCount: number
+          bestRating?: number
+          worstRating?: number
+          source?: string
+          sourceUrl?: string
+        }
+        individual?: Array<{
+          author: string
+          date: string
+          rating: number
+          reviewBody: string
+          source?: string
+        }>
+      }
+    | Array<{
+        author: string
+        rating: number
+        date: string
+        comment: string
+        source?: string
+      }>
   reservation?: {
     acceptsReservations: boolean
     reservationMethods: string[]
@@ -437,18 +439,20 @@ const RESTAURANTS_PATH = path.join(process.cwd(), "restaurants")
 
 // Pre-process/resolve embed URL for Google Maps
 // This runs once per restaurant load instead of on every page render
-function resolveEmbedUrl(location: RestaurantData['location']): string | null {
+function resolveEmbedUrl(location: RestaurantData["location"]): string | null {
   if (!location?.mapsUrl) return null
-  
+
   try {
     const mapsUrl = location.mapsUrl
-    
+
     // Handle Google Maps URLs (including short goo.gl links)
     if (mapsUrl.includes("goo.gl") || mapsUrl.includes("google.com/maps")) {
       let embedUrlStr = mapsUrl
 
       if (mapsUrl.includes("/place/")) {
-        embedUrlStr = mapsUrl.replace("/place/", "/embed/").replace(/\/data=!.*$/, "")
+        embedUrlStr = mapsUrl
+          .replace("/place/", "/embed/")
+          .replace(/\/data=!.*$/, "")
       } else if (mapsUrl.includes("@")) {
         const match = mapsUrl.match(/@(-?\d+\.?\d*),(-?\d+\.?\d*),(\d+[a-z]?)/)
         if (match && match[3]) {
@@ -459,11 +463,17 @@ function resolveEmbedUrl(location: RestaurantData['location']): string | null {
 
       if (embedUrlStr === mapsUrl || !embedUrlStr.includes("embed")) {
         // For short goo.gl / maps.app.goo.gl links, build embed URL from lat/lng
-        if ((mapsUrl.includes("goo.gl") || mapsUrl.includes("maps.app.goo.gl")) && location.lat && location.lng) {
+        if (
+          (mapsUrl.includes("goo.gl") || mapsUrl.includes("maps.app.goo.gl")) &&
+          location.lat &&
+          location.lng
+        ) {
           // Use pb format with proper coordinates - shows map centered on location
           embedUrlStr = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14488!2d${location.lng}!3d${location.lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1s0x0%3A0x0!3e0`
         } else {
-          embedUrlStr = mapsUrl.includes("?") ? mapsUrl + "&output=embed" : mapsUrl + "?output=embed"
+          embedUrlStr = mapsUrl.includes("?")
+            ? mapsUrl + "&output=embed"
+            : mapsUrl + "?output=embed"
         }
       }
 
@@ -472,7 +482,7 @@ function resolveEmbedUrl(location: RestaurantData['location']): string | null {
   } catch (error) {
     console.error("Failed to resolve embed URL:", error)
   }
-  
+
   return null
 }
 
@@ -481,15 +491,15 @@ function resolveEmbedUrl(location: RestaurantData['location']): string | null {
  * exactly as before. Legacy restaurants (no `uid`) pass through unchanged.
  */
 function normaliseBlockSchema(data: RestaurantData): RestaurantData {
-  if (!data.uid || !data.pages) return data   // legacy — nothing to do
+  if (!data.uid || !data.pages) return data // legacy — nothing to do
 
   const home = data.pages.home
 
   // Hoist shared contact pool → top-level legacy fields
   if (data.contact) {
-    data.address     ??= data.contact.address
-    data.phone       ??= data.contact.phone
-    data.email       ??= data.contact.email
+    data.address ??= data.contact.address
+    data.phone ??= data.contact.phone
+    data.email ??= data.contact.email
     data.openingHours ??= data.contact.openingHours
     data.holidayNotes ??= data.contact.holidayNotes
     if (!data.location && data.contact.location) {
@@ -499,35 +509,56 @@ function normaliseBlockSchema(data: RestaurantData): RestaurantData {
 
   // Hoist hero section → data.hero
   if (home && !data.hero) {
-    const heroSection = home.sections.find(s => s.id === "hero")
+    const heroSection = home.sections.find((s) => s.id === "hero")
     if (heroSection) {
-      const d = heroSection.data as { slides?: RestaurantData['hero'] extends { slides: infer S } ? S : never[] }
+      const d = heroSection.data as {
+        slides?: RestaurantData["hero"] extends { slides: infer S }
+          ? S
+          : never[]
+      }
       data.hero = { slides: d.slides ?? [] }
     }
   }
 
   // Hoist about section → data.about
   if (home && !data.about) {
-    const aboutSection = home.sections.find(s => s.id === "about")
-    if (aboutSection?.data && !('ref' in aboutSection.data && aboutSection.data.ref !== 'pages.home.sections.about.data')) {
+    const aboutSection = home.sections.find((s) => s.id === "about")
+    if (
+      aboutSection?.data &&
+      !(
+        "ref" in aboutSection.data &&
+        aboutSection.data.ref !== "pages.home.sections.about.data"
+      )
+    ) {
       const d = aboutSection.data as {
-        title?: string; content?: string; images?: string[]
-        additionalContent?: string[]; foundedYear?: number
-        founder?: RestaurantData['about'] extends { founder?: infer F } ? F : never
+        title?: string
+        content?: string
+        images?: string[]
+        additionalContent?: string[]
+        foundedYear?: number
+        founder?: RestaurantData["about"] extends { founder?: infer F }
+          ? F
+          : never
       }
       data.about = {
-        title: d.title ?? '',
-        content: d.content ?? '',
+        title: d.title ?? "",
+        content: d.content ?? "",
         images: d.images,
         additionalContent: d.additionalContent,
         foundedYear: d.foundedYear,
         founder: d.founder,
-        team: data.team?.map(m => ({ name: m.name, role: m.role, image: m.image, bio: m.bio, social: m.social })),
+        team: data.team?.map((m) => ({
+          name: m.name,
+          role: m.role,
+          image: m.image,
+          bio: m.bio,
+          social: m.social,
+        })),
       }
     }
   }
 
-  // Hoist gallery images → images.gallery  
+  // Hoist gallery images → images.gallery
   if (data.images && Array.isArray(data.images.gallery)) {
     // already an array of objects — keep as-is
   } else if (data.images && !data.images.gallery) {
@@ -535,11 +566,20 @@ function normaliseBlockSchema(data: RestaurantData): RestaurantData {
   }
 
   // Hoist reviews pool → legacy data.reviews array
-  if (data.reviews === undefined && Array.isArray((data as Record<string, unknown>).reviews)) {
+  if (
+    data.reviews === undefined &&
+    Array.isArray((data as unknown as Record<string, unknown>).reviews)
+  ) {
     // already set
   } else if (data.reviews === undefined) {
-    const reviewsSection = home?.sections.find(s => s.id === "reviews")
-    if (reviewsSection?.data?.ref === 'reviews' && Array.isArray((data as Record<string, unknown & { reviews?: unknown[] }>).reviews)) {
+    const reviewsSection = home?.sections.find((s) => s.id === "reviews")
+    if (
+      reviewsSection?.data?.ref === "reviews" &&
+      Array.isArray(
+        (data as unknown as Record<string, unknown & { reviews?: unknown[] }>)
+          .reviews
+      )
+    ) {
       // reviews pool is at data.reviews (same key) — already populated by JSON
     }
   }
@@ -550,7 +590,7 @@ function normaliseBlockSchema(data: RestaurantData): RestaurantData {
 export async function getRestaurant(slug: string): Promise<Restaurant | null> {
   try {
     const restaurantPath = path.join(RESTAURANTS_PATH, slug)
-    
+
     // Read data.json
     const dataPath = path.join(restaurantPath, "data.json")
     const dataRaw = await fs.readFile(dataPath, "utf8")
@@ -558,19 +598,19 @@ export async function getRestaurant(slug: string): Promise<Restaurant | null> {
 
     // Normalise v1 block schema → legacy fields
     data = normaliseBlockSchema(data)
-    
+
     // Pre-resolve embed URL once at load time
     if (data.location && !data.location.embedUrl) {
       data.location.embedUrl = resolveEmbedUrl(data.location) || undefined
     }
-    
+
     // Extract menu from data or default to empty array
     const menu = data.menu || []
-    
+
     return {
       slug,
       data,
-      menu
+      menu,
     }
   } catch (error) {
     console.error(`Error loading restaurant data for ${slug}:`, error)

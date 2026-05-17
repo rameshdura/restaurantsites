@@ -1,28 +1,32 @@
-import { useState } from 'react';
-import Image from 'next/image';
+import { useState } from "react"
+import Image from "next/image"
 
 type NavLink = {
-  label: string;
-  href: string;
-};
+  label: string
+  href: string
+}
 
 type NavConfig = {
   brand?: {
-    text?: string;
-    link?: string;
+    text?: string
+    link?: string
     image?: {
-      src: string;
-      alt: string;
-    };
-  };
-  links: NavLink[];
-};
+      src: string
+      alt: string
+    }
+  }
+  links: NavLink[]
+}
 
-export default function ResponsiveNavConfigurable({ config }: { config: NavConfig }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function ResponsiveNavConfigurable({
+  config,
+}: {
+  config: NavConfig
+}) {
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <nav className="bg-white border-b">
+    <nav className="border-b bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
@@ -38,7 +42,9 @@ export default function ResponsiveNavConfigurable({ config }: { config: NavConfi
               </a>
             ) : (
               <a href={config.brand?.link || "/"}>
-                <span className="text-xl font-semibold">{config.brand?.text}</span>
+                <span className="text-xl font-semibold">
+                  {config.brand?.text}
+                </span>
               </a>
             )}
           </div>
@@ -59,7 +65,7 @@ export default function ResponsiveNavConfigurable({ config }: { config: NavConfi
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+              className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none focus:ring-inset"
               aria-controls="mobile-menu"
               aria-expanded={isOpen}
             >
@@ -101,17 +107,15 @@ export default function ResponsiveNavConfigurable({ config }: { config: NavConfi
 
         {/* Mobile menu */}
         <div
-          className={`md:hidden ${
-            isOpen ? 'block' : 'hidden'
-          }`}
+          className={`md:hidden ${isOpen ? "block" : "hidden"}`}
           id="mobile-menu"
         >
-          <div className="pt-2 pb-3 space-y-1">
+          <div className="space-y-1 pt-2 pb-3">
             {config.links.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900"
               >
                 {link.label}
               </a>
@@ -120,5 +124,5 @@ export default function ResponsiveNavConfigurable({ config }: { config: NavConfi
         </div>
       </div>
     </nav>
-  );
+  )
 }
