@@ -1,5 +1,5 @@
 import { Metadata } from "next"
-import { getRestaurant, groupMenuByCategory } from "@/lib/restaurant"
+import { getRestaurant, groupMenuByCategory, getImageSrc } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
 import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
@@ -15,7 +15,10 @@ import { JsonLd } from "@/components/json-ld"
 import { generateHomeMetadata, generateRestaurantSchema } from "@/lib/seo"
 import { ReviewsSection } from "@workspace/ui/components/reviews-section"
 import Image from "next/image"
+import Link from "next/link"
+import { buttonVariants } from "@workspace/ui/components/button"
 import { BlockRenderer } from "@/components/BlockRenderer"
+import { FloatingActions } from "@/components/floating-actions"
 
 interface RestaurantPageProps {
   params: Promise<{ restaurant: string }>
@@ -41,6 +44,9 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
   const { data, menu } = restaurant
   const categories = groupMenuByCategory(menu)
   const translations = getTranslations(data.app?.language)
+  const onlineBookingUrl =
+    data.reservation?.onlineBookingUrl ||
+    data.operations?.services?.onlineBookingUrl
 
   // -------------------------------------------------------------------------
   // V1 block-schema: render page sections dynamically
@@ -70,6 +76,11 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
             />
           ))}
         </main>
+        <FloatingActions
+          restaurantSlug={slug}
+          onlineBookingUrl={onlineBookingUrl}
+          translations={translations}
+        />
         <Footer
           restaurantName={data.name || slug}
           restaurantSlug={slug}
@@ -82,6 +93,19 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
   // -------------------------------------------------------------------------
   // Legacy schema: keep existing hardwired layout (backward compat)
   // -------------------------------------------------------------------------
+  const heroSlides = (data.hero?.slides ?? []).map((s) => ({
+    ...s,
+    image: getImageSrc(slug, s.image),
+  }))
+  const aboutImage = getImageSrc(slug, data.about?.image)
+  const aboutImages = data.about?.images?.map((im) => getImageSrc(slug, im))
+  const galleryImages =
+    data.images?.gallery?.map((img) => ({
+      src: getImageSrc(slug, img.url),
+      alt: img.alt,
+    })) ||
+    aboutImages?.map((src) => ({ src, alt: data.name }))
+
   return (
     <div className="flex min-h-svh flex-col">
       <JsonLd data={generateRestaurantSchema(data, slug)} />
@@ -92,11 +116,11 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
       />
 
       <main className="flex-1">
-        {data.hero && <Hero slides={data.hero.slides} />}
+        {data.hero && <Hero slides={heroSlides} phone={data.phone} />}
 
         <div className="mx-auto max-w-7xl px-6 pb-12">
           {/* About Section */}
-          <section id="about" className={cn("py-20", !data.hero && "pt-32")}>
+          <section id="about" className={cn("py-20", !heroSlides.length && "pt-32")}>
             <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
               <div>
                 <SectionHeader
@@ -126,16 +150,42 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
                 <p className="mb-10 text-xl leading-relaxed text-muted-foreground">
                   {data.about?.content || data.description}
                 </p>
+                <div className="mt-8">
+                  <Link
+                    href={`/${slug}/about`}
+                    className={cn(
+                      buttonVariants({ variant: "outline", size: "lg" }),
+                      "group h-12 rounded-full px-6 text-sm font-semibold tracking-wider transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20 active:scale-95"
+                    )}
+                  >
+                    {(translations as { navbar?: { about?: string } }).navbar
+                      ?.about || "About Us"}
+                    <svg
+                      className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        pathLength={1}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </Link>
+                </div>
               </div>
 
-              {data.about?.images ? (
-                <ImageSlider images={data.about.images} />
+              {aboutImages ? (
+                <ImageSlider images={aboutImages} />
               ) : (
-                data.about?.image && (
+                aboutImage && (
                   <div className="relative aspect-square overflow-hidden rounded-3xl shadow-2xl">
                     <Image
-                      src={data.about.image}
-                      alt={data.about.title || "About image"}
+                      src={aboutImage}
+                      alt={data.about?.title || "About image"}
                       fill
                       className="object-cover transition-transform duration-700 hover:scale-105"
                     />
@@ -157,13 +207,7 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
         )}
 
         <GallerySection
-          images={
-            data.images?.gallery?.map((img) => ({
-              src: img.url,
-              alt: img.alt,
-            })) ||
-            data.about?.images?.map((url) => ({ src: url, alt: data.name }))
-          }
+          images={galleryImages}
           translations={translations}
           restaurantName={data.name}
         />
@@ -214,6 +258,12 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
           translations={translations}
         />
       </main>
+
+      <FloatingActions
+        restaurantSlug={slug}
+        onlineBookingUrl={onlineBookingUrl}
+        translations={translations}
+      />
 
       <Footer
         restaurantName={data.name || slug}

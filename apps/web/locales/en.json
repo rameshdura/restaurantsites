@@ -1,8 +1,8 @@
 {
-   "contact": {
-     "title": "Contact Us",
-     "sectionTitle": "Contact",
-     "subtitle": "Our Contacts",
+  "contact": {
+    "title": "Contact Us",
+    "sectionTitle": "Contact",
+    "subtitle": "Our Contacts",
     "description": "Have a question or want to book a private event? We'd love to hear from you. Reach out through the form or our direct contact details.",
     "pageSubtitle": "We'd love to hear from you. Get in touch with us today.",
     "location": "Location",
@@ -10,11 +10,11 @@
     "email": "Email",
     "hours": "Hours",
     "googleMaps": "Google Maps",
-    "getDirections": "Get Directions →",
+    "getDirections": "Get Directions \u2192",
     "availableHours": "Available 11 AM - 10 PM daily",
     "generalReservations": "General & Reservations",
     "findUs": "Find us on Google Maps",
-    "openGoogleMap": "Open Google Map →",
+    "openGoogleMap": "Open Google Map \u2192",
     "followUs": "Follow Us",
     "backgroundTitle": "Contact",
     "serviceHours": "Service Hours",
@@ -71,6 +71,27 @@
       "title": "Our Story",
       "subtitle": "Our Story",
       "backgroundTitle": "Heritage"
+    },
+    "hero": {
+      "slide1": {
+        "title": "Authentic Flavors, Crafted Fresh Daily",
+        "subtitle": "Experience carefully prepared dishes made with fresh ingredients, aromatic herbs, and traditional spices.",
+        "buttonLabel": "View Menu"
+      },
+      "slide2": {
+        "title": "A Warm Dining Experience for Everyone",
+        "subtitle": "From healthy light bites to signature specialties, enjoy authentic taste in every serving.",
+        "buttonLabel": "About Us"
+      }
+    },
+    "menu": {
+      "subtitle": "Our Menu",
+      "title": "A Taste of Tradition",
+      "backgroundTitle": "Delicious Food",
+      "description": "Every dish on our menu is prepared using fresh ingredients, aromatic herbs, and carefully selected spices to create rich, balanced flavors inspired by authentic culinary traditions.",
+      "description2": "From healthy light bites to bold signature specialties, each plate is crafted with care and passion — combining freshness, quality, and authentic taste in every serving.",
+      "openMenuButton": "Open Menu",
+      "makeReservationButton": "Make Reservation"
     }
   },
   "aboutPage": {

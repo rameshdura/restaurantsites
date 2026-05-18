@@ -365,6 +365,8 @@ export function Navbar({
                 <img
                   src={restaurant.logo}
                   alt={restaurant.name}
+                  width={160}
+                  height={40}
                   className="h-10 w-auto object-contain"
                 />
               ) : (
@@ -536,18 +538,22 @@ export function Navbar({
 
       {/* Language Transition Overlay */}
       <div
+        role="status"
+        aria-live="polite"
         className={cn(
           "notranslate fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-primary text-primary-foreground",
-          langTransitionState === "idle" && "translate-y-full transition-none",
+          langTransitionState === "idle" &&
+            "pointer-events-none -translate-y-full transition-none",
           langTransitionState === "in" &&
-            "translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-          langTransitionState === "covering" && "translate-y-0 transition-none",
+            "pointer-events-auto translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          langTransitionState === "covering" &&
+            "pointer-events-none translate-y-0 transition-none",
           langTransitionState === "out" &&
-            "-translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            "pointer-events-none -translate-y-full transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
         )}
         translate="no"
       >
-        <div className="flex flex-col items-center gap-6">
+        <div className="flex flex-col items-center gap-6" aria-hidden="true">
           <HugeiconsIcon icon={GlobalIcon} className="size-16 animate-pulse" />
           <span className="text-4xl font-bold tracking-tight md:text-5xl">
             {targetLangName}

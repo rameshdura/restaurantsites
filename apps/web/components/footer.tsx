@@ -48,6 +48,7 @@ export function Footer({ restaurantName, translations }: FooterProps) {
             href={getLink("/brand")}
             className="inline-block text-foreground/60 transition-transform duration-200 hover:scale-110 hover:text-foreground"
             title="View Brand Assets"
+            aria-label="View Brand Assets"
           >
             <HugeiconsIcon icon={Heart} size={18} />
           </Link>

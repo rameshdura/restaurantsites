@@ -17,10 +17,12 @@ interface HeroSlide {
 
 interface HeroProps {
   slides: HeroSlide[]
+  phone?: string
 }
 
-export function Hero({ slides }: HeroProps) {
+export function Hero({ slides, phone }: HeroProps) {
   const [currentSlide, setCurrentSlide] = React.useState(0)
+  const [brokenSlides, setBrokenSlides] = React.useState<Set<number>>(new Set())
   const { getLink } = useRestaurantLink()
 
   React.useEffect(() => {
@@ -42,25 +44,31 @@ export function Hero({ slides }: HeroProps) {
         <div
           key={index}
           className={cn(
-            "absolute inset-0 transition-all duration-1000 ease-in-out",
+            "absolute inset-0 transition-all duration-[3000ms] ease-in-out",
             index === currentSlide
               ? "scale-100 opacity-100"
               : "pointer-events-none scale-110 opacity-0"
           )}
         >
           {/* Background Image */}
-          <div className="absolute inset-0 z-0">
-            {slide.image ? (
+          <div className="absolute inset-0 z-0 overflow-hidden">
+            {slide.image && !brokenSlides.has(index) ? (
               <Image
                 src={slide.image}
                 alt={slide.title}
                 fill
                 priority={index === 0}
-                className="object-cover"
+                className={cn(
+                  "object-cover transition-transform duration-[6000ms] ease-in-out",
+                  index === currentSlide && "scale-110"
+                )}
                 sizes="100vw"
+                onError={() => {
+                  setBrokenSlides((prev) => new Set(prev).add(index))
+                }}
               />
             ) : (
-              /* Grey placeholder shown when no image is provided */
+              /* Grey placeholder shown when image is broken or missing */
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="100%"
@@ -128,7 +136,7 @@ export function Hero({ slides }: HeroProps) {
                     }
                     className={cn(
                       buttonVariants({ variant: "default", size: "lg" }),
-                      "h-14 rounded-full px-10 text-lg font-bold shadow-2xl transition-all hover:scale-105 active:scale-95"
+                      "h-14 rounded-full px-10 text-2xl font-bold tracking-[7px] shadow-2xl transition-all hover:scale-105 active:scale-95"
                     )}
                   >
                     {slide.ctaText}
@@ -139,6 +147,22 @@ export function Hero({ slides }: HeroProps) {
           </div>
         </div>
       ))}
+
+      {/* Static Vertical Phone Number - overlaid on slider */}
+      {phone && (
+        <div
+          className="absolute top-1/2 left-6 z-20 hidden -translate-y-1/2 md:block"
+          style={{ writingMode: "sideways-lr" }}
+        >
+          <Link
+            href={`tel:${phone}`}
+            className="text-2xl font-bold tracking-[7px] text-white transition-colors hover:text-white/80"
+            aria-label="Call restaurant"
+          >
+            {phone}
+          </Link>
+        </div>
+      )}
 
       {/* Slide Indicators */}
       {slides.length > 1 && (

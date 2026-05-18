@@ -22,6 +22,7 @@ export interface SectionBlock<T = Record<string, unknown>> {
 
 export interface PageDef {
   id: string
+  coverImage?: string
   sections: SectionBlock[]
 }
 
@@ -197,6 +198,16 @@ export interface RestaurantData extends BlockSchemaFields {
       alt: string
       name: string
       role: string
+    }>
+    featured?: Array<{
+      id: string
+      url: string
+      alt: string
+    }>
+    drinks?: Array<{
+      id: string
+      url: string
+      alt: string
     }>
   }
 
@@ -439,7 +450,17 @@ const RESTAURANTS_PATH = path.join(process.cwd(), "restaurants")
 
 // Pre-process/resolve embed URL for Google Maps
 // This runs once per restaurant load instead of on every page render
-function resolveEmbedUrl(location: RestaurantData["location"]): string | null {
+function resolveEmbedUrl(
+  location?: RestaurantData["location"],
+  name?: string,
+  address?: string
+): string | null {
+  // The most reliable way to get a map with a business pin without an API key
+  if (name && address) {
+    const query = encodeURIComponent(`${name} ${address}`)
+    return `https://maps.google.com/maps?q=${query}&t=&z=15&ie=UTF8&iwloc=&output=embed`
+  }
+
   if (!location?.mapsUrl) return null
 
   try {
@@ -550,7 +571,7 @@ function normaliseBlockSchema(data: RestaurantData): RestaurantData {
         team: data.team?.map((m) => ({
           name: m.name,
           role: m.role,
-          image: m.image,
+          image: getImageSrc(data.uid || "", m.image),
           bio: m.bio,
           social: m.social,
         })),
@@ -601,7 +622,14 @@ export async function getRestaurant(slug: string): Promise<Restaurant | null> {
 
     // Pre-resolve embed URL once at load time
     if (data.location && !data.location.embedUrl) {
-      data.location.embedUrl = resolveEmbedUrl(data.location) || undefined
+      const address = data.location.address || data.address || data.contact?.address
+      data.location.embedUrl = resolveEmbedUrl(data.location, data.name, address) || undefined
+    }
+    
+    // Also resolve for contact.location if it's a separate object
+    if (data.contact?.location && !data.contact.location.embedUrl) {
+      const address = data.contact.location.address || data.contact.address || data.address
+      data.contact.location.embedUrl = resolveEmbedUrl(data.contact.location, data.name, address) || undefined
     }
 
     // Extract menu from data or default to empty array
@@ -628,6 +656,41 @@ export async function getAllRestaurantSlugs(): Promise<string[]> {
     console.error("Error reading restaurants directory:", error)
     return []
   }
+}
+
+/** Resolve an image URL stored in data.json to its serving URL.
+ *
+ * Restaurant-specific local images can be specified with the "localfolder:" prefix
+ *   e.g., "localfolder:/logo.png" or "localfolder:/homeslider/image.jpg"
+ * which gets mapped to   /restaurants/<slug>/images/<path>
+ *
+ * External URLs (http/https) and already-resolved URLs (start with /restaurants/)
+ * are returned as-is.
+ */
+export function getImageSrc(slug: string, url: string | undefined | null): string {
+  if (!url) return ""
+  if (url.startsWith("/restaurants/")) return url
+  if (/^https?:\/\//i.test(url)) return url
+  
+  // Already-resolved absolute /images/restaurants/<slug>/… path — return as-is
+  if (url.startsWith(`/images/restaurants/${slug}/`)) return url
+  // Other /images/… paths not yet restaurant-scoped — map to /restaurants/<slug>/images/
+  if (url.startsWith("/images/")) {
+    const pathWithoutImages = url.slice("/images/".length)
+    return `/restaurants/${slug}/images/${pathWithoutImages}`
+  }
+  
+  // Handle localfolder: prefix - map to restaurant-specific location
+  if (url.startsWith("localfolder:")) {
+    let pathWithoutPrefix = url.slice("localfolder:".length)
+    if (pathWithoutPrefix.startsWith("/")) {
+      pathWithoutPrefix = pathWithoutPrefix.slice(1)
+    }
+    return `/restaurants/${slug}/images/${pathWithoutPrefix}`
+  }
+  
+  // For other paths (like /assets/, /favicon.ico, etc.) - keep as-is for global static
+  return url
 }
 
 export function groupMenuByCategory(menu: MenuItem[]): MenuCategory[] {

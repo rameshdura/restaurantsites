@@ -77,14 +77,14 @@
     "googleMapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
     "timezone": "Asia/Tokyo"
   },
-    "images": {
-        "logo": {
-            "id": "logo",
-            "url": "/images/restaurants/ramen-taro/logo.png",
-            "alt": "Ramen Taro restaurant logo",
-            "width": 200,
-            "height": 200
-        },
+  "images": {
+    "logo": {
+      "id": "logo",
+      "url": "/images/logo.png",
+      "alt": "Ramen Taro restaurant logo",
+      "width": 200,
+      "height": 200
+    },
     "gallery": [
       {
         "id": "g1",
@@ -175,7 +175,7 @@
             "slides": [
               {
               "id": "slide-1",
-              "image": "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg",
+              "image": "/images/homeslider/nepalese-restaurant.jpg",
               "alt": "Authentic Hakata tonkotsu ramen bowl with chashu pork and soft-boiled egg",
               "subtitle": "",
               "title": "",
@@ -184,7 +184,7 @@
             },
             {
               "id": "slide-2",
-              "image": "/images/restaurants/ramen-taro/homeslider/ramen-2.jpg",
+              "image": "/images/homeslider/pathivara-indian-nepali-restaurant-4-162511.jpg",
               "alt": "Ramen chef masterfully crafting a bowl",
               "subtitle": "",
               "title": "",
@@ -218,7 +218,7 @@
               "name": "Takeshi Yamamoto",
               "role": "Master Chef & Founder",
               "bio": "With over 30 years of experience in traditional Japanese ramen making, Takeshi Yamamoto founded Ramen Taro as a humble Fukuoka street stall in 1985.",
-              "image": "/images/restaurants/ramen-taro/team/chef.png"
+              "image": "/images/team/chef.png"
             },
             "images": [
               "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&q=80&w=1000",
@@ -279,7 +279,6 @@
     },
     "about": {
       "id": "about",
-      "coverImage": "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg",
       "sections": [
         {
           "id": "about-full",
@@ -308,7 +307,6 @@
     },
     "menu": {
       "id": "menu",
-      "coverImage": "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg",
       "sections": [
         {
           "id": "full-menu",
@@ -325,7 +323,6 @@
     },
     "contact": {
       "id": "contact",
-      "coverImage": "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg",
       "sections": [
         {
           "id": "contact-full",
@@ -388,21 +385,21 @@
       "id": "team-takeshi",
       "name": "Takeshi Yamamoto",
       "role": "Master Chef",
-      "image": "/images/restaurants/ramen-taro/team/chef.png",
+      "image": "/images/team/chef.png",
       "bio": "With over 30 years of experience, Takeshi is the heart of our kitchen."
     },
     {
       "id": "team-hanako",
       "name": "Hanako Sato",
       "role": "General Manager",
-      "image": "/images/restaurants/ramen-taro/team/manager.png",
+      "image": "/images/team/manager.png",
       "bio": "Hanako ensures every guest feels at home with her warm hospitality."
     },
     {
       "id": "team-kenji",
       "name": "Kenji Tanaka",
       "role": "Sous Chef",
-      "image": "/images/restaurants/ramen-taro/team/sous-chef.png",
+      "image": "/images/team/sous-chef.png",
       "bio": "Kenji's passion for fresh ingredients brings innovation to our menu."
     }
   ],

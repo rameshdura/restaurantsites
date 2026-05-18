@@ -42,6 +42,24 @@
     "isDelivery": false,
     "priceCurrency": "JPY"
   },
+  "about": {
+    "subtitle": "",
+    "title": "Our Story",
+    "backgroundTitle": "",
+    "content": "this is the main story paragraph",
+    "additionalContent": [
+      "this is second paragraph in about us page",
+      "this is the third paragraph in about us page"
+    ],
+    "foundedYear": 2026,
+    "founder": {
+      "name": "",
+      "role": "",
+      "bio": "",
+      "image": ""
+    },
+    "images": []
+  },
   "localSEO": {
     "neighborhood": "Ogawahigashicho",
     "city": "Kodaira",
@@ -56,7 +74,7 @@
   "images": {
     "logo": {
       "id": "logo",
-      "url": "",
+      "url": "/images/restaurants/ramesh-dura/logo.png",
       "alt": "Ramesh Dura restaurant logo",
       "width": 200,
       "height": 200
@@ -93,9 +111,9 @@
                 "id": "slide-1",
                 "image": "",
                 "alt": "Ramesh Dura restaurant",
-                "title": "Ramesh Dura",
-                "subtitle": "this is ramesh dura",
-                "ctaText": "View Menu",
+                "subtitle": "",
+                "title": "",
+                "ctaText": "",
                 "ctaLink": "#menu"
               }
             ]
@@ -110,7 +128,9 @@
             "layout": "image-right"
           },
           "data": {
+            "subtitle": "",
             "title": "Our Story",
+            "backgroundTitle": "",
             "content": "this is the main story paragraph",
             "additionalContent": [
               "this is second paragraph in about us page",
@@ -135,7 +155,11 @@
             "visible": true
           },
           "data": {
-            "ref": "menu"
+            "subtitle": "",
+            "title": "",
+            "backgroundTitle": "",
+            "description": "Every dish on our menu is prepared using fresh ingredients, aromatic herbs, and carefully selected spices to create rich, balanced flavors inspired by authentic culinary traditions.",
+            "description2": "From healthy light bites to bold signature specialties, each plate is crafted with care and passion — combining freshness, quality, and authentic taste in every serving."
           }
         },
         {
@@ -185,7 +209,21 @@
             "layout": "image-right"
           },
           "data": {
-            "ref": "pages.home.sections.about.data"
+            "ref": "pages.home.sections.about.data",
+            "title": "Our Story",
+            "content": "this is the main story paragraph",
+            "additionalContent": [
+              "this is second paragraph in about us page",
+              "this is the third paragraph in about us page"
+            ],
+            "foundedYear": 2026,
+            "founder": {
+              "name": "",
+              "role": "",
+              "bio": "",
+              "image": ""
+            },
+            "images": []
           }
         },
         {

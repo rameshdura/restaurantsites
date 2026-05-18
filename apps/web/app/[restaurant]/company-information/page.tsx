@@ -4,6 +4,8 @@ import { notFound } from "next/navigation"
 import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
 import { Footer } from "@/components/footer"
+import { ContactSection } from "@workspace/ui/components/contact-section"
+import { FloatingActions } from "@/components/floating-actions"
 import { cn } from "@workspace/ui/lib/utils"
 import { JsonLd } from "@/components/json-ld"
 import { generateCompanyMetadata, generateOrganizationSchema } from "@/lib/seo"
@@ -34,6 +36,9 @@ export default async function CompanyInformationPage({
   const { data } = restaurant
   const info = data.companyInfo
   const translations = getTranslations(data.app?.language)
+  const onlineBookingUrl =
+    data.reservation?.onlineBookingUrl ||
+    data.operations?.services?.onlineBookingUrl
 
   const details = [
     {
@@ -115,6 +120,26 @@ export default async function CompanyInformationPage({
           </div>
         </div>
       </main>
+
+      <ContactSection
+        isHomePage={true}
+        restaurantSlug={slug}
+        openingHours={data.openingHours}
+        holidayNotes={data.holidayNotes}
+        restaurantName={data.name}
+        address={data.address}
+        phone={data.phone}
+        email={data.email}
+        location={data.location}
+        embedUrl={null}
+        translations={translations}
+      />
+
+      <FloatingActions
+        restaurantSlug={slug}
+        onlineBookingUrl={onlineBookingUrl}
+        translations={translations}
+      />
 
       <Footer
         restaurantName={data.name || slug}

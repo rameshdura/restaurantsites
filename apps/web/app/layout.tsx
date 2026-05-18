@@ -30,7 +30,7 @@ export default function RootLayout({
         signature.variable
       )}
     >
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className="overflow-x-hidden">
         <ThemeProvider>
           {children}
           <Toaster />

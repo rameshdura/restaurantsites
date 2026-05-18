@@ -97,6 +97,9 @@ export function ImageSlider({
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
               priority={currentIndex === 0}
+              onError={(e) => {
+                e.currentTarget.style.display = "none"
+              }}
             />
           )}
         </motion.div>
@@ -107,14 +110,14 @@ export function ImageSlider({
         <>
           <button
             onClick={prevSlide}
-            className="absolute top-1/2 left-4 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-md transition-all hover:bg-black/40 lg:opacity-0 lg:group-hover:opacity-100"
+            className="absolute top-1/2 left-4 z-10 flex -translate-y-1/2 items-center justify-center text-white transition-colors hover:text-white/80 lg:opacity-0 lg:group-hover:opacity-100"
             aria-label="Previous slide"
           >
             <HugeiconsIcon icon={ArrowLeft01Icon} size={24} />
           </button>
           <button
             onClick={nextSlide}
-            className="absolute top-1/2 right-4 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-md transition-all hover:bg-black/40 lg:opacity-0 lg:group-hover:opacity-100"
+            className="absolute top-1/2 right-4 z-10 flex -translate-y-1/2 items-center justify-center text-white transition-colors hover:text-white/80 lg:opacity-0 lg:group-hover:opacity-100"
             aria-label="Next slide"
           >
             <HugeiconsIcon icon={ArrowRight01Icon} size={24} />
@@ -133,10 +136,10 @@ export function ImageSlider({
                 setCurrentIndex(index)
               }}
               className={cn(
-                "h-1.5 rounded-full transition-all duration-500",
+                "h-2 rounded-full transition-all duration-500",
                 index === currentIndex
                   ? "w-8 bg-white"
-                  : "w-1.5 bg-white/50 hover:bg-white/80"
+                  : "w-2 bg-white/30 hover:bg-white/50"
               )}
               aria-label={`Go to slide ${index + 1}`}
             />

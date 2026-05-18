@@ -21,7 +21,7 @@
     "serviceHoursDescription": "営業時間中に、忘れられないダイニング体験をお楽しみください。",
     "hoursComingSoon": "営業時間は近日公開...",
     "holidayNotice": "休業日のお知らせ",
-    "requestReservation": "ご予約をリクエスト",
+    "requestReservation": "予約申込",
     "yourName": "お名前",
     "emailAddress": "メールアドレス",
     "subject": "件名",
@@ -68,9 +68,30 @@
   },
   "home": {
     "about": {
-      "title": "私たちの物語",
+      "title": "私たちのストーリー",
       "subtitle": "私たちの物語",
       "backgroundTitle": "伝統"
+    },
+    "hero": {
+      "slide1": {
+        "title": "毎日丁寧に仕上げる本格の味",
+        "subtitle": "新鮮な食材、香り豊かなハーブ、伝統的なスパイスで丁寧に仕上げた料理をご体験ください。",
+        "buttonLabel": "メニューを見る"
+      },
+      "slide2": {
+        "title": "心温まるダイニング体験を",
+        "subtitle": "ヘルシーな軽食から人気の特製料理まで、本格的な味わいをお楽しみください。",
+        "buttonLabel": "私たちについて"
+      }
+    },
+    "menu": {
+      "subtitle": "メニュー",
+      "title": "伝統を味わう",
+      "backgroundTitle": "美食",
+      "description": "新鮮な食材、香り豊かなハーブ、厳選されたスパイスを使用し、本格的な味わいと調和の取れた風味を一皿一皿に丁寧に仕上げています。",
+      "description2": "ヘルシーな軽食から人気の看板メニューまで、すべての料理に新鮮さ、品質、そして本場の美味しさへのこだわりを込めてご提供しています。",
+      "openMenuButton": "メニューを見る",
+      "makeReservationButton": "ご予約はこちら"
     }
   },
   "aboutPage": {

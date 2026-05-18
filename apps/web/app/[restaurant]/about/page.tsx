@@ -1,13 +1,18 @@
 import Image from "next/image"
 import { Metadata } from "next"
-import { getRestaurant } from "@/lib/restaurant"
+import { getRestaurant, getImageSrc } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
 import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
 import { Footer } from "@/components/footer"
 import { TeamSection } from "@workspace/ui/components/team-section"
+import { ContactSection } from "@workspace/ui/components/contact-section"
+import { FloatingActions } from "@/components/floating-actions"
 import { JsonLd } from "@/components/json-ld"
 import { generateAboutMetadata, generateAboutPageSchema } from "@/lib/seo"
+import { CoverSection } from "@workspace/ui/components/cover-section"
+import { cn } from "@workspace/ui/lib/utils"
+import { ImageSlider } from "@workspace/ui/components/image-slider"
 
 interface AboutPageProps {
   params: Promise<{ restaurant: string }>
@@ -32,6 +37,14 @@ export default async function AboutPage({ params }: AboutPageProps) {
 
   const { data } = restaurant
   const translations = getTranslations(data.app?.language)
+  const onlineBookingUrl =
+    data.reservation?.onlineBookingUrl ||
+    data.operations?.services?.onlineBookingUrl
+
+  // Get cover image from page data, fallback to first hero slide image
+  const coverImage = getImageSrc(slug, data.pages?.about?.coverImage || data.hero?.slides?.[0]?.image)
+  const aboutImage = getImageSrc(slug, data.about?.image)
+  const aboutImages = data.about?.images?.map((im) => getImageSrc(slug, im))
 
   return (
     <div className="flex min-h-svh flex-col">
@@ -42,18 +55,41 @@ export default async function AboutPage({ params }: AboutPageProps) {
         defaultLanguage={data.app?.language}
       />
 
-      <main className="flex-1 pt-32 pb-20">
+      {coverImage && (
+        <CoverSection
+          image={coverImage}
+          title={
+            (
+              translations as { home?: { about?: { title?: string } } }
+            ).home?.about?.title || "Our Story"
+          }
+          subtitle={
+            (
+              translations as { home?: { about?: { subtitle?: string } } }
+            ).home?.about?.subtitle || "Our Story"
+          }
+        />
+      )}
+
+      <main className={cn("flex-1", !coverImage ? "pt-32" : "pt-8", "pb-20")}>
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
             <div>
-              <h4 className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
-                {translations.aboutPage?.subtitle || "Our Story"}
-              </h4>
-              <h1 className="mb-8 text-4xl font-bold tracking-tight md:text-6xl">
-                {data.about?.title ||
-                  translations.aboutPage?.title ||
-                  `About ${data.name}`}
-              </h1>
+              {!coverImage && (
+                <h4 className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
+                  {(
+                    translations as { home?: { about?: { subtitle?: string } } }
+                  ).home?.about?.subtitle ||
+                    "Our Story"}
+                </h4>
+              )}
+              {!coverImage && (
+                <h1 className="mb-8 text-4xl font-bold tracking-tight md:text-6xl">
+                  {(
+                    translations as { home?: { about?: { title?: string } } }
+                  ).home?.about?.title || "Our Story"}
+                </h1>
+              )}
               <div className="space-y-6">
                 <p className="text-xl leading-relaxed text-muted-foreground">
                   {data.about?.content || data.description}
@@ -71,15 +107,19 @@ export default async function AboutPage({ params }: AboutPageProps) {
               </div>
             </div>
 
-            {data.about?.image && (
-              <div className="relative aspect-square overflow-hidden rounded-3xl shadow-2xl lg:aspect-4/5">
-                <Image
-                  src={data.about.image}
-                  alt={data.about.title || "About image"}
-                  fill
-                  className="object-cover transition-transform duration-700 hover:scale-105"
-                />
-              </div>
+            {aboutImages ? (
+              <ImageSlider images={aboutImages} />
+            ) : (
+              aboutImage && (
+                <div className="relative aspect-square overflow-hidden rounded-3xl shadow-2xl lg:aspect-4/5">
+                  <Image
+                    src={aboutImage}
+                    alt={data.about?.title || "About image"}
+                    fill
+                    className="object-cover transition-transform duration-700 hover:scale-105"
+                  />
+                </div>
+              )
             )}
           </div>
 
@@ -122,6 +162,26 @@ export default async function AboutPage({ params }: AboutPageProps) {
           )}
         </div>
       </main>
+
+      <ContactSection
+        isHomePage={true}
+        restaurantSlug={slug}
+        openingHours={data.openingHours}
+        holidayNotes={data.holidayNotes}
+        restaurantName={data.name}
+        address={data.address}
+        phone={data.phone}
+        email={data.email}
+        location={data.location}
+        embedUrl={null}
+        translations={translations}
+      />
+
+      <FloatingActions
+        restaurantSlug={slug}
+        onlineBookingUrl={onlineBookingUrl}
+        translations={translations}
+      />
 
       <Footer
         restaurantName={data.name || slug}

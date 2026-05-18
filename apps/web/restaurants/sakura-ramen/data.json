@@ -125,7 +125,7 @@
   "images": {
     "logo": {
       "id": "import-1778503428000-49bryn",
-      "url": "/images/logo.png",
+      "url": "/images/restaurants/sakura-ramen/logo.png",
       "alt": "Sakura Ramen logo",
       "width": 200,
       "height": 200
@@ -159,19 +159,19 @@
     ],
     "team": [
       {
-        "url": "/images/team/chef.png",
+        "url": "/images/restaurants/sakura-ramen/team/chef.png",
         "alt": "Yuki Tanaka - Head Chef & Owner",
         "name": "Yuki Tanaka",
         "role": "Head Chef & Owner"
       },
       {
-        "url": "/images/team/manager.png",
+        "url": "/images/restaurants/sakura-ramen/team/manager.png",
         "alt": "Aiko Nakamura - General Manager",
         "name": "Aiko Nakamura",
         "role": "General Manager"
       },
       {
-        "url": "/images/team/sous-chef.png",
+        "url": "/images/restaurants/sakura-ramen/team/sous-chef.png",
         "alt": "Kenji Sato - Sous Chef",
         "name": "Kenji Sato",
         "role": "Sous Chef"
@@ -199,7 +199,9 @@
     ]
   },
   "about": {
+    "subtitle": "",
     "title": "Our Story",
+    "backgroundTitle": "",
     "content": "Sakura Ramen was born from a simple idea: bring authentic Japanese ramen to the local community using time-honored techniques and the freshest ingredients. What started as a small family kitchen has grown into a beloved neighborhood gathering place where friends and families come together over steaming bowls of handmade noodles.",
     "shortDescription": "Family-owned ramen shop since 2010, specializing in tonkotsu and miso ramen.",
     "mission": "To share the warmth and comfort of authentic Japanese ramen with every bowl we serve.",
@@ -249,7 +251,7 @@
       {
         "name": "Yuki Tanaka",
         "role": "Head Chef & Owner",
-        "image": "/images/team/chef.png",
+"image": "/images/restaurants/sakura-ramen/team/chef.png",
         "bio": "20 years of ramen-making expertise. Trained in Fukuoka.",
         "social": {
           "instagram": "https://instagram.com/yukitanaka"
@@ -521,18 +523,18 @@
                 "id": "slide-authentic-japanese-ramen",
                 "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=2000",
                 "alt": "Bowl of authentic tonkotsu ramen",
-                "title": "Authentic Japanese Ramen",
-                "subtitle": "36-hour slow-cooked broth, handmade noodles, and the freshest ingredients since 2010.",
-                "ctaText": "View Menu",
+                "subtitle": "",
+                "title": "",
+                "ctaText": "",
                 "ctaLink": "#menu"
               },
               {
                 "id": "slide-izakaya-experience",
                 "image": "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&q=80&w=2000",
                 "alt": "Izakaya dining scene",
-                "title": "Izakaya Experience",
-                "subtitle": "Traditional Japanese small plates and craft drinks in a cozy atmosphere.",
-                "ctaText": "Our Story",
+                "subtitle": "",
+                "title": "",
+                "ctaText": "",
                 "ctaLink": "#about"
               }
             ]
@@ -548,7 +550,9 @@
           },
           "data": {
             "ref": "pages.home.sections.about.data",
+            "subtitle": "",
             "title": "Our Story",
+            "backgroundTitle": "",
             "content": "Sakura Ramen was born from a simple idea: bring authentic Japanese ramen to the local community using time-honored techniques and the freshest ingredients. What started as a small family kitchen has grown into a beloved neighborhood gathering place where friends and families come together over steaming bowls of handmade noodles.",
             "additionalContent": [
               "Our broth is simmered for 36 hours using locally sourced pork bones, resulting in a rich, velvety texture that defines our signature style.",
@@ -578,7 +582,11 @@
             "visible": true
           },
           "data": {
-            "ref": "menu"
+            "subtitle": "",
+            "title": "",
+            "backgroundTitle": "",
+            "description": "Every dish on our menu is prepared using fresh ingredients, aromatic herbs, and carefully selected spices to create rich, balanced flavors inspired by authentic culinary traditions.",
+            "description2": "From healthy light bites to bold signature specialties, each plate is crafted with care and passion — combining freshness, quality, and authentic taste in every serving."
           }
         },
         {

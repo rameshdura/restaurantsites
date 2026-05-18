@@ -84,7 +84,7 @@ export function GallerySection({
   }, [items.length])
 
   return (
-    <section className="overflow-hidden border-t border-border/40 bg-background py-20">
+    <section className="overflow-hidden overflow-x-hidden border-t border-border/40 bg-background py-20">
       <div className="mx-auto mb-12 max-w-7xl px-6">
         <SectionHeader
           subtitle={t.subtitle || "Gallery"}

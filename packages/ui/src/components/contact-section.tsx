@@ -227,7 +227,9 @@ export function ContactSection({
 
   return (
     <section
-      className="relative overflow-hidden bg-background py-20"
+      className={`relative overflow-hidden bg-background pb-20 ${
+        hideHeader ? "pt-10" : "pt-20"
+      }`}
       id="contact"
     >
       {/* Decorative Background Elements */}
@@ -454,7 +456,7 @@ export function ContactSection({
                               ? undefined
                               : "John Doe"
                           }
-                          className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pr-4 pl-12 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
+                          className="w-full rounded-2xl border border-foreground/40 bg-white/5 py-4 pr-4 pl-12 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
                         />
                         <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
                           <HugeiconsIcon icon={UserIcon} size={20} />
@@ -479,7 +481,7 @@ export function ContactSection({
                               ? undefined
                               : "john@example.com"
                           }
-                          className="w-full rounded-2xl border border-white/5 bg-white/5 py-4 pr-4 pl-12 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
+                          className="w-full rounded-2xl border border-foreground/40 bg-white/5 py-4 pr-4 pl-12 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
                         />
                         <div className="absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground/40 transition-colors group-focus-within/input:text-primary">
                           <HugeiconsIcon icon={Mail01Icon} size={20} />
@@ -501,7 +503,7 @@ export function ContactSection({
                         name="subject"
                         required
                         defaultValue=""
-                        className="w-full appearance-none rounded-2xl border border-white/5 bg-white/5 py-4 pr-12 pl-12 transition-all outline-none focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
+                        className="w-full appearance-none rounded-2xl border border-foreground/40 bg-white/5 py-4 pr-12 pl-12 transition-all outline-none focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
                       >
                         <option
                           value=""
@@ -565,7 +567,7 @@ export function ContactSection({
                             ? undefined
                             : "Tell us how we can help..."
                         }
-                        className="w-full resize-none rounded-2xl border border-white/5 bg-white/5 px-4 py-4 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
+                        className="w-full resize-none rounded-2xl border border-foreground/40 bg-white/5 px-4 py-4 transition-all outline-none placeholder:text-muted-foreground/30 focus:border-primary/50 focus:bg-white/8 focus:ring-4 focus:ring-primary/5"
                       />
                     </div>
                   </div>

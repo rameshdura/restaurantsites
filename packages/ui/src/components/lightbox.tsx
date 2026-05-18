@@ -224,6 +224,7 @@ export function Lightbox({
                 prevImage()
               }}
               className="flex h-12 w-12 items-center justify-center rounded-full bg-foreground/10 text-foreground"
+              aria-label="Previous"
             >
               <HugeiconsIcon icon={ArrowLeft01Icon} className="size-6" />
             </button>
@@ -233,6 +234,7 @@ export function Lightbox({
                 nextImage()
               }}
               className="flex h-12 w-12 items-center justify-center rounded-full bg-foreground/10 text-foreground"
+              aria-label="Next"
             >
               <HugeiconsIcon icon={ArrowRight01Icon} className="size-6" />
             </button>

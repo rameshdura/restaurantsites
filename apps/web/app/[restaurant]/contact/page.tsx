@@ -1,5 +1,5 @@
 import { Metadata } from "next"
-import { getRestaurant } from "@/lib/restaurant"
+import { getRestaurant, getImageSrc } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
 import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
@@ -11,6 +11,8 @@ import {
   generateContactSchema,
   generateRestaurantSchema,
 } from "@/lib/seo"
+import { CoverSection } from "@workspace/ui/components/cover-section"
+import { cn } from "@workspace/ui/lib/utils"
 
 interface ContactPageProps {
   params: Promise<{ restaurant: string }>
@@ -36,6 +38,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
   const { data } = restaurant
   const t = getTranslations(data.app?.language)
 
+  // Get cover image from page data, fallback to first hero slide image
+  const coverImage = getImageSrc(slug, data.pages?.contact?.coverImage || data.hero?.slides?.[0]?.image)
+
   return (
     <div className="flex min-h-svh flex-col">
       <JsonLd
@@ -50,16 +55,26 @@ export default async function ContactPage({ params }: ContactPageProps) {
         defaultLanguage={data.app?.language}
       />
 
-      <main className="flex-1 pt-32 pb-20">
-        <div className="mx-auto mb-12 max-w-7xl px-6">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-6xl">
-            {t.contact?.title || "Contact Us"}
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            {t.contact?.pageSubtitle ||
-              "We'd love to hear from you. Get in touch with us today."}
-          </p>
-        </div>
+      {coverImage && (
+        <CoverSection
+          image={coverImage}
+          title={t.contact?.title || "Contact Us"}
+          subtitle={t.contact?.pageSubtitle || "Get in Touch"}
+        />
+      )}
+
+      <main className={cn("flex-1", !coverImage ? "pt-32" : "pt-0", "pb-20")}>
+        {!coverImage && (
+          <div className="mx-auto mb-12 max-w-7xl px-6">
+            <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-6xl">
+              {t.contact?.title || "Contact Us"}
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              {t.contact?.pageSubtitle ||
+                "We'd love to hear from you. Get in touch with us today."}
+            </p>
+          </div>
+        )}
 
         <ContactSection
           hideHeader={true}
