@@ -537,7 +537,7 @@ export function mapBuilderToDataJson(formData: SiteBuilderData) {
       representative: formData.representative || "",
       businessPurpose: formData.businessPurpose || "",
       annualReportUrl: formData.annualReportUrl || "",
-      url: `https://restaurantsite.io/${formData.siteSlug}/company-information`,
+      url: `https://restaurantsites.vercel.app/${formData.siteSlug}/company-information`,
     },
 
     location: {

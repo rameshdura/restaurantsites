@@ -36,7 +36,7 @@ export async function POST(request: Request) {
       from: "RestaurantSite.io <onboarding@resend.dev>",
       to: [EMAIL_RECIPIENT],
       subject: emailSubject,
-      replyTo: "noreply@restaurantsite.io",
+      replyTo: "noreply@restaurantsites.vercel.app",
       html: `
         <div style="font-family: sans-serif; padding: 20px; color: #333; max-width: 600px; margin: 0 auto;">
           <div style="text-align: center; margin-bottom: 24px;">
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
           <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
           <p style="font-size: 12px; color: #888;">
             This data.json file can be imported directly into the RestaurantSite.io site builder platform.<br/>
-            Visit <a href="https://restaurantsite.io" style="color: #1a73e8;">restaurantsite.io</a> to manage your restaurant website.
+            Visit <a href="https://restaurantsites.vercel.app" style="color: #1a73e8;">restaurantsites.vercel.app</a> to manage your restaurant website.
           </p>
           <p style="font-size: 11px; color: #bbb; margin-top: 8px;">
             Sent on ${formattedDateTime}

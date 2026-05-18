@@ -11,7 +11,7 @@ import { MetadataRoute } from "next"
  */
 export default function robots(): MetadataRoute.Robots {
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsite.io"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
   const sitemapUrl = `${baseUrl}/sitemap.xml`
 
   return {

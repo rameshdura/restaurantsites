@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const now = new Date()
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsite.io"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
 
   // Static pages (platform level)
   const staticPages: MetadataRoute.Sitemap = [
@@ -115,7 +115,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 export async function sitemapWithFileTimes(): Promise<MetadataRoute.Sitemap> {
   const slugs = await getAllRestaurantSlugs()
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsite.io"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
 
   const entries: MetadataRoute.Sitemap = [
     {

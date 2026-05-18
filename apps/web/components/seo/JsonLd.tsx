@@ -180,7 +180,7 @@ export function QAPageJsonLd({
   )
 }
 
-const DOMAIN = process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsite.io"
+const DOMAIN = process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
 
 /**
  * Validate structured data against schema.org

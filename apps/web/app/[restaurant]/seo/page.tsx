@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 }
 
 // Get base URL from env or use placeholder
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsite.io"
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
 
 interface SEOChecklist {
   route: string
