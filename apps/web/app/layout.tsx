@@ -13,6 +13,12 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://restaurantsite.io'),
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{

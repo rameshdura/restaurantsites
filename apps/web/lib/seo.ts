@@ -8,6 +8,17 @@ const DOMAIN = process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsite.io"
 const DEFAULT_OG_IMAGE = `${DOMAIN}/og-default.jpg`
 
 /**
+ * Helper to ensure image URLs are absolute for Open Graph scrapers.
+ */
+export function getAbsoluteImageUrl(url: string | undefined | null): string {
+  if (!url) return DEFAULT_OG_IMAGE
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url
+  }
+  return `${DOMAIN}${url.startsWith("/") ? "" : "/"}${url}`
+}
+
+/**
  * Generate icons metadata from restaurant logo
  */
 export function generateIcons(data: RestaurantData) {
@@ -250,11 +261,12 @@ export function generateHomeMetadata(
     data.seo?.description ||
     truncate(data.about?.content || data.description, 160)
 
-  const heroImage =
+  const heroImage = getAbsoluteImageUrl(
     data.hero?.slides?.[0]?.image ||
     data.images?.heroImage?.url ||
     data.logo ||
     DEFAULT_OG_IMAGE
+  )
 
   const keywords = data.seo?.keywords || generateKeywords(data)
 
@@ -320,12 +332,13 @@ export function generateAboutMetadata(
       160
     )
 
-  const aboutImage =
+  const aboutImage = getAbsoluteImageUrl(
     data.about?.image ||
     data.images?.coverImage?.url ||
     data.hero?.slides?.[0]?.image ||
     data.logo ||
     DEFAULT_OG_IMAGE
+  )
 
   const keywords = data.seo?.keywords || [
     ...generateKeywords(data),
@@ -394,11 +407,12 @@ export function generateMenuMetadata(
   const description =
     data.seo?.menuDescription || truncate(baseDescription, 160)
 
-  const menuImage =
+  const menuImage = getAbsoluteImageUrl(
     data.menu?.find((item) => item.image && item.isPopular)?.image ||
     data.hero?.slides?.[0]?.image ||
     data.logo ||
     DEFAULT_OG_IMAGE
+  )
 
   const keywords = data.seo?.keywords || [
     ...generateKeywords(data),
@@ -480,7 +494,7 @@ export function generateContactMetadata(
       url: `${DOMAIN}/${slug}/contact`,
       images: [
         {
-          url: data.images?.logo?.url || DEFAULT_OG_IMAGE,
+          url: getAbsoluteImageUrl(data.images?.logo?.url || DEFAULT_OG_IMAGE),
           width: 1200,
           height: 630,
           alt: `${data.name} contact information and map`,
@@ -539,7 +553,7 @@ export function generateBrandMetadata(
       url: `${DOMAIN}/${slug}/brand`,
       images: [
         {
-          url: data.images?.logo?.url || DEFAULT_OG_IMAGE,
+          url: getAbsoluteImageUrl(data.images?.logo?.url || DEFAULT_OG_IMAGE),
           width: 1200,
           height: 630,
           alt: `${data.name} brand assets and marketing materials`,
@@ -589,7 +603,7 @@ export function generateCompanyMetadata(
       url: `${DOMAIN}/${slug}/company-information`,
       images: [
         {
-          url: data.images?.logo?.url || DEFAULT_OG_IMAGE,
+          url: getAbsoluteImageUrl(data.images?.logo?.url || DEFAULT_OG_IMAGE),
           width: 1200,
           height: 630,
           alt: `${data.name} corporate information`,
