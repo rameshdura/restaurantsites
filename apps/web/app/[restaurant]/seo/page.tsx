@@ -1,6 +1,9 @@
 import { Metadata } from "next"
-import { getRestaurant } from "@/lib/restaurant"
-import { notFound } from "next/navigation"
+import Image                         from "next/image"
+import { getRestaurant }             from "@/lib/restaurant"
+import { notFound }                  from "next/navigation"
+import fs                            from "node:fs/promises"
+import { headers }                   from "next/headers"
 import {
   Card,
   CardContent,
@@ -17,6 +20,12 @@ import {
   Globe,
   Image as ImageIcon,
   FileText,
+  Images,
+  Link as LinkIcon,
+  Info,
+  FolderOpen,
+  HardDrive,
+  Link2,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -228,6 +237,453 @@ function SEOPageCard({
   )
 }
 
+// ---------------------------------------------------------------------------
+// Experiment: Local OG Image helpers
+// ---------------------------------------------------------------------------
+
+interface ExperimentLocalOGImageProps {
+  restaurantSlug: string
+  restaurantName: string
+  restaurantData: Record<string, unknown>
+  ogImageUrl?: string // current data.social.ogImage (external Unsplash)
+}
+
+interface OGImageCandidate {
+  label: string
+  path: string
+}
+
+/**
+ * Locate the hero section and return its slides array from a maybe-heterogeneous
+ * SectionBlock[] typed under RestaurantData.pages.home.sections.
+ *
+ * The public `SectionBlock<T>` type doesn't expose the concrete hero-variant's
+ * `data.slides` field, so we reach for `(s as any)` here and keep the complete
+ * TS disabler scoped to the narrowest possible line.
+ */
+function getSlideUrlsFromSections(sections: unknown): { id: string; image: string; alt: string }[] {
+  const arr = Array.isArray(sections) ? sections : []
+  for (let i = 0; i < arr.length; i++) {
+    const s: any = arr[i]
+    if (s?.type === "hero" && Array.isArray(s?.data?.slides)) {
+      return s.data.slides
+    }
+  }
+  return []
+}
+
+/** Build visually distinct candidate images and enrich each with a debug label. */
+function buildCandidates(data: Record<string, unknown>, heroSlides?: { id: string; image: string; alt: string }[]): OGImageCandidate[] {
+  const c: OGImageCandidate[] = []
+
+  const _data = data as any
+
+  const pages: string[] = ["about", "menu", "contact"]
+  for (const p of pages) {
+    const pageObj = _data.pages?.[p]
+    const cover = pageObj?.coverImage ?? pageObj?.data?.coverImage
+    if (typeof cover === "string") c.push({ label: `coverImage / pages.${p}`, path: cover })
+  }
+
+  if (typeof _data.gallery?.[0]?.url === "string")
+    c.push({ label: "data.gallery[0].url", path: _data.gallery[0].url })
+
+  if (_data.images) {
+    const imgs: any = _data.images
+    if (typeof imgs.ogImage === "string")     c.push({ label: "data.images.ogImage",          path: imgs.ogImage })
+    if (typeof imgs.logo === "string")        c.push({ label: "data.images.logo",             path: imgs.logo })
+    if (typeof imgs.logo === "object" && imgs.logo?.url)
+                                              c.push({ label: "data.images.logo.url",         path: imgs.logo.url })
+    if (typeof imgs.featured === "object" && Array.isArray(imgs.featured) && imgs.featured.length > 0) {
+      const url = imgs.featured[0]?.url
+      if (typeof url === "string")            c.push({ label: "data.images.featured[0].url",  path: url })
+    }
+  }
+
+  const heroPaths: string[] = (heroSlides ?? [])
+    .map((s) => s.image)
+    .filter((v): v is string => Boolean(v))
+  for (let i = 0; i < heroPaths.length; i++) {
+    const hp = heroPaths[i]
+    if (hp) c.push({ label: `Hero slide ${i + 1}`, path: hp })
+  }
+
+  if (_data.pages?.about?.images && Array.isArray(_data.pages.about.images)) {
+    const aboutImages: unknown[] = _data.pages.about.images
+    for (let i = 0; i < aboutImages.length; i++) {
+      const u = (aboutImages[i] as any)?.url ?? ""
+      if (typeof u === "string")             c.push({ label: `pages.about.images[${i}].url`, path: u })
+    }
+  }
+  if (typeof _data.pages?.menu?.coverImage === "string")
+    c.push({ label: "pages.menu.coverImage", path: _data.pages.menu.coverImage })
+  if (typeof _data.pages?.contact?.coverImage === "string")
+    c.push({ label: "pages.contact.coverImage", path: _data.pages.contact.coverImage })
+
+  return c
+}
+
+const absSrc = (path: string | undefined, origin?: string): string => path ? `${origin || BASE_URL}${path}` : origin || BASE_URL
+
+function checkDisk(path: string): Promise<{ exists: boolean; fullPath: string }> {
+  const tsDir     = "apps/web"
+  const publicDir = `${tsDir}/public`
+  const diskPath = path.startsWith("/")
+    ? `${publicDir}${path}`
+    : `${publicDir}/${path}`
+  return fs.access(diskPath)
+    .then(()  => ({ exists: true,  fullPath: diskPath }))
+    .catch(() => ({ exists: false, fullPath: diskPath }))
+}
+
+function resolveFullUrl(
+  path: string,
+  siteUrl: string,
+  reqOrigin: string
+): { url: string; note: string } {
+  if (!path) return { url: reqOrigin, note: "empty path → origin only" }
+
+  if (reqOrigin && !siteUrl) {
+    return { url: `${reqOrigin}${path}`, note: `from request Origin header (${reqOrigin})` }
+  }
+
+  const base = siteUrl || reqOrigin
+  if (!base) return { url: path, note: "no base available — raw path" }
+
+  if (path.startsWith("http")) return { url: path, note: "already absolute" }
+  if (path.startsWith("//"))     return { url: `https:${path}`, note: "protocol-relative" }
+
+  return { url: `${base}${path}`, note: `${base} + path` }
+}
+
+function labelForSiteUrl(siteUrl: string | undefined, origin: string): string[] {
+  const rows: string[] = []
+  rows.push(`NEXT_PUBLIC_SITE_URL: ${siteUrl || "(not set)"}`)
+  if (origin) rows.push(`Request Origin header: ${origin}`)
+  return rows
+}
+
+async function ExperimentLocalOGImage({
+  restaurantSlug,
+  restaurantName,
+  restaurantData,
+  ogImageUrl,
+}: ExperimentLocalOGImageProps) {
+  // Resolve origin the current request so we always know the live host.
+  const reqHeader = await headers()
+  const reqOrigin = reqHeader.get("origin") || ""
+  const reqHost   = reqHeader.get("x-forwarded-host") || ""
+
+  const heroSlideImages = getSlideUrlsFromSections((restaurantData.pages as any)?.home?.sections)
+  const candidates = buildCandidates(restaurantData, heroSlideImages)
+
+  // Collect full URLs and disk-existence in parallel
+  const enriched = await Promise.all(
+    candidates.map(async (c) => {
+      const resolved = resolveFullUrl(c.path, BASE_URL, reqOrigin)
+      const diskInfo = await checkDisk(c.path)
+      return { ...c, ...resolved, reqOrigin, ...diskInfo }
+    })
+  )
+
+  return (
+    <section className="mb-16 space-y-6 rounded-2xl border-2 border-primary/30 bg-primary/[0.02] p-6">
+      <div className="flex items-center gap-3">
+        <div className="rounded-full bg-primary/10 p-2">
+          <Images className="h-5 w-5 text-primary" />
+        </div>
+        <div>
+          <h2 className="text-xl font-bold tracking-tight">
+            Experiment: Local OG Image
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            Testing every available local image candidate for <strong>{restaurantName}</strong> —{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs">/{restaurantSlug}</code>
+          </p>
+        </div>
+      </div>
+
+      {/* ─── Reference: current external ogImage ─── */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          <LinkIcon className="h-3 w-3" /> Current ogImage (external)
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="space-y-1 text-xs">
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-[10px]">data.social.ogImage</Badge>
+              <Badge variant="outline" className="text-[10px] border-amber-500/40 text-amber-600">external · current</Badge>
+            </div>
+            <div className="overflow-hidden rounded-lg border border-border/40 bg-muted/20 p-2">
+              <img
+                src={ogImageUrl}
+                alt="Current external OG image"
+                className="h-24 w-full object-cover"
+              />
+            </div>
+              <code className="text-[10px] text-muted-foreground block truncate">
+                src={absSrc(ogImageUrl, reqOrigin)}
+              </code>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── Candidates ─── */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          <ImageIcon className="h-3 w-3" /> Candidates
+        </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          {enriched.map((c, i) => {
+            const abs  = absSrc(c.path, reqOrigin)
+            const rel  = c.path
+            const fallbackMeta = JSON.stringify(c)
+            return (
+              <div key={`${c.label}-${i}`} className="space-y-2">
+                {/* Row ① absolute src  (= BASE_URL + path) */}
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1">
+                    <Badge variant="default" className="text-[10px]">① absolute</Badge>
+                    <code className="text-muted-foreground">{c.label}</code>
+                  </div>
+                  <div className="overflow-hidden rounded-lg border border-border/40 bg-muted/20 p-2">
+                    <Image
+                      key={`abs-${i}`}
+                      src={abs}
+                      alt={c.label}
+                      width={600}
+                      height={200}
+                      className="h-24 w-full object-cover"
+                      unoptimized
+                    />
+                  </div>
+                  <code className="text-[10px] text-muted-foreground block truncate">
+                    src={abs}
+                  </code>
+                </div>
+
+                {/* Row ② relative src  (path only, no BASE_URL) */}
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1">
+                    <Badge variant="secondary" className="text-[10px]">② relative</Badge>
+                    <code className="text-muted-foreground">{c.label}</code>
+                  </div>
+                  <div className="overflow-hidden rounded-lg border border-border/40 bg-muted/20 p-2">
+                    <Image
+                      key={`rel-${i}`}
+                      src={rel}
+                      alt={c.label}
+                      width={600}
+                      height={200}
+                      className="h-24 w-full object-cover"
+                      unoptimized
+                    />
+                  </div>
+                  <code className="text-[10px] text-muted-foreground block truncate">
+                    src={rel}
+                  </code>
+                </div>
+
+                {/* Row ③ page.tsx default  (= undefined fallback from SEOChecklistCard) */}
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1">
+                    <Badge variant="outline" className="text-[10px]">③ missing src</Badge>
+                    <code className="text-muted-foreground">{c.label}</code>
+                  </div>
+                  <div className="overflow-hidden rounded-lg border border-destructive/40 bg-destructive/5 p-2">
+                    <Image
+                      key={`miss-${i}`}
+                      src={"/images/_nonexistent_missing.jpg"}
+                      alt="MISSING – should fail"
+                      width={600}
+                      height={200}
+                      className="h-24 w-full object-cover bg-destructive/20"
+                    />
+                  </div>
+                  <code className="text-[10px] text-muted-foreground block truncate">
+                    src={"/_nonexistent_missing.jpg"}
+                  </code>
+                </div>
+
+                {/* Row ④ explicit meta fall-back */}
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1">
+                    <Badge variant="outline" className="text-[10px] text-green-600">④ meta fallback</Badge>
+                    <code className="text-muted-foreground">{c.label}</code>
+                  </div>
+                  <div className="rounded-lg border border-border/40 bg-green-500/5 p-2 text-[10px] text-muted-foreground">
+                    <code className="block truncate">{fallbackMeta}</code>
+                    <span className="mt-1 block text-green-600">
+                      ✓ Stored in page.tsx metadata / meta tag
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* ─── URL Debug ─── */}
+      <Card className="border-blue-500/30 bg-blue-500/5">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <Link2 className="h-4 w-4" /> URL Debug
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-xs">
+          {/* ── Origin / base-URL block ─────────────────────────────────── */}
+          <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
+            <div className="flex items-center gap-1.5">
+              <HardDrive className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+              <code className="rounded bg-muted px-1.5 py-0.5">
+                NEXT_PUBLIC_SITE_URL
+              </code>
+              <span className="text-muted-foreground">=</span>
+              <code className="rounded bg-muted px-1.5 py-0.5">
+                {BASE_URL}
+              </code>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Globe className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+              <code className="rounded bg-muted px-1.5 py-0.5">Origin</code>
+              <span className="text-muted-foreground">=</span>
+              {reqOrigin ? (
+                <code className="rounded bg-green-500/10 px-1.5 py-0.5 text-green-600">
+                  {reqOrigin}
+                </code>
+              ) : (
+                <code className="rounded bg-red-500/5 px-1.5 py-0.5 text-red-500">
+                  (unavailable — headers() threw)
+                </code>
+              )}
+            </div>
+            {reqHost && (
+              <div className="flex items-center gap-1.5">
+                <Globe className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                <code className="rounded bg-muted px-1.5 py-0.5">
+                  x-forwarded-host
+                </code>
+                <span className="text-muted-foreground">=</span>
+                <code className="rounded bg-muted px-1.5 py-0.5">
+                  {reqHost}
+                </code>
+              </div>
+            )}
+          </div>
+
+          {/* ── Per-candidate table ────────────────────────────────────── */}
+          <div className="overflow-x-auto rounded-lg border border-border/40">
+            <table className="w-full [&_th]:border-b [&_th]:border-border/40 [&_th]:bg-muted/50 [&_th]:p-1.5 [&_th]:text-left [&_th]:text-[11px] [&_th]:font-semibold [&_td]:border-b [&_td]:border-border/40 [&_td]:p-1.5 [&_td]:text-[11px]">
+              <thead>
+                <tr>
+                  <th>Label</th>
+                  <th>Path (data.json)</th>
+                  <th>Resolved URL</th>
+                  <th>Origin used</th>
+                  <th>On disk?</th>
+                </tr>
+              </thead>
+              <tbody>
+                {enriched.map((c, i) => (
+                  <tr key={`debug-${c.label}-${i}`}>
+                    <td className="text-muted-foreground">
+                      <code className="text-[10px]">{c.label}</code>
+                    </td>
+                    <td>
+                      <code className="text-[10px] text-muted-foreground">
+                        {c.path}
+                      </code>
+                    </td>
+                    <td>
+                      <code className="text-[10px] break-all">{c.url}</code>
+                    </td>
+                    <td>
+                      {c.note ? (
+                        <code className="text-[10px] text-amber-600 block max-w-[180px]">
+                          {c.note}
+                        </code>
+                      ) : (
+                        <span className="text-[10px] text-muted-foreground">—</span>
+                      )}
+                    </td>
+                    <td>
+                      {c.exists ? (
+                        <Badge
+                          variant="default"
+                          className="bg-green-500/10 text-green-600 border-green-500/20 text-[10px]"
+                        >
+                          ✓ {c.fullPath}
+                        </Badge>
+                      ) : (
+                        <Badge
+                          variant="destructive"
+                          className="bg-red-500/5 text-red-500 border-red-500/20 text-[10px]"
+                        >
+                          ✗
+                        </Badge>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ─── Summary legend ─── */}
+      <Card className="border-amber-500/30 bg-amber-500/5">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <Search className="h-4 w-4" /> Debug Guide
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2 text-xs">
+          <p>
+            <strong>① absolute</strong> — <code className="rounded bg-muted px-1">src={"{BASE_URL + path}"}</code>{" "}
+            — This is also what the browser receives if the page is inside{" "}
+            <code className="rounded bg-muted px-1">&lt;head&gt;</code>:
+            the URL must be fully qualified or the social scraper won't find it.
+          </p>
+          <p>
+            <strong>② relative</strong> — <code className="rounded bg-muted px-1">src={"{path}"}</code>{" "}
+            — Works in JSX but is unsafe in OG meta tags because crawlers don't
+            resolve the path against your domain.
+          </p>
+          <p>
+            <strong>③ missing src</strong> — demonstrates the default "no-image"
+            state; the <code className="rounded bg-muted px-1">&lt;Image /&gt;</code> code above carries{" "}
+            <code className="rounded bg-muted px-1">onError</code> so you can see exactly
+            when the browser fires it.
+          </p>
+          <p>
+            <strong>④ meta fallback</strong> — the raw JSON object is stored here
+            (not rendered as an image, only useful as a reference string).
+          </p>
+          <div className="rounded-lg border border-primary/30 bg-primary/10 p-2 text-[11px]">
+            <strong>Next.js &lt;Image /&gt; behaviour to watch for:</strong>
+            <ul className="ml-4 mt-1 space-y-0.5 list-disc">
+              <li>
+                <code className="rounded bg-muted px-1">next/image</code> needs a
+                <strong> real remote URL</strong> or a real static file; it will
+                silently fall back to a blank placeholder when the file is 404
+                — bypass that with <code className="rounded bg-muted px-1">unoptimized</code>.
+              </li>
+              <li>If the OG-image <code className="rounded bg-muted px-1">&lt;meta property="og:image"&gt;</code> is
+                set in <code className="rounded bg-muted px-1">generateMetadata()</code>,{" "}
+                Next.js does <em>not</em> rewrite local paths — the tag contains
+                whatever string you return, exactly as-is.</li>
+              <li>Use the BADGE colours above to match which panel is currently
+                rendering the correct image for this restaurant.</li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+    </section>
+  )
+}
+
 interface SEOPreviewPageProps {
   params: Promise<{ restaurant: string }>
 }
@@ -241,6 +697,7 @@ export default async function SEOPreviewPage({ params }: SEOPreviewPageProps) {
   }
 
   const { data } = restaurant
+  const restaurantData = data as unknown as Record<string, unknown>
 
   // Generate current metadata state based on existing data
   const currentMetadata = {
@@ -329,6 +786,16 @@ export default async function SEOPreviewPage({ params }: SEOPreviewPageProps) {
       </div>
 
       <main className="container mx-auto max-w-7xl px-6 py-12">
+        {/* ================================================================== */}
+        {/* EXPERIMENT: Local OG Image Preview                                   */}
+        {/* ================================================================== */}
+        <ExperimentLocalOGImage
+          restaurantSlug={slug}
+          restaurantName={data.name}
+          restaurantData={restaurantData}
+          ogImageUrl={data.social?.ogImage}
+        />
+
         {/* Dashboard Header */}
         <div className="mb-12 space-y-4">
           <div className="flex items-center justify-between">
