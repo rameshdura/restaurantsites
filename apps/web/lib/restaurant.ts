@@ -658,38 +658,20 @@ export async function getAllRestaurantSlugs(): Promise<string[]> {
   }
 }
 
-/** Resolve an image URL stored in data.json to its serving URL.
+/** Resolve an image URL and serve it from the `public/` folder.
  *
- * Restaurant-specific local images can be specified with the "localfolder:" prefix
- *   e.g., "localfolder:/logo.png" or "localfolder:/homeslider/image.jpg"
- * which gets mapped to   /restaurants/<slug>/images/<path>
+ * v2 convention — URLs already point directly into
+ *   public/images/restaurants/<slug>/…
+ *   e.g. "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg"
+ * is the filesystem path:
+ *   public/images/restaurants/ramen-taro/homeslider/ramen-1.jpg
  *
- * External URLs (http/https) and already-resolved URLs (start with /restaurants/)
- * are returned as-is.
+ * External URLs (http/https) are returned as-is.
+ * All other relative/absolute paths are returned as-is for global static assets.
  */
-export function getImageSrc(slug: string, url: string | undefined | null): string {
+export function getImageSrc(_slug: string, url: string | undefined | null): string {
   if (!url) return ""
-  if (url.startsWith("/restaurants/")) return url
   if (/^https?:\/\//i.test(url)) return url
-  
-  // Already-resolved absolute /images/restaurants/<slug>/… path — return as-is
-  if (url.startsWith(`/images/restaurants/${slug}/`)) return url
-  // Other /images/… paths not yet restaurant-scoped — map to /restaurants/<slug>/images/
-  if (url.startsWith("/images/")) {
-    const pathWithoutImages = url.slice("/images/".length)
-    return `/restaurants/${slug}/images/${pathWithoutImages}`
-  }
-  
-  // Handle localfolder: prefix - map to restaurant-specific location
-  if (url.startsWith("localfolder:")) {
-    let pathWithoutPrefix = url.slice("localfolder:".length)
-    if (pathWithoutPrefix.startsWith("/")) {
-      pathWithoutPrefix = pathWithoutPrefix.slice(1)
-    }
-    return `/restaurants/${slug}/images/${pathWithoutPrefix}`
-  }
-  
-  // For other paths (like /assets/, /favicon.ico, etc.) - keep as-is for global static
   return url
 }
 
