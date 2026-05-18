@@ -669,13 +669,19 @@ export async function getAllRestaurantSlugs(): Promise<string[]> {
  * External URLs (http/https) are returned as-is.
  * All other relative/absolute paths are returned as-is for global static assets.
  */
-export function getImageSrc(_slug: string, url: string | undefined | null): string {
+export function getImageSrc(slug: string, url: string | undefined | null): string {
   if (!url) return ""
   if (/^https?:\/\//i.test(url)) return url
+  
+  // If it's a relative path (doesn't start with /), assume it's in the restaurant's image folder
+  if (!url.startsWith("/")) {
+    return `/images/restaurants/${slug}/${url}`
+  }
+  
   return url
 }
 
-export function groupMenuByCategory(menu: MenuItem[]): MenuCategory[] {
+export function groupMenuByCategory(menu: MenuItem[], slug: string): MenuCategory[] {
   return menu.reduce((acc, item) => {
     const existingCategory = acc.find((c) => c.title === item.category)
     const menuItem = {
@@ -683,7 +689,7 @@ export function groupMenuByCategory(menu: MenuItem[]): MenuCategory[] {
       name: item.name,
       description: item.description,
       price: item.price,
-      image: item.image,
+      image: getImageSrc(slug, item.image),
     }
 
     if (existingCategory) {

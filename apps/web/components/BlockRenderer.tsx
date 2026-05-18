@@ -186,7 +186,7 @@ function MenuBlock({
   translations: Record<string, unknown>
   restaurantSlug: string
 }) {
-  const categories = groupMenuByCategory((data.menu ?? []) as MenuItem[])
+  const categories = groupMenuByCategory((data.menu ?? []) as MenuItem[], restaurantSlug)
   if (!categories.length) return null
 
   const isPreview = section.id === "menu-preview"
@@ -333,14 +333,22 @@ function MenuBlock({
 
 function GalleryBlock({
   data,
+  restaurantSlug,
   translations,
 }: {
   data: RestaurantData
+  restaurantSlug: string
   translations: Record<string, unknown>
 }) {
   const gallery =
-    data.images?.gallery?.map((img) => ({ src: img.url, alt: img.alt })) ??
-    data.about?.images?.map((url) => ({ src: url, alt: data.name }))
+    data.images?.gallery?.map((img) => ({
+      src: getImageSrc(restaurantSlug, img.url),
+      alt: img.alt,
+    })) ??
+    data.about?.images?.map((url) => ({
+      src: getImageSrc(restaurantSlug, url),
+      alt: data.name,
+    }))
 
   return (
     <GallerySection
@@ -391,7 +399,7 @@ function DrinksBlock({
               className="group relative aspect-[4/5] overflow-hidden rounded-3xl border border-border/40 bg-background/50 shadow-md backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5"
             >
               <Image
-                src={item.url}
+                src={getImageSrc(restaurantSlug, item.url)}
                 alt={item.alt}
                 fill
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -538,8 +546,8 @@ const BLOCK_MAP: Record<
       restaurantSlug={restaurantSlug}
     />
   ),
-  gallery: ({ data, translations }) => (
-    <GalleryBlock data={data} translations={translations} />
+  gallery: ({ data, restaurantSlug, translations }) => (
+    <GalleryBlock data={data} restaurantSlug={restaurantSlug} translations={translations} />
   ),
   reviews: ({ data, translations }) => (
     <ReviewsBlock data={data} translations={translations} />

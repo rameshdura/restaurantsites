@@ -9,6 +9,14 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/images/restaurants/:slug/:path*",
+        destination: "/api/restaurants/:slug/images/:path*",
+      },
+    ];
+  },
 }
 
 export default nextConfig

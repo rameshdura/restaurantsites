@@ -42,7 +42,7 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
   }
 
   const { data, menu } = restaurant
-  const categories = groupMenuByCategory(menu)
+  const categories = groupMenuByCategory(menu, slug)
   const translations = getTranslations(data.app?.language)
   const onlineBookingUrl =
     data.reservation?.onlineBookingUrl ||
