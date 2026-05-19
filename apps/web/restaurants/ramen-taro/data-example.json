@@ -4,9 +4,9 @@
   "name": "Ramen Taro",
   "description": "Authentic Japanese ramen restaurant in the heart of Tokyo.",
   "foundingDate": "1985-01-01",
-  "menuLink": "/assets/menu-ramen-taro.pdf",
+  "menuLink": "pdfmenu/ramen-taro-menu.pdf",
   "app": {
-    "language": "EN",
+    "language": "JA",
     "currency": "JPY"
   },
   "seo": {
@@ -77,72 +77,90 @@
     "googleMapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
     "timezone": "Asia/Tokyo"
   },
-  "images": {
-    "logo": {
-      "id": "logo",
-      "url": "/images/logo.png",
-      "alt": "Ramen Taro restaurant logo",
-      "width": 200,
-      "height": 200
-    },
+    "images": {
+        "favicon": {
+            "url": ""
+        },
+        "logo": {
+            "id": "logo",
+            "url": "/images/restaurants/ramen-taro/logo.png",
+            "alt": "Ramen Taro restaurant logo",
+            "width": 200,
+            "height": 200
+        },
     "gallery": [
       {
         "id": "g1",
-        "url": "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&q=80&w=1000",
+        "url": "/images/restaurants/ramen-taro/ourgallery/gallery-1.png",
         "alt": "Inside Ramen Taro restaurant — warm Japanese dining atmosphere"
       },
       {
         "id": "g2",
-        "url": "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=1000",
-        "alt": "Ramen bowl close-up with toppings"
+        "url": "/images/restaurants/ramen-taro/ourgallery/gallery-2.png",
+        "alt": "Authentic Ramen Bowl"
       },
       {
         "id": "g3",
-        "url": "https://images.unsplash.com/photo-1511910849309-0dffb8785146?auto=format&fit=crop&q=80&w=1000",
-        "alt": "Chef preparing ramen noodles"
+        "url": "/images/restaurants/ramen-taro/ourgallery/gallery-3.png",
+        "alt": "Chef Masterfully Crafting Ramen"
+      },
+      {
+        "id": "g4",
+        "url": "/images/restaurants/ramen-taro/ourgallery/gallery-4.png",
+        "alt": "Cozy Japanese Dining Area"
+      },
+      {
+        "id": "g5",
+        "url": "/images/restaurants/ramen-taro/ourgallery/gallery-5.png",
+        "alt": "Fresh Ramen Ingredients"
+      },
+      {
+        "id": "g6",
+        "url": "/images/restaurants/ramen-taro/ourgallery/gallery-6.png",
+        "alt": "Ramen Taro Evening Exterior"
       }
     ],
     "featured": [
       {
         "id": "f1",
-        "url": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=800",
+        "url": "/images/restaurants/ramen-taro/ourfood/food-1.png",
         "alt": "Tonkotsu Ramen"
       },
       {
         "id": "f2",
-        "url": "https://images.unsplash.com/photo-1591814468924-caf88d1232e1?auto=format&fit=crop&q=80&w=800",
+        "url": "/images/restaurants/ramen-taro/ourfood/food-2.png",
         "alt": "Spicy Miso Ramen"
       },
       {
         "id": "f3",
-        "url": "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=800",
+        "url": "/images/restaurants/ramen-taro/ourfood/food-3.png",
         "alt": "Shoyu Ramen"
       },
       {
         "id": "f4",
-        "url": "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&q=80&w=800",
+        "url": "/images/restaurants/ramen-taro/ourfood/food-4.png",
         "alt": "Gyoza"
       }
     ],
     "drinks": [
       {
         "id": "d1",
-        "url": "https://images.unsplash.com/photo-1608270586620-248524c67de9?auto=format&fit=crop&q=80&w=800",
+        "url": "/images/restaurants/ramen-taro/ourdrink/drink-1.png",
         "alt": "Sapporo Premium Beer"
       },
       {
         "id": "d2",
-        "url": "https://images.unsplash.com/photo-1664477407933-dd42ed0c6c62?auto=format&fit=crop&q=80&w=800",
+        "url": "/images/restaurants/ramen-taro/ourdrink/drink-2.png",
         "alt": "Hot Sake"
       },
       {
         "id": "d3",
-        "url": "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&q=80&w=800",
+        "url": "/images/restaurants/ramen-taro/ourdrink/drink-3.png",
         "alt": "Matcha Latte"
       },
       {
         "id": "d4",
-        "url": "https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&q=80&w=800",
+        "url": "/images/restaurants/ramen-taro/ourdrink/drink-4.png",
         "alt": "Calpico"
       }
     ]
@@ -158,6 +176,29 @@
     "fiscalYearEnd": "End of March",
     "representative": "Poudel Prakash",
     "url": "/ramen-taro/company-information"
+  },
+  "menuCategories": [
+    {
+      "name": "Ramen",
+      "items": [
+        {
+          "name": "Tonkotsu Ramen",
+          "description": "Rich pork bone broth, thin noodles, chashu, soft-boiled egg.",
+          "price": "15",
+          "category": "Ramen",
+          "image": "/images/restaurants/ramen-taro/ourfood/food-1.png"
+        }
+      ]
+    }
+  ],
+  "about": {
+    "representative": {
+      "name": "Takeshi Yamamoto",
+      "position": "Master Chef & Founder",
+      "message": "Quality is the heartbeat of our kitchen. Every bowl I serve is a tribute to the traditions I learned in Fukuoka, brought to life with passion for our guests in Tokyo.",
+      "story": "Takeshi started his journey in 1985 at a small street stall. He believes that the essence of a great ramen lies in the patience of simmering the broth for 48 hours and the connection built with every customer who walks through our doors.",
+      "image": "/images/restaurants/ramen-taro/team/representative.png"
+    }
   },
   "pages": {
     "home": {
@@ -175,7 +216,7 @@
             "slides": [
               {
               "id": "slide-1",
-              "image": "/images/homeslider/nepalese-restaurant.jpg",
+              "image": "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg",
               "alt": "Authentic Hakata tonkotsu ramen bowl with chashu pork and soft-boiled egg",
               "subtitle": "",
               "title": "",
@@ -184,7 +225,7 @@
             },
             {
               "id": "slide-2",
-              "image": "/images/homeslider/pathivara-indian-nepali-restaurant-4-162511.jpg",
+              "image": "/images/restaurants/ramen-taro/homeslider/ramen-2.jpg",
               "alt": "Ramen chef masterfully crafting a bowl",
               "subtitle": "",
               "title": "",
@@ -218,14 +259,16 @@
               "name": "Takeshi Yamamoto",
               "role": "Master Chef & Founder",
               "bio": "With over 30 years of experience in traditional Japanese ramen making, Takeshi Yamamoto founded Ramen Taro as a humble Fukuoka street stall in 1985.",
-              "image": "/images/team/chef.png"
+              "image": "/images/restaurants/ramen-taro/team/chef.png"
             },
             "images": [
-              "https://images.unsplash.com/photo-1552611052-33e04de081de?auto=format&fit=crop&q=80&w=1000",
-              "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=1000",
-              "https://images.unsplash.com/photo-1511910849309-0dffb8785146?auto=format&fit=crop&q=80&w=1000"
+              "/images/restaurants/ramen-taro/ourstory/story-1.png",
+              "/images/restaurants/ramen-taro/ourstory/story-2.png",
+              "/images/restaurants/ramen-taro/ourstory/story-3.png",
+              "/images/restaurants/ramen-taro/ourstory/story-4.png"
             ]
-          }
+          },
+          "foundedYear": 1985
         },
         {
           "id": "menu-preview",
@@ -279,6 +322,7 @@
     },
     "about": {
       "id": "about",
+      "coverImage": "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg",
       "sections": [
         {
           "id": "about-full",
@@ -307,6 +351,7 @@
     },
     "menu": {
       "id": "menu",
+      "coverImage": "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg",
       "sections": [
         {
           "id": "full-menu",
@@ -323,6 +368,7 @@
     },
     "contact": {
       "id": "contact",
+      "coverImage": "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg",
       "sections": [
         {
           "id": "contact-full",
@@ -385,21 +431,21 @@
       "id": "team-takeshi",
       "name": "Takeshi Yamamoto",
       "role": "Master Chef",
-      "image": "/images/team/chef.png",
+      "image": "/images/restaurants/ramen-taro/team/chef.png",
       "bio": "With over 30 years of experience, Takeshi is the heart of our kitchen."
     },
     {
       "id": "team-hanako",
       "name": "Hanako Sato",
       "role": "General Manager",
-      "image": "/images/team/manager.png",
+      "image": "/images/restaurants/ramen-taro/team/manager.png",
       "bio": "Hanako ensures every guest feels at home with her warm hospitality."
     },
     {
       "id": "team-kenji",
       "name": "Kenji Tanaka",
       "role": "Sous Chef",
-      "image": "/images/team/sous-chef.png",
+      "image": "/images/restaurants/ramen-taro/team/sous-chef.png",
       "bio": "Kenji's passion for fresh ingredients brings innovation to our menu."
     }
   ],
@@ -461,7 +507,7 @@
       "price": "15",
       "category": "Ramen",
       "isPopular": true,
-      "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourfood/food-1.png"
     },
     {
       "id": "spicy-miso-ramen",
@@ -470,7 +516,7 @@
       "price": "16.5",
       "category": "Ramen",
       "isPopular": true,
-      "image": "https://images.unsplash.com/photo-1591814468924-caf88d1232e1?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourfood/food-2.png"
     },
     {
       "id": "shoyu-ramen",
@@ -478,7 +524,7 @@
       "description": "Soy sauce based clear broth with bamboo shoots and nori.",
       "price": "14.5",
       "category": "Ramen",
-      "image": "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourfood/food-3.png"
     },
     {
       "id": "vegetarian-miso",
@@ -486,7 +532,7 @@
       "description": "Creamy miso broth with seasonal vegetables and tofu.",
       "price": "15.5",
       "category": "Ramen",
-      "image": "https://images.unsplash.com/photo-1623341214825-9f4f963727da?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourfood/food-4.png"
     },
     {
       "id": "black-garlic-ramen",
@@ -613,7 +659,7 @@
       "description": "Classic Japanese lager.",
       "price": "7",
       "category": "Drinks",
-      "image": "https://images.unsplash.com/photo-1608270586620-248524c67de9?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png"
     },
     {
       "id": "sapporo-premium",
@@ -621,7 +667,7 @@
       "description": "Golden lager with a crisp finish.",
       "price": "7",
       "category": "Drinks",
-      "image": "https://images.unsplash.com/photo-1532890801473-151f85303757?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png"
     },
     {
       "id": "hot-sake",
@@ -629,7 +675,7 @@
       "description": "Traditional rice wine served warm.",
       "price": "12",
       "category": "Drinks",
-      "image": "https://images.unsplash.com/photo-1613063372217-49f48545d4b1?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-3.png"
     },
     {
       "id": "cold-sake",
@@ -637,7 +683,7 @@
       "description": "Premium Junmai Ginjo served chilled.",
       "price": "15",
       "category": "Drinks",
-      "image": "https://images.unsplash.com/photo-1607330289024-1535c6b4e1c1?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-4.png"
     },
     {
       "id": "matcha-latte",
@@ -645,7 +691,7 @@
       "description": "Creamy green tea latte, hot or iced.",
       "price": "6",
       "category": "Drinks",
-      "image": "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png"
     },
     {
       "id": "calpico",
@@ -653,7 +699,7 @@
       "description": "Refreshing non-carbonated milky soft drink.",
       "price": "4.5",
       "category": "Drinks",
-      "image": "https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png"
     },
     {
       "id": "ramune",
@@ -661,7 +707,7 @@
       "description": "Classic marble-stoppered Japanese soda.",
       "price": "5",
       "category": "Drinks",
-      "image": "https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-3.png"
     },
     {
       "id": "iced-oolong-tea",
@@ -669,7 +715,7 @@
       "description": "Unsweetened traditional Japanese tea.",
       "price": "4",
       "category": "Drinks",
-      "image": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-4.png"
     },
     {
       "id": "sparkling-water",
@@ -677,7 +723,7 @@
       "description": "Refreshing carbonated water with lime.",
       "price": "3.5",
       "category": "Drinks",
-      "image": "https://images.unsplash.com/photo-1551829142-d9b812ef36a6?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png"
     },
     {
       "id": "plum-wine",
@@ -685,7 +731,7 @@
       "description": "Sweet and tangy Japanese Umeshu.",
       "price": "9",
       "category": "Drinks",
-      "image": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&q=80&w=800"
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png"
     },
     {
       "id": "mochi-ice-cream",

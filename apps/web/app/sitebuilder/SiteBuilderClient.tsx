@@ -16,24 +16,111 @@ export default function SiteBuilderPage() {
   const action = searchParams.get("action")
   const slug = searchParams.get("slug")
 
-  const [siteToEdit, setSiteToEdit] = useState<SiteBuilderData | undefined>(
-    undefined
-  )
+  const [formData, setFormData] = useState<SiteBuilderData | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(true)
+
+  const updateFormData = <K extends keyof SiteBuilderData>(field: K, value: SiteBuilderData[K]) => {
+    setFormData((prev) => prev ? ({ ...prev, [field]: value }) : prev)
+  }
 
   useEffect(() => {
     const init = async () => {
       if (action === "edit" && slug) {
         const sites = await getSites()
         const found = sites.find((s) => s.siteSlug === slug)
-        setSiteToEdit(found)
+        setFormData(found)
       } else {
-        setSiteToEdit(undefined)
-      }
-      setIsLoading(false)
-    }
-    init()
-  }, [action, slug])
+        setFormData({
+            uid: "",
+            siteName: "",
+            siteSlug: "",
+            description: "",
+            tagline: "",
+            address: "",
+            phone: "",
+            email: "",
+            website: "",
+            menuLink: "",
+            foundingDate: "",
+            language: "EN",
+            currency: "USD",
+            seoTitle: "",
+            seoDescription: "",
+            keywords: [],
+            noindex: false,
+            ogLocale: "en_US",
+            twitterCard: "summary_large_image",
+            twitterSite: "",
+            socialInstagram: "",
+            socialFacebook: "",
+            socialTwitter: "",
+            socialTabelog: "",
+            sameAs: [],
+            city: "",
+            region: "",
+            country: "",
+            countryCode: "",
+            postalCode: "",
+            placeId: "",
+            googleMapsUrl: "",
+            embedUrl: "",
+            lat: 0,
+            lng: 0,
+            timezone: "Asia/Tokyo",
+            priceRange: "$$",
+            cuisineTypes: [],
+            acceptsReservations: true,
+            isTakeout: true,
+            isDelivery: false,
+            aggregateRating: null,
+            logoImage: null,
+            heroImage: null,
+            coverImage: null,
+            imagesGallery: [],
+            imagesFeatured: [],
+            imagesDrinks: [],
+            heroSlides: [],
+            aboutTitle: "",
+            aboutContent: "",
+            aboutShortDescription: "",
+            aboutMission: "",
+            aboutPhilosophy: "",
+            aboutAdditionalContent: [],
+            aboutImage: null,
+            aboutImages: [],
+            aboutRepresentative: { name: "", role: "", bio: "", image: null, message: "", story: "" },
+            team: [],
+            awards: [],
+            companyName: "",
+            companyLegalName: "",
+            registrationNumber: "",
+            representative: "",
+            companyAddress: "",
+            companyPhone: "",
+            establishedDate: "",
+            capital: "",
+            fiscalYearEnd: "",
+            businessPurpose: "",
+            annualReportUrl: "",
+            numberOfEmployees: 0,
+            openingHours: [],
+            holidayNotes: "",
+            paymentMethods: [],
+            dietaryOptions: { vegetarian: false, vegan: false, glutenFree: false, halal: false, kosher: false, dairyFree: false, nutFree: false },
+            features: { privateDining: false, privateDiningCapacity: 0, privateDiningDescription: "", outdoorSeating: false, wifi: false, wifiPassword: "", parking: "none", parkingDetails: "", wheelchairAccessible: false, petFriendly: false, romantic: false, goodForGroups: false, goodForFamilies: false, goodForDateNight: false },
+            services: { takeout: false, delivery: false, deliveryPlatforms: [], deliveryRadius: "", catering: false, cateringRadius: "", cateringMinimum: "", reservations: false, reservationMethods: [], onlineBookingUrl: "", banquets: false, banquetCapacity: 0 },
+            menuCategories: [],
+            reviews: [],
+            videos: [],
+            virtualTour: "",
+            advancedSchema: { foundedDate: "", foundingLocation: "", numberOfEmployees: 0, hasMap: "", currenciesAccepted: [], paymentAccepted: [], servesCuisine: [], menuType: [], starRating: 0, priceRange: "$", eventType: [], seats: 0, smoking: "No Smoking", music: "None", attire: "casual" }
+            })
+            }
+            setIsLoading(false)
+            }
+            init()
+            }, [slug])
+
 
   if (isLoading) {
     return (
@@ -44,9 +131,10 @@ export default function SiteBuilderPage() {
   }
 
   if (action === "edit" || action === "create") {
+    if (!formData) return null
     return (
       <>
-        <SiteBuilderHeader />
+        <SiteBuilderHeader siteName={formData?.siteName} />
         <main className="container mx-auto px-4 py-8">
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-2xl font-bold">
@@ -60,8 +148,8 @@ export default function SiteBuilderPage() {
             </Button>
           </div>
           <SiteBuilderForm
-            key={siteToEdit?.siteSlug || "new"}
-            initialData={siteToEdit}
+            formData={formData}
+            updateFormData={updateFormData}
           />
         </main>
       </>

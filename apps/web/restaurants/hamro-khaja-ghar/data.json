@@ -1,0 +1,522 @@
+{
+  "uid": "hamro-khaja-ghar",
+  "version": "1",
+  "name": "Hamro Khaja Ghar",
+  "description": "Experience authentic Nepalese home-style cooking and traditional Newari khaja sets in Tokyo. Savor freshly prepared momos, robust spices, and classic Himalayan hospitality.",
+  "tagline": "Your Authentic Nepalese Home in Tokyo",
+  "address": "1-chome Hyakunincho, Shinjuku City, Tokyo 169-0073, Japan",
+  "phone": "+81 3-5937-5545",
+  "email": "info@hamrokhajaghar.jp",
+  "website": "",
+  "foundingDate": "2023-11-15",
+  "menuLink": "pdfmenu/hamro-khaja-ghar-menu.pdf",
+  "app": {
+    "language": "EN",
+    "currency": "JPY"
+  },
+  "seo": {
+    "title": "Hamro Khaja Ghar | Authentic Nepali Restaurant in Shinjuku, Tokyo",
+    "description": "Discover true Nepalese tastes at Hamro Khaja Ghar in Shinjuku, Tokyo. Featuring traditional Newari khaja sets, handmade juicy momos, and classic Himalayan comfort food.",
+    "keywords": [
+      "hamro khaja ghar",
+      "nepalese restaurant shinjuku",
+      "nepali food tokyo",
+      "newari khaja set",
+      "momo shin-okubo",
+      "authentic dal bhat tokyo",
+      "himalayan cuisine japan",
+      "nepali snack bar tokyo",
+      "tokyo nepalese dining",
+      "hyakunincho restuarants"
+    ],
+    "noindex": false,
+    "aboutTitle": ""
+  },
+  "social": {
+    "ogImage": null,
+    "ogLocale": "en_US",
+    "twitterCard": "summary_large_image",
+    "sameAs": [
+      "https://www.instagram.com/hamrokhajaghar",
+      "https://www.facebook.com/hamrokhajaghar",
+      "https://maps.google.com/?cid=123456789012345"
+    ]
+  },
+  "schema": {
+    "priceRange": "¥",
+    "servesCuisine": [
+      "Nepalese",
+      "Himalayan",
+      "Newari"
+    ],
+    "acceptsReservations": true,
+    "isTakeout": true,
+    "isDelivery": true,
+    "priceCurrency": "JPY",
+    "aggregateRating": {
+      "ratingValue": 4.5,
+      "reviewCount": 84,
+      "bestRating": 5,
+      "worstRating": 1,
+      "source": "Google Reviews",
+      "sourceUrl": "https://maps.google.com/?cid=123456789012345"
+    }
+  },
+  "localSEO": {
+    "city": "Shinjuku",
+    "region": "Tokyo",
+    "country": "Japan",
+    "countryCode": "JP",
+    "postalCode": "169-0073",
+    "placeId": "ChIJQ656bXCNGGARSAam1H_XECM_HKG",
+    "googleMapsUrl": "https://maps.google.com/?cid=123456789012345",
+    "timezone": "Asia/Tokyo"
+  },
+  "images": {
+    "logo": {
+      "url": "/images/restaurants/hamro-khaja-ghar/logo.png",
+      "alt": "Hamro Khaja Ghar logo",
+      "width": 200,
+      "height": 200
+    },
+    "gallery": [
+      {
+        "url": "/images/restaurants/hamro-khaja-ghar/ourgallery/gallery-1.png",
+        "alt": "Traditional Nepalese brass dining plate and accessories"
+      },
+      {
+        "url": "/images/restaurants/hamro-khaja-ghar/ourgallery/gallery-2.png",
+        "alt": "Cozy interior setup of Hamro Khaja Ghar"
+      },
+      {
+        "url": "/images/restaurants/hamro-khaja-ghar/ourgallery/gallery-3.png",
+        "alt": "Assorted Himalayan spices used in traditional cooking"
+      },
+      {
+        "url": "/images/restaurants/hamro-khaja-ghar/ourgallery/gallery-4.png",
+        "alt": "Chef meticulously shaping fresh handmade momo dumplings"
+      },
+      {
+        "url": "/images/restaurants/hamro-khaja-ghar/ourgallery/gallery-5.png",
+        "alt": "Spicy Nepalese side dishes and specialty pickles"
+      },
+      {
+        "url": "/images/restaurants/hamro-khaja-ghar/ourgallery/gallery-6.png",
+        "alt": "Vibrant exterior and warm lighting of our storefront"
+      }
+    ],
+    "featured": [
+      {
+        "id": "f1",
+        "url": "/images/restaurants/hamro-khaja-ghar/ourfood/food-1.png",
+        "alt": "Signature Newari Khaja Set with beaten rice and choice meats"
+      },
+      {
+        "id": "f2",
+        "url": "/images/restaurants/hamro-khaja-ghar/ourfood/food-2.png",
+        "alt": "Steam-cooked Nepalese momos with signature tomato sesame chutney"
+      },
+      {
+        "id": "f3",
+        "url": "/images/restaurants/hamro-khaja-ghar/ourfood/food-3.png",
+        "alt": "Authentic Nepalese Thakali Thali set with lentils and rice"
+      },
+      {
+        "id": "f4",
+        "url": "/images/restaurants/hamro-khaja-ghar/ourfood/food-4.png",
+        "alt": "Pan-fried crispy momos seasoned with hot aromatic chili oil"
+      }
+    ],
+    "drinks": [
+      {
+        "id": "d1",
+        "url": "/images/restaurants/hamro-khaja-ghar/ourdrink/drink-1.png",
+        "alt": "Chilled Sweet Mango Lassi blended with fresh yogurt"
+      },
+      {
+        "id": "d2",
+        "url": "/images/restaurants/hamro-khaja-ghar/ourdrink/drink-2.png",
+        "alt": "Traditional Himalayan Spiced Milk Tea served hot"
+      },
+      {
+        "id": "d3",
+        "url": "/images/restaurants/hamro-khaja-ghar/ourdrink/drink-3.png",
+        "alt": "Premium imported Nepalese premium lager beer"
+      },
+      {
+        "id": "d4",
+        "url": "/images/restaurants/hamro-khaja-ghar/ourdrink/drink-4.png",
+        "alt": "Refreshing house iced lemon tea infused with mint"
+      }
+    ],
+    "about": [
+      {
+        "id": "a1",
+        "url": "/images/restaurants/hamro-khaja-ghar/ourstory/story-1.png",
+        "alt": "The culinary roots of Hamro Khaja Ghar"
+      },
+      {
+        "id": "a2",
+        "url": "/images/restaurants/hamro-khaja-ghar/ourstory/story-2.png",
+        "alt": "Sourcing direct spices from high-altitude Himalayan valleys"
+      },
+      {
+        "id": "a3",
+        "url": "/images/restaurants/hamro-khaja-ghar/ourstory/story-3.png",
+        "alt": "Welcoming our guests with sincere Nepalese hospitality traditions"
+      },
+      {
+        "id": "a4",
+        "url": "/images/restaurants/hamro-khaja-ghar/ourstory/story-4.png",
+        "alt": "Our kitchen family crafting home-style recipes daily"
+      }
+    ]
+  },
+  "companyInfo": {
+    "name": "Hamro Khaja Ghar Co., Ltd.",
+    "legalName": "Hamro Khaja Ghar Company Limited",
+    "registrationNumber": "2011101076543",
+    "representative": "R. K. Shrestha",
+    "address": "1-chome Hyakunincho, Shinjuku Ward, Tokyo 169-0073, Japan",
+    "phone": "03-5937-5545",
+    "establishedDate": "2023-11-15",
+    "capital": "5,000,000 JPY",
+    "fiscalYearEnd": "End of December",
+    "businessPurpose": "",
+    "annualReportUrl": "",
+    "url": "/hamro-khaja-ghar/company-information"
+  },
+  "openingHours": [
+    {
+      "day": "Mon - Sun",
+      "lunch": "11:00 - 16:00",
+      "lunchLO": "15:30",
+      "dinner": "17:00 - 23:00",
+      "dinnerLO": "22:30",
+      "isClosed": false,
+      "notes": "Open daily with freshly ground spices."
+    }
+  ],
+  "holidayNotes": "",
+  "menuCategories": [
+    {
+      "name": "Khaja & Thali Sets",
+      "items": [
+        {
+          "name": "Traditional Newari Khaja Set",
+          "description": "Authentic feast featuring beaten rice (chiura), roasted spiced soybeans (bhatmas), choice of marinated meat (choila), spiced potatoes, and house chutneys.",
+          "price": "1200",
+          "category": "Khaja & Thali Sets",
+          "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-1.png"
+        },
+        {
+          "name": "Hamro Thakali Dal Bhat Set",
+          "description": "A wholesome traditional platter with basmati rice, slow-cooked black lentils, seasonal vegetable tarkaari, fresh spinach greens, spicy pickles, and papad.",
+          "price": "1100",
+          "category": "Khaja & Thali Sets",
+          "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-3.png"
+        }
+      ]
+    },
+    {
+      "name": "Himalayan Momos",
+      "items": [
+        {
+          "name": "Classic Steamed Chicken Momo",
+          "description": "Hand-folded Nepalese dumplings stuffed with lean seasoned minced chicken, herbs, and warm spices. Served alongside fresh tomato-sesame sauce.",
+          "price": "750",
+          "category": "Himalayan Momos",
+          "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-2.png"
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "name": "Traditional Newari Khaja Set",
+      "description": "Authentic feast featuring beaten rice (chiura), roasted spiced soybeans (bhatmas), choice of marinated meat (choila), spiced potatoes, and house chutneys.",
+      "price": "1200",
+      "category": "Khaja & Thali Sets",
+      "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-1.png",
+      "id": "traditional-newari-khaja-set",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "Hamro Thakali Dal Bhat Set",
+      "description": "A wholesome traditional platter with basmati rice, slow-cooked black lentils, seasonal vegetable tarkaari, fresh spinach greens, spicy pickles, and papad.",
+      "price": "1100",
+      "category": "Khaja & Thali Sets",
+      "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-3.png",
+      "id": "hamro-thakali-dal-bhat-set",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "Classic Steamed Chicken Momo",
+      "description": "Hand-folded Nepalese dumplings stuffed with lean seasoned minced chicken, herbs, and warm spices. Served alongside fresh tomato-sesame sauce.",
+      "price": "750",
+      "category": "Himalayan Momos",
+      "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-2.png",
+      "id": "classic-steamed-chicken-momo",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    }
+  ],
+  "about": {
+    "representative": {
+      "name": "R. K. Shrestha",
+      "position": "Representative",
+      "message": "Bringing the genuine essence of Himalayan spices and warm hospitality to Tokyo. We invite you to experience a piece of our home through every dish we prepare.",
+      "story": "Bringing the genuine essence of Himalayan spices and warm hospitality to Tokyo. We invite you to experience a piece of our home through every dish we prepare.",
+      "image": "/images/restaurants/hamro-khaja-ghar/team/representative.png"
+    }
+  },
+  "pages": {
+    "home": {
+      "id": "home",
+      "sections": [
+        {
+          "id": "hero",
+          "type": "hero",
+          "ui": {
+            "order": 1,
+            "visible": true,
+            "fullBleed": true
+          },
+          "data": {
+            "slides": [
+              {
+                "id": "slide-1",
+                "image": "/images/restaurants/hamro-khaja-ghar/homeslider/slide-1.jpg",
+                "alt": "A gorgeous traditional platter spreading of classic Nepalese Newari Khaja elements",
+                "subtitle": "Welcome to Hamro Khaja Ghar",
+                "title": "True Flavors of the Himalayan Footreader",
+                "ctaText": "Explore Menu",
+                "ctaLink": "#menu"
+              },
+              {
+                "id": "slide-2",
+                "image": "/images/restaurants/hamro-khaja-ghar/homeslider/slide-2.jpg",
+                "alt": "Carefully steamed hot meat momo dumplings prepared from scratch",
+                "subtitle": "Made Fresh Every Day",
+                "title": "Juicy Handmade Himalayan Momos",
+                "ctaText": "Our Story",
+                "ctaLink": "#about"
+              }
+            ]
+          }
+        },
+        {
+          "id": "about",
+          "type": "about",
+          "ui": {
+            "order": 2,
+            "visible": true,
+            "layout": "image-right"
+          },
+          "data": {
+            "title": "",
+            "content": "Welcome to Hamro Khaja Ghar. We serve memory and culture on a plate, meticulously honoring the aromatic complexity and deep comforts of authentic home-cooked Nepali cuisine.",
+            "additionalContent": [],
+            "representative": "R. K. Shrestha"
+          }
+        },
+        {
+          "id": "menu-preview",
+          "type": "menu",
+          "ui": {
+            "order": 3,
+            "visible": true
+          },
+          "data": {
+            "ref": "menu"
+          }
+        },
+        {
+          "id": "gallery",
+          "type": "gallery",
+          "ui": {
+            "order": 4,
+            "visible": true
+          },
+          "data": {
+            "ref": "images.gallery"
+          }
+        },
+        {
+          "id": "reviews",
+          "type": "reviews",
+          "ui": {
+            "order": 5,
+            "visible": true
+          },
+          "data": {
+            "ref": "reviews"
+          }
+        },
+        {
+          "id": "contact",
+          "type": "contact",
+          "ui": {
+            "order": 6,
+            "visible": true
+          },
+          "data": {
+            "ref": "contact"
+          }
+        }
+      ]
+    },
+    "about": {
+      "id": "about",
+      "coverImage": null,
+      "sections": [
+        {
+          "id": "about-full",
+          "type": "about",
+          "ui": {
+            "order": 1,
+            "visible": true,
+            "layout": "image-right"
+          },
+          "data": {
+            "ref": "pages.home.sections.about.data"
+          }
+        },
+        {
+          "id": "team",
+          "type": "team",
+          "ui": {
+            "order": 2,
+            "visible": true
+          },
+          "data": {
+            "ref": "team"
+          }
+        }
+      ]
+    },
+    "menu": {
+      "id": "menu",
+      "coverImage": null,
+      "sections": [
+        {
+          "id": "full-menu",
+          "type": "menu",
+          "ui": {
+            "order": 1,
+            "visible": true
+          },
+          "data": {
+            "ref": "menu"
+          }
+        }
+      ]
+    },
+    "contact": {
+      "id": "contact",
+      "coverImage": null,
+      "sections": [
+        {
+          "id": "contact-full",
+          "type": "contact",
+          "ui": {
+            "order": 1,
+            "visible": true
+          },
+          "data": {
+            "ref": "contact"
+          }
+        }
+      ]
+    }
+  },
+  "contact": {
+    "address": "1-chome Hyakunincho, Shinjuku City, Tokyo 169-0073, Japan",
+    "phone": "+81 3-5937-5545",
+    "email": "info@hamrokhajaghar.jp",
+    "location": {
+      "lat": 35.702245,
+      "lng": 139.701254,
+      "mapsUrl": "https://maps.google.com/?cid=123456789012345",
+      "address": "1-chome Hyakunincho, Shinjuku City, Tokyo 169-0073, Japan",
+      "plusCode": ""
+    },
+    "openingHours": [
+      {
+        "day": "Mon - Sun",
+        "lunch": "11:00 - 16:00",
+        "lunchLO": "15:30",
+        "dinner": "17:00 - 23:00",
+        "dinnerLO": "22:30",
+        "isClosed": false,
+        "notes": "Open daily with freshly ground spices."
+      }
+    ],
+    "holidayNotes": ""
+  },
+  "team": [
+    {
+      "id": "team-shrestha",
+      "name": "R. K. Shrestha",
+      "role": "Founder & Owner",
+      "image": "/images/restaurants/hamro-khaja-ghar/team/representative.png",
+      "bio": "Committed to delivering rich, uncompromised home-style Newari food traditions to food lovers in Tokyo."
+    },
+    {
+      "id": "team-ghale",
+      "name": "S. Ghale",
+      "role": "Head Kitchen Chef",
+      "image": "/images/restaurants/hamro-khaja-ghar/team/chef.png",
+      "bio": "Master of custom traditional spice blends and slow-roasted high-altitude cooking preparations."
+    }
+  ],
+  "reviews": [
+    {
+      "id": "review-1",
+      "author": "Kiran Thapa",
+      "rating": 5,
+      "date": "2026-03-14",
+      "comment": "The most authentic Newari Khaja set I have had outside of Kathmandu! The chiura was perfect and the meat choice was deeply flavored. Will definitely become a regular spot.",
+      "source": "Google Reviews"
+    },
+    {
+      "id": "review-2",
+      "author": "Takashi Tanaka",
+      "rating": 5,
+      "date": "2026-04-19",
+      "comment": "Incredibly juicy momos with a fantastic savory dipping sauce. The staff are so kind and explained the spices patiently to me. Highly recommend checking this out!",
+      "source": "Google Reviews"
+    },
+    {
+      "id": "review-3",
+      "author": "Sarah Jenkins",
+      "rating": 4,
+      "date": "2026-05-02",
+      "comment": "Loved the Thakali Dal Bhat set. Rich flavor profiles and unlimited comfort elements. Terrific value for money right in the heart of the Shinjuku area.",
+      "source": "Google Reviews"
+    }
+  ],
+  "videos": [],
+  "virtualTour": "",
+  "advancedSchema": {}
+}

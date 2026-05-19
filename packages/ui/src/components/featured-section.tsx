@@ -32,16 +32,24 @@ export function FeaturedSection({
           {items.map((item) => (
             <div
               key={item.id}
-              className="relative aspect-square overflow-hidden rounded-3xl border border-border/40 bg-background/50 shadow-md backdrop-blur-md transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/5"
+              className="group relative flex flex-col gap-3"
             >
-              <Image
-                src={item.image}
-                alt={item.alt}
-                fill
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              />
-              {/* Optional: Add a subtle overlay on hover */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+              <div className="relative aspect-square overflow-hidden rounded-3xl border border-border/40 bg-accent/30 shadow-md backdrop-blur-md transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/5">
+                <Image
+                  src={item.image || "/images/placeholder.png"}
+                  alt={item.alt}
+                  fill
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "/images/placeholder.png";
+                  }}
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+              </div>
+              <p className="text-center text-sm font-medium text-muted-foreground group-hover:text-foreground">
+                {item.alt}
+              </p>
             </div>
           ))}
         </div>

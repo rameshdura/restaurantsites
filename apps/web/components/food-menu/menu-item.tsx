@@ -18,9 +18,9 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
   } = item
 
   return (
-    <div className="group -mx-2 flex flex-row gap-3 border-b border-border/40 px-2 py-3 transition-colors last:border-0 hover:bg-accent/5">
+    <div className="group -mx-2 flex flex-row gap-4 border-b border-border/40 px-2 py-4 transition-colors last:border-0 hover:bg-accent/5">
       {image && (
-        <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg shadow-sm transition-shadow group-hover:shadow-md">
+        <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-lg shadow-sm transition-shadow group-hover:shadow-md">
           <Image
             src={image}
             alt={name}
@@ -51,7 +51,7 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
         </div>
 
         {description && (
-          <p className="mt-0.5 mb-1 line-clamp-1 max-w-[95%] text-xs text-muted-foreground">
+          <p className="mt-0.5 mb-1 line-clamp-2 max-w-[95%] text-xs text-muted-foreground">
             {description}
           </p>
         )}

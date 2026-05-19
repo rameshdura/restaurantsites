@@ -1,22 +1,16 @@
+/* global process */
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@workspace/ui"],
+  env: {
+    GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+  },
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "images.unsplash.com",
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
       },
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: "/images/restaurants/:slug/:path*",
-        destination: "/api/restaurants/:slug/images/:path*",
-      },
-    ];
-  },
-}
-
-export default nextConfig
+};
+export default nextConfig;

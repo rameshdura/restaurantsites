@@ -13,7 +13,7 @@ export function MenuSection({ category }: MenuSectionProps) {
     <section id={id} className="mb-12 last:mb-0">
       <div className="relative mb-6">
         {coverImage && (
-          <div className="group relative mb-6 h-48 w-full overflow-hidden rounded-xl md:h-56">
+          <div className="group relative mb-6 h-64 w-full overflow-hidden rounded-xl md:h-80">
             <Image
               src={coverImage}
               alt={title}

@@ -6,7 +6,6 @@ import { Navbar } from "@workspace/ui/components/navbar"
 import { FoodMenu } from "@/components/food-menu/food-menu"
 import { Footer } from "@/components/footer"
 import { ContactSection } from "@workspace/ui/components/contact-section"
-import { FloatingActions } from "@/components/floating-actions"
 import { Button } from "@workspace/ui/components/button"
 import { Download } from "lucide-react"
 import { JsonLd } from "@/components/json-ld"
@@ -21,26 +20,24 @@ interface MenuPageProps {
 export async function generateMetadata({
   params,
 }: MenuPageProps): Promise<Metadata> {
-  const { restaurant: slug } = await params
-  const restaurant = await getRestaurant(slug)
+  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const restaurant = await getRestaurant(decodedSlug)
   if (!restaurant) return {}
   return generateMenuMetadata(restaurant.data, slug)
 }
 
 export default async function MenuPage({ params }: MenuPageProps) {
-  const { restaurant: slug } = await params
-  const restaurant = await getRestaurant(slug)
+  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const restaurant = await getRestaurant(decodedSlug)
 
   if (!restaurant) {
     notFound()
   }
 
   const { data, menu } = restaurant
+  console.log("Debug menuLink:", data.menuLink);
   const categories = groupMenuByCategory(menu, slug)
   const translations = getTranslations(data.app?.language)
-  const onlineBookingUrl =
-    data.reservation?.onlineBookingUrl ||
-    data.operations?.services?.onlineBookingUrl
 
   // Get cover image from page data, fallback to first hero slide image
   const coverImage = getImageSrc(slug, data.pages?.menu?.coverImage || data.hero?.slides?.[0]?.image)
@@ -75,21 +72,22 @@ export default async function MenuPage({ params }: MenuPageProps) {
               {translations.menuPage?.description ||
                 "Discover our curated selection of dishes, prepared with the finest ingredients and culinary passion."}
             </p>
-            {data.menuLink && (
-              <div className="mt-8 flex justify-center">
-                <Button size="lg" asChild className="rounded-full px-8">
-                  <a
-                    href={data.menuLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Download className="mr-2 h-5 w-5" />
-                    {translations.menuPage?.downloadButton ||
-                      "Download Menu PDF"}
-                  </a>
-                </Button>
-              </div>
-            )}
+          </div>
+        )}
+        
+        {data.menuLink && data.menuLink.trim() !== "" && (
+          <div className="mt-12 flex justify-center pb-8">
+            <Button size="lg" asChild className="rounded-full px-8">
+              <a
+                href={getImageSrc(slug, data.menuLink)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Download className="mr-2 h-5 w-5" />
+                {translations.menuPage?.downloadButton ||
+                  "Download Menu PDF"}
+              </a>
+            </Button>
           </div>
         )}
 
@@ -129,12 +127,6 @@ export default async function MenuPage({ params }: MenuPageProps) {
         email={data.email}
         location={data.location}
         embedUrl={null}
-        translations={translations}
-      />
-
-      <FloatingActions
-        restaurantSlug={slug}
-        onlineBookingUrl={onlineBookingUrl}
         translations={translations}
       />
 

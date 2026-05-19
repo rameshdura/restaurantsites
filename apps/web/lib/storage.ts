@@ -20,7 +20,7 @@ export interface SiteImageData {
 }
 
 export interface SiteBuilderData {
-  // Step 1: Basic Info
+  // --- Core Info ---
   uid: string
   siteName: string
   siteSlug: string
@@ -29,152 +29,127 @@ export interface SiteBuilderData {
   address: string
   phone: string
   email: string
-  menuLink?: string
-  foundingDate?: string
+  website: string
+  menuLink: string
+  foundingDate: string
   language: string
   currency: string
 
-  // Step 2: SEO & Metadata
+  // --- SEO & Social ---
   seoTitle: string
   seoDescription: string
   keywords: string[]
-  menuTitle: string
-  menuDescription: string
-  aboutTitle: string
-  aboutDescription: string
-  contactTitle: string
-  contactDescription: string
-  brandTitle?: string
-  brandDescription?: string
-  companyTitle?: string
-  companyDescription?: string
-  ogLocale?: string
-  twitterCard?: "summary" | "summary_large_image"
-  twitterSite?: string
-  noindex?: boolean
+  noindex: boolean
+  ogLocale: string
+  twitterCard: "summary" | "summary_large_image"
+  twitterSite: string
+  socialInstagram: string
+  socialFacebook: string
+  socialTwitter: string
+  socialTabelog: string
+  sameAs: string[]
 
-  // Step 3: Local SEO & Schema
-  neighborhood?: string
-  city?: string
-  region?: string
-  country?: string
-  countryCode?: string
-  postalCode?: string
-  googleMapsUrl?: string
-  timezone?: string
-  lat?: number
-  lng?: number
-  embedUrl?: string
-  plusCode?: string
-  placeId?: string
+  // --- Local SEO & Schema ---
+  city: string
+  region: string
+  country: string
+  countryCode: string
+  postalCode: string
+  placeId: string
+  googleMapsUrl: string
+  embedUrl: string
+  lat: number
+  lng: number
+  timezone: string
   priceRange: "$" | "$$" | "$$$" | "$$$$"
   cuisineTypes: string[]
   acceptsReservations: boolean
   isTakeout: boolean
   isDelivery: boolean
-  priceCurrency: string
-  aggregateRating?: {
+  aggregateRating: {
     ratingValue: number
     reviewCount: number
-    bestRating?: number
-    worstRating?: number
-    source?: string
-    sourceUrl?: string
-  }
+    source: string
+    sourceUrl: string
+  } | null
 
-  // Step 4: Images & Hero
-  logoImage: string | null // Base64 data URL
+  // --- Images ---
+  logoImage: string | null
   heroImage: string | null
   coverImage: string | null
-  imagesGallery: string[] // Array of base64 data URLs
+  imagesGallery: Array<{ url: string; alt: string }>
+  imagesFeatured: Array<{ url: string; alt: string }>
+  imagesDrinks: Array<{ url: string; alt: string }>
   heroSlides: Array<{
     image: string | null
     title: string
     subtitle: string
     ctaText: string
     ctaLink: string
-    alt?: string
+    alt: string
   }>
 
-  // Step 5: About Us
+  // --- Content (About/Team) ---
+  aboutTitle: string
   aboutContent: string
   aboutShortDescription: string
   aboutMission: string
   aboutPhilosophy: string
   aboutAdditionalContent: string[]
-  foundedYear?: number
-  foundingLocation?: string
-  founderName: string
-  founderRole: string
-  founderBio: string
-  founderImage: string | null
-  founderQualifications: string[]
-  founderSocial: Record<string, string>
-  founderSince?: string
-  awards: Array<{
-    year: number
-    title: string
-    issuer: string
-  }>
-  keywordsByPage?: {
-    home?: string[]
-    about?: string[]
-    menu?: string[]
-    contact?: string[]
+  aboutImage: string | null // NEW: About page specific hero
+  aboutImages: Array<{ id: string; url: string; alt: string }>
+  aboutRepresentative: {
+    name: string
+    role: string
+    bio: string
+    image: string | null
+    message: string
+    story: string
   }
   team: Array<{
     name: string
     role: string
     image: string | null
     bio: string
-    social?: Record<string, string>
-    since?: string
   }>
+  awards: Array<{ year: number; title: string; issuer: string }>
 
-  // Step 6: Company Info
+  // --- Company Info ---
   companyName: string
-  companyLegalName?: string
-  registrationNumber?: string
-  representative?: string
-  companyAddress?: string
-  companyPhone?: string
-  establishedDate?: string
-  capital?: string
-  fiscalYearEnd?: string
-  businessPurpose?: string
-  annualReportUrl?: string
-  numberOfEmployees?: number
+  companyLegalName: string
+  registrationNumber: string
+  representative: string
+  companyAddress: string
+  companyPhone: string
+  establishedDate: string
+  capital: string
+  fiscalYearEnd: string
+  businessPurpose: string
+  annualReportUrl: string
+  numberOfEmployees: number
 
-  // Step 7: Operations
+  // --- Operational & Features ---
   openingHours: Array<{
     day: string
-    lunch?: string
-    lunchLO?: string
-    dinner?: string
-    dinnerLO?: string
-    isClosed?: boolean
-    notes?: string
+    lunch: string
+    lunchLO: string
+    dinner: string
+    dinnerLO: string
+    isClosed: boolean
+    notes: string
   }>
-  holidayNotes?: string
+  holidayNotes: string
   paymentMethods: string[]
-  dietaryOptions: {
-    vegetarian: boolean
-    vegan: boolean
-    glutenFree: boolean
-    halal: boolean
-    kosher: boolean
-    dairyFree: boolean
-    nutFree: boolean
-  }
+  dietaryOptions: Record<string, boolean>
   features: {
     privateDining: boolean
-    privateDiningCapacity?: number
-    privateDiningDescription?: string
+    privateDiningCapacity: number
+    privateDiningDescription: string
     outdoorSeating: boolean
     wifi: boolean
-    wifiPassword?: string
-    parking?: string
-    parkingDetails?: string
+    wifiPassword: string
+    parking: "street" | "lot" | "garage" | "none"
+    parkingDetails: string
     wheelchairAccessible: boolean
     petFriendly: boolean
     romantic: boolean
@@ -186,103 +161,58 @@ export interface SiteBuilderData {
     takeout: boolean
     delivery: boolean
     deliveryPlatforms: string[]
-    deliveryRadius?: string
+    deliveryRadius: string
     catering: boolean
-    cateringRadius?: string
-    cateringMinimum?: string
+    cateringRadius: string
+    cateringMinimum: string
     reservations: boolean
     reservationMethods: string[]
-    onlineBookingUrl?: string
+    onlineBookingUrl: string
     banquets: boolean
-    banquetCapacity?: number
+    banquetCapacity: number
   }
-  socialInstagram?: string
-  socialFacebook?: string
-  socialTwitter?: string
-  socialTabelog?: string
 
-  // Step 8: Menu
+  // --- Menu & Content ---
   menuCategories: Array<{
     name: string
     items: Array<{
       name: string
-      secondaryName?: string
       description: string
       price: string
       category: string
-      image?: string | null
-      isPopular?: boolean
-      isVegetarian?: boolean
-      isVegan?: boolean
-      isSpicy?: boolean
-      spiceLevel?: number
-      allergens?: string[]
-      calories?: number
-      ingredients?: string[]
-      available?: boolean
-      availableFrom?: string
-      availableTo?: string
-      size?: string
-      limited?: boolean
-      availableUntil?: string
+      image: string | null
+      isPopular: boolean
+      isSpicy: boolean
+      spiceLevel: number
+      allergens: string[]
     }>
   }>
-
-  // Step 9: Reviews
   reviews: Array<{
-    id?: string
+    id: string
     author: string
     rating: number
     date: string
     comment: string
     source: string
   }>
-
-  // Media
-  videos: Array<{
-    url: string
-    title: string
-    description: string
-    thumbnail: string
-    duration: string
-    uploadDate: string
-  }>
-  virtualTour?: string
-
-  // Advanced
-  knowLanguages?: string[]
-  cuisineType?: string
-  reservation?: {
-    acceptsReservations: boolean
-    reservationMethods: string[]
-    onlineBookingUrl?: string
-    minimumPartySize?: number
-    maximumPartySize?: number
-    largeGroups?: boolean
-    largeGroupCapacity?: number
-    privateDining?: {
-      available: boolean
-      capacity: number
-      minimumSpend?: string
-      description?: string
-    }
-  }
-  advancedSchema?: {
-    foundedDate?: string
-    foundingLocation?: string
-    numberOfEmployees?: number
-    hasMap?: string
-    currenciesAccepted?: string[]
-    paymentAccepted?: string[]
-    servesCuisine?: string[]
-    menuType?: string[]
-    starRating?: number
-    priceRange?: string
-    eventType?: string[]
-    seats?: number
-    smoking?: string
-    music?: string
-    attire?: string
+  videos: Array<{ url: string; title: string; description: string }>
+  virtualTour: string
+  advancedSchema: {
+    foundedDate: string
+    foundingLocation: string
+    numberOfEmployees: number
+    hasMap: string
+    currenciesAccepted: string[]
+    paymentAccepted: string[]
+    servesCuisine: string[]
+    menuType: string[]
+    starRating: number
+    priceRange: string
+    eventType: string[]
+    seats: number
+    smoking: "No Smoking" | "Yes" | "Outdoor"
+    music: "Background jazz" | "None" | "Live music"
+    attire: "casual" | "smart casual" | "formal"
   }
 }
 

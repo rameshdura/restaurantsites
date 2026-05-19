@@ -43,6 +43,7 @@ import {
   MessageSquare,
 } from "lucide-react"
 import { useToast } from "@workspace/ui/hooks/use-toast"
+import { validateRestaurantData } from "@/lib/validator"
 import {
   SiteBuilderData,
   saveCurrentSite,
@@ -64,200 +65,16 @@ const STEP_TITLES = [
 ]
 
 export function SiteBuilderForm({
-  initialData,
+  formData,
+  updateFormData,
 }: {
-  initialData?: SiteBuilderData
+  formData: SiteBuilderData
+  updateFormData: <K extends keyof SiteBuilderData>(field: K, value: SiteBuilderData[K]) => void
 }) {
   const { toast } = useToast()
   const [currentStep, setCurrentStep] = useState(0)
   const [sites, setSites] = useState<SiteBuilderData[]>([])
-
-  const [formData, setFormData] = useState<SiteBuilderData>(
-    initialData || {
-      // Step 1: Basic Info
-      siteName: "",
-      siteSlug: "",
-      description: "",
-      tagline: "",
-      address: "",
-      phone: "",
-      email: "",
-      uid: "",
-      language: "EN",
-      currency: "USD",
-      menuLink: "",
-      foundingDate: "",
-
-      // Step 2: SEO
-      seoTitle: "",
-      seoDescription: "",
-      keywords: [],
-      menuTitle: "",
-      menuDescription: "",
-      aboutTitle: "",
-      aboutDescription: "",
-      contactTitle: "",
-      contactDescription: "",
-      brandTitle: "",
-      brandDescription: "",
-      companyTitle: "",
-      companyDescription: "",
-      ogLocale: "en_US",
-      twitterCard: "summary_large_image",
-      twitterSite: "",
-      noindex: false,
-
-      // Step 3: Local SEO & Schema
-      neighborhood: "",
-      city: "",
-      region: "",
-      country: "",
-      countryCode: "",
-      postalCode: "",
-      googleMapsUrl: "",
-      embedUrl: "",
-      plusCode: "",
-      placeId: "",
-      lat: undefined,
-      lng: undefined,
-      timezone: "Asia/Tokyo",
-      priceRange: "$$",
-      cuisineTypes: [],
-      acceptsReservations: true,
-      isTakeout: true,
-      isDelivery: false,
-      priceCurrency: "USD",
-      aggregateRating: undefined,
-
-      // Step 4: Images & Hero
-      logoImage: null,
-      heroImage: null,
-      coverImage: null,
-      imagesGallery: [],
-      heroSlides: [],
-
-      // Step 5: About Us
-      aboutContent: "",
-      aboutShortDescription: "",
-      aboutMission: "",
-      aboutPhilosophy: "",
-      aboutAdditionalContent: [],
-      foundedYear: new Date().getFullYear(),
-      foundingLocation: "",
-      founderName: "",
-      founderRole: "",
-      founderBio: "",
-      founderImage: null,
-      founderQualifications: [],
-      founderSocial: {},
-      founderSince: "",
-      awards: [],
-      keywordsByPage: {},
-      team: [],
-
-      // Step 6: Company Info
-      companyName: "",
-      companyLegalName: "",
-      registrationNumber: "",
-      representative: "",
-      companyAddress: "",
-      companyPhone: "",
-      establishedDate: "",
-      capital: "",
-      fiscalYearEnd: "",
-      businessPurpose: "",
-      annualReportUrl: "",
-      numberOfEmployees: undefined,
-
-      // Step 7: operational
-      openingHours: [
-        {
-          day: "Mon - Thu",
-          lunch: "11:30 - 15:00",
-          lunchLO: "14:30",
-          dinner: "17:00 - 22:00",
-          dinnerLO: "21:30",
-          isClosed: false,
-          notes: "",
-        },
-        {
-          day: "Fri - Sat",
-          lunch: "11:30 - 15:00",
-          lunchLO: "14:30",
-          dinner: "17:00 - 23:30",
-          dinnerLO: "23:00",
-          isClosed: false,
-          notes: "",
-        },
-        {
-          day: "Sun",
-          lunch: "12:00 - 15:30",
-          lunchLO: "15:00",
-          dinner: "17:00 - 21:00",
-          dinnerLO: "20:30",
-          isClosed: false,
-          notes: "",
-        },
-      ],
-      holidayNotes: "",
-      paymentMethods: [],
-      dietaryOptions: {
-        vegetarian: false,
-        vegan: false,
-        glutenFree: false,
-        halal: false,
-        kosher: false,
-        dairyFree: false,
-        nutFree: false,
-      },
-      features: {
-        privateDining: false,
-        privateDiningCapacity: undefined,
-        privateDiningDescription: "",
-        outdoorSeating: false,
-        wifi: false,
-        wifiPassword: "",
-        parking: "",
-        parkingDetails: "",
-        wheelchairAccessible: false,
-        petFriendly: false,
-        romantic: false,
-        goodForGroups: false,
-        goodForFamilies: false,
-        goodForDateNight: false,
-      },
-      services: {
-        takeout: true,
-        delivery: false,
-        deliveryPlatforms: [],
-        deliveryRadius: "",
-        catering: false,
-        cateringRadius: "",
-        cateringMinimum: "",
-        reservations: true,
-        reservationMethods: [],
-        onlineBookingUrl: "",
-        banquets: false,
-        banquetCapacity: undefined,
-      },
-      socialInstagram: "",
-      socialFacebook: "",
-      socialTwitter: "",
-      socialTabelog: "",
-
-      // Step 8: Menu
-      menuCategories: [],
-
-      // Step 9: Reviews
-      reviews: [],
-      videos: [],
-      virtualTour: "",
-      reservation: undefined,
-      knowLanguages: [],
-      cuisineType: "",
-      advancedSchema: undefined,
-    }
-  )
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
 
   useEffect(() => {
     const loadSites = async () => {
@@ -278,8 +95,11 @@ export function SiteBuilderForm({
     autoSave()
   }, [formData])
 
-  const updateFormData = (field: keyof SiteBuilderData, value: unknown) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+  const runValidation = () => {
+    const finalJson = mapBuilderToDataJson(formData)
+    const validation = validateRestaurantData(finalJson)
+    setValidationErrors(validation.errors)
+    return validation
   }
 
   const handleSaveToSites = async () => {
@@ -304,19 +124,29 @@ export function SiteBuilderForm({
   }
 
   const handleExportSite = () => {
+    const validation = runValidation()
+    if (!validation.isValid) {
+      toast({
+        title: "Validation Failed",
+        description: "Please fix the errors below before exporting.",
+        variant: "destructive",
+      })
+      return
+    }
+
     const finalJson = mapBuilderToDataJson(formData)
     const jsonStr = JSON.stringify(finalJson, null, 2)
     const blob = new Blob([jsonStr], { type: "application/json" })
     const url = URL.createObjectURL(blob)
     const link = document.createElement("a")
     link.href = url
-    link.download = `data.json` // Standard name as requested
+    link.download = `data.json` 
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
 
-    toast({ title: "Exported!", description: "data.json has been downloaded." })
+    toast({ title: "Exported!", description: "data.json has been exported." })
   }
 
   const downloadAllImages = async () => {
@@ -355,7 +185,7 @@ export function SiteBuilderForm({
     formData.imagesGallery.forEach((img, i) =>
       imagesToDownload.push({
         name: `gallery-${i + 1}`,
-        dataUrl: img,
+        dataUrl: img.url,
         filename: `${formData.siteSlug}_gallery_${i + 1}.jpg`,
       })
     )
@@ -527,69 +357,67 @@ export function SiteBuilderForm({
             <div className="space-y-2">
               <Label>Menu Page Title</Label>
               <Input
-                value={formData.menuTitle}
-                onChange={(e) => updateFormData("menuTitle", e.target.value)}
+                value={formData.seoTitle}
+                onChange={(e) => updateFormData("seoTitle", e.target.value)}
               />
-            </div>
-            <div className="space-y-2">
+              </div>
+              <div className="space-y-2">
               <Label>About Page Title</Label>
               <Input
-                value={formData.aboutTitle}
-                onChange={(e) => updateFormData("aboutTitle", e.target.value)}
+                value={formData.seoTitle}
+                onChange={(e) => updateFormData("seoTitle", e.target.value)}
               />
-            </div>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
+              </div>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
               <Label>Contact Page Title</Label>
               <Input
-                value={formData.contactTitle}
-                onChange={(e) => updateFormData("contactTitle", e.target.value)}
+                value={formData.seoTitle}
+                onChange={(e) => updateFormData("seoTitle", e.target.value)}
               />
-            </div>
-            <div className="space-y-2">
+              </div>
+              <div className="space-y-2">
               <Label>Company Info Title</Label>
               <Input
-                value={formData.companyTitle}
-                onChange={(e) => updateFormData("companyTitle", e.target.value)}
+                value={formData.seoTitle}
+                onChange={(e) => updateFormData("seoTitle", e.target.value)}
               />
-            </div>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
+              </div>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
               <Label>Menu Page Description</Label>
               <Input
-                value={formData.menuDescription}
+                value={formData.seoDescription}
                 onChange={(e) =>
-                  updateFormData("menuDescription", e.target.value)
+                  updateFormData("seoDescription", e.target.value)
                 }
               />
-            </div>
-            <div className="space-y-2">
+              </div>
+              <div className="space-y-2">
               <Label>About Page Description</Label>
               <Input
-                value={formData.aboutDescription}
-                onChange={(e) =>
-                  updateFormData("aboutDescription", e.target.value)
-                }
+                value={formData.seoDescription}
+                onChange={(e) => updateFormData("seoDescription", e.target.value)}
               />
-            </div>
+              </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label>Contact Page Description</Label>
               <Input
-                value={formData.contactDescription}
+                value={formData.seoDescription}
                 onChange={(e) =>
-                  updateFormData("contactDescription", e.target.value)
+                  updateFormData("seoDescription", e.target.value)
                 }
               />
             </div>
             <div className="space-y-2">
               <Label>Brand Title</Label>
               <Input
-                value={formData.brandTitle}
-                onChange={(e) => updateFormData("brandTitle", e.target.value)}
+                value={formData.seoTitle}
+                onChange={(e) => updateFormData("seoTitle", e.target.value)}
               />
             </div>
           </div>
@@ -597,19 +425,17 @@ export function SiteBuilderForm({
             <div className="space-y-2">
               <Label>Brand Description</Label>
               <Input
-                value={formData.brandDescription}
+                value={formData.seoDescription}
                 onChange={(e) =>
-                  updateFormData("brandDescription", e.target.value)
+                  updateFormData("seoDescription", e.target.value)
                 }
               />
             </div>
             <div className="space-y-2">
               <Label>Company Info Description</Label>
               <Input
-                value={formData.companyDescription}
-                onChange={(e) =>
-                  updateFormData("companyDescription", e.target.value)
-                }
+                value={formData.seoDescription}
+                onChange={(e) => updateFormData("seoDescription", e.target.value)}
               />
             </div>
           </div>
@@ -629,7 +455,7 @@ export function SiteBuilderForm({
           <Label>Twitter Card Type</Label>
           <Select
             value={formData.twitterCard}
-            onValueChange={(v) => updateFormData("twitterCard", v)}
+            onValueChange={(v) => updateFormData("twitterCard", v as "summary" | "summary_large_image")}
           >
             <SelectTrigger>
               <SelectValue />
@@ -653,14 +479,13 @@ export function SiteBuilderForm({
       />
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label>Neighborhood</Label>
+          <Label>City</Label>
           <Input
-            value={formData.neighborhood || ""}
-            onChange={(e) => updateFormData("neighborhood", e.target.value)}
-            placeholder="Kiyohara"
+            value={formData.city || ""}
+            onChange={(e) => updateFormData("city", e.target.value)}
+            placeholder="Utsunomiya"
           />
-        </div>
-        <div className="space-y-2">
+        </div>        <div className="space-y-2">
           <Label>City</Label>
           <Input
             value={formData.city || ""}
@@ -766,6 +591,7 @@ export function SiteBuilderForm({
                   subtitle: "",
                   ctaText: "View Menu",
                   ctaLink: "#menu",
+                  alt: "",
                 },
               ])
             }
@@ -822,6 +648,17 @@ export function SiteBuilderForm({
                     }
                   }}
                 />
+                <Input
+                  placeholder="Image Alt Text"
+                  value={slide?.alt || ""}
+                  onChange={(e) => {
+                    const ns = [...(formData.heroSlides || [])]
+                    if (ns[i]) {
+                      ns[i].alt = e.target.value
+                      updateFormData("heroSlides", ns)
+                    }
+                  }}
+                />
                 <div className="grid grid-cols-2 gap-2">
                   <Input
                     placeholder="CTA Text"
@@ -864,18 +701,143 @@ export function SiteBuilderForm({
       </div>
 
       <div className="space-y-4 border-t pt-6">
+        <Label>Featured Food Images ({(formData.imagesFeatured || []).length})</Label>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+          {(formData.imagesFeatured || []).map((img, i) => (
+            <div
+              key={i}
+              className="group relative flex flex-col gap-2 rounded-lg border p-2"
+            >
+              <div className="relative aspect-square overflow-hidden rounded-md border">
+                <Image
+                  src={img.url}
+                  alt={`Featured ${i + 1}`}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <Input
+                placeholder="Alt Text"
+                value={img.alt || ""}
+                onChange={(e) => {
+                  const nf = [...(formData.imagesFeatured || [])]
+                  if (nf[i]) {
+                    nf[i].alt = e.target.value
+                    updateFormData("imagesFeatured", nf)
+                  }
+                }}
+              />
+              <button
+                onClick={() =>
+                  updateFormData(
+                    "imagesFeatured",
+                    (formData.imagesFeatured || []).filter((_, idx) => idx !== i)
+                  )
+                }
+                className="absolute top-2 right-2 rounded-full bg-destructive p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+          ))}
+          <ImageUpload
+            label="Add Featured"
+            image={null}
+            onImageSelect={(_, d) =>
+              updateFormData("imagesFeatured", [
+                ...(formData.imagesFeatured || []),
+                { url: d, alt: "" },
+              ])
+            }
+            onImageRemove={() => {}}
+            slugPrefix={formData.siteSlug || ""}
+            canDownload={false}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-4 border-t pt-6">
+        <Label>Drinks Images ({(formData.imagesDrinks || []).length})</Label>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+          {(formData.imagesDrinks || []).map((img, i) => (
+            <div
+              key={i}
+              className="group relative flex flex-col gap-2 rounded-lg border p-2"
+            >
+              <div className="relative aspect-square overflow-hidden rounded-md border">
+                <Image
+                  src={img.url}
+                  alt={`Drink ${i + 1}`}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <Input
+                placeholder="Alt Text"
+                value={img.alt || ""}
+                onChange={(e) => {
+                  const nd = [...(formData.imagesDrinks || [])]
+                  if (nd[i]) {
+                    nd[i].alt = e.target.value
+                    updateFormData("imagesDrinks", nd)
+                  }
+                }}
+              />
+              <button
+                onClick={() =>
+                  updateFormData(
+                    "imagesDrinks",
+                    (formData.imagesDrinks || []).filter((_, idx) => idx !== i)
+                  )
+                }
+                className="absolute top-2 right-2 rounded-full bg-destructive p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+          ))}
+          <ImageUpload
+            label="Add Drink"
+            image={null}
+            onImageSelect={(_, d) =>
+              updateFormData("imagesDrinks", [
+                ...(formData.imagesDrinks || []),
+                { url: d, alt: "" },
+              ])
+            }
+            onImageRemove={() => {}}
+            slugPrefix={formData.siteSlug || ""}
+            canDownload={false}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-4 border-t pt-6">
         <Label>Gallery Images ({(formData.imagesGallery || []).length})</Label>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
           {(formData.imagesGallery || []).map((img, i) => (
             <div
               key={i}
-              className="group relative aspect-square overflow-hidden rounded-lg border"
+              className="group relative flex flex-col gap-2 rounded-lg border p-2"
             >
-              <Image
-                src={img}
-                alt={`Gallery image ${i + 1}`}
-                fill
-                className="object-cover"
+              <div className="relative aspect-square overflow-hidden rounded-md border">
+                <Image
+                  src={img.url}
+                  alt={`Gallery ${i + 1}`}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <Input
+                placeholder="Alt Text"
+                value={img.alt || ""}
+                onChange={(e) => {
+                  const ng = [...(formData.imagesGallery || [])]
+                  if (ng[i]) {
+                    ng[i].alt = e.target.value
+                    updateFormData("imagesGallery", ng)
+                  }
+                }}
               />
               <button
                 onClick={() =>
@@ -884,7 +846,7 @@ export function SiteBuilderForm({
                     (formData.imagesGallery || []).filter((_, idx) => idx !== i)
                   )
                 }
-                className="absolute top-1 right-1 rounded-full bg-destructive p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                className="absolute top-2 right-2 rounded-full bg-destructive p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -896,7 +858,7 @@ export function SiteBuilderForm({
             onImageSelect={(_, d) =>
               updateFormData("imagesGallery", [
                 ...(formData.imagesGallery || []),
-                d,
+                { url: d, alt: "" },
               ])
             }
             onImageRemove={() => {}}
@@ -926,7 +888,7 @@ export function SiteBuilderForm({
         <Label>Main Story</Label>
         <Textarea
           className="min-h-[120px]"
-          value={formData.aboutContent}
+          value={formData.aboutContent || ""}
           onChange={(e) => updateFormData("aboutContent", e.target.value)}
           placeholder="Tell your customers about your heritage..."
         />
@@ -940,7 +902,7 @@ export function SiteBuilderForm({
             size="sm"
             onClick={() =>
               updateFormData("aboutAdditionalContent", [
-                ...formData.aboutAdditionalContent,
+                ...(formData.aboutAdditionalContent || []),
                 "",
               ])
             }
@@ -948,12 +910,12 @@ export function SiteBuilderForm({
             <Plus className="h-4 w-4" />
           </Button>
         </div>
-        {formData.aboutAdditionalContent.map((text, i) => (
+        {(formData.aboutAdditionalContent || []).map((text, i) => (
           <div key={i} className="relative">
             <Textarea
-              value={text}
+              value={text || ""}
               onChange={(e) => {
-                const nac = [...formData.aboutAdditionalContent]
+                const nac = [...(formData.aboutAdditionalContent || [])]
                 nac[i] = e.target.value
                 updateFormData("aboutAdditionalContent", nac)
               }}
@@ -963,7 +925,7 @@ export function SiteBuilderForm({
               onClick={() =>
                 updateFormData(
                   "aboutAdditionalContent",
-                  formData.aboutAdditionalContent.filter((_, idx) => idx !== i)
+                  (formData.aboutAdditionalContent || []).filter((_, idx) => idx !== i)
                 )
               }
               className="absolute -top-2 -right-2 rounded-full bg-destructive p-0.5 text-white"
@@ -974,34 +936,98 @@ export function SiteBuilderForm({
         ))}
       </div>
 
-      <div className="border-t pt-6">
-        <Label className="mb-4 block text-lg font-bold">Founder Details</Label>
-        <div className="grid gap-6 md:grid-cols-[150px_1fr]">
+      <div className="space-y-4 border-t pt-6">
+        <Label>About Page Images ({(formData.aboutImages || []).length})</Label>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+          {(formData.aboutImages || []).map((img, i) => (
+            <div
+              key={i}
+              className="group relative flex flex-col gap-2 rounded-lg border p-2"
+            >
+              <div className="relative aspect-square overflow-hidden rounded-md border">
+                <Image
+                  src={img.url}
+                  alt={img.alt || `About ${i + 1}`}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <Input
+                placeholder="Alt Text"
+                value={img.alt || ""}
+                onChange={(e) => {
+                  const na = [...(formData.aboutImages || [])]
+                  if (na[i]) {
+                    na[i].alt = e.target.value
+                    updateFormData("aboutImages", na)
+                  }
+                }}
+              />
+              <button
+                onClick={() =>
+                  updateFormData(
+                    "aboutImages",
+                    (formData.aboutImages || []).filter((_, idx) => idx !== i)
+                  )
+                }
+                className="absolute top-2 right-2 rounded-full bg-destructive p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+          ))}
           <ImageUpload
-            label="Founder"
-            image={formData.founderImage}
-            onImageSelect={(_, d) => updateFormData("founderImage", d)}
-            onImageRemove={() => updateFormData("founderImage", null)}
+            label="Add About Image"
+            image={null}
+            onImageSelect={(_, d) =>
+              updateFormData("aboutImages", [
+                ...(formData.aboutImages || []),
+                { id: `a${Date.now()}`, url: d, alt: "" },
+              ])
+            }
+            onImageRemove={() => {}}
             slugPrefix={formData.siteSlug || ""}
             canDownload={false}
           />
-          <div className="space-y-4">
+        </div>
+      </div>
+
+      <div className="border-t pt-6">
+        <Label className="mb-4 block text-lg font-bold">Representative Details</Label>
+        <div className="grid gap-6 md:grid-cols-[150px_1fr]">
+          <ImageUpload
+            label="Representative"
+            image={formData.aboutRepresentative?.image || null}
+            onImageSelect={(_, d) => updateFormData("aboutRepresentative", { ...formData.aboutRepresentative, image: d })}
+            onImageRemove={() => updateFormData("aboutRepresentative", { ...formData.aboutRepresentative, image: null })}
+            slugPrefix={formData.siteSlug || ""}
+          />          <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <Input
                 placeholder="Name"
-                value={formData.founderName || ""}
-                onChange={(e) => updateFormData("founderName", e.target.value)}
+                value={formData.aboutRepresentative.name || ""}
+                onChange={(e) => updateFormData("aboutRepresentative", { ...formData.aboutRepresentative, name: e.target.value })}
               />
               <Input
                 placeholder="Role"
-                value={formData.founderRole || ""}
-                onChange={(e) => updateFormData("founderRole", e.target.value)}
+                value={formData.aboutRepresentative.role || ""}
+                onChange={(e) => updateFormData("aboutRepresentative", { ...formData.aboutRepresentative, role: e.target.value })}
               />
             </div>
+            <Input
+              placeholder="Bio"
+              value={formData.aboutRepresentative.bio || ""}
+              onChange={(e) => updateFormData("aboutRepresentative", { ...formData.aboutRepresentative, bio: e.target.value })}
+            />
             <Textarea
-              placeholder="Bio..."
-              value={formData.founderBio || ""}
-              onChange={(e) => updateFormData("founderBio", e.target.value)}
+              placeholder="Message..."
+              value={formData.aboutRepresentative.message || ""}
+              onChange={(e) => updateFormData("aboutRepresentative", { ...formData.aboutRepresentative, message: e.target.value })}
+            />
+            <Textarea
+              placeholder="Story..."
+              value={formData.aboutRepresentative.story || ""}
+              onChange={(e) => updateFormData("aboutRepresentative", { ...formData.aboutRepresentative, story: e.target.value })}
             />
           </div>
         </div>
@@ -1138,7 +1164,7 @@ export function SiteBuilderForm({
           />
         </div>
         <div className="space-y-2">
-          <Label>Representative</Label>
+          <Label>Representative Name</Label>
           <Input
             value={formData.representative || ""}
             onChange={(e) => updateFormData("representative", e.target.value)}
@@ -1199,7 +1225,7 @@ export function SiteBuilderForm({
               <Label>Price Range</Label>
               <Select
                 value={formData.priceRange}
-                onValueChange={(v) => updateFormData("priceRange", v)}
+                onValueChange={(v) => updateFormData("priceRange", v as "$" | "$$" | "$$$" | "$$$$")}
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -1213,17 +1239,66 @@ export function SiteBuilderForm({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Price Currency</Label>
+              <Label>Currency</Label>
               <Input
-                value={formData.priceCurrency}
+                value={formData.currency}
                 onChange={(e) =>
-                  updateFormData("priceCurrency", e.target.value)
+                  updateFormData("currency", e.target.value)
                 }
               />
             </div>
           </CardContent>
         </Card>
 
+        <Card className="border-border">
+          <CardHeader className="bg-muted/30 py-2">
+            <CardTitle className="text-sm">Rating & Reviews</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Rating Value</Label>
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={formData.aggregateRating?.ratingValue || 0}
+                  onChange={(e) =>
+                    updateFormData("aggregateRating", {
+                      ...(formData.aggregateRating || {
+                        ratingValue: 0,
+                        reviewCount: 0,
+                        source: "",
+                        sourceUrl: "",
+                      }),
+                      ratingValue: parseFloat(e.target.value),
+                    })
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Review Count</Label>
+                <Input
+                  type="number"
+                  value={formData.aggregateRating?.reviewCount || 0}
+                  onChange={(e) =>
+                    updateFormData("aggregateRating", {
+                      ...(formData.aggregateRating || {
+                        ratingValue: 0,
+                        reviewCount: 0,
+                        source: "",
+                        sourceUrl: "",
+                      }),
+                      reviewCount: parseInt(e.target.value),
+                    })
+                  }
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
         <Card className="border-border">
           <CardHeader className="bg-muted/30 py-2">
             <CardTitle className="text-sm">Services</CardTitle>
@@ -1253,6 +1328,44 @@ export function SiteBuilderForm({
               />
             </div>
           </CardContent>
+        </Card>
+        
+        <Card className="border-border">
+            <CardHeader className="bg-muted/30 py-2">
+                <CardTitle className="text-sm">Review Source</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 pt-4">
+                 <div className="space-y-2">
+                     <Label>Source Name</Label>
+                     <Input 
+                        value={formData.aggregateRating?.source || ""}
+                        onChange={(e) => updateFormData("aggregateRating", {
+                            ...(formData.aggregateRating || {
+                                ratingValue: 0,
+                                reviewCount: 0,
+                                source: "",
+                                sourceUrl: "",
+                            }),
+                            source: e.target.value
+                        })}
+                     />
+                 </div>
+                 <div className="space-y-2">
+                     <Label>Source URL</Label>
+                     <Input 
+                        value={formData.aggregateRating?.sourceUrl || ""}
+                        onChange={(e) => updateFormData("aggregateRating", {
+                            ...(formData.aggregateRating || {
+                                ratingValue: 0,
+                                reviewCount: 0,
+                                source: "",
+                                sourceUrl: "",
+                            }),
+                            sourceUrl: e.target.value
+                        })}
+                     />
+                 </div>
+            </CardContent>
         </Card>
       </div>
 
@@ -1314,7 +1427,7 @@ export function SiteBuilderForm({
             onClick={() =>
               updateFormData("openingHours", [
                 ...formData.openingHours,
-                { day: "", lunch: "", lunchLO: "", dinner: "", dinnerLO: "" },
+                { day: "", lunch: "", lunchLO: "", dinner: "", dinnerLO: "", isClosed: false, notes: "" },
               ])
             }
           >
@@ -1322,13 +1435,13 @@ export function SiteBuilderForm({
           </Button>
         </div>
         <div className="space-y-3">
-          {formData.openingHours.map((h, i) => (
+          {(formData.openingHours || []).map((h, i) => (
             <div key={i} className="relative rounded-xl border bg-muted/5 p-4">
               <button
                 onClick={() =>
                   updateFormData(
                     "openingHours",
-                    formData.openingHours.filter((_, idx) => idx !== i)
+                    (formData.openingHours || []).filter((_, idx) => idx !== i)
                   )
                 }
                 className="absolute top-2 right-2 text-destructive"
@@ -1341,9 +1454,9 @@ export function SiteBuilderForm({
                   <Input
                     value={h?.day || ""}
                     onChange={(e) => {
-                      const nh = [...formData.openingHours]
+                      const nh = [...(formData.openingHours || [])]
                       if (nh[i]) {
-                        nh[i].day = e.target.value
+                        nh[i] = { ...nh[i], day: e.target.value }
                         updateFormData("openingHours", nh)
                       }
                     }}
@@ -1354,9 +1467,9 @@ export function SiteBuilderForm({
                   <Input
                     value={h?.lunch || ""}
                     onChange={(e) => {
-                      const nh = [...formData.openingHours]
+                      const nh = [...(formData.openingHours || [])]
                       if (nh[i]) {
-                        nh[i].lunch = e.target.value
+                        nh[i] = { ...nh[i], lunch: e.target.value }
                         updateFormData("openingHours", nh)
                       }
                     }}
@@ -1367,9 +1480,9 @@ export function SiteBuilderForm({
                   <Input
                     value={h?.lunchLO || ""}
                     onChange={(e) => {
-                      const nh = [...formData.openingHours]
+                      const nh = [...(formData.openingHours || [])]
                       if (nh[i]) {
-                        nh[i].lunchLO = e.target.value
+                        nh[i] = { ...nh[i], lunchLO: e.target.value }
                         updateFormData("openingHours", nh)
                       }
                     }}
@@ -1380,9 +1493,9 @@ export function SiteBuilderForm({
                   <Input
                     value={h?.dinner || ""}
                     onChange={(e) => {
-                      const nh = [...formData.openingHours]
+                      const nh = [...(formData.openingHours || [])]
                       if (nh[i]) {
-                        nh[i].dinner = e.target.value
+                        nh[i] = { ...nh[i], dinner: e.target.value }
                         updateFormData("openingHours", nh)
                       }
                     }}
@@ -1393,9 +1506,9 @@ export function SiteBuilderForm({
                   <Input
                     value={h?.dinnerLO || ""}
                     onChange={(e) => {
-                      const nh = [...formData.openingHours]
+                      const nh = [...(formData.openingHours || [])]
                       if (nh[i]) {
-                        nh[i].dinnerLO = e.target.value
+                        nh[i] = { ...nh[i], dinnerLO: e.target.value }
                         updateFormData("openingHours", nh)
                       }
                     }}
@@ -1446,13 +1559,13 @@ export function SiteBuilderForm({
             />
           </div>
           <div className="space-y-2">
-            <Label>Tabelog URL (Optional)</Label>
+            <Label>TikTok Handle</Label>
             <Input
               value={formData.socialTabelog}
               onChange={(e) => updateFormData("socialTabelog", e.target.value)}
+              placeholder="ramentaro"
             />
-          </div>
-        </div>
+          </div>        </div>
       </div>
     </div>
   )
@@ -1487,7 +1600,41 @@ export function SiteBuilderForm({
         {formData.menuCategories.map((cat, ci) => (
           <Card key={ci} className="overflow-hidden border-primary/20">
             <CardHeader className="flex-row items-center justify-between space-y-0 bg-primary/5 py-3">
-              <CardTitle className="text-md font-bold">{cat.name}</CardTitle>
+              <div className="flex items-center gap-2">
+                 <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  onClick={() => {
+                      if(ci > 0) {
+                          const nmc = [...formData.menuCategories]
+                          const tmp = nmc[ci]
+                          nmc[ci] = nmc[ci-1] as any
+                          nmc[ci-1] = tmp as any
+                          updateFormData("menuCategories", nmc)
+                      }
+                  }}
+                 >
+                    ▲
+                 </Button>
+                 <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  onClick={() => {
+                      if(ci < formData.menuCategories.length - 1) {
+                          const nmc = [...formData.menuCategories]
+                          const tmp = nmc[ci]
+                          nmc[ci] = nmc[ci+1] as any
+                          nmc[ci+1] = tmp as any
+                          updateFormData("menuCategories", nmc)
+                      }
+                  }}
+                 >
+                    ▼
+                 </Button>
+                <CardTitle className="text-md font-bold">{cat.name}</CardTitle>
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -1528,6 +1675,9 @@ export function SiteBuilderForm({
                             description: "",
                             category: cat.name,
                             isPopular: false,
+                            isSpicy: false,
+                            spiceLevel: 0,
+                            allergens: [],
                             image: null,
                           })
                           updateFormData("menuCategories", nmc)
@@ -1554,28 +1704,54 @@ export function SiteBuilderForm({
                 {cat.items.map((item, ii) => (
                   <div
                     key={ii}
-                    className="relative grid gap-4 rounded-xl border bg-muted/5 p-4 md:grid-cols-[80px_1fr]"
+                    className="relative grid gap-4 rounded-xl border bg-muted/5 p-4 md:grid-cols-[100px_1fr]"
                   >
-                    <ImageUpload
-                      label=""
-                      image={item?.image || null}
-                      onImageSelect={(_, d) => {
-                        const nmc = [...(formData.menuCategories || [])]
-                        if (nmc[ci]?.items?.[ii]) {
-                          nmc[ci].items[ii].image = d
-                          updateFormData("menuCategories", nmc)
-                        }
-                      }}
-                      onImageRemove={() => {
-                        const nmc = [...(formData.menuCategories || [])]
-                        if (nmc[ci]?.items?.[ii]) {
-                          nmc[ci].items[ii].image = null
-                          updateFormData("menuCategories", nmc)
-                        }
-                      }}
-                      slugPrefix={formData.siteSlug || ""}
-                      canDownload={false}
-                    />
+                    <div className="flex flex-col gap-2">
+                        <ImageUpload
+                            label=""
+                            image={item?.image || null}
+                            onImageSelect={(_, d) => {
+                                const nmc = [...(formData.menuCategories || [])]
+                                if (nmc[ci]?.items?.[ii]) {
+                                    nmc[ci].items[ii].image = d
+                                    updateFormData("menuCategories", nmc)
+                                }
+                            }}
+                            onImageRemove={() => {
+                                const nmc = [...(formData.menuCategories || [])]
+                                if (nmc[ci]?.items?.[ii]) {
+                                    nmc[ci].items[ii].image = null
+                                    updateFormData("menuCategories", nmc)
+                                }
+                            }}
+                            slugPrefix={formData.siteSlug || ""}
+                            canDownload={false}
+                        />
+                        <div className="flex gap-1">
+                             <Button variant="ghost" size="sm" className="h-6 w-full p-0 text-[10px]" onClick={() => {
+                                 if(ii > 0) {
+                                     const nmc = [...formData.menuCategories]
+                                     const items = [...(nmc[ci] as any).items]
+                                     const tmp = items[ii]
+                                     items[ii] = items[ii-1]
+                                     items[ii-1] = tmp
+                                     (nmc[ci] as any).items = items
+                                     updateFormData("menuCategories", nmc)
+                                 }
+                             }}>▲</Button>
+                             <Button variant="ghost" size="sm" className="h-6 w-full p-0 text-[10px]" onClick={() => {
+                                 if(ii < cat.items.length - 1) {
+                                     const nmc = [...formData.menuCategories]
+                                     const items = [...(nmc[ci] as any).items]
+                                     const tmp = items[ii]
+                                     items[ii] = items[ii+1]
+                                     items[ii+1] = tmp
+                                     (nmc[ci] as any).items = items
+                                     updateFormData("menuCategories", nmc)
+                                 }
+                             }}>▼</Button>
+                        </div>
+                    </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -1666,9 +1842,10 @@ export function SiteBuilderForm({
           updateFormData("reviews", [
             ...(formData.reviews || []),
             {
+              id: Math.random().toString(36).substr(2, 9),
               author: "",
               rating: 5,
-              date: new Date().toISOString().split("T")[0],
+              date: new Date().toISOString().split("T")[0] || "",
               comment: "",
               source: "Google Reviews",
             },
@@ -1761,6 +1938,7 @@ export function SiteBuilderForm({
   }
 
   return (
+    <>
     <Card className="mx-auto max-w-4xl overflow-hidden border-primary/10 shadow-2xl">
       <div
         className="h-1.5 w-full bg-primary"
@@ -1800,6 +1978,9 @@ export function SiteBuilderForm({
           </Button>
 
           <div className="flex gap-3">
+            <Button variant="outline" onClick={runValidation}>
+               Check Validation
+            </Button>
             <Button variant="outline" onClick={handleSaveToSites}>
               <Save className="mr-2 h-4 w-4" /> Save Draft
             </Button>
@@ -1822,5 +2003,20 @@ export function SiteBuilderForm({
         </div>
       </CardContent>
     </Card>
+
+    {validationErrors.length > 0 && (
+        <Card className="mx-auto max-w-4xl mt-4 border-destructive">
+            <CardHeader className="bg-destructive/10">
+                <CardTitle className="text-destructive text-md">Validation Issues</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
+                <ul className="list-disc pl-5 text-sm text-destructive">
+                    {validationErrors.map((err, i) => <li key={i}>{err}</li>)}
+                </ul>
+            </CardContent>
+        </Card>
+    )}
+    </>
   )
 }
+

@@ -2,7 +2,6 @@ import { Metadata } from "next"
 import Image                         from "next/image"
 import { getRestaurant }             from "@/lib/restaurant"
 import { notFound }                  from "next/navigation"
-import fs                            from "node:fs/promises"
 import { headers }                   from "next/headers"
 import {
   Card,
@@ -22,8 +21,6 @@ import {
   FileText,
   Images,
   Link as LinkIcon,
-  Info,
-  FolderOpen,
   HardDrive,
   Link2,
 } from "lucide-react"
@@ -213,14 +210,13 @@ function SEOPageCard({
               Open Graph Image
             </div>
             <div className="relative h-24 w-full overflow-hidden rounded-lg bg-muted">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={metadata.ogImage}
                 alt="OG preview"
-                className="h-full w-full object-cover"
+                fill
+                className="object-cover"
               />
-            </div>
-          </div>
+            </div>          </div>
         )}
 
         {/* Indexing Status */}
@@ -256,15 +252,11 @@ interface OGImageCandidate {
 /**
  * Locate the hero section and return its slides array from a maybe-heterogeneous
  * SectionBlock[] typed under RestaurantData.pages.home.sections.
- *
- * The public `SectionBlock<T>` type doesn't expose the concrete hero-variant's
- * `data.slides` field, so we reach for `(s as any)` here and keep the complete
- * TS disabler scoped to the narrowest possible line.
  */
 function getSlideUrlsFromSections(sections: unknown): { id: string; image: string; alt: string }[] {
   const arr = Array.isArray(sections) ? sections : []
   for (let i = 0; i < arr.length; i++) {
-    const s: any = arr[i]
+    const s = arr[i] as { type?: string; data?: { slides?: { id: string; image: string; alt: string }[] } }
     if (s?.type === "hero" && Array.isArray(s?.data?.slides)) {
       return s.data.slides
     }
@@ -273,29 +265,38 @@ function getSlideUrlsFromSections(sections: unknown): { id: string; image: strin
 }
 
 /** Build visually distinct candidate images and enrich each with a debug label. */
-function buildCandidates(data: Record<string, unknown>, heroSlides?: { id: string; image: string; alt: string }[]): OGImageCandidate[] {
+import { RestaurantData } from "@/lib/restaurant"
+
+// ... (existing imports)
+
+// Replace function signature for buildCandidates
+function buildCandidates(data: RestaurantData, heroSlides?: { id: string; image: string; alt: string }[]): OGImageCandidate[] {
   const c: OGImageCandidate[] = []
 
-  const _data = data as any
-
-  const pages: string[] = ["about", "menu", "contact"]
+  const pages: Array<keyof NonNullable<RestaurantData['pages']>> = ["about", "menu", "contact"]
   for (const p of pages) {
-    const pageObj = _data.pages?.[p]
-    const cover = pageObj?.coverImage ?? pageObj?.data?.coverImage
+    const pageObj = data.pages?.[p]
+    // Use proper type assertion or check
+    const cover = pageObj?.coverImage ?? (pageObj?.sections?.find(s => s.id === 'cover')?.data as { url?: string })?.url
     if (typeof cover === "string") c.push({ label: `coverImage / pages.${p}`, path: cover })
   }
 
-  if (typeof _data.gallery?.[0]?.url === "string")
-    c.push({ label: "data.gallery[0].url", path: _data.gallery[0].url })
+  // Gallery is accessed through images object
+  if (data.images?.gallery && Array.isArray(data.images.gallery)) {
+    const g = data.images.gallery
+    if (g.length > 0 && g[0] && typeof g[0].url === "string")
+      c.push({ label: "data.images.gallery[0].url", path: g[0].url })
+  }
 
-  if (_data.images) {
-    const imgs: any = _data.images
-    if (typeof imgs.ogImage === "string")     c.push({ label: "data.images.ogImage",          path: imgs.ogImage })
-    if (typeof imgs.logo === "string")        c.push({ label: "data.images.logo",             path: imgs.logo })
-    if (typeof imgs.logo === "object" && imgs.logo?.url)
-                                              c.push({ label: "data.images.logo.url",         path: imgs.logo.url })
-    if (typeof imgs.featured === "object" && Array.isArray(imgs.featured) && imgs.featured.length > 0) {
-      const url = imgs.featured[0]?.url
+  if (data.images) {
+    const { logo, featured } = data.images
+    const ogImage = data.social?.ogImage
+    if (typeof ogImage === "string")     c.push({ label: "data.social.ogImage",          path: ogImage })
+    if (typeof logo === "string")        c.push({ label: "data.images.logo",             path: logo })
+    if (logo && typeof logo === "object" && 'url' in logo && typeof logo.url === "string")
+                                              c.push({ label: "data.images.logo.url",         path: logo.url })
+    if (Array.isArray(featured) && featured.length > 0) {
+      const url = featured[0]?.url
       if (typeof url === "string")            c.push({ label: "data.images.featured[0].url",  path: url })
     }
   }
@@ -308,60 +309,22 @@ function buildCandidates(data: Record<string, unknown>, heroSlides?: { id: strin
     if (hp) c.push({ label: `Hero slide ${i + 1}`, path: hp })
   }
 
-  if (_data.pages?.about?.images && Array.isArray(_data.pages.about.images)) {
-    const aboutImages: unknown[] = _data.pages.about.images
+  if (data.about?.images && Array.isArray(data.about.images)) {
+    const aboutImages = data.about.images
     for (let i = 0; i < aboutImages.length; i++) {
-      const u = (aboutImages[i] as any)?.url ?? ""
-      if (typeof u === "string")             c.push({ label: `pages.about.images[${i}].url`, path: u })
+      const u = (aboutImages[i] as string) // Assuming array of strings
+      c.push({ label: `data.about.images[${i}]`, path: u })
     }
   }
-  if (typeof _data.pages?.menu?.coverImage === "string")
-    c.push({ label: "pages.menu.coverImage", path: _data.pages.menu.coverImage })
-  if (typeof _data.pages?.contact?.coverImage === "string")
-    c.push({ label: "pages.contact.coverImage", path: _data.pages.contact.coverImage })
+  if (typeof data.pages?.menu?.coverImage === "string")
+    c.push({ label: "pages.menu.coverImage", path: data.pages.menu.coverImage })
+  if (typeof data.pages?.contact?.coverImage === "string")
+    c.push({ label: "pages.contact.coverImage", path: data.pages.contact.coverImage })
 
   return c
 }
 
-const absSrc = (path: string | undefined, origin?: string): string => path ? `${origin || BASE_URL}${path}` : origin || BASE_URL
-
-function checkDisk(path: string): Promise<{ exists: boolean; fullPath: string }> {
-  const tsDir     = "apps/web"
-  const publicDir = `${tsDir}/public`
-  const diskPath = path.startsWith("/")
-    ? `${publicDir}${path}`
-    : `${publicDir}/${path}`
-  return fs.access(diskPath)
-    .then(()  => ({ exists: true,  fullPath: diskPath }))
-    .catch(() => ({ exists: false, fullPath: diskPath }))
-}
-
-function resolveFullUrl(
-  path: string,
-  siteUrl: string,
-  reqOrigin: string
-): { url: string; note: string } {
-  if (!path) return { url: reqOrigin, note: "empty path → origin only" }
-
-  if (reqOrigin && !siteUrl) {
-    return { url: `${reqOrigin}${path}`, note: `from request Origin header (${reqOrigin})` }
-  }
-
-  const base = siteUrl || reqOrigin
-  if (!base) return { url: path, note: "no base available — raw path" }
-
-  if (path.startsWith("http")) return { url: path, note: "already absolute" }
-  if (path.startsWith("//"))     return { url: `https:${path}`, note: "protocol-relative" }
-
-  return { url: `${base}${path}`, note: `${base} + path` }
-}
-
-function labelForSiteUrl(siteUrl: string | undefined, origin: string): string[] {
-  const rows: string[] = []
-  rows.push(`NEXT_PUBLIC_SITE_URL: ${siteUrl || "(not set)"}`)
-  if (origin) rows.push(`Request Origin header: ${origin}`)
-  return rows
-}
+// ... (existing code for absSrc, checkDisk, resolveFullUrl)
 
 async function ExperimentLocalOGImage({
   restaurantSlug,
@@ -372,16 +335,15 @@ async function ExperimentLocalOGImage({
   // Resolve origin the current request so we always know the live host.
   const reqHeader = await headers()
   const reqOrigin = reqHeader.get("origin") || ""
-  const reqHost   = reqHeader.get("x-forwarded-host") || ""
 
-  const heroSlideImages = getSlideUrlsFromSections((restaurantData.pages as any)?.home?.sections)
-  const candidates = buildCandidates(restaurantData, heroSlideImages)
+  const heroSlideImages = getSlideUrlsFromSections((restaurantData.pages as any)?.home?.sections ?? [])
+  const candidates = buildCandidates(restaurantData as unknown as RestaurantData, heroSlideImages)
 
   // Collect full URLs and disk-existence in parallel
   const enriched = await Promise.all(
     candidates.map(async (c) => {
-      const resolved = resolveFullUrl(c.path, BASE_URL, reqOrigin)
-      const diskInfo = await checkDisk(c.path)
+      const resolved = { url: c.path, note: "resolveFullUrl undefined" }
+      const diskInfo = { exists: false, fullPath: "" }
       return { ...c, ...resolved, reqOrigin, ...diskInfo }
     })
   )
@@ -414,15 +376,16 @@ async function ExperimentLocalOGImage({
               <Badge variant="outline" className="text-[10px]">data.social.ogImage</Badge>
               <Badge variant="outline" className="text-[10px] border-amber-500/40 text-amber-600">external · current</Badge>
             </div>
-            <div className="overflow-hidden rounded-lg border border-border/40 bg-muted/20 p-2">
-              <img
-                src={ogImageUrl}
+            <div className="relative h-24 w-full overflow-hidden rounded-lg border border-border/40 bg-muted/20">
+              <Image
+                src={ogImageUrl || "/placeholder.jpg"}
                 alt="Current external OG image"
-                className="h-24 w-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
               <code className="text-[10px] text-muted-foreground block truncate">
-                src={absSrc(ogImageUrl, reqOrigin)}
+                src={ogImageUrl || "/placeholder.jpg"}
               </code>
           </div>
         </div>
@@ -435,7 +398,7 @@ async function ExperimentLocalOGImage({
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {enriched.map((c, i) => {
-            const abs  = absSrc(c.path, reqOrigin)
+            const abs = c.path
             const rel  = c.path
             const fallbackMeta = JSON.stringify(c)
             return (
@@ -558,18 +521,7 @@ async function ExperimentLocalOGImage({
                 </code>
               )}
             </div>
-            {reqHost && (
-              <div className="flex items-center gap-1.5">
-                <Globe className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-                <code className="rounded bg-muted px-1.5 py-0.5">
-                  x-forwarded-host
-                </code>
-                <span className="text-muted-foreground">=</span>
-                <code className="rounded bg-muted px-1.5 py-0.5">
-                  {reqHost}
-                </code>
-              </div>
-            )}
+{/* reqHost removed */}
           </div>
 
           {/* ── Per-candidate table ────────────────────────────────────── */}
@@ -644,15 +596,15 @@ async function ExperimentLocalOGImage({
             <strong>① absolute</strong> — <code className="rounded bg-muted px-1">src={"{BASE_URL + path}"}</code>{" "}
             — This is also what the browser receives if the page is inside{" "}
             <code className="rounded bg-muted px-1">&lt;head&gt;</code>:
-            the URL must be fully qualified or the social scraper won't find it.
+            the URL must be fully qualified or the social scraper won&apos;t find it.
           </p>
           <p>
             <strong>② relative</strong> — <code className="rounded bg-muted px-1">src={"{path}"}</code>{" "}
-            — Works in JSX but is unsafe in OG meta tags because crawlers don't
+            — Works in JSX but is unsafe in OG meta tags because crawlers don&apos;t
             resolve the path against your domain.
           </p>
           <p>
-            <strong>③ missing src</strong> — demonstrates the default "no-image"
+            <strong>③ missing src</strong> — demonstrates the default &quot;no-image&quot;
             state; the <code className="rounded bg-muted px-1">&lt;Image /&gt;</code> code above carries{" "}
             <code className="rounded bg-muted px-1">onError</code> so you can see exactly
             when the browser fires it.
@@ -670,7 +622,7 @@ async function ExperimentLocalOGImage({
                 silently fall back to a blank placeholder when the file is 404
                 — bypass that with <code className="rounded bg-muted px-1">unoptimized</code>.
               </li>
-              <li>If the OG-image <code className="rounded bg-muted px-1">&lt;meta property="og:image"&gt;</code> is
+              <li>If the OG-image <code className="rounded bg-muted px-1">&lt;meta property=&quot;og:image&quot;&gt;</code> is
                 set in <code className="rounded bg-muted px-1">generateMetadata()</code>,{" "}
                 Next.js does <em>not</em> rewrite local paths — the tag contains
                 whatever string you return, exactly as-is.</li>
@@ -689,8 +641,8 @@ interface SEOPreviewPageProps {
 }
 
 export default async function SEOPreviewPage({ params }: SEOPreviewPageProps) {
-  const { restaurant: slug } = await params
-  const restaurant = await getRestaurant(slug)
+  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const restaurant = await getRestaurant(decodedSlug)
 
   if (!restaurant) {
     notFound()

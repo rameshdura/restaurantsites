@@ -19,17 +19,32 @@ export function getAbsoluteImageUrl(url: string | undefined | null): string {
 }
 
 /**
- * Generate icons metadata from restaurant logo
+ * Generate icons metadata from restaurant favicon, logo, or fallback to global assets
  */
 export function generateIcons(data: RestaurantData) {
-  const logoUrl = data.images?.logo?.url || data.logo || "/favicon.ico"
+  const faviconUrl = (data.images as any)?.favicon?.url
+  const logoUrl = (data.images as any)?.logo?.url || (data as any).logo
+  const iconUrl = faviconUrl || logoUrl
+  const globalFaviconBase = "/assets/favicon_io"
+
+  if (iconUrl) {
+    return {
+      icon: [
+        { url: iconUrl },
+        { url: iconUrl, sizes: "32x32", type: "image/png" },
+      ],
+      apple: [{ url: iconUrl, sizes: "180x180", type: "image/png" }],
+    }
+  }
 
   return {
     icon: [
-      { url: logoUrl },
-      { url: logoUrl, sizes: "32x32", type: "image/png" },
+      { url: `${globalFaviconBase}/favicon.ico` },
+      { url: `${globalFaviconBase}/favicon-16x16.png`, sizes: "16x16", type: "image/png" },
+      { url: `${globalFaviconBase}/favicon-32x32.png`, sizes: "32x32", type: "image/png" },
     ],
-    apple: [{ url: logoUrl, sizes: "180x180", type: "image/png" }],
+    apple: [{ url: `${globalFaviconBase}/apple-touch-icon.png`, sizes: "180x180", type: "image/png" }],
+    manifest: `${globalFaviconBase}/site.webmanifest`,
   }
 }
 

@@ -11,6 +11,7 @@ import { ReviewsSection } from "@workspace/ui/components/reviews-section"
 import { SectionHeader } from "@workspace/ui/components/section-header"
 import { ImageSlider } from "@workspace/ui/components/image-slider"
 import { FeaturedSection } from "@workspace/ui/components/featured-section"
+import { SafeImage } from "@/components/safe-image"
 import Image from "next/image"
 import Link from "next/link"
 import { buttonVariants } from "@workspace/ui/components/button"
@@ -104,9 +105,10 @@ function AboutBlock({
   const d = section.data as {
     title?: string
     content?: string
-    images?: string[]
     image?: string
   }
+
+  const aboutImages = data.about?.images
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-12">
@@ -155,9 +157,9 @@ function AboutBlock({
             </div>
           </div>
 
-          {d.images ? (
+          {aboutImages && aboutImages.length > 0 ? (
             <ImageSlider
-              images={d.images.map((im) => getImageSrc(restaurantSlug, im))}
+              images={aboutImages.map((im: any) => getImageSrc(restaurantSlug, typeof im === 'string' ? im : im.url))}
             />
           ) : d.image ? (
             <div className="relative aspect-square overflow-hidden rounded-3xl shadow-2xl">
@@ -253,15 +255,20 @@ function MenuBlock({
                 {featuredItems.map((item) => (
                   <div
                     key={item.id}
-                    className="group relative aspect-square overflow-hidden rounded-3xl border border-border/40 bg-background/50 shadow-md backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5 max-sm:rounded-none max-sm:border-none max-sm:shadow-none max-sm:hover:translate-y-0"
+                    className="group relative flex flex-col gap-3 max-sm:rounded-none max-sm:border-none max-sm:shadow-none"
                   >
-                    <Image
-                      src={item.image}
-                      alt={item.alt}
-                      fill
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="relative aspect-square overflow-hidden rounded-3xl border border-border/40 bg-accent/30 shadow-md backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5">
+                      <SafeImage
+                        src={item.image || "/images/placeholder.png"}
+                        alt={item.alt}
+                        fill
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    </div>
+                    <p className="text-center text-sm font-medium text-muted-foreground group-hover:text-foreground">
+                      {item.alt}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -281,15 +288,20 @@ function MenuBlock({
                 {drinkItems.map((item) => (
                   <div
                     key={item.id}
-                    className="group relative aspect-square overflow-hidden rounded-3xl border border-border/40 bg-background/50 shadow-md backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5 max-sm:rounded-none max-sm:border-none max-sm:shadow-none max-sm:hover:translate-y-0"
+                    className="group relative flex flex-col gap-3"
                   >
-                    <Image
-                      src={item.image}
-                      alt={item.alt}
-                      fill
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="relative aspect-square overflow-hidden rounded-3xl border border-border/40 bg-accent/30 shadow-md backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5">
+                      <SafeImage
+                        src={item.image || "/images/placeholder.png"}
+                        alt={item.alt}
+                        fill
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    </div>
+                    <p className="text-center text-sm font-medium text-muted-foreground group-hover:text-foreground">
+                      {item.alt}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -396,15 +408,20 @@ function DrinksBlock({
           {drinks.map((item) => (
             <div
               key={item.id}
-              className="group relative aspect-[4/5] overflow-hidden rounded-3xl border border-border/40 bg-background/50 shadow-md backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5"
+              className="group relative flex flex-col gap-3"
             >
-              <Image
-                src={getImageSrc(restaurantSlug, item.url)}
-                alt={item.alt}
-                fill
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-border/40 bg-accent/30 shadow-md backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5">
+                <SafeImage
+                  src={getImageSrc(restaurantSlug, item.url) || "/images/placeholder.png"}
+                  alt={item.alt}
+                  fill
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              </div>
+              <p className="text-center text-sm font-medium text-muted-foreground group-hover:text-foreground">
+                {item.alt}
+              </p>
             </div>
           ))}
         </div>

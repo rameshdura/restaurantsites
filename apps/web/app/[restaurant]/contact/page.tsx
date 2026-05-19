@@ -21,15 +21,15 @@ interface ContactPageProps {
 export async function generateMetadata({
   params,
 }: ContactPageProps): Promise<Metadata> {
-  const { restaurant: slug } = await params
-  const restaurant = await getRestaurant(slug)
+  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const restaurant = await getRestaurant(decodedSlug)
   if (!restaurant) return {}
   return generateContactMetadata(restaurant.data, slug)
 }
 
 export default async function ContactPage({ params }: ContactPageProps) {
-  const { restaurant: slug } = await params
-  const restaurant = await getRestaurant(slug)
+  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const restaurant = await getRestaurant(decodedSlug)
 
   if (!restaurant) {
     notFound()

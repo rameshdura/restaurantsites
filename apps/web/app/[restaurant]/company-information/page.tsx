@@ -1,14 +1,14 @@
 import { Metadata } from "next"
-import { getRestaurant } from "@/lib/restaurant"
+import { getRestaurant, getImageSrc } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
 import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
 import { Footer } from "@/components/footer"
 import { ContactSection } from "@workspace/ui/components/contact-section"
-import { FloatingActions } from "@/components/floating-actions"
 import { cn } from "@workspace/ui/lib/utils"
 import { JsonLd } from "@/components/json-ld"
 import { generateCompanyMetadata, generateOrganizationSchema } from "@/lib/seo"
+import { CoverSection } from "@workspace/ui/components/cover-section"
 
 interface CompanyInformationPageProps {
   params: Promise<{ restaurant: string }>
@@ -17,8 +17,8 @@ interface CompanyInformationPageProps {
 export async function generateMetadata({
   params,
 }: CompanyInformationPageProps): Promise<Metadata> {
-  const { restaurant: slug } = await params
-  const restaurant = await getRestaurant(slug)
+  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const restaurant = await getRestaurant(decodedSlug)
   if (!restaurant) return {}
   return generateCompanyMetadata(restaurant.data, slug)
 }
@@ -26,8 +26,8 @@ export async function generateMetadata({
 export default async function CompanyInformationPage({
   params,
 }: CompanyInformationPageProps) {
-  const { restaurant: slug } = await params
-  const restaurant = await getRestaurant(slug)
+  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const restaurant = await getRestaurant(decodedSlug)
 
   if (!restaurant || !restaurant.data.companyInfo) {
     notFound()
@@ -36,9 +36,8 @@ export default async function CompanyInformationPage({
   const { data } = restaurant
   const info = data.companyInfo
   const translations = getTranslations(data.app?.language)
-  const onlineBookingUrl =
-    data.reservation?.onlineBookingUrl ||
-    data.operations?.services?.onlineBookingUrl
+
+  const coverImage = getImageSrc(slug, data.pages?.company?.coverImage || data.hero?.slides?.[0]?.image)
 
   const details = [
     {
@@ -77,18 +76,16 @@ export default async function CompanyInformationPage({
         defaultLanguage={data.app?.language}
       />
 
-      <main className="flex-1 px-6 pt-32 pb-20">
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-16 text-center">
-            <h4 className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
-              {translations.companyInformation.subtitle}
-            </h4>
-            <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl">
-              {translations.companyInformation.title}
-            </h1>
-            <div className="mx-auto h-1.5 w-20 rounded-full bg-primary" />
-          </div>
+      {coverImage && (
+        <CoverSection
+          image={coverImage}
+          title={translations.companyInformation.title}
+          subtitle={translations.companyInformation.subtitle}
+        />
+      )}
 
+      <main className={cn("flex-1", !coverImage ? "pt-32" : "pt-16", "pb-20")}>
+        <div className="mx-auto max-w-4xl px-6">
           <div className="overflow-hidden rounded-3xl border bg-card shadow-sm">
             <div className="divide-y">
               {details.map((detail, index) => (
@@ -132,12 +129,6 @@ export default async function CompanyInformationPage({
         email={data.email}
         location={data.location}
         embedUrl={null}
-        translations={translations}
-      />
-
-      <FloatingActions
-        restaurantSlug={slug}
-        onlineBookingUrl={onlineBookingUrl}
         translations={translations}
       />
 

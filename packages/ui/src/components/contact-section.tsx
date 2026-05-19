@@ -12,6 +12,7 @@ import {
   InstagramIcon,
   Facebook01Icon,
   TwitterIcon,
+  TiktokIcon,
   UserIcon,
   Message01Icon,
   ArrowDown01Icon,
@@ -349,6 +350,7 @@ export function ContactSection({
                   { icon: InstagramIcon, label: "Instagram" },
                   { icon: Facebook01Icon, label: "Facebook" },
                   { icon: TwitterIcon, label: "Twitter" },
+                  { icon: TiktokIcon, label: "TikTok" },
                 ].map((social, i) => (
                   <button
                     key={i}
@@ -595,7 +597,9 @@ export function ContactSection({
                       ? translations.contact.privacyAgreement
                       : "By clicking send, you agree to our"}{" "}
                     <span className="cursor-pointer underline decoration-primary/30 underline-offset-4 transition-colors hover:text-primary">
-                      {translations?.contact?.privacyPolicy || "Privacy Policy"}
+                      <Link href="/privacy-policy">
+                        {translations?.contact?.privacyPolicy || "Privacy Policy"}
+                      </Link>
                     </span>
                     .
                   </p>

@@ -5,9 +5,9 @@ import { notFound } from "next/navigation"
 import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
 import { Footer } from "@/components/footer"
+import { Button } from "@workspace/ui/components/button"
 import { TeamSection } from "@workspace/ui/components/team-section"
 import { ContactSection } from "@workspace/ui/components/contact-section"
-import { FloatingActions } from "@/components/floating-actions"
 import { JsonLd } from "@/components/json-ld"
 import { generateAboutMetadata, generateAboutPageSchema } from "@/lib/seo"
 import { CoverSection } from "@workspace/ui/components/cover-section"
@@ -21,15 +21,15 @@ interface AboutPageProps {
 export async function generateMetadata({
   params,
 }: AboutPageProps): Promise<Metadata> {
-  const { restaurant: slug } = await params
-  const restaurant = await getRestaurant(slug)
+  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const restaurant = await getRestaurant(decodedSlug)
   if (!restaurant) return {}
   return generateAboutMetadata(restaurant.data, slug)
 }
 
 export default async function AboutPage({ params }: AboutPageProps) {
-  const { restaurant: slug } = await params
-  const restaurant = await getRestaurant(slug)
+  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const restaurant = await getRestaurant(decodedSlug)
 
   if (!restaurant) {
     notFound()
@@ -37,14 +37,13 @@ export default async function AboutPage({ params }: AboutPageProps) {
 
   const { data } = restaurant
   const translations = getTranslations(data.app?.language)
-  const onlineBookingUrl =
-    data.reservation?.onlineBookingUrl ||
-    data.operations?.services?.onlineBookingUrl
 
-  // Get cover image from page data, fallback to first hero slide image
+  // Get data for the story section, preferring home-page about data
+  const storyData = data.pages?.home?.sections?.find((s: { id: string }) => s.id === "about")?.data || data.about
+  
   const coverImage = getImageSrc(slug, data.pages?.about?.coverImage || data.hero?.slides?.[0]?.image)
-  const aboutImage = getImageSrc(slug, data.about?.image)
-  const aboutImages = data.about?.images?.map((im) => getImageSrc(slug, im))
+  const aboutImage = getImageSrc(slug, storyData?.image as string | undefined)
+  const aboutImages = data.images?.gallery?.map((im: { url: string }) => getImageSrc(slug, im.url))
 
   return (
     <div className="flex min-h-svh flex-col">
@@ -92,29 +91,38 @@ export default async function AboutPage({ params }: AboutPageProps) {
               )}
               <div className="space-y-6">
                 <p className="text-xl leading-relaxed text-muted-foreground">
-                  {data.about?.content || data.description}
+                  {typeof storyData?.content === 'string' ? storyData.content : data.description}
                 </p>
-                {data.about?.additionalContent?.map(
-                  (paragraph: string, index: number) => (
-                    <p
-                      key={index}
-                      className="text-lg leading-relaxed text-muted-foreground/80"
-                    >
-                      {paragraph}
-                    </p>
-                  )
+                {(storyData?.additionalContent as string[])?.map(
+                (paragraph: string, index: number) => (
+                  <p
+                    key={index}
+                    className="text-lg leading-relaxed text-muted-foreground/80"
+                  >
+                    {paragraph}
+                  </p>
+                )
                 )}
-              </div>
-            </div>
-
+                <div className="pt-4">
+                <Button asChild variant="outline" className="rounded-full">
+                  <a href={`/${slug}/company-information`}>
+                    About Company
+                  </a>
+                </Button>
+                </div>
+                </div>
+                </div>
             {aboutImages ? (
-              <ImageSlider images={aboutImages} />
+              <ImageSlider
+                images={aboutImages}
+                aspectRatio="aspect-square lg:aspect-4/5"
+              />
             ) : (
               aboutImage && (
                 <div className="relative aspect-square overflow-hidden rounded-3xl shadow-2xl lg:aspect-4/5">
                   <Image
                     src={aboutImage}
-                    alt={data.about?.title || "About image"}
+                    alt={typeof storyData?.title === 'string' ? storyData.title : "About image"}
                     fill
                     className="object-cover transition-transform duration-700 hover:scale-105"
                   />
@@ -157,8 +165,42 @@ export default async function AboutPage({ params }: AboutPageProps) {
             </div>
           </div>
 
-          {data.about?.team && (
-            <TeamSection team={data.about.team} translations={translations} />
+          {console.log("About data:", data.about)}
+          {(data.about as any)?.representative && (
+            <section className="mt-24 rounded-3xl bg-accent/30 p-12 lg:p-20">
+              <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+                {getImageSrc(slug, (data.about as any).representative.image) && (
+                  <div className="relative aspect-square overflow-hidden rounded-3xl">
+                    <Image
+                      src={getImageSrc(slug, (data.about as any).representative.image)}
+                      alt={(data.about as any).representative.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="space-y-6">
+                  <blockquote className="text-2xl font-medium italic text-primary md:text-3xl">
+                    &ldquo;{(data.about as any).representative.message}&rdquo;
+                  </blockquote>
+                  <div>
+                    <h4 className="text-xl font-bold">
+                      {(data.about as any).representative.name}
+                    </h4>
+                    <p className="text-muted-foreground">
+                      {(data.about as any).representative.position}
+                    </p>
+                  </div>
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    {(data.about as any).representative.story}
+                  </p>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {data.team && (
+            <TeamSection team={data.team} translations={translations} />
           )}
         </div>
       </main>
@@ -174,12 +216,6 @@ export default async function AboutPage({ params }: AboutPageProps) {
         email={data.email}
         location={data.location}
         embedUrl={null}
-        translations={translations}
-      />
-
-      <FloatingActions
-        restaurantSlug={slug}
-        onlineBookingUrl={onlineBookingUrl}
         translations={translations}
       />
 

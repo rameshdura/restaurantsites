@@ -616,6 +616,7 @@ export async function getRestaurant(slug: string): Promise<Restaurant | null> {
     const dataPath = path.join(restaurantPath, "data.json")
     const dataRaw = await fs.readFile(dataPath, "utf8")
     let data: RestaurantData = JSON.parse(dataRaw)
+    console.log(`[DEBUG] Loaded restaurant ${slug} name:`, data.name)
 
     // Normalise v1 block schema → legacy fields
     data = normaliseBlockSchema(data)
