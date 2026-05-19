@@ -53,8 +53,7 @@ export function Footer({ restaurantName, translations }: FooterProps) {
             <HugeiconsIcon icon={Heart} size={18} />
           </Link>
           <span className="text-border">|</span>
-          <Link href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
-          <span className="text-border">|</span>
+          <Link href={getLink("/privacy-policy")} className="hover:text-primary transition-colors">Privacy Policy</Link>          <span className="text-border">|</span>
           <span>Dark Mode</span>
           <button
             onClick={() => setTheme(isDark ? "light" : "dark")}

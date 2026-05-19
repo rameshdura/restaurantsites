@@ -108,7 +108,32 @@ function AboutBlock({
     image?: string
   }
 
-  const aboutImages = data.about?.images
+  const aboutImages = data.images?.about
+
+  const lang = data.app?.language || "EN"
+  const defaultRep = lang === "JA" 
+    ? {
+        name: "ヘッドシェフ＆チーム",
+        position: "",
+        message: "「私たちの情熱はシンプルです。最高の料理と心温まるおもてなしで、すべてのお客様に特別なひとときをお届けすることです。」",
+        story: "私たちが提供する一皿一皿の裏には、食への妥協なき挑戦を続けるチームの情熱があります。新鮮な素材の厳選から、洗練されたレシピの追求に至るまで、私たちは心地よい空間づくりのために心を込めて取り組んでいます。素晴らしい料理は人々を結びつけるもの。私たちのキッチンのこだわりを、皆様と分かち合えることを誇りに思っています。",
+        image: data.about?.representative?.image || "/images/restaurants/hamro-khaja-ghar/team/representative.png"
+      }
+    : {
+        name: "Head Chef & Team",
+        position: "",
+        message: "\"Our passion is simple: serving incredible food with warm, attentive hospitality to make every meal memorable.\"",
+        story: "Behind every dish we serve is a dedicated team committed to culinary excellence. From sourcing the freshest seasonal ingredients to perfecting our recipes, we pour our hearts into creating a welcoming dining experience. We believe that great food brings people together, and we are honored to share our kitchen's passion with you.",
+        image: data.about?.representative?.image || "/images/restaurants/hamro-khaja-ghar/team/representative.png"
+      }
+
+  const rep = {
+    name: data.about?.representative?.name || defaultRep.name,
+    position: data.about?.representative?.position || defaultRep.position,
+    message: data.about?.representative?.message || defaultRep.message,
+    story: data.about?.representative?.story || defaultRep.story,
+    image: getImageSrc(restaurantSlug, data.about?.representative?.image || defaultRep.image)
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-12">
