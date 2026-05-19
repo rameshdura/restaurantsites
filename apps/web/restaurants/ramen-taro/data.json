@@ -238,7 +238,7 @@
             "slides": [
               {
               "id": "slide-1",
-              "image": "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg",
+              "image": "/images/restaurants/ramen-taro/homeslider/slide-1.jpg",
               "alt": "Authentic Hakata tonkotsu ramen bowl with chashu pork and soft-boiled egg",
               "subtitle": "",
               "title": "",
@@ -247,7 +247,7 @@
             },
             {
               "id": "slide-2",
-              "image": "/images/restaurants/ramen-taro/homeslider/ramen-2.jpg",
+              "image": "/images/restaurants/ramen-taro/homeslider/slide-2.jpg",
               "alt": "Ramen chef masterfully crafting a bowl",
               "subtitle": "",
               "title": "",
@@ -331,7 +331,7 @@
     },
     "about": {
       "id": "about",
-      "coverImage": "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg",
+      "coverImage": "/images/restaurants/ramen-taro/homeslider/slide-1.jpg",
       "sections": [
         {
           "id": "about-full",
@@ -360,7 +360,7 @@
     },
     "menu": {
       "id": "menu",
-      "coverImage": "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg",
+      "coverImage": "/images/restaurants/ramen-taro/homeslider/slide-1.jpg",
       "sections": [
         {
           "id": "full-menu",
@@ -377,7 +377,7 @@
     },
     "contact": {
       "id": "contact",
-      "coverImage": "/images/restaurants/ramen-taro/homeslider/ramen-1.jpg",
+      "coverImage": "/images/restaurants/ramen-taro/homeslider/slide-1.jpg",
       "sections": [
         {
           "id": "contact-full",
