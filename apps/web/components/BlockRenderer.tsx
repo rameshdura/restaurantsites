@@ -63,10 +63,7 @@ function HeroBlock({
 
   if (!d.slides?.length) return null
 
-  const localeSlides = [
-    t.home?.hero?.slide1,
-    t.home?.hero?.slide2,
-  ]
+  const localeSlides = [t.home?.hero?.slide1, t.home?.hero?.slide2]
 
   const slides = d.slides.map((slide, i) => {
     const locale = localeSlides[i] || {}
@@ -109,28 +106,40 @@ function AboutBlock({
   }
 
   const lang = data.app?.language || "EN"
-  const defaultRep = lang === "JA" 
-    ? {
-        name: "ヘッドシェフ＆チーム",
-        position: "",
-        message: "「私たちの情熱はシンプルです。最高の料理と心温まるおもてなしで、すべてのお客様に特別なひとときをお届けすることです。」",
-        story: "私たちが提供する一皿一皿の裏には、食への妥協なき挑戦を続けるチームの情熱があります。新鮮な素材の厳選から、洗練されたレシピの追求に至るまで、私たちは心地よい空間づくりのために心を込めて取り組んでいます。素晴らしい料理は人々を結びつけるもの。私たちのキッチンのこだわりを、皆様と分かち合えることを誇りに思っています。",
-        image: data.about?.founder?.image || "/images/restaurants/hamro-khaja-ghar/team/representative.png"
-      }
-    : {
-        name: "Head Chef & Team",
-        position: "",
-        message: "\"Our passion is simple: serving incredible food with warm, attentive hospitality to make every meal memorable.\"",
-        story: "Behind every dish we serve is a dedicated team committed to culinary excellence. From sourcing the freshest seasonal ingredients to perfecting our recipes, we pour our hearts into creating a welcoming dining experience. We believe that great food brings people together, and we are honored to share our kitchen's passion with you.",
-        image: data.about?.founder?.image || "/images/restaurants/hamro-khaja-ghar/team/representative.png"
-      }
+  const defaultRep =
+    lang === "JA"
+      ? {
+          name: "ヘッドシェフ＆チーム",
+          position: "",
+          message:
+            "「私たちの情熱はシンプルです。最高の料理と心温まるおもてなしで、すべてのお客様に特別なひとときをお届けすることです。」",
+          story:
+            "私たちが提供する一皿一皿の裏には、食への妥協なき挑戦を続けるチームの情熱があります。新鮮な素材の厳選から、洗練されたレシピの追求に至るまで、私たちは心地よい空間づくりのために心を込めて取り組んでいます。素晴らしい料理は人々を結びつけるもの。私たちのキッチンのこだわりを、皆様と分かち合えることを誇りに思っています。",
+          image:
+            data.about?.founder?.image ||
+            "/images/restaurants/hamro-khaja-ghar/team/representative.png",
+        }
+      : {
+          name: "Head Chef & Team",
+          position: "",
+          message:
+            '"Our passion is simple: serving incredible food with warm, attentive hospitality to make every meal memorable."',
+          story:
+            "Behind every dish we serve is a dedicated team committed to culinary excellence. From sourcing the freshest seasonal ingredients to perfecting our recipes, we pour our hearts into creating a welcoming dining experience. We believe that great food brings people together, and we are honored to share our kitchen's passion with you.",
+          image:
+            data.about?.founder?.image ||
+            "/images/restaurants/hamro-khaja-ghar/team/representative.png",
+        }
 
   const rep = {
     name: data.about?.founder?.name || defaultRep.name,
     position: "", // Placeholder as there is no position in founder schema
     message: "", // Placeholder as there is no message in founder schema
     story: data.about?.content || defaultRep.story,
-    image: getImageSrc(restaurantSlug, data.about?.founder?.image || defaultRep.image)
+    image: getImageSrc(
+      restaurantSlug,
+      data.about?.founder?.image || defaultRep.image
+    ),
   }
 
   return (
@@ -182,7 +191,12 @@ function AboutBlock({
 
           {data.about?.images && data.about.images.length > 0 ? (
             <ImageSlider
-              images={data.about.images.map((im: any) => getImageSrc(restaurantSlug, typeof im === 'string' ? im : im.url))}
+              images={data.about.images.map((im: any) =>
+                getImageSrc(
+                  restaurantSlug,
+                  typeof im === "string" ? im : im.url
+                )
+              )}
             />
           ) : d.image ? (
             <div className="relative aspect-square overflow-hidden rounded-3xl shadow-2xl">
@@ -211,7 +225,10 @@ function MenuBlock({
   translations: Record<string, unknown>
   restaurantSlug: string
 }) {
-  const categories = groupMenuByCategory((data.menu ?? []) as MenuItem[], restaurantSlug)
+  const categories = groupMenuByCategory(
+    (data.menu ?? []) as MenuItem[],
+    restaurantSlug
+  )
   if (!categories.length) return null
 
   const isPreview = section.id === "menu-preview"
@@ -219,7 +236,15 @@ function MenuBlock({
   if (isPreview) {
     const t = translations as {
       home?: {
-        menu?: { subtitle?: string; title?: string; backgroundTitle?: string; description?: string; description2?: string; openMenuButton?: string; makeReservationButton?: string }
+        menu?: {
+          subtitle?: string
+          title?: string
+          backgroundTitle?: string
+          description?: string
+          description2?: string
+          openMenuButton?: string
+          makeReservationButton?: string
+        }
       }
     }
     const d = section.data as {
@@ -233,10 +258,20 @@ function MenuBlock({
     const subtitle = t.home?.menu?.subtitle ?? "Our Menu"
     const title = d.title || t.home?.menu?.title || "A Taste of Tradition"
     const backgroundTitle = t.home?.menu?.backgroundTitle ?? "Delicious Food"
-    const description = d.description || t.home?.menu?.description || "Every dish on our menu is prepared using fresh ingredients, aromatic herbs, and carefully selected spices to create rich, balanced flavors inspired by authentic culinary traditions."
-    const description2 = d.description2 || t.home?.menu?.description2 || "From healthy light bites to bold signature specialties, each plate is crafted with care and passion — combining freshness, quality, and authentic taste in every serving."
-    const openMenuButton = d.openMenuButton || t.home?.menu?.openMenuButton || "Open Menu"
-    const makeReservationButton = d.makeReservationButton || t.home?.menu?.makeReservationButton || "Make Reservation"
+    const description =
+      d.description ||
+      t.home?.menu?.description ||
+      "Every dish on our menu is prepared using fresh ingredients, aromatic herbs, and carefully selected spices to create rich, balanced flavors inspired by authentic culinary traditions."
+    const description2 =
+      d.description2 ||
+      t.home?.menu?.description2 ||
+      "From healthy light bites to bold signature specialties, each plate is crafted with care and passion — combining freshness, quality, and authentic taste in every serving."
+    const openMenuButton =
+      d.openMenuButton || t.home?.menu?.openMenuButton || "Open Menu"
+    const makeReservationButton =
+      d.makeReservationButton ||
+      t.home?.menu?.makeReservationButton ||
+      "Make Reservation"
 
     const featuredItems = (data.images?.featured ?? [])
       .filter(Boolean)
@@ -429,13 +464,13 @@ function DrinksBlock({
 
         <div className="mb-10 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
           {drinks.map((item) => (
-            <div
-              key={item.id}
-              className="group relative flex flex-col gap-3"
-            >
+            <div key={item.id} className="group relative flex flex-col gap-3">
               <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-border/40 bg-accent/30 shadow-md backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/5">
                 <SafeImage
-                  src={getImageSrc(restaurantSlug, item.url) || "/images/placeholder.png"}
+                  src={
+                    getImageSrc(restaurantSlug, item.url) ||
+                    "/images/placeholder.png"
+                  }
                   alt={item.alt}
                   fill
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -550,7 +585,12 @@ const BLOCK_MAP: Record<
   (props: BlockRendererProps) => React.ReactElement | null
 > = {
   hero: ({ section, data, translations, restaurantSlug }) => (
-    <HeroBlock section={section} data={data} translations={translations} restaurantSlug={restaurantSlug} />
+    <HeroBlock
+      section={section}
+      data={data}
+      translations={translations}
+      restaurantSlug={restaurantSlug}
+    />
   ),
   about: ({ section, data, translations, restaurantSlug }) => (
     <AboutBlock
@@ -587,7 +627,11 @@ const BLOCK_MAP: Record<
     />
   ),
   gallery: ({ data, restaurantSlug, translations }) => (
-    <GalleryBlock data={data} restaurantSlug={restaurantSlug} translations={translations} />
+    <GalleryBlock
+      data={data}
+      restaurantSlug={restaurantSlug}
+      translations={translations}
+    />
   ),
   reviews: ({ data, translations }) => (
     <ReviewsBlock data={data} translations={translations} />

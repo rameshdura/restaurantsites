@@ -16,7 +16,9 @@ const fontMono = Geist_Mono({
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://restaurantsites.vercel.app'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
+  ),
 }
 
 export default function RootLayout({

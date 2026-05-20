@@ -45,18 +45,19 @@ export default async function proxy(req: NextRequest) {
   if (hostname.endsWith(`.${rootDomain}`)) {
     slug = hostname.replace(`.${rootDomain}`, "")
   } else if (hostname.endsWith(".vercel.app")) {
-    // Handle Vercel default domains (e.g. project-name-suffix.vercel.app)
+    // Handle Vercel default domains (e.g. restaurant-slug-suffix.vercel.app)
     const subdomain = hostname.replace(".vercel.app", "")
-    
+
     // Ignore internal platform subdomains
     if (subdomain.includes("restaurantsites")) {
       return NextResponse.next()
     }
-    
-    // Extract slug by removing potential Vercel deployment suffixes (e.g. -ojjqbgqaf-rameshduras-projects)
-    // A suffix typically starts after the restaurant name. Assuming restaurant names don't contain dashes
-    // or we can heuristically clean it.
-    slug = subdomain.split("-")[0] || ""
+
+    // Identify valid slugs to avoid matching Vercel's random deployment suffix
+    const validSlugs = ["hamro-khaja-ghar", "ramen-taro", "rato-bhale"]
+
+    // Check if the subdomain starts with any of the valid slugs
+    slug = validSlugs.find((s) => subdomain.startsWith(s)) || ""
   } else {
     // Custom domain
     slug = hostname.split(".")[0] || ""

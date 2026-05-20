@@ -17,14 +17,16 @@ interface BrandPageProps {
 export async function generateMetadata({
   params,
 }: BrandPageProps): Promise<Metadata> {
-  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const { restaurant: slug } = await params
+  const decodedSlug = decodeURIComponent(slug)
   const restaurant = await getRestaurant(decodedSlug)
   if (!restaurant) return {}
   return generateBrandMetadata(restaurant.data, slug)
 }
 
 export default async function BrandPage({ params }: BrandPageProps) {
-  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const { restaurant: slug } = await params
+  const decodedSlug = decodeURIComponent(slug)
   const restaurant = await getRestaurant(decodedSlug)
 
   if (!restaurant) {

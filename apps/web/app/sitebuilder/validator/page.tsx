@@ -1,7 +1,12 @@
 "use client"
 
 import React, { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card"
 import { Button } from "@workspace/ui/components/button"
 import { Textarea } from "@workspace/ui/components/textarea"
 import { validateRestaurantData } from "@/lib/validator"
@@ -9,7 +14,10 @@ import { Check, AlertCircle } from "lucide-react"
 
 export default function JsonValidatorPage() {
   const [jsonInput, setJsonInput] = useState("")
-  const [result, setResult] = useState<{ isValid: boolean; errors: string[] } | null>(null)
+  const [result, setResult] = useState<{
+    isValid: boolean
+    errors: string[]
+  } | null>(null)
 
   const handleValidate = () => {
     try {
@@ -22,27 +30,35 @@ export default function JsonValidatorPage() {
   }
 
   return (
-    <div className="container mx-auto p-8 max-w-2xl">
+    <div className="container mx-auto max-w-2xl p-8">
       <Card>
         <CardHeader>
           <CardTitle>External JSON Validator</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Textarea 
+          <Textarea
             placeholder="Paste your JSON here..."
             className="min-h-[300px] font-mono text-xs"
             value={jsonInput}
             onChange={(e) => setJsonInput(e.target.value)}
           />
-          <Button className="w-full" onClick={handleValidate}>Validate JSON</Button>
-          
+          <Button className="w-full" onClick={handleValidate}>
+            Validate JSON
+          </Button>
+
           {result && (
-            <div className={`p-4 rounded-lg flex gap-3 ${result.isValid ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900'}`}>
+            <div
+              className={`flex gap-3 rounded-lg p-4 ${result.isValid ? "bg-green-100 text-green-900" : "bg-red-100 text-red-900"}`}
+            >
               {result.isValid ? <Check /> : <AlertCircle />}
               <div>
-                <p className="font-bold">{result.isValid ? "Valid JSON" : "Invalid JSON"}</p>
+                <p className="font-bold">
+                  {result.isValid ? "Valid JSON" : "Invalid JSON"}
+                </p>
                 <ul className="list-disc pl-5 text-sm">
-                  {result.errors.map((err, i) => <li key={i}>{err}</li>)}
+                  {result.errors.map((err, i) => (
+                    <li key={i}>{err}</li>
+                  ))}
                 </ul>
               </div>
             </div>

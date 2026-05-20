@@ -4,7 +4,8 @@ import { RestaurantData, MenuItem } from "./restaurant"
 /**
  * Configuration
  */
-const DOMAIN = process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
+const DOMAIN =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
 const DEFAULT_OG_IMAGE = `${DOMAIN}/og-default.jpg`
 
 /**
@@ -40,10 +41,24 @@ export function generateIcons(data: RestaurantData) {
   return {
     icon: [
       { url: `${globalFaviconBase}/favicon.ico` },
-      { url: `${globalFaviconBase}/favicon-16x16.png`, sizes: "16x16", type: "image/png" },
-      { url: `${globalFaviconBase}/favicon-32x32.png`, sizes: "32x32", type: "image/png" },
+      {
+        url: `${globalFaviconBase}/favicon-16x16.png`,
+        sizes: "16x16",
+        type: "image/png",
+      },
+      {
+        url: `${globalFaviconBase}/favicon-32x32.png`,
+        sizes: "32x32",
+        type: "image/png",
+      },
     ],
-    apple: [{ url: `${globalFaviconBase}/apple-touch-icon.png`, sizes: "180x180", type: "image/png" }],
+    apple: [
+      {
+        url: `${globalFaviconBase}/apple-touch-icon.png`,
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
     manifest: `${globalFaviconBase}/site.webmanifest`,
   }
 }
@@ -278,9 +293,9 @@ export function generateHomeMetadata(
 
   const heroImage = getAbsoluteImageUrl(
     data.hero?.slides?.[0]?.image ||
-    data.images?.heroImage?.url ||
-    data.logo ||
-    DEFAULT_OG_IMAGE
+      data.images?.heroImage?.url ||
+      data.logo ||
+      DEFAULT_OG_IMAGE
   )
 
   const keywords = data.seo?.keywords || generateKeywords(data)
@@ -349,10 +364,10 @@ export function generateAboutMetadata(
 
   const aboutImage = getAbsoluteImageUrl(
     data.about?.image ||
-    data.images?.coverImage?.url ||
-    data.hero?.slides?.[0]?.image ||
-    data.logo ||
-    DEFAULT_OG_IMAGE
+      data.images?.coverImage?.url ||
+      data.hero?.slides?.[0]?.image ||
+      data.logo ||
+      DEFAULT_OG_IMAGE
   )
 
   const keywords = data.seo?.keywords || [
@@ -424,9 +439,9 @@ export function generateMenuMetadata(
 
   const menuImage = getAbsoluteImageUrl(
     data.menu?.find((item) => item.image && item.isPopular)?.image ||
-    data.hero?.slides?.[0]?.image ||
-    data.logo ||
-    DEFAULT_OG_IMAGE
+      data.hero?.slides?.[0]?.image ||
+      data.logo ||
+      DEFAULT_OG_IMAGE
   )
 
   const keywords = data.seo?.keywords || [

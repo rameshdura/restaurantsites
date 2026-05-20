@@ -10,7 +10,9 @@ export interface ValidationResult {
 
 import { SiteBuilderData } from "./storage"
 
-export function validateRestaurantData(data: SiteBuilderData): ValidationResult {
+export function validateRestaurantData(
+  data: SiteBuilderData
+): ValidationResult {
   const errors: string[] = []
 
   // Check required fields (checking both draft field and final name field)

@@ -24,16 +24,17 @@ export async function GET(
 
     // Determine the content type based on extension
     const ext = path.extname(imagePath).toLowerCase()
-    const contentType = {
-      ".png": "image/png",
-      ".jpg": "image/jpeg",
-      ".jpeg": "image/jpeg",
-      ".gif": "image/gif",
-      ".webp": "image/webp",
-      ".svg": "image/svg+xml",
-      ".ico": "image/x-icon",
-      ".pdf": "application/pdf",
-    }[ext] || "application/octet-stream"
+    const contentType =
+      {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".gif": "image/gif",
+        ".webp": "image/webp",
+        ".svg": "image/svg+xml",
+        ".ico": "image/x-icon",
+        ".pdf": "application/pdf",
+      }[ext] || "application/octet-stream"
 
     return new NextResponse(fileBuffer, {
       headers: {
@@ -42,7 +43,10 @@ export async function GET(
       },
     })
   } catch (error) {
-    console.error(`[Image API] Error serving image ${imagePath} for ${slug}:`, error)
+    console.error(
+      `[Image API] Error serving image ${imagePath} for ${slug}:`,
+      error
+    )
     return new NextResponse("Image not found", { status: 404 })
   }
 }

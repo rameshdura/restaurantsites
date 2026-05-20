@@ -27,7 +27,12 @@ export function SiteBuilderHeader({
             </Button>
           )}
           <h1 className="text-xl font-bold">
-            Site Builder {siteName && <span className="font-normal text-muted-foreground">- {siteName}</span>}
+            Site Builder{" "}
+            {siteName && (
+              <span className="font-normal text-muted-foreground">
+                - {siteName}
+              </span>
+            )}
           </h1>
         </div>
         <div className="flex items-center gap-2">

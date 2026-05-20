@@ -21,14 +21,16 @@ interface ContactPageProps {
 export async function generateMetadata({
   params,
 }: ContactPageProps): Promise<Metadata> {
-  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const { restaurant: slug } = await params
+  const decodedSlug = decodeURIComponent(slug)
   const restaurant = await getRestaurant(decodedSlug)
   if (!restaurant) return {}
   return generateContactMetadata(restaurant.data, slug)
 }
 
 export default async function ContactPage({ params }: ContactPageProps) {
-  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const { restaurant: slug } = await params
+  const decodedSlug = decodeURIComponent(slug)
   const restaurant = await getRestaurant(decodedSlug)
 
   if (!restaurant) {
@@ -39,7 +41,10 @@ export default async function ContactPage({ params }: ContactPageProps) {
   const t = getTranslations(data.app?.language)
 
   // Get cover image from page data, fallback to first hero slide image
-  const coverImage = getImageSrc(slug, data.pages?.contact?.coverImage || data.hero?.slides?.[0]?.image)
+  const coverImage = getImageSrc(
+    slug,
+    data.pages?.contact?.coverImage || data.hero?.slides?.[0]?.image
+  )
 
   return (
     <div className="flex min-h-svh flex-col">

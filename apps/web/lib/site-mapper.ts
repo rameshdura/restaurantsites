@@ -76,21 +76,49 @@ export function mapDataJsonToBuilder(data: any): Partial<SiteBuilderData> {
     logoImage: data.images?.logo?.url || null,
     heroImage: data.images?.heroImage?.url || null,
     coverImage: data.images?.coverImage?.url || null,
-    imagesGallery: data.images?.gallery?.map((g: any) => ({ url: g.url || "", alt: g.alt || "" })) || [],
-    imagesFeatured: data.images?.featured?.map((g: any) => ({ url: g.url || "", alt: g.alt || "" })) || [],
-    imagesDrinks: data.images?.drinks?.map((g: any) => ({ url: g.url || "", alt: g.alt || "" })) || [],
-    aboutImages: data.images?.about?.map((g: any) => ({ id: g.id || "", url: g.url || "", alt: g.alt || "" })) || [],
-    heroSlides: data.hero?.slides ||
-      (data.pages?.home?.sections ?? []).find((s: any) => s.type === "hero")?.data?.slides ||
+    imagesGallery:
+      data.images?.gallery?.map((g: any) => ({
+        url: g.url || "",
+        alt: g.alt || "",
+      })) || [],
+    imagesFeatured:
+      data.images?.featured?.map((g: any) => ({
+        url: g.url || "",
+        alt: g.alt || "",
+      })) || [],
+    imagesDrinks:
+      data.images?.drinks?.map((g: any) => ({
+        url: g.url || "",
+        alt: g.alt || "",
+      })) || [],
+    aboutImages:
+      data.images?.about?.map((g: any) => ({
+        id: g.id || "",
+        url: g.url || "",
+        alt: g.alt || "",
+      })) || [],
+    heroSlides:
+      data.hero?.slides ||
+      (data.pages?.home?.sections ?? []).find((s: any) => s.type === "hero")
+        ?.data?.slides ||
       [],
     aboutTitle: data.about?.title || "",
-    aboutContent: data.about?.content || data.about?.representative?.message || "",
+    aboutContent:
+      data.about?.content || data.about?.representative?.message || "",
     aboutShortDescription: data.about?.shortDescription || "",
     aboutMission: data.about?.mission || "",
     aboutPhilosophy: data.about?.philosophy || "",
     aboutAdditionalContent: data.about?.additionalContent || [],
     aboutImage: data.about?.image || null,
-    representative: data.about?.founder || data.about?.representative || { name: "", role: "", bio: "", image: null, message: "", story: "" },
+    representative: data.about?.founder ||
+      data.about?.representative || {
+        name: "",
+        role: "",
+        bio: "",
+        image: null,
+        message: "",
+        story: "",
+      },
     team: data.about?.team || data.team || [],
     awards: data.about?.awards || [],
     openingHours: data.openingHours || data.contact?.openingHours || [],
@@ -163,11 +191,28 @@ export function mapBuilderToDataJson(formData: SiteBuilderData): any {
       timezone: formData.timezone,
     },
     images: {
-      logo: { url: formData.logoImage, alt: `${formData.siteName} logo`, width: 200, height: 200 },
+      logo: {
+        url: formData.logoImage,
+        alt: `${formData.siteName} logo`,
+        width: 200,
+        height: 200,
+      },
       gallery: formData.imagesGallery,
-      featured: (formData.imagesFeatured ?? []).map((img, i) => ({ id: `f${i+1}`, url: img.url, alt: img.alt })),
-      drinks: (formData.imagesDrinks ?? []).map((img, i) => ({ id: `d${i+1}`, url: img.url, alt: img.alt })),
-      about: (formData.aboutImages ?? []).map((img, i) => ({ id: img.id || `a${i+1}`, url: img.url, alt: img.alt }))
+      featured: (formData.imagesFeatured ?? []).map((img, i) => ({
+        id: `f${i + 1}`,
+        url: img.url,
+        alt: img.alt,
+      })),
+      drinks: (formData.imagesDrinks ?? []).map((img, i) => ({
+        id: `d${i + 1}`,
+        url: img.url,
+        alt: img.alt,
+      })),
+      about: (formData.aboutImages ?? []).map((img, i) => ({
+        id: img.id || `a${i + 1}`,
+        url: img.url,
+        alt: img.alt,
+      })),
     },
     companyInfo: {
       name: formData.companyName,
@@ -181,14 +226,15 @@ export function mapBuilderToDataJson(formData: SiteBuilderData): any {
       fiscalYearEnd: formData.fiscalYearEnd,
       businessPurpose: formData.businessPurpose,
       annualReportUrl: formData.annualReportUrl,
-      url: `/${formData.siteSlug}/company-information`
+      url: `/${formData.siteSlug}/company-information`,
     },
     openingHours: formData.openingHours,
     holidayNotes: formData.holidayNotes,
     menuCategories: formData.menuCategories,
-    menu: formData.menuCategories.flatMap(c => c.items.map(i => ({
+    menu: formData.menuCategories.flatMap((c) =>
+      c.items.map((i) => ({
         ...i,
-        id: i.name.toLowerCase().replace(/\s+/g, '-'),
+        id: i.name.toLowerCase().replace(/\s+/g, "-"),
         available: true,
         availableFrom: "",
         availableTo: "",
@@ -196,75 +242,120 @@ export function mapBuilderToDataJson(formData: SiteBuilderData): any {
         size: "Regular",
         limited: false,
         spiceLevel: 0,
-        allergens: []
-    }))),
+        allergens: [],
+      }))
+    ),
     about: {
-        representative: formData.representative
+      representative: formData.representative,
     },
     pages: {
-        home: {
-            id: "home",
-            sections: [
-                {
-                  id: "hero",
-                  type: "hero",
-                  ui: { order: 1, visible: true, fullBleed: true },
-                  data: { slides: formData.heroSlides }
-                },
-                {
-                  id: "about",
-                  type: "about",
-                  ui: { order: 2, visible: true, layout: "image-right" },
-                  data: {
-                      title: formData.aboutTitle,
-                      content: formData.aboutContent,
-                      additionalContent: formData.aboutAdditionalContent,
-                      representative: formData.representative
-                  }
-                },
-                { id: "menu-preview", type: "menu", ui: { order: 3, visible: true }, data: { ref: "menu" } },
-                { id: "gallery", type: "gallery", ui: { order: 4, visible: true }, data: { ref: "images.gallery" } },
-                { id: "reviews", type: "reviews", ui: { order: 5, visible: true }, data: { ref: "reviews" } },
-                { id: "contact", type: "contact", ui: { order: 6, visible: true }, data: { ref: "contact" } }
-            ]
-        },
-        about: {
+      home: {
+        id: "home",
+        sections: [
+          {
+            id: "hero",
+            type: "hero",
+            ui: { order: 1, visible: true, fullBleed: true },
+            data: { slides: formData.heroSlides },
+          },
+          {
             id: "about",
-            coverImage: formData.coverImage,
-            sections: [
-                { id: "about-full", type: "about", ui: { order: 1, visible: true, layout: "image-right" }, data: { ref: "pages.home.sections.about.data" } },
-                { id: "team", type: "team", ui: { order: 2, visible: true }, data: { ref: "team" } }
-            ]
-        },
-        menu: {
-            id: "menu",
-            coverImage: formData.coverImage,
-            sections: [ { id: "full-menu", type: "menu", ui: { order: 1, visible: true }, data: { ref: "menu" } } ]
-        },
-        contact: {
+            type: "about",
+            ui: { order: 2, visible: true, layout: "image-right" },
+            data: {
+              title: formData.aboutTitle,
+              content: formData.aboutContent,
+              additionalContent: formData.aboutAdditionalContent,
+              representative: formData.representative,
+            },
+          },
+          {
+            id: "menu-preview",
+            type: "menu",
+            ui: { order: 3, visible: true },
+            data: { ref: "menu" },
+          },
+          {
+            id: "gallery",
+            type: "gallery",
+            ui: { order: 4, visible: true },
+            data: { ref: "images.gallery" },
+          },
+          {
+            id: "reviews",
+            type: "reviews",
+            ui: { order: 5, visible: true },
+            data: { ref: "reviews" },
+          },
+          {
             id: "contact",
-            coverImage: formData.coverImage,
-            sections: [ { id: "contact-full", type: "contact", ui: { order: 1, visible: true }, data: { ref: "contact" } } ]
-        }
+            type: "contact",
+            ui: { order: 6, visible: true },
+            data: { ref: "contact" },
+          },
+        ],
+      },
+      about: {
+        id: "about",
+        coverImage: formData.coverImage,
+        sections: [
+          {
+            id: "about-full",
+            type: "about",
+            ui: { order: 1, visible: true, layout: "image-right" },
+            data: { ref: "pages.home.sections.about.data" },
+          },
+          {
+            id: "team",
+            type: "team",
+            ui: { order: 2, visible: true },
+            data: { ref: "team" },
+          },
+        ],
+      },
+      menu: {
+        id: "menu",
+        coverImage: formData.coverImage,
+        sections: [
+          {
+            id: "full-menu",
+            type: "menu",
+            ui: { order: 1, visible: true },
+            data: { ref: "menu" },
+          },
+        ],
+      },
+      contact: {
+        id: "contact",
+        coverImage: formData.coverImage,
+        sections: [
+          {
+            id: "contact-full",
+            type: "contact",
+            ui: { order: 1, visible: true },
+            data: { ref: "contact" },
+          },
+        ],
+      },
     },
     contact: {
+      address: formData.address,
+      phone: formData.phone,
+      email: formData.email,
+      location: {
+        lat: formData.lat,
+        lng: formData.lng,
+        mapsUrl: formData.googleMapsUrl,
         address: formData.address,
-        phone: formData.phone,
-        email: formData.email,
-        location: {
-            lat: formData.lat,
-            lng: formData.lng,
-            mapsUrl: formData.googleMapsUrl,
-            address: formData.address,
-            plusCode: ""
-        },
-        openingHours: formData.openingHours,
-        holidayNotes: formData.holidayNotes
+        plusCode: "",
+      },
+      openingHours: formData.openingHours,
+      holidayNotes: formData.holidayNotes,
     },
     team: formData.team,
     reviews: formData.reviews,
     videos: formData.videos,
     virtualTour: formData.virtualTour,
-    advancedSchema: formData.advancedSchema
+    advancedSchema: formData.advancedSchema,
   }
 }

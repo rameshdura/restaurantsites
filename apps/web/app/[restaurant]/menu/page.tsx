@@ -1,5 +1,9 @@
 import { Metadata } from "next"
-import { getRestaurant, groupMenuByCategory, getImageSrc } from "@/lib/restaurant"
+import {
+  getRestaurant,
+  groupMenuByCategory,
+  getImageSrc,
+} from "@/lib/restaurant"
 import { notFound } from "next/navigation"
 import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
@@ -20,14 +24,16 @@ interface MenuPageProps {
 export async function generateMetadata({
   params,
 }: MenuPageProps): Promise<Metadata> {
-  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const { restaurant: slug } = await params
+  const decodedSlug = decodeURIComponent(slug)
   const restaurant = await getRestaurant(decodedSlug)
   if (!restaurant) return {}
   return generateMenuMetadata(restaurant.data, slug)
 }
 
 export default async function MenuPage({ params }: MenuPageProps) {
-  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const { restaurant: slug } = await params
+  const decodedSlug = decodeURIComponent(slug)
   const restaurant = await getRestaurant(decodedSlug)
 
   if (!restaurant) {
@@ -35,12 +41,15 @@ export default async function MenuPage({ params }: MenuPageProps) {
   }
 
   const { data, menu } = restaurant
-  console.log("Debug menuLink:", data.menuLink);
+  console.log("Debug menuLink:", data.menuLink)
   const categories = groupMenuByCategory(menu, slug)
   const translations = getTranslations(data.app?.language)
 
   // Get cover image from page data, fallback to first hero slide image
-  const coverImage = getImageSrc(slug, data.pages?.menu?.coverImage || data.hero?.slides?.[0]?.image)
+  const coverImage = getImageSrc(
+    slug,
+    data.pages?.menu?.coverImage || data.hero?.slides?.[0]?.image
+  )
 
   return (
     <div className="flex min-h-svh flex-col">
@@ -74,7 +83,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
             </p>
           </div>
         )}
-        
+
         {data.menuLink && data.menuLink.trim() !== "" && (
           <div className="mt-12 flex justify-center pb-8">
             <Button size="lg" asChild className="rounded-full px-8">
@@ -84,8 +93,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
                 rel="noopener noreferrer"
               >
                 <Download className="mr-2 h-5 w-5" />
-                {translations.menuPage?.downloadButton ||
-                  "Download Menu PDF"}
+                {translations.menuPage?.downloadButton || "Download Menu PDF"}
               </a>
             </Button>
           </div>

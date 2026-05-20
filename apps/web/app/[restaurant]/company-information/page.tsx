@@ -17,7 +17,8 @@ interface CompanyInformationPageProps {
 export async function generateMetadata({
   params,
 }: CompanyInformationPageProps): Promise<Metadata> {
-  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const { restaurant: slug } = await params
+  const decodedSlug = decodeURIComponent(slug)
   const restaurant = await getRestaurant(decodedSlug)
   if (!restaurant) return {}
   return generateCompanyMetadata(restaurant.data, slug)
@@ -26,7 +27,8 @@ export async function generateMetadata({
 export default async function CompanyInformationPage({
   params,
 }: CompanyInformationPageProps) {
-  const { restaurant: slug } = await params; const decodedSlug = decodeURIComponent(slug)
+  const { restaurant: slug } = await params
+  const decodedSlug = decodeURIComponent(slug)
   const restaurant = await getRestaurant(decodedSlug)
 
   if (!restaurant || !restaurant.data.companyInfo) {
@@ -37,7 +39,10 @@ export default async function CompanyInformationPage({
   const info = data.companyInfo
   const translations = getTranslations(data.app?.language)
 
-  const coverImage = getImageSrc(slug, data.pages?.company?.coverImage || data.hero?.slides?.[0]?.image)
+  const coverImage = getImageSrc(
+    slug,
+    data.pages?.company?.coverImage || data.hero?.slides?.[0]?.image
+  )
 
   const details = [
     {

@@ -623,14 +623,18 @@ export async function getRestaurant(slug: string): Promise<Restaurant | null> {
 
     // Pre-resolve embed URL once at load time
     if (data.location && !data.location.embedUrl) {
-      const address = data.location.address || data.address || data.contact?.address
-      data.location.embedUrl = resolveEmbedUrl(data.location, data.name, address) || undefined
+      const address =
+        data.location.address || data.address || data.contact?.address
+      data.location.embedUrl =
+        resolveEmbedUrl(data.location, data.name, address) || undefined
     }
-    
+
     // Also resolve for contact.location if it's a separate object
     if (data.contact?.location && !data.contact.location.embedUrl) {
-      const address = data.contact.location.address || data.contact.address || data.address
-      data.contact.location.embedUrl = resolveEmbedUrl(data.contact.location, data.name, address) || undefined
+      const address =
+        data.contact.location.address || data.contact.address || data.address
+      data.contact.location.embedUrl =
+        resolveEmbedUrl(data.contact.location, data.name, address) || undefined
     }
 
     // Extract menu from data or default to empty array
@@ -670,19 +674,25 @@ export async function getAllRestaurantSlugs(): Promise<string[]> {
  * External URLs (http/https) are returned as-is.
  * All other relative/absolute paths are returned as-is for global static assets.
  */
-export function getImageSrc(slug: string, url: string | undefined | null): string {
+export function getImageSrc(
+  slug: string,
+  url: string | undefined | null
+): string {
   if (!url) return ""
   if (/^https?:\/\//i.test(url)) return url
-  
+
   // If it's a relative path (doesn't start with /), assume it's in the restaurant's image folder
   if (!url.startsWith("/")) {
     return `/images/restaurants/${slug}/${url}`
   }
-  
+
   return url
 }
 
-export function groupMenuByCategory(menu: MenuItem[], slug: string): MenuCategory[] {
+export function groupMenuByCategory(
+  menu: MenuItem[],
+  slug: string
+): MenuCategory[] {
   return menu.reduce((acc, item) => {
     const existingCategory = acc.find((c) => c.title === item.category)
     const menuItem = {

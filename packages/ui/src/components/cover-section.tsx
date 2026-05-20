@@ -28,7 +28,10 @@ export function CoverSection({
 
   return (
     <section
-      className={cn("relative h-[400px] w-full overflow-hidden lg:h-[500px]", className)}
+      className={cn(
+        "relative h-[400px] w-full overflow-hidden lg:h-[500px]",
+        className
+      )}
     >
       <div className="absolute inset-0">
         <div

@@ -598,7 +598,8 @@ export function ContactSection({
                       : "By clicking send, you agree to our"}{" "}
                     <span className="cursor-pointer underline decoration-primary/30 underline-offset-4 transition-colors hover:text-primary">
                       <Link href="privacy-policy">
-                        {translations?.contact?.privacyPolicy || "Privacy Policy"}
+                        {translations?.contact?.privacyPolicy ||
+                          "Privacy Policy"}
                       </Link>
                     </span>
                     .

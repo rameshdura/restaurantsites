@@ -7,7 +7,12 @@ interface SafeImageProps extends Omit<ImageProps, "onError"> {
   fallbackSrc?: string
 }
 
-export function SafeImage({ src, fallbackSrc = "/images/placeholder.png", alt, ...props }: SafeImageProps) {
+export function SafeImage({
+  src,
+  fallbackSrc = "/images/placeholder.png",
+  alt,
+  ...props
+}: SafeImageProps) {
   const [imgSrc, setImgSrc] = useState(src)
 
   return (
