@@ -344,7 +344,7 @@ function MenuBlock({
               </div>
               <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link
-                  href={getLink("/menu")}
+                  href="#menu"
                   className={cn(
                     buttonVariants({ size: "lg" }),
                     "min-w-[180px] rounded-full text-sm font-semibold tracking-wider transition-all duration-300 active:scale-95"

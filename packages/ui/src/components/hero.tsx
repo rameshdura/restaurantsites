@@ -130,9 +130,11 @@ export function Hero({ slides, phone }: HeroProps) {
                     href={
                       slide.ctaLink === "#menu"
                         ? getLink("/menu")
-                        : slide.ctaLink?.startsWith("#")
-                          ? getLink(slide.ctaLink)
-                          : slide.ctaLink || "#"
+                        : slide.ctaLink === "#about"
+                          ? getLink("/about")
+                          : slide.ctaLink?.startsWith("#")
+                            ? getLink(slide.ctaLink)
+                            : slide.ctaLink || "#"
                     }
                     className={cn(
                       buttonVariants({ variant: "default", size: "lg" }),
