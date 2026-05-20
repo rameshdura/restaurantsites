@@ -18,7 +18,7 @@ export function useRestaurantLink() {
     const forceMain = process.env.NEXT_PUBLIC_FORCE_MAIN_SITE === "true"
 
     if (forceMain) {
-      return false
+      return true
     }
 
     // Check if we are on a dedicated domain
