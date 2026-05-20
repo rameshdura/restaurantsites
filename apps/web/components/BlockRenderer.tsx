@@ -24,6 +24,7 @@ interface BlockRendererProps {
   data: RestaurantData
   translations: Record<string, unknown>
   restaurantSlug: string
+  getLink: (path: string) => string
 }
 
 // ---------------------------------------------------------------------------
@@ -85,11 +86,13 @@ function AboutBlock({
   data,
   translations,
   restaurantSlug,
+  getLink,
 }: {
   section: SectionBlock
   data: RestaurantData
   translations: Record<string, unknown>
   restaurantSlug: string
+  getLink: (path: string) => string
 }) {
   const t = translations as {
     home?: {
@@ -127,7 +130,7 @@ function AboutBlock({
             </p>
             <div className="mt-8">
               <Link
-                href={`/${restaurantSlug}/about`}
+                href={getLink("/about")}
                 className={cn(
                   buttonVariants({ variant: "outline", size: "lg" }),
                   "group h-12 rounded-full px-6 text-sm font-semibold tracking-wider transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20 active:scale-95"
@@ -186,17 +189,20 @@ function AboutBlock({
     </div>
   )
 }
+// ... existing code ...
 
 function MenuBlock({
   section,
   data,
   translations,
   restaurantSlug,
+  getLink,
 }: {
   section: SectionBlock
   data: RestaurantData
   translations: Record<string, unknown>
   restaurantSlug: string
+  getLink: (path: string) => string
 }) {
   const categories = groupMenuByCategory(
     (data.menu ?? []) as MenuItem[],
@@ -338,7 +344,7 @@ function MenuBlock({
               </div>
               <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link
-                  href={`/${restaurantSlug}/menu`}
+                  href={getLink("/menu")}
                   className={cn(
                     buttonVariants({ size: "lg" }),
                     "min-w-[180px] rounded-full text-sm font-semibold tracking-wider transition-all duration-300 active:scale-95"
@@ -347,7 +353,7 @@ function MenuBlock({
                   {openMenuButton}
                 </Link>
                 <Link
-                  href={`/${restaurantSlug}/contact`}
+                  href={getLink("/contact")}
                   className={cn(
                     buttonVariants({ variant: "outline", size: "lg" }),
                     "min-w-[180px] rounded-full text-sm font-semibold tracking-wider transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20 active:scale-95"
@@ -406,11 +412,11 @@ function GalleryBlock({
 function DrinksBlock({
   data,
   restaurantSlug,
+  getLink,
 }: {
-  section: SectionBlock
   data: RestaurantData
-  translations: Record<string, unknown>
   restaurantSlug: string
+  getLink: (path: string) => string
 }) {
   const drinks = (data.images?.drinks ?? []) as Array<{
     id: string
@@ -460,7 +466,7 @@ function DrinksBlock({
 
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link
-            href={`/${restaurantSlug}/menu`}
+            href={getLink("/menu")}
             className={cn(
               buttonVariants({ size: "lg" }),
               "min-w-[180px] rounded-full text-sm font-semibold tracking-wider transition-all duration-300 active:scale-95"
@@ -469,7 +475,7 @@ function DrinksBlock({
             Open Menu
           </Link>
           <Link
-            href={`/${restaurantSlug}/contact`}
+            href={getLink("/contact")}
             className={cn(
               buttonVariants({ variant: "outline", size: "lg" }),
               "min-w-[180px] rounded-full text-sm font-semibold tracking-wider transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20 active:scale-95"
@@ -568,20 +574,22 @@ const BLOCK_MAP: Record<
       restaurantSlug={restaurantSlug}
     />
   ),
-  about: ({ section, data, translations, restaurantSlug }) => (
+  about: ({ section, data, translations, restaurantSlug, getLink }) => (
     <AboutBlock
       section={section}
       data={data}
       translations={translations}
       restaurantSlug={restaurantSlug}
+      getLink={getLink}
     />
   ),
-  menu: ({ section, data, translations, restaurantSlug }) => (
+  menu: ({ section, data, translations, restaurantSlug, getLink }) => (
     <MenuBlock
       section={section}
       data={data}
       translations={translations}
       restaurantSlug={restaurantSlug}
+      getLink={getLink}
     />
   ),
   featured: ({ data, restaurantSlug }) => {
@@ -594,12 +602,11 @@ const BLOCK_MAP: Record<
 
     return <FeaturedSection items={featuredItems} />
   },
-  drinks: ({ section, data, translations, restaurantSlug }) => (
+  drinks: ({ data, restaurantSlug, getLink }) => (
     <DrinksBlock
-      section={section}
       data={data}
-      translations={translations}
       restaurantSlug={restaurantSlug}
+      getLink={getLink}
     />
   ),
   gallery: ({ data, restaurantSlug, translations }) => (

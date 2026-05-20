@@ -32,6 +32,13 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
     notFound()
   }
 
+  // Server-side link helper
+  const getLink = (path: string) => {
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`
+    if (normalizedPath === "/") return `/${slug}`
+    return `/${slug}${normalizedPath}`
+  }
+
   const { data } = restaurant
   const translations = getTranslations(data.app?.language)
   const onlineBookingUrl =
@@ -63,11 +70,11 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
             data={data}
             translations={translations}
             restaurantSlug={slug}
+            getLink={getLink}
           />
         ))}
       </main>
       <FloatingActions
-        restaurantSlug={slug}
         onlineBookingUrl={onlineBookingUrl}
         translations={translations}
       />
