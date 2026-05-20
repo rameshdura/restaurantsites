@@ -734,6 +734,10 @@ export function groupMenuByCategory(
  * representing a restaurant's profile, contact info, hours, backstory, and complete menu.
  */
 export function generateRestaurantLlmTxt(data: RestaurantData): string {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
+  const slug = data.uid || ""
+  const restaurantUrl = `${baseUrl}/${slug}`
+
   let md = `# ${data.name}\n\n`
 
   const desc = data.seo?.description || data.description || data.tagline || ""
@@ -741,135 +745,10 @@ export function generateRestaurantLlmTxt(data: RestaurantData): string {
     md += `> ${desc}\n\n`
   }
 
-  md += `## Key Information\n`
-
-  const cuisines = data.schema?.servesCuisine || (data.cuisineType ? [data.cuisineType] : [])
-  if (cuisines.length > 0) {
-    md += `- **Cuisine**: ${cuisines.join(", ")}\n`
-  }
-
-  if (data.schema?.priceRange) {
-    md += `- **Price Range**: ${data.schema.priceRange} (${data.app?.currency || "USD"})\n`
-  }
-
-  if (data.phone) {
-    md += `- **Phone**: [${data.phone}](tel:${data.phone.replace(/\s+/g, "")})\n`
-  }
-
-  if (data.email) {
-    md += `- **Email**: [${data.email}](mailto:${data.email})\n`
-  }
-
-  const address = data.address || data.contact?.address || ""
-  if (address) {
-    md += `- **Address**: ${address}\n`
-  }
-
-  const mapsUrl = data.location?.mapsUrl || data.contact?.location?.mapsUrl || ""
-  if (mapsUrl) {
-    md += `- **Google Maps**: [View on Google Maps](${mapsUrl})\n`
-  }
-
-  const lat = data.location?.lat || data.contact?.location?.lat
-  const lng = data.location?.lng || data.contact?.location?.lng
-  if (lat && lng) {
-    md += `- **Coordinates**: ${lat}, ${lng}\n`
-  }
-
-  const acceptsRes = data.schema?.acceptsReservations !== undefined
-    ? (data.schema.acceptsReservations ? "Yes" : "No")
-    : (data.operations?.services?.reservations ? "Yes" : "No")
-  md += `- **Accepts Reservations**: ${acceptsRes}\n`
-
-  const isTakeout = data.schema?.isTakeout !== undefined
-    ? (data.schema.isTakeout ? "Yes" : "No")
-    : (data.operations?.services?.takeout ? "Yes" : "No")
-  const isDelivery = data.schema?.isDelivery !== undefined
-    ? (data.schema.isDelivery ? "Yes" : "No")
-    : (data.operations?.services?.delivery ? "Yes" : "No")
-  md += `- **Services**: Takeout: ${isTakeout}, Delivery: ${isDelivery}\n`
-
-  md += "\n"
-
-  // Opening Hours
-  const hours = data.openingHours || data.contact?.openingHours || []
-  if (hours.length > 0) {
-    md += `## Opening Hours\n`
-    for (const h of hours) {
-      if (h.isClosed) {
-        md += `- **${h.day}**: Closed\n`
-      } else {
-        const lunchStr = h.lunch ? `Lunch: ${h.lunch}${h.lunchLO ? ` (LO ${h.lunchLO})` : ""}` : ""
-        const dinnerStr = h.dinner ? `Dinner: ${h.dinner}${h.dinnerLO ? ` (LO ${h.dinnerLO})` : ""}` : ""
-        const timeStr = h.time ? `Hours: ${h.time}` : ""
-        const details = [lunchStr, dinnerStr, timeStr].filter(Boolean).join(", ")
-        md += `- **${h.day}**: ${details}${h.notes ? ` (${h.notes})` : ""}\n`
-      }
-    }
-    if (data.holidayNotes || data.contact?.holidayNotes) {
-      md += `\n*Holiday Notes: ${data.holidayNotes || data.contact?.holidayNotes}*\n`
-    }
-    md += "\n"
-  }
-
-  // About Story
-  const aboutTitle = data.about?.title || "Our Story"
-  const aboutContent = data.about?.content || ""
-  if (aboutContent) {
-    md += `## ${aboutTitle}\n${aboutContent}\n\n`
-    const additional = data.about?.additionalContent || []
-    if (additional.length > 0) {
-      for (const p of additional) {
-        md += `${p}\n\n`
-      }
-    }
-  }
-
-  // Menu categories
-  const categories = data.menuCategories || []
-  if (categories.length > 0) {
-    md += `## Full Menu\n\n`
-    for (const cat of categories) {
-      md += `### ${cat.name}\n`
-      const items = cat.items || []
-      for (const item of items as any[]) {
-        md += `- **${item.name}** - ${item.price} ${data.app?.currency || ""}\n`
-        if (item.description) {
-          md += `  ${item.description}\n`
-        }
-        const attrs: string[] = []
-        if (item.isSpicy) attrs.push("Spicy 🌶️")
-        if (item.isVegetarian) attrs.push("Vegetarian 🥬")
-        if (item.isVegan) attrs.push("Vegan 🌱")
-        if (item.allergens && item.allergens.length > 0) {
-          attrs.push(`Allergens: ${item.allergens.join(", ")}`)
-        }
-        if (attrs.length > 0) {
-          md += `  *(${attrs.join(" | ")})*\n`
-        }
-      }
-      md += "\n"
-    }
-  }
-
-  // Reviews
-  const reviews = Array.isArray(data.reviews)
-    ? data.reviews
-    : Array.isArray((data as any).reviewsPool)
-    ? (data as any).reviewsPool
-    : []
-  if (reviews.length > 0) {
-    md += `## Reviews & Customer Feedback\n`
-    const rating = data.schema?.aggregateRating || (data.reviews as any)?.aggregate
-    if (rating) {
-      md += `Average Rating: **${rating.ratingValue}** / 5 (${rating.reviewCount} reviews from ${rating.source || "Google Reviews"})\n\n`
-    }
-    for (const rev of reviews) {
-      const comment = rev.comment || rev.reviewBody || ""
-      md += `- "${comment}" — *${rev.author}*, ${rev.rating} stars (${rev.source || "Platform Reviews"}${rev.date ? `, ${rev.date}` : ""})\n`
-    }
-    md += "\n"
-  }
+  md += `## Pages\n`
+  md += `- [Home](${restaurantUrl})\n`
+  md += `- [Full Menu](${restaurantUrl}/menu) - A machine-readable view of our current menu and prices.\n`
+  md += `- [Contact & Location](${restaurantUrl}/contact)\n`
 
   return md
 }

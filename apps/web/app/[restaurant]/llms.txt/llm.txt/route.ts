@@ -1,4 +1,4 @@
-import { GET as getLlms } from "../llms.txt/route"
+import { GET as getLlms } from "../route"
 
 interface RouteProps {
   params: Promise<{ restaurant: string }>
