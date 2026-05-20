@@ -129,7 +129,6 @@ function AboutBlock({
               {d.content ?? data.description}
             </p>
              <div className="mt-8">
-              {console.log("About link path:", getLink("/about"))}
               <Link
                 href={getLink("/about")}
                 className={cn(                  buttonVariants({ variant: "outline", size: "lg" }),
