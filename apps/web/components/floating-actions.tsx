@@ -19,7 +19,7 @@ export function FloatingActions({
   translations,
 }: FloatingActionsProps) {
   // Use onlineBookingUrl if provided, otherwise link to the contact/reservation form section
-  const reservationLink = onlineBookingUrl || `/${restaurantSlug}/contact`
+  const reservationLink = onlineBookingUrl || `/contact`
   const isExternal =
     !!onlineBookingUrl &&
     (onlineBookingUrl.startsWith("http://") ||

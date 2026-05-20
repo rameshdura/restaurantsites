@@ -24,7 +24,7 @@ import {
 import { Button } from "./button"
 import { SectionHeader } from "./section-header"
 import { useTheme } from "next-themes"
-
+import { useRestaurantLink } from "../hooks/use-restaurant-link"
 interface ContactDetailProps {
   icon: IconSvgElement
   title: string
@@ -179,6 +179,7 @@ export function ContactSection({
   const [mounted, setMounted] = React.useState(false)
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === "dark"
+  const { getLink } = useRestaurantLink()
 
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -466,7 +467,7 @@ export function ContactSection({
                   className="h-16 w-full rounded-2xl text-lg font-bold shadow-2xl transition-all hover:scale-[1.02] active:scale-95"
                 >
                   <Link
-                    href={`/${restaurantSlug}/contact`}
+                    href={getLink('/contact')}
                     className="flex items-center justify-center gap-3"
                   >
                     {translations?.contact?.requestReservation ||
