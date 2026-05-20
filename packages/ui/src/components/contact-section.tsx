@@ -350,9 +350,9 @@ export function ContactSection({
 
             {/* Social Links */}
             <div className="border-t border-border/40 pt-8">
-              <h4 className="mb-6 text-xs font-bold tracking-[0.2em] text-muted-foreground/50 uppercase">
+              <p className="mb-6 text-xs font-bold tracking-[0.2em] text-muted-foreground/50 uppercase">
                 {translations?.contact?.followUs || "Follow Us"}
-              </h4>
+              </p>
               <div className="flex gap-5">
                 {[
                   { icon: InstagramIcon, label: "Instagram" },
@@ -415,10 +415,10 @@ export function ContactSection({
                               size={18}
                             />
                           </div>
-                          <h4 className="text-xs font-bold tracking-widest text-muted-foreground/60 uppercase">
+                          <p className="text-xs font-bold tracking-widest text-muted-foreground/60 uppercase">
                             {translations?.contact?.holidayNotice ||
                               "Holiday Notice"}
-                          </h4>
+                          </p>
                         </div>
                         <p className="max-w-[60%] text-right text-sm font-semibold text-foreground">
                           {holidayNotes}
@@ -431,9 +431,9 @@ export function ContactSection({
                           <div className="shrink-0 text-muted-foreground/60">
                             <HugeiconsIcon icon={CreditCardIcon} size={18} />
                           </div>
-                          <h4 className="text-xs font-bold tracking-widest text-muted-foreground/60 uppercase">
+                          <p className="text-xs font-bold tracking-widest text-muted-foreground/60 uppercase">
                             {translations?.contact?.payments || "Payments"}
-                          </h4>
+                          </p>
                         </div>
                         <p className="text-sm font-semibold text-foreground">
                           {paymentMethods.join(", ")}
@@ -449,9 +449,9 @@ export function ContactSection({
                               size={18}
                             />
                           </div>
-                          <h4 className="text-xs font-bold tracking-widest text-muted-foreground/60 uppercase">
+                          <p className="text-xs font-bold tracking-widest text-muted-foreground/60 uppercase">
                             {translations?.contact?.delivery || "Delivery"}
-                          </h4>
+                          </p>
                         </div>
                         <p className="text-sm font-semibold text-foreground">
                           {deliveryPlatforms.join(", ")}

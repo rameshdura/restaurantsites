@@ -86,11 +86,11 @@ export default async function AboutPage({ params }: AboutPageProps) {
           <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
             <div>
               {!coverImage && (
-                <h4 className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
+                <p className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
                   {(
                     translations as { home?: { about?: { subtitle?: string } } }
                   ).home?.about?.subtitle || "Our Story"}
-                </h4>
+                </p>
               )}
               {!coverImage && (
                 <h1 className="mb-8 text-4xl font-bold tracking-tight md:text-6xl">

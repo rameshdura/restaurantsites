@@ -71,9 +71,9 @@ export default async function MenuPage({ params }: MenuPageProps) {
       <main className={cn("flex-1", !coverImage ? "pt-32" : "pt-0", "pb-20")}>
         {!coverImage && (
           <div className="mx-auto mb-12 max-w-7xl px-6 text-center">
-            <h4 className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
+            <p className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
               {translations.menuPage?.subtitle || "Exquisite Selection"}
-            </h4>
+            </p>
             <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-6xl">
               {translations.menuPage?.title || "Our Menu"}
             </h1>

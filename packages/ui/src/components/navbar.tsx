@@ -420,6 +420,7 @@ export function Navbar({
                       ? "border-border/50 bg-background text-foreground hover:bg-accent/50"
                       : "border-white/20 bg-white/10 text-white hover:bg-white/20"
                   )}
+                  aria-label={`Select language ${getLanguageName(currentLang)}`}
                   translate="no"
                 >
                   <HugeiconsIcon icon={GlobalIcon} className="size-4" />

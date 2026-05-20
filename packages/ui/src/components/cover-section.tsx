@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import { cn } from "@workspace/ui/lib/utils"
 
 interface CoverSectionProps {
@@ -35,13 +36,22 @@ export function CoverSection({
     >
       <div className="absolute inset-0">
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0"
           style={{
-            backgroundImage: `url(${image})`,
             transform: `translateY(${scrollY * 0.5}px)`,
             willChange: "transform",
           }}
-        />
+        >
+          <Image
+            src={image}
+            alt={title || "Cover Image"}
+            fill
+            priority
+            fetchPriority="high"
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+        </div>
         <div className="absolute inset-0 bg-black/30 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
       </div>
       {(title || subtitle) && (

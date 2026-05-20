@@ -73,7 +73,7 @@ export function SectionHeader({
       {/* Main Title */}
       <div className="relative z-10">
         {subtitle && (
-          <motion.h4
+          <motion.p
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -81,7 +81,7 @@ export function SectionHeader({
             className="mb-4 text-xs font-bold tracking-[0.2em] text-primary uppercase"
           >
             {subtitle}
-          </motion.h4>
+          </motion.p>
         )}
         <motion.h2
           initial={{ opacity: 0, y: 20 }}

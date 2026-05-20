@@ -48,9 +48,9 @@ export default async function BrandPage({ params }: BrandPageProps) {
       <main className="flex-1 px-6 pt-32 pb-20">
         <div className="mx-auto max-w-5xl">
           <header className="mb-16 text-center">
-            <h4 className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
+            <p className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
               {translations.brandPage?.subtitle || "Brand Assets"}
-            </h4>
+            </p>
             <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl">
               {translations.brandPage?.title || "Marketing Materials"}
             </h1>
