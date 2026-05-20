@@ -54,7 +54,9 @@ export default async function AboutPage({ params }: AboutPageProps) {
     data.images?.about ||
     data.about?.images ||
     data.images?.gallery
-  )?.map((im: any) => getImageSrc(slug, typeof im === "string" ? im : im.url))
+  )?.map((im: string | { url: string }) =>
+    getImageSrc(slug, typeof im === "string" ? im : im.url)
+  )
 
   return (
     <div className="flex min-h-svh flex-col">
@@ -114,7 +116,9 @@ export default async function AboutPage({ params }: AboutPageProps) {
                 )}
                 <div className="pt-4">
                   <Button asChild variant="outline" className="rounded-full">
-                    <a href={`/${slug}/company-information`}>About Company</a>
+                    <a href={`/${slug}/company-information`}>
+                      {translations.common?.aboutCompany || "About Company"}
+                    </a>
                   </Button>
                 </div>
               </div>
@@ -177,7 +181,17 @@ export default async function AboutPage({ params }: AboutPageProps) {
           </div>
 
           {(() => {
-            const representative = (data.about as any)?.representative
+            const representative = (
+              data.about as {
+                representative?: {
+                  name?: string
+                  position?: string
+                  message?: string
+                  story?: string
+                  image?: string
+                }
+              }
+            )?.representative
             if (!representative) return null
 
             const lang = data.app?.language || "EN"
@@ -185,25 +199,25 @@ export default async function AboutPage({ params }: AboutPageProps) {
               lang === "JA"
                 ? {
                     name:
-                      (data.companyInfo as any)?.representative ||
-                      "ヘッドシェフ＆チーム",
+                      (data.companyInfo as { representative?: string })
+                        ?.representative || "ヘッドシェフ＆チーム",
                     position: "代表者",
                     message:
                       "「私たちの情熱はシンプルです。最高の料理と心温まるおもてなしで、すべてのお客様に特別なひとときをお届けすることです。」",
                     story:
                       "私たちが提供する一皿一皿の裏には、食への妥協なき挑戦を続けるチームの情熱があります。新鮮な素材の厳選から、洗練されたレシピの追求に至るまで、私たちは心地よい空間づくりのために心を込めて取り組んでいます。素晴らしい料理は人々を結びつけるもの。私たちのキッチンのこだわりを、皆様と分かち合えることを誇りに思っています。",
-                    image: `/images/restaurants/${slug}/team/representative.png`,
+                    image: `/images/restaurants/${slug}/representative/representative.jpg`,
                   }
                 : {
                     name:
-                      (data.companyInfo as any)?.representative ||
-                      "Head Chef & Team",
+                      (data.companyInfo as { representative?: string })
+                        ?.representative || "Head Chef & Team",
                     position: "Representative",
                     message:
                       "Our passion is simple: serving incredible food with warm, attentive hospitality to make every meal memorable.",
                     story:
                       "Behind every dish we serve is a dedicated team committed to culinary excellence. From sourcing the freshest seasonal ingredients to perfecting our recipes, we pour our hearts into creating a welcoming dining experience. We believe that great food brings people together, and we are honored to share our kitchen's passion with you.",
-                    image: `/images/restaurants/${slug}/team/representative.png`,
+                    image: `/images/restaurants/${slug}/representative/representative.jpg`,
                   }
 
             const repName = representative.name || defaultRep.name

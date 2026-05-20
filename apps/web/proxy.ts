@@ -54,7 +54,13 @@ export default async function proxy(req: NextRequest) {
     }
 
     // Identify valid slugs to avoid matching Vercel's random deployment suffix
-    const validSlugs = ["hamro-khaja-ghar", "ramen-taro", "rato-bhale"]
+    const validSlugs = [
+      "hamro-khaja-ghar",
+      "ramen-taro",
+      "rato-bhale",
+      "solmari",
+      "royalgarden-restaurant",
+    ]
 
     // Check if the subdomain starts with any of the valid slugs
     slug = validSlugs.find((s) => subdomain.startsWith(s)) || ""

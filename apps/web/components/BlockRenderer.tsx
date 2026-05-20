@@ -158,7 +158,7 @@ function AboutBlock({
             if (imagesList && imagesList.length > 0) {
               return (
                 <ImageSlider
-                  images={imagesList.map((im: any) =>
+                  images={imagesList.map((im: string | { url: string }) =>
                     getImageSrc(
                       restaurantSlug,
                       typeof im === "string" ? im : im.url

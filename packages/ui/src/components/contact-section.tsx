@@ -402,28 +402,29 @@ export function ContactSection({
                   )}
                 </div>
 
-                {holidayNotes && (
-                  <div className="relative z-10 mb-8 rounded-2xl bg-primary/5 p-5">
-                    <div className="flex items-start gap-4">
-                      <div className="mt-0.5 shrink-0 text-primary">
-                        <HugeiconsIcon icon={InformationCircleIcon} size={20} />
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="text-xs font-bold tracking-widest text-primary uppercase">
-                          {translations?.contact?.holidayNotice ||
-                            "Holiday Notice"}
-                        </h4>
-                        <p className="text-sm leading-relaxed text-muted-foreground/90">
+                {(paymentMethods.length > 0 ||
+                  deliveryPlatforms.length > 0 ||
+                  holidayNotes) && (
+                  <div className="relative z-10 mb-8 divide-y divide-border/40 border-y border-border/40">
+                    {holidayNotes && (
+                      <div className="flex items-center justify-between py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="shrink-0 text-muted-foreground/60">
+                            <HugeiconsIcon
+                              icon={InformationCircleIcon}
+                              size={18}
+                            />
+                          </div>
+                          <h4 className="text-xs font-bold tracking-widest text-muted-foreground/60 uppercase">
+                            {translations?.contact?.holidayNotice ||
+                              "Holiday Notice"}
+                          </h4>
+                        </div>
+                        <p className="max-w-[60%] text-right text-sm font-semibold text-foreground">
                           {holidayNotes}
                         </p>
                       </div>
-                    </div>
-                  </div>
-                )}
-
-                {(paymentMethods.length > 0 ||
-                  deliveryPlatforms.length > 0) && (
-                  <div className="relative z-10 mb-8 divide-y divide-border/40 border-y border-border/40">
+                    )}
                     {paymentMethods.length > 0 && (
                       <div className="flex items-center justify-between py-4">
                         <div className="flex items-center gap-3">

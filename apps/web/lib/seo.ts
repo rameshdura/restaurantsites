@@ -23,8 +23,11 @@ export function getAbsoluteImageUrl(url: string | undefined | null): string {
  * Generate icons metadata from restaurant favicon, logo, or fallback to global assets
  */
 export function generateIcons(data: RestaurantData) {
-  const faviconUrl = (data.images as any)?.favicon?.url
-  const logoUrl = (data.images as any)?.logo?.url || (data as any).logo
+  const faviconUrl = (data.images as { favicon?: { url?: string } })?.favicon
+    ?.url
+  const logoUrl =
+    (data.images as { logo?: { url?: string } })?.logo?.url ||
+    (data as { logo?: string }).logo
   const iconUrl = faviconUrl || logoUrl
   const globalFaviconBase = "/assets/favicon_io"
 

@@ -1,0 +1,691 @@
+{
+  "uid": "royalgarden-restaurant",
+  "version": "1",
+  "name": "Royal Garden Lounge & Bar",
+  "description": "洗練された雰囲気の中で、極上の多国籍料理とプレミアムドリンクをお楽しみいただけるラウンジ＆バー。",
+  "tagline": "都会の喧騒を離れた、贅沢で優雅なひととき",
+  "address": "〒150-0002 東京都渋谷区渋谷1-23-4 ロイヤルガーデンビル 1F",
+  "phone": "+81 3-1234-5678",
+  "email": "info@royalgarden-lounge.jp",
+  "website": "",
+  "foundingDate": "2018-04-01",
+  "menuLink": "pdfmenu/royalgarden-restaurant-menu.pdf",
+  "app": {
+    "language": "JA",
+    "currency": "JPY"
+  },
+  "seo": {
+    "title": "Royal Garden Lounge & Bar | 渋谷のエレガントなラウンジバー",
+    "description": "東京・渋谷に位置するRoyal Garden Lounge & Bar。洗練されたモダンな空間で、厳選されたカクテル、高級ワイン、そして極上の創作料理をご堪能いただけます。",
+    "keywords": [
+      "royal garden lounge",
+      "ロイヤルガーデン",
+      "渋谷 バー",
+      "東京 ラウンジ",
+      "渋谷 ディナー",
+      "カクテルバー 東京",
+      "おしゃれ ラウンジ",
+      "渋谷 デート スポット",
+      "ワインバー 渋谷",
+      "プレミアムカクテル"
+    ],
+    "noindex": false,
+    "menuTitle": "メニュー | Royal Garden Lounge & Bar",
+    "menuDescription": "Royal Garden Lounge & Barの全メニュー。特製カクテル、厳選ワイン、贅沢なアラカルト料理の数々を価格付きでご覧いただけます。PDFメニューのダウンロードも可能です。",
+    "aboutTitle": "私たちの歩みとこだわり",
+    "aboutDescription": "Royal Garden Lounge & Barの歴史とこだわり。洗練されたおもてなし、モダンな空間デザイン、そして一流のシェフとバーテンダーが紡ぐ極上の空間についてご紹介します。",
+    "contactTitle": "ご予約・アクセス | Royal Garden Lounge & Bar",
+    "contactDescription": "Royal Garden Lounge & Barへのアクセス・ご予約はこちら。東京都渋谷区に位置し、年中無休で営業しております。お電話（+81 3-1234-5678）またはオンラインにて承ります。",
+    "brandTitle": "ブランドアセット | Royal Garden Lounge & Bar",
+    "brandDescription": "Royal Garden Lounge & Barの公式マーケティング素材およびブランドアセットのダウンロードページです。メディア用ロゴや高解像度画像を掲載しています。",
+    "companyTitle": "株式会社ロイヤルホスピタリティ | 企業情報",
+    "companyDescription": "Royal Garden Lounge & Barを運営する株式会社ロイヤルホスピタリティの公式企業情報です。会社概要、本社所在地、ガバナンスについてご覧いただけます。"
+  },
+  "social": {
+    "ogImage": null,
+    "ogLocale": "ja_JP",
+    "twitterCard": "summary_large_image",
+    "sameAs": [
+      "https://www.instagram.com/royalgarden_lounge",
+      "https://www.facebook.com/royalgarden_lounge",
+      "https://maps.google.com/?cid=royalgarden"
+    ]
+  },
+  "schema": {
+    "priceRange": "￥￥￥",
+    "servesCuisine": [
+      "Modern International",
+      "Bar Bite",
+      "Cocktails"
+    ],
+    "acceptsReservations": true,
+    "isTakeout": false,
+    "isDelivery": false,
+    "priceCurrency": "JPY",
+    "aggregateRating": {
+      "ratingValue": 4.7,
+      "reviewCount": 245,
+      "bestRating": 5,
+      "worstRating": 1,
+      "source": "Google Reviews",
+      "sourceUrl": "https://maps.google.com/?cid=royalgarden"
+    }
+  },
+  "localSEO": {
+    "city": "Shibuya",
+    "region": "Tokyo",
+    "country": "Japan",
+    "countryCode": "JP",
+    "postalCode": "150-0002",
+    "placeId": "ChIJN1t_tDeuEmsRUsoyg83yJQl",
+    "googleMapsUrl": "https://maps.google.com/?cid=royalgarden",
+    "timezone": "Asia/Tokyo"
+  },
+  "images": {
+    "logo": {
+      "url": "/images/restaurants/royalgarden-restaurant/logo.png",
+      "alt": "Royal Garden Lounge & Bar logo",
+      "width": 200,
+      "height": 200
+    },
+    "gallery": [
+      {
+        "url": "/images/restaurants/royalgarden-restaurant/ourgallery/gallery-1.png",
+        "alt": "シックでモダンなバーカウンターエリア"
+      },
+      {
+        "url": "/images/restaurants/royalgarden-restaurant/ourgallery/gallery-2.png",
+        "alt": "贅沢なソファが並ぶプレミアムラウンジ席"
+      },
+      {
+        "url": "/images/restaurants/royalgarden-restaurant/ourgallery/gallery-3.png",
+        "alt": "柔らかな光に包まれた夜のメインダイニング"
+      },
+      {
+        "url": "/images/restaurants/royalgarden-restaurant/ourgallery/gallery-4.png",
+        "alt": "プライベートなひとときを過ごせるラグジュアリーな個室"
+      },
+      {
+        "url": "/images/restaurants/royalgarden-restaurant/ourgallery/gallery-5.png",
+        "alt": "バーテンダーがカクテルを仕上げる美しい瞬間"
+      },
+      {
+        "url": "/images/restaurants/royalgarden-restaurant/ourgallery/gallery-6.png",
+        "alt": "洗練されたロイヤルガーデンのエントランス外観"
+      }
+    ],
+    "featured": [
+      {
+        "id": "f1",
+        "url": "/images/restaurants/royalgarden-restaurant/ourfood/food-1.png",
+        "alt": "極上和牛のロースト 季節の野菜添え"
+      },
+      {
+        "id": "f2",
+        "url": "/images/restaurants/royalgarden-restaurant/ourfood/food-2.png",
+        "alt": "新鮮なシーフードのプラッター"
+      },
+      {
+        "id": "f3",
+        "url": "/images/restaurants/royalgarden-restaurant/ourfood/food-3.png",
+        "alt": "トリュフが香る特製モダンパスタ"
+      },
+      {
+        "id": "f4",
+        "url": "/images/restaurants/royalgarden-restaurant/ourfood/food-4.png",
+        "alt": "シェフ厳選の職人技光る前菜盛り合わせ"
+      }
+    ],
+    "drinks": [
+      {
+        "id": "d1",
+        "url": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-1.png",
+        "alt": "シグネチャーカクテル「ロイヤル・ミスト」"
+      },
+      {
+        "id": "d2",
+        "url": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-2.png",
+        "alt": "厳選された高級ヴィンテージ赤ワイン"
+      },
+      {
+        "id": "d3",
+        "url": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-3.png",
+        "alt": "爽やかな自家製ボタニカルジントニック"
+      },
+      {
+        "id": "d4",
+        "url": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-4.png",
+        "alt": "プレミアムシャンパーニュの美しく輝く泡"
+      }
+    ],
+    "about": [
+      {
+        "id": "a1",
+        "url": "/images/restaurants/royalgarden-restaurant/ourstory/story-1.png",
+        "alt": "創業当時のデザインコンセプトスケッチ"
+      },
+      {
+        "id": "a2",
+        "url": "/images/restaurants/royalgarden-restaurant/ourstory/story-2.png",
+        "alt": "世界中から厳選された食材の仕入れの様子"
+      },
+      {
+        "id": "a3",
+        "url": "/images/restaurants/royalgarden-restaurant/ourstory/story-3.png",
+        "alt": "洗練されたおもてなし（オモテナシ）を学ぶスタッフ研修"
+      },
+      {
+        "id": "a4",
+        "url": "/images/restaurants/royalgarden-restaurant/ourstory/story-4.png",
+        "alt": "心地よい空間を演出し続けるモダンなインテリア"
+      }
+    ]
+  },
+  "companyInfo": {
+    "name": "株式会社ロイヤルホスピタリティ",
+    "legalName": "株式会社ロイヤルホスピタリティ",
+    "registrationNumber": "1010001099999",
+    "representative": "佐藤 健一",
+    "address": "〒150-0002 東京都渋谷区渋谷1-23-4 ロイヤルガーデンビル 4F",
+    "phone": "03-1234-5670",
+    "establishedDate": "2015-08-15",
+    "capital": "10,000,000 JPY",
+    "fiscalYearEnd": "3月末日",
+    "businessPurpose": "飲食店およびバーの経営、飲食コンサルティング業務、イベント企画運営",
+    "annualReportUrl": "",
+    "url": "/royalgarden-restaurant/company-information"
+  },
+  "openingHours": [
+    {
+      "day": "月曜日 - 木曜日",
+      "lunch": "12:00 - 15:00",
+      "lunchLO": "14:30",
+      "dinner": "18:00 - 23:30",
+      "dinnerLO": "22:30",
+      "isClosed": false,
+      "notes": ""
+    },
+    {
+      "day": "金曜日 - 土曜日",
+      "lunch": "12:00 - 15:00",
+      "lunchLO": "14:30",
+      "dinner": "18:00 - 02:00",
+      "dinnerLO": "01:00",
+      "isClosed": false,
+      "notes": "深夜営業を行っております。"
+    },
+    {
+      "day": "日曜日",
+      "lunch": "12:00 - 16:00",
+      "lunchLO": "15:15",
+      "dinner": "17:30 - 22:30",
+      "dinnerLO": "21:30",
+      "isClosed": false,
+      "notes": ""
+    }
+  ],
+  "holidayNotes": "年末年始（12月31日〜1月3日）はお休みをいただきます。",
+  "operations": {
+    "paymentMethods": [
+      "Visa",
+      "Mastercard",
+      "JCB",
+      "American Express",
+      "Diners Club",
+      "Cash"
+    ],
+    "dietaryOptions": {
+      "vegetarian": true,
+      "vegan": false,
+      "glutenFree": true,
+      "halal": false,
+      "kosher": false,
+      "dairyFree": false,
+      "nutFree": true
+    },
+    "features": {
+      "privateDining": true,
+      "privateDiningCapacity": 12,
+      "privateDiningDescription": "VIPのお客様や大切なビジネスの接待に最適な、完全防音のシックなラグジュアリー個室をご用意しております。",
+      "outdoorSeating": true,
+      "wifi": true,
+      "wifiPassword": "royalgardenwifi",
+      "parking": "valet",
+      "parkingDetails": "ビル地下に提携駐車場がございまして、バレーパーキングサービスがご利用いただけます。",
+      "wheelchairAccessible": true,
+      "petFriendly": false,
+      "romantic": true,
+      "goodForGroups": true,
+      "goodForFamilies": false,
+      "goodForDateNight": true
+    },
+    "services": {
+      "takeout": false,
+      "delivery": false,
+      "deliveryPlatforms": [
+        "Uber Eats",
+        "Demae-can",
+        "Wolt"
+      ],
+      "deliveryRadius": "",
+      "catering": true,
+      "cateringRadius": "東京23区内",
+      "cateringMinimum": "150000",
+      "reservations": true,
+      "reservationMethods": [
+        "Phone",
+        "Website"
+      ],
+      "onlineBookingUrl": "https://royalgarden-lounge.jp/reserve",
+      "banquets": true,
+      "banquetCapacity": 80
+    }
+  },
+  "menuCategories": [
+    {
+      "name": "メインディッシュ",
+      "items": [
+        {
+          "name": "01. 極上和牛のグリル",
+          "description": "厳選されたA5ランク和牛を、熟成赤ワインソースとトリュフ塩で。極上の柔らかさをお楽しみください。",
+          "price": "5800",
+          "category": "メインディッシュ",
+          "image": "/images/restaurants/royalgarden-restaurant/ourfood/food-1.png"
+        },
+        {
+          "name": "02. 真鯛のポワレ 〜ハーブバターソース〜",
+          "description": "皮目はパリッと、身はジューシーに焼き上げた新鮮な真鯛。爽やかな香りのハーブバターとともに。",
+          "price": "3400",
+          "category": "メインディッシュ",
+          "image": "/images/restaurants/royalgarden-restaurant/ourfood/food-2.png"
+        }
+      ]
+    },
+    {
+      "name": "シグネチャーカクテル",
+      "items": [
+        {
+          "name": "03. ロイヤル・ミスト",
+          "description": "プレミアムジンに自家製のラベンダーシロップとフレッシュシトラスを合わせた、幻想的な香りのカクテル。",
+          "price": "1800",
+          "category": "シグネチャーカクテル",
+          "image": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-1.png"
+        },
+        {
+          "name": "04. 渋みとボタニカルのジントニック",
+          "description": "厳選した日本のクラフトジンに、特製トニックウォーターとフレッシュハーブをブレンドした極上の一杯。",
+          "price": "1600",
+          "category": "シグネチャーカクテル",
+          "image": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-3.png"
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "name": "01. 極上和牛のグリル",
+      "description": "厳選されたA5ランク和牛を、熟成赤ワインソースとトリュフ塩で。極上の柔らかさをお楽しみください。",
+      "price": "5800",
+      "category": "メインディッシュ",
+      "image": "/images/restaurants/royalgarden-restaurant/ourfood/food-1.png",
+      "id": "01.-極上和牛のグリル",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "02. 真鯛のポワレ 〜ハーブバターソース〜",
+      "description": "皮目はパリッと、身はジューシーに焼き上げた新鮮な真鯛。爽やかな香りのハーブバターとともに。",
+      "price": "3400",
+      "category": "メインディッシュ",
+      "image": "/images/restaurants/royalgarden-restaurant/ourfood/food-2.png",
+      "id": "02.-真鯛のポワレ-〜ハーブバターソース〜",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "03. ロイヤル・ミスト",
+      "description": "プレミアムジンに自家製のラベンダーシロップとフレッシュシトラスを合わせた、幻想的な香りのカクテル。",
+      "price": "1800",
+      "category": "シグネチャーカクテル",
+      "image": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-1.png",
+      "id": "03.-ロイヤル・ミスト",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "04. 渋みとボタニカルのジントニック",
+      "description": "厳選した日本のクラフトジンに、特製トニックウォーターとフレッシュハーブをブレンドした極上の一杯。",
+      "price": "1600",
+      "category": "シグネチャーカクテル",
+      "image": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-3.png",
+      "id": "04.-渋みとボタニカルのジントニック",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    }
+  ],
+  "about": {
+    "representative": {
+      "name": "佐藤 健一",
+      "role": "エグゼクティブ・マネージャー",
+      "bio": "都内の名だたる高級ホテルで15年以上ラウンジマネジメントを経験したのち、Royal Gardenの立ち上げに参画。お客様ひとりひとりに寄り添った極上のおもてなしを追求しています。",
+      "image": "/images/restaurants/royalgarden-restaurant/representative/representative.jpg",
+      "message": "日常の喧騒から離れた都会のオアシスで、最高のひとときをお約束いたします。",
+      "story": "私たちは単に料理やドリンクを提供するだけでなく、お客様の心に残る『記憶の空間』を創造したいという想いからスタートしました。",
+      "position": "総支配人"
+    }
+  },
+  "pages": {
+    "home": {
+      "id": "home",
+      "sections": [
+        {
+          "id": "hero",
+          "type": "hero",
+          "ui": {
+            "order": 1,
+            "visible": true,
+            "fullBleed": true
+          },
+          "data": {
+            "slides": [
+              {
+                "id": "slide-1",
+                "image": "/images/restaurants/royalgarden-restaurant/homeslider/slide-1.jpg",
+                "alt": "ライトアップされたバーカウンターと美しいカクテルのグラス",
+                "subtitle": "洗練された大人の隠れ家へようこそ",
+                "title": "Royal Garden Lounge & Bar",
+                "ctaText": "メニューを見る",
+                "ctaLink": "#menu"
+              },
+              {
+                "id": "slide-2",
+                "image": "/images/restaurants/royalgarden-restaurant/homeslider/slide-2.jpg",
+                "alt": "一流シェフが織りなす美しいモダン創作料理の数々",
+                "subtitle": "極上の美食と優雅な空間",
+                "title": "贅沢を嗜むディナータイム",
+                "ctaText": "私たちのストーリー",
+                "ctaLink": "#about"
+              }
+            ]
+          }
+        },
+        {
+          "id": "about",
+          "type": "about",
+          "ui": {
+            "order": 2,
+            "visible": true,
+            "layout": "image-right"
+          },
+          "data": {
+            "title": "私たちの歩みとこだわり",
+            "content": "2018年に設立されたRoyal Garden Lounge & Barは、トレンドの発信地である渋谷の喧騒から一歩離れた場所に、大人のための隠れ家ラウンジとして誕生しました。私たちは、伝統的なおもてなしの精神を守りつつ、常にモダンで洗練された最高の食体験とリラクゼーションを提供し続けることに挑戦しています。",
+            "additionalContent": [
+              "私たちの最大のこだわりは、世界中から厳選した最高級のスピリッツやヴィンテージワイン、そして一流シェフが手掛ける妥協のない創作料理です。すべての皿とグラスにストーリーがあります。",
+              "贅沢なインテリア、計算され尽くした心地よい照明、そして上質な音楽が響き渡る空間は、お客様に日常を忘れさせ、特別な高揚感をもたらすよう細部まで設計されています。",
+              "すべてのお客様に『Omotenashi（おもてなし）』の心を。ご友人との大切な時間、ビジネスでの特別な接待、ロマンチックなデートなど、あらゆるシーンを完璧なサービスで彩ります。"
+            ],
+            "representative": "佐藤 健一"
+          }
+        },
+        {
+          "id": "menu-preview",
+          "type": "menu",
+          "ui": {
+            "order": 3,
+            "visible": true
+          },
+          "data": {
+            "ref": "menu"
+          }
+        },
+        {
+          "id": "gallery",
+          "type": "gallery",
+          "ui": {
+            "order": 4,
+            "visible": true
+          },
+          "data": {
+            "ref": "images.gallery"
+          }
+        },
+        {
+          "id": "reviews",
+          "type": "reviews",
+          "ui": {
+            "order": 5,
+            "visible": true
+          },
+          "data": {
+            "ref": "reviews"
+          }
+        },
+        {
+          "id": "contact",
+          "type": "contact",
+          "ui": {
+            "order": 6,
+            "visible": true
+          },
+          "data": {
+            "ref": "contact"
+          }
+        }
+      ]
+    },
+    "about": {
+      "id": "about",
+      "coverImage": null,
+      "sections": [
+        {
+          "id": "about-full",
+          "type": "about",
+          "ui": {
+            "order": 1,
+            "visible": true,
+            "layout": "image-right"
+          },
+          "data": {
+            "ref": "pages.home.sections.about.data"
+          }
+        },
+        {
+          "id": "team",
+          "type": "team",
+          "ui": {
+            "order": 2,
+            "visible": true
+          },
+          "data": {
+            "ref": "team"
+          }
+        }
+      ]
+    },
+    "menu": {
+      "id": "menu",
+      "coverImage": null,
+      "sections": [
+        {
+          "id": "full-menu",
+          "type": "menu",
+          "ui": {
+            "order": 1,
+            "visible": true
+          },
+          "data": {
+            "ref": "menu"
+          }
+        }
+      ]
+    },
+    "contact": {
+      "id": "contact",
+      "coverImage": null,
+      "sections": [
+        {
+          "id": "contact-full",
+          "type": "contact",
+          "ui": {
+            "order": 1,
+            "visible": true
+          },
+          "data": {
+            "ref": "contact"
+          }
+        }
+      ]
+    }
+  },
+  "contact": {
+    "address": "〒150-0002 東京都渋谷区渋谷1-23-4 ロイヤルガーデンビル 1F",
+    "phone": "+81 3-1234-5678",
+    "email": "info@royalgarden-lounge.jp",
+    "location": {
+      "lat": 35.664035,
+      "lng": 139.701334,
+      "mapsUrl": "https://maps.google.com/?cid=royalgarden",
+      "address": "〒150-0002 東京都渋谷区渋谷1-23-4 ロイヤルガーデンビル 1F",
+      "plusCode": ""
+    },
+    "openingHours": [
+      {
+        "day": "月曜日 - 木曜日",
+        "lunch": "12:00 - 15:00",
+        "lunchLO": "14:30",
+        "dinner": "18:00 - 23:30",
+        "dinnerLO": "22:30",
+        "isClosed": false,
+        "notes": ""
+      },
+      {
+        "day": "金曜日 - 土曜日",
+        "lunch": "12:00 - 15:00",
+        "lunchLO": "14:30",
+        "dinner": "18:00 - 02:00",
+        "dinnerLO": "01:00",
+        "isClosed": false,
+        "notes": "深夜営業を行っております。"
+      },
+      {
+        "day": "日曜日",
+        "lunch": "12:00 - 16:00",
+        "lunchLO": "15:15",
+        "dinner": "17:30 - 22:30",
+        "dinnerLO": "21:30",
+        "isClosed": false,
+        "notes": ""
+      }
+    ],
+    "holidayNotes": "年末年始（12月31日〜1月3日）はお休みをいただきます。"
+  },
+  "team": [
+    {
+      "id": "team-1",
+      "name": "高橋 大介",
+      "role": "総料理長（チーフシェフ）",
+      "image": "/images/restaurants/royalgarden-restaurant/team/team-1.jpg",
+      "bio": "フランスおよびイタリアの名店で修行を重ね、クラシックをベースとしたモダンな創作料理に定評があります。"
+    },
+    {
+      "id": "team-2",
+      "name": "松本 麗奈",
+      "role": "ヘッド・バーテンダー",
+      "image": "/images/restaurants/royalgarden-restaurant/team/team-2.jpg",
+      "bio": "数々のカクテルコンペティションでの受賞歴を持ち、お客様の気分に合わせたボタニカルカクテルを魔法のように創り出します。"
+    },
+    {
+      "id": "team-3",
+      "name": "渡辺 裕太",
+      "role": "シニア・ソムリエ",
+      "image": "/images/restaurants/royalgarden-restaurant/team/team-3.jpg",
+      "bio": "世界中のインディーズワイナリーから五感に響く銘醸ワインを買い付け、料理との最高のペアリングを提案します。"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "review-1",
+      "author": "山田 太郎",
+      "rating": 5,
+      "date": "2026-05-10",
+      "comment": "渋谷とは思えないほど落ち着いたラグジュアリーな空間でした。シグネチャーカクテルの香りが素晴らしく、和牛のグリルもとろける美味しさ。記念日のデートに最高です。",
+      "source": "Google Reviews"
+    },
+    {
+      "id": "review-2",
+      "author": "佐藤 美咲",
+      "rating": 5,
+      "date": "2026-05-02",
+      "comment": "深夜遅くまであいているのが嬉しい。バーテンダーの方がとても親切で、お酒が詳しくない私にもぴったりのオリジナルカクテルを作ってくれました。また絶対来ます！",
+      "source": "Google Reviews"
+    },
+    {
+      "id": "review-3",
+      "author": "Kenji O.",
+      "rating": 4,
+      "date": "2026-04-20",
+      "comment": "ビジネスの接待で完全個室を利用しました。防音もしっかりしていて、バレーパーキングもあるので、VIPを招くのにも非常に使い勝手が良い素晴らしいラウンジバーです。",
+      "source": "Google Reviews"
+    }
+  ],
+  "videos": [],
+  "virtualTour": "",
+  "advancedSchema": {
+    "foundedDate": "2018-04-01",
+    "foundingLocation": "東京都渋谷区",
+    "numberOfEmployees": 24,
+    "hasMap": "https://maps.google.com/?cid=royalgarden",
+    "currenciesAccepted": [
+      "JPY",
+      "USD"
+    ],
+    "paymentAccepted": [
+      "Credit Card",
+      "Cash"
+    ],
+    "servesCuisine": [
+      "Modern International",
+      "Cocktails"
+    ],
+    "menuType": [
+      "Dinner",
+      "Late Night"
+    ],
+    "starRating": 4.7,
+    "priceRange": "￥￥￥",
+    "eventType": [
+      "Anniversary",
+      "Corporate Banquet",
+      "Date Night"
+    ],
+    "seats": 60,
+    "smoking": "全席禁煙（別途喫煙ブースあり）",
+    "music": "Lounge / Deep House / Jazz",
+    "attire": "スマートカジュアル"
+  }
+}

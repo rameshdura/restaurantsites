@@ -1782,11 +1782,16 @@ export function SiteBuilderForm({
                   className="h-8 w-8 p-0"
                   onClick={() => {
                     if (ci > 0) {
-                      const nmc = [...formData.menuCategories]
+                      const nmc = [
+                        ...formData.menuCategories,
+                      ] as SiteBuilderData["menuCategories"]
                       const tmp = nmc[ci]
-                      nmc[ci] = nmc[ci - 1] as any
-                      nmc[ci - 1] = tmp as any
-                      updateFormData("menuCategories", nmc)
+                      const prev = nmc[ci - 1]
+                      if (tmp && prev) {
+                        nmc[ci] = prev
+                        nmc[ci - 1] = tmp
+                        updateFormData("menuCategories", nmc)
+                      }
                     }
                   }}
                 >
@@ -1798,11 +1803,16 @@ export function SiteBuilderForm({
                   className="h-8 w-8 p-0"
                   onClick={() => {
                     if (ci < formData.menuCategories.length - 1) {
-                      const nmc = [...formData.menuCategories]
+                      const nmc = [
+                        ...formData.menuCategories,
+                      ] as SiteBuilderData["menuCategories"]
                       const tmp = nmc[ci]
-                      nmc[ci] = nmc[ci + 1] as any
-                      nmc[ci + 1] = tmp as any
-                      updateFormData("menuCategories", nmc)
+                      const next = nmc[ci + 1]
+                      if (tmp && next) {
+                        nmc[ci] = next
+                        nmc[ci + 1] = tmp
+                        updateFormData("menuCategories", nmc)
+                      }
                     }
                   }}
                 >
@@ -1909,12 +1919,21 @@ export function SiteBuilderForm({
                           className="h-6 w-full p-0 text-[10px]"
                           onClick={() => {
                             if (ii > 0) {
-                              const nmc = [...formData.menuCategories]
-                              const items = [...(nmc[ci] as any).items]
-                              const tmp = items[ii]
-                              items[ii] = items[ii - 1]
-                              items[ii - 1] = tmp(nmc[ci] as any).items = items
-                              updateFormData("menuCategories", nmc)
+                              const nmc = [
+                                ...formData.menuCategories,
+                              ] as SiteBuilderData["menuCategories"]
+                              const category = nmc[ci]
+                              if (category) {
+                                const items = [...category.items]
+                                const tmp = items[ii]
+                                const prev = items[ii - 1]
+                                if (tmp !== undefined && prev !== undefined) {
+                                  items[ii] = prev
+                                  items[ii - 1] = tmp
+                                  category.items = items
+                                  updateFormData("menuCategories", nmc)
+                                }
+                              }
                             }
                           }}
                         >
@@ -1926,12 +1945,21 @@ export function SiteBuilderForm({
                           className="h-6 w-full p-0 text-[10px]"
                           onClick={() => {
                             if (ii < cat.items.length - 1) {
-                              const nmc = [...formData.menuCategories]
-                              const items = [...(nmc[ci] as any).items]
-                              const tmp = items[ii]
-                              items[ii] = items[ii + 1]
-                              items[ii + 1] = tmp(nmc[ci] as any).items = items
-                              updateFormData("menuCategories", nmc)
+                              const nmc = [
+                                ...formData.menuCategories,
+                              ] as SiteBuilderData["menuCategories"]
+                              const category = nmc[ci]
+                              if (category) {
+                                const items = [...category.items]
+                                const tmp = items[ii]
+                                const next = items[ii + 1]
+                                if (tmp !== undefined && next !== undefined) {
+                                  items[ii] = next
+                                  items[ii + 1] = tmp
+                                  category.items = items
+                                  updateFormData("menuCategories", nmc)
+                                }
+                              }
                             }
                           }}
                         >

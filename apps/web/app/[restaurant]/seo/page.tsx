@@ -369,7 +369,8 @@ async function ExperimentLocalOGImage({
   const reqOrigin = reqHeader.get("origin") || ""
 
   const heroSlideImages = getSlideUrlsFromSections(
-    (restaurantData.pages as any)?.home?.sections ?? []
+    (restaurantData.pages as { home?: { sections?: unknown[] } })?.home
+      ?.sections ?? []
   )
   const candidates = buildCandidates(
     restaurantData as unknown as RestaurantData,

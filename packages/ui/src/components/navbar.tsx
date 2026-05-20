@@ -367,10 +367,18 @@ export function Navbar({
                   alt={restaurant.name}
                   width={160}
                   height={40}
-                  className="h-10 w-auto object-contain"
+                  className={cn(
+                    "h-10 w-auto object-contain transition-all duration-300",
+                    !isScrolled && "brightness-0 invert"
+                  )}
                 />
               ) : (
-                <span className="text-2xl font-bold tracking-tight text-primary transition-opacity group-hover:opacity-80">
+                <span
+                  className={cn(
+                    "text-2xl font-bold tracking-tight transition-all duration-300 group-hover:opacity-80",
+                    isScrolled ? "text-primary" : "text-white"
+                  )}
+                >
                   {restaurant.name}
                 </span>
               )}
@@ -382,10 +390,20 @@ export function Navbar({
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="group/link relative text-[15px] font-medium text-muted-foreground transition-colors hover:text-primary"
+                  className={cn(
+                    "group/link relative text-[15px] font-medium transition-colors",
+                    isScrolled
+                      ? "text-muted-foreground hover:text-primary"
+                      : "text-white/90 hover:text-white"
+                  )}
                 >
                   {link.name}
-                  <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover/link:w-full" />
+                  <span
+                    className={cn(
+                      "absolute -bottom-1 left-0 h-0.5 w-0 transition-all duration-300 group-hover/link:w-full",
+                      isScrolled ? "bg-primary" : "bg-white"
+                    )}
+                  />
                 </Link>
               ))}
             </div>
@@ -396,7 +414,12 @@ export function Navbar({
               <div className="relative" ref={langDropdownRef}>
                 <button
                   onClick={() => setIsLangOpen(!isLangOpen)}
-                  className="notranslate flex items-center gap-2 rounded-full border border-border/50 px-3 py-2 text-sm font-medium transition-colors hover:bg-accent/50"
+                  className={cn(
+                    "notranslate flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium transition-colors",
+                    isScrolled
+                      ? "border-border/50 bg-background text-foreground hover:bg-accent/50"
+                      : "border-white/20 bg-white/10 text-white hover:bg-white/20"
+                  )}
                   translate="no"
                 >
                   <HugeiconsIcon icon={GlobalIcon} className="size-4" />
@@ -442,8 +465,13 @@ export function Navbar({
                 <a
                   href={`tel:${phone}`}
                   className={cn(
-                    buttonVariants({ variant: "default", size: "sm" }),
-                    "hidden items-center gap-2 rounded-full shadow-lg shadow-primary/20 transition-transform duration-300 hover:scale-105 active:scale-95 sm:flex"
+                    buttonVariants({
+                      variant: isScrolled ? "default" : "outline",
+                      size: "sm",
+                    }),
+                    "hidden items-center gap-2 rounded-full shadow-lg transition-transform duration-300 hover:scale-105 active:scale-95 sm:flex",
+                    !isScrolled &&
+                      "border-white/20 bg-white/10 text-white shadow-none hover:bg-white/20"
                   )}
                 >
                   <HugeiconsIcon icon={Call02Icon} className="size-4" />
@@ -455,7 +483,12 @@ export function Navbar({
               )}
 
               <button
-                className="rounded-full p-2 text-foreground transition-colors hover:bg-accent focus:outline-none md:hidden"
+                className={cn(
+                  "rounded-full p-2 transition-colors focus:outline-none md:hidden",
+                  isScrolled
+                    ? "text-foreground hover:bg-accent"
+                    : "text-white hover:bg-white/20"
+                )}
                 onClick={() => setIsMenuOpen(true)}
                 aria-label="Open menu"
               >
