@@ -128,11 +128,11 @@ function AboutBlock({
             <p className="mb-10 text-xl leading-relaxed text-muted-foreground">
               {d.content ?? data.description}
             </p>
-            <div className="mt-8">
+             <div className="mt-8">
+              {console.log("About link path:", getLink("/about"))}
               <Link
                 href={getLink("/about")}
-                className={cn(
-                  buttonVariants({ variant: "outline", size: "lg" }),
+                className={cn(                  buttonVariants({ variant: "outline", size: "lg" }),
                   "group h-12 rounded-full px-6 text-sm font-semibold tracking-wider transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20 active:scale-95"
                 )}
               >
@@ -344,7 +344,7 @@ function MenuBlock({
               </div>
               <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link
-                  href="#menu"
+                  href={getLink("/menu")}
                   className={cn(
                     buttonVariants({ size: "lg" }),
                     "min-w-[180px] rounded-full text-sm font-semibold tracking-wider transition-all duration-300 active:scale-95"

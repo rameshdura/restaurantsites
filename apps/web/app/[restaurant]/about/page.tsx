@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import { Metadata } from "next"
 import { getRestaurant, getImageSrc } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
@@ -122,9 +123,9 @@ export default async function AboutPage({ params }: AboutPageProps) {
                 )}
                 <div className="pt-4">
                   <Button asChild variant="outline" className="rounded-full">
-                    <a href={getLink("/company-information")}>
+                    <Link href={getLink("/company-information")}>
                       {translations.common?.aboutCompany || "About Company"}
-                    </a>
+                    </Link>
                   </Button>
                 </div>
               </div>
