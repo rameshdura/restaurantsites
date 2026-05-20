@@ -36,6 +36,12 @@ export default async function BrandPage({ params }: BrandPageProps) {
   const { data } = restaurant
   const translations = getTranslations(data.app?.language)
 
+  const getLink = (path: string) => {
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`
+    if (normalizedPath === "/") return `/${slug}`
+    return `/${slug}${normalizedPath}`
+  }
+
   return (
     <div className="flex min-h-svh flex-col bg-slate-50/50">
       <JsonLd data={generateBrandSchema(data, slug)} />
@@ -274,7 +280,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
                 "Contact our support team for personalized marketing materials and branding consultations."}
             </p>
             <Button asChild>
-              <a href={`/${slug}/contact`}>
+              <a href={getLink("/contact")}>
                 {translations.brandPage?.contactButton || "Contact Us"}
               </a>
             </Button>

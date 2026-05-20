@@ -58,6 +58,12 @@ export default async function AboutPage({ params }: AboutPageProps) {
     getImageSrc(slug, typeof im === "string" ? im : im.url)
   )
 
+  const getLink = (path: string) => {
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`
+    if (normalizedPath === "/") return `/${slug}`
+    return `/${slug}${normalizedPath}`
+  }
+
   return (
     <div className="flex min-h-svh flex-col">
       <JsonLd data={generateAboutPageSchema(data, slug)} />
@@ -116,7 +122,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
                 )}
                 <div className="pt-4">
                   <Button asChild variant="outline" className="rounded-full">
-                    <a href={`/${slug}/company-information`}>
+                    <a href={getLink("/company-information")}>
                       {translations.common?.aboutCompany || "About Company"}
                     </a>
                   </Button>
