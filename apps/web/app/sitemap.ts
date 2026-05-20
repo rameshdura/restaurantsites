@@ -43,15 +43,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 1.0,
     },
-    // Note: /seo route removed - it's now per-restaurant and noindex
   ]
 
   // Restaurant pages (dynamic)
   const restaurantPages: MetadataRoute.Sitemap = activeRestaurants.flatMap(
-    ({ slug, data }) => {
+    ({ slug }) => {
       const entries: MetadataRoute.Sitemap = []
 
-      // Home page - highest priority
+      // Home page
       entries.push({
         url: `${baseUrl}/${slug}`,
         lastModified: now,
@@ -59,7 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.9,
       })
 
-      // Menu page - second highest (menu changes often)
+      // Menu page
       entries.push({
         url: `${baseUrl}/${slug}/menu`,
         lastModified: now,
@@ -67,7 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
       })
 
-      // About page - lower priority, changes rarely
+      // About page
       entries.push({
         url: `${baseUrl}/${slug}/about`,
         lastModified: now,
@@ -75,7 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
       })
 
-      // Contact page - updates occasionally
+      // Contact page
       entries.push({
         url: `${baseUrl}/${slug}/contact`,
         lastModified: now,
@@ -83,87 +82,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
       })
 
-      // Company information - legal page, rarely updates
-      if (data.companyInfo) {
-        entries.push({
-          url: `${baseUrl}/${slug}/company-information`,
-          lastModified: now,
-          changeFrequency: "yearly",
-          priority: 0.3,
-        })
-      }
+      // Company information
+      entries.push({
+        url: `${baseUrl}/${slug}/company-information`,
+        lastModified: now,
+        changeFrequency: "yearly",
+        priority: 0.3,
+      })
+
+      // llm.txt
+      entries.push({
+        url: `${baseUrl}/${slug}/llm.txt`,
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.2,
+      })
 
       return entries
     }
   )
 
   return [...staticPages, ...restaurantPages]
-}
-
-/**
- * Sitemap with lastmod dates based on file system
- * (Optional enhancement - read data.json modification time)
- */
-export async function sitemapWithFileTimes(): Promise<MetadataRoute.Sitemap> {
-  const slugs = await getAllRestaurantSlugs()
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
-
-  const entries: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1.0,
-    },
-  ]
-
-  for (const slug of slugs) {
-    try {
-      // We could read data.json mtime here for accurate lastmod
-      // const dataPath = path.join(RESTAURANTS_PATH, slug, 'data.json')
-      // const stats = await fs.stat(dataPath)
-      // const lastMod = stats.mtime
-
-      // For now, use current date
-      const lastMod = new Date()
-
-      entries.push(
-        {
-          url: `${baseUrl}/${slug}`,
-          lastModified: lastMod,
-          changeFrequency: "weekly",
-          priority: 0.9,
-        },
-        {
-          url: `${baseUrl}/${slug}/menu`,
-          lastModified: lastMod,
-          changeFrequency: "weekly",
-          priority: 0.8,
-        },
-        {
-          url: `${baseUrl}/${slug}/about`,
-          lastModified: lastMod,
-          changeFrequency: "monthly",
-          priority: 0.7,
-        },
-        {
-          url: `${baseUrl}/${slug}/contact`,
-          lastModified: lastMod,
-          changeFrequency: "monthly",
-          priority: 0.7,
-        },
-        {
-          url: `${baseUrl}/${slug}/company-information`,
-          lastModified: lastMod,
-          changeFrequency: "yearly",
-          priority: 0.3,
-        }
-      )
-    } catch (error) {
-      console.error(`Error processing ${slug}:`, error)
-    }
-  }
-
-  return entries
 }
