@@ -93,14 +93,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         })
       }
 
-      // Brand assets - thin content, low priority
-      entries.push({
-        url: `${baseUrl}/${slug}/brand`,
-        lastModified: now,
-        changeFrequency: "yearly",
-        priority: 0.3,
-      })
-
       return entries
     }
   )
@@ -163,12 +155,6 @@ export async function sitemapWithFileTimes(): Promise<MetadataRoute.Sitemap> {
         },
         {
           url: `${baseUrl}/${slug}/company-information`,
-          lastModified: lastMod,
-          changeFrequency: "yearly",
-          priority: 0.3,
-        },
-        {
-          url: `${baseUrl}/${slug}/brand`,
           lastModified: lastMod,
           changeFrequency: "yearly",
           priority: 0.3,
