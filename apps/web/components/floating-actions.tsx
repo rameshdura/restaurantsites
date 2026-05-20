@@ -16,7 +16,7 @@ interface FloatingActionsProps {
 export function FloatingActions({
   onlineBookingUrl,
   translations,
-}: Omit<FloatingActionsProps, 'restaurantSlug'>) {
+}: Omit<FloatingActionsProps, "restaurantSlug">) {
   // Use onlineBookingUrl if provided, otherwise link to the contact/reservation form section
   const reservationLink = onlineBookingUrl || `/contact`
   const isExternal =

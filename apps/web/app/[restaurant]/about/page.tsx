@@ -14,6 +14,7 @@ import { generateAboutMetadata, generateAboutPageSchema } from "@/lib/seo"
 import { CoverSection } from "@workspace/ui/components/cover-section"
 import { cn } from "@workspace/ui/lib/utils"
 import { ImageSlider } from "@workspace/ui/components/image-slider"
+import { getServerRestaurantLink } from "@/lib/link"
 
 interface AboutPageProps {
   params: Promise<{ restaurant: string }>
@@ -59,11 +60,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
     getImageSrc(slug, typeof im === "string" ? im : im.url)
   )
 
-  const getLink = (path: string) => {
-    const normalizedPath = path.startsWith("/") ? path : `/${path}`
-    if (normalizedPath === "/") return `/${slug}`
-    return `/${slug}${normalizedPath}`
-  }
+  const { getLink } = await getServerRestaurantLink(slug)
 
   return (
     <div className="flex min-h-svh flex-col">

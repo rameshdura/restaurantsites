@@ -135,12 +135,12 @@ export function ImageSlider({
                 setDirection(index > currentIndex ? 1 : -1)
                 setCurrentIndex(index)
               }}
-              className="flex items-center justify-center w-11 h-11"
+              className="flex h-11 w-11 items-center justify-center"
               aria-label={`Go to slide ${index + 1}`}
             >
               <span
                 className={cn(
-                  "rounded-full h-2 transition-all duration-500",
+                  "h-2 rounded-full transition-all duration-500",
                   index === currentIndex
                     ? "w-8 bg-white"
                     : "w-2 bg-white/30 hover:bg-white/50"

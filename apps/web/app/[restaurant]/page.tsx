@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/json-ld"
 import { generateHomeMetadata, generateRestaurantSchema } from "@/lib/seo"
 import { BlockRenderer } from "@/components/BlockRenderer"
 import { FloatingActions } from "@/components/floating-actions"
+import { getServerRestaurantLink } from "@/lib/link"
 
 interface RestaurantPageProps {
   params: Promise<{ restaurant: string }>
@@ -33,11 +34,7 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
   }
 
   // Server-side link helper
-  const getLink = (path: string) => {
-    const normalizedPath = path.startsWith("/") ? path : `/${path}`
-    if (normalizedPath === "/") return `/${slug}`
-    return `/${slug}${normalizedPath}`
-  }
+  const { getLink } = await getServerRestaurantLink(slug)
 
   const { data } = restaurant
   const translations = getTranslations(data.app?.language)

@@ -421,8 +421,8 @@ export function Navbar({
                       : "border-white/20 bg-white/10 text-white hover:bg-white/20"
                   )}
                   aria-label={`Select language ${getLanguageName(currentLang)}`}
-                  translate="no">
-                
+                  translate="no"
+                >
                   <HugeiconsIcon icon={GlobalIcon} className="size-4" />
                   <span className="hidden sm:inline">
                     {getLanguageName(currentLang)}

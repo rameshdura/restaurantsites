@@ -467,7 +467,7 @@ export function ContactSection({
                   className="h-16 w-full rounded-2xl text-lg font-bold shadow-2xl transition-all hover:scale-[1.02] active:scale-95"
                 >
                   <Link
-                    href={getLink('/contact')}
+                    href={getLink("/contact")}
                     className="flex items-center justify-center gap-3"
                   >
                     {translations?.contact?.requestReservation ||

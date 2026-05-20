@@ -9,6 +9,7 @@ import { CreditCard } from "lucide-react"
 import { DownloadPdfButton } from "@/components/download-pdf-button"
 import { JsonLd } from "@/components/json-ld"
 import { generateBrandMetadata, generateBrandSchema } from "@/lib/seo"
+import { getServerRestaurantLink } from "@/lib/link"
 
 interface BrandPageProps {
   params: Promise<{ restaurant: string }>
@@ -36,11 +37,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
   const { data } = restaurant
   const translations = getTranslations(data.app?.language)
 
-  const getLink = (path: string) => {
-    const normalizedPath = path.startsWith("/") ? path : `/${path}`
-    if (normalizedPath === "/") return `/${slug}`
-    return `/${slug}${normalizedPath}`
-  }
+  const { getLink } = await getServerRestaurantLink(slug)
 
   return (
     <div className="flex min-h-svh flex-col bg-slate-50/50">
