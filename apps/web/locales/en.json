@@ -36,6 +36,8 @@
     "processing": "Processing...",
     "privacyPolicy": "Privacy Policy",
     "privacyAgreement": "By clicking send, you agree to our Privacy Policy.",
+    "payments": "Payments",
+    "delivery": "Delivery",
     "success": "Message sent! We'll get back to you soon.",
     "error": "An error occurred. Please try again later.",
     "sendError": "Failed to send message. Please try again later."

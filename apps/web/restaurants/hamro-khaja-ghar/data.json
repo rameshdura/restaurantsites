@@ -203,14 +203,14 @@
       "name": "Khaja & Thali Sets",
       "items": [
         {
-          "name": "Traditional Newari Khaja Set",
+          "name": "01. Traditional Newari Khaja Set",
           "description": "Authentic feast featuring beaten rice (chiura), roasted spiced soybeans (bhatmas), choice of marinated meat (choila), spiced potatoes, and house chutneys.",
           "price": "1200",
           "category": "Khaja & Thali Sets",
           "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-1.png"
         },
         {
-          "name": "Hamro Thakali Dal Bhat Set",
+          "name": "02. Hamro Thakali Dal Bhat Set",
           "description": "A wholesome traditional platter with basmati rice, slow-cooked black lentils, seasonal vegetable tarkaari, fresh spinach greens, spicy pickles, and papad.",
           "price": "1100",
           "category": "Khaja & Thali Sets",
@@ -222,7 +222,7 @@
       "name": "Himalayan Momos",
       "items": [
         {
-          "name": "Classic Steamed Chicken Momo",
+          "name": "03. Classic Steamed Chicken Momo",
           "description": "Hand-folded Nepalese dumplings stuffed with lean seasoned minced chicken, herbs, and warm spices. Served alongside fresh tomato-sesame sauce.",
           "price": "750",
           "category": "Himalayan Momos",
@@ -233,7 +233,7 @@
   ],
   "menu": [
     {
-      "name": "Traditional Newari Khaja Set",
+      "name": "01. Traditional Newari Khaja Set",
       "description": "Authentic feast featuring beaten rice (chiura), roasted spiced soybeans (bhatmas), choice of marinated meat (choila), spiced potatoes, and house chutneys.",
       "price": "1200",
       "category": "Khaja & Thali Sets",
@@ -249,7 +249,7 @@
       "allergens": []
     },
     {
-      "name": "Hamro Thakali Dal Bhat Set",
+      "name": "02. Hamro Thakali Dal Bhat Set",
       "description": "A wholesome traditional platter with basmati rice, slow-cooked black lentils, seasonal vegetable tarkaari, fresh spinach greens, spicy pickles, and papad.",
       "price": "1100",
       "category": "Khaja & Thali Sets",
@@ -265,7 +265,7 @@
       "allergens": []
     },
     {
-      "name": "Classic Steamed Chicken Momo",
+      "name": "03. Classic Steamed Chicken Momo",
       "description": "Hand-folded Nepalese dumplings stuffed with lean seasoned minced chicken, herbs, and warm spices. Served alongside fresh tomato-sesame sauce.",
       "price": "750",
       "category": "Himalayan Momos",

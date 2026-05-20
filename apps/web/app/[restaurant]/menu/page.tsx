@@ -109,6 +109,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
             <FoodMenu
               categories={categories}
               hideHeader={true}
+              currency={data.app?.currency}
               translations={translations}
             />
           ) : (
@@ -135,6 +136,8 @@ export default async function MenuPage({ params }: MenuPageProps) {
         email={data.email}
         location={data.location}
         embedUrl={null}
+        paymentMethods={data.operations?.paymentMethods}
+        deliveryPlatforms={data.operations?.services?.deliveryPlatforms}
         translations={translations}
       />
 

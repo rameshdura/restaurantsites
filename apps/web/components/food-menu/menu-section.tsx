@@ -4,9 +4,10 @@ import { MenuItemCard } from "./menu-item"
 
 interface MenuSectionProps {
   category: MenuCategory
+  currency?: string
 }
 
-export function MenuSection({ category }: MenuSectionProps) {
+export function MenuSection({ category, currency }: MenuSectionProps) {
   const { title, description, coverImage, items, id } = category
 
   return (
@@ -47,7 +48,7 @@ export function MenuSection({ category }: MenuSectionProps) {
 
       <div className="grid grid-cols-1 gap-x-8 gap-y-1 md:grid-cols-2">
         {items.map((item) => (
-          <MenuItemCard key={item.id} item={item} />
+          <MenuItemCard key={item.id} item={item} currency={currency} />
         ))}
       </div>
     </section>

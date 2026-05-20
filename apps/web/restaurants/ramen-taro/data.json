@@ -3,10 +3,15 @@
   "version": "1",
   "name": "Ramen Taro",
   "description": "Authentic Japanese ramen restaurant in the heart of Tokyo.",
+  "tagline": "Where Tradition Meets Every Bowl",
+  "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
+  "phone": "+81 3-8765-4321",
+  "email": "info@ramentaro.jp",
+  "website": "",
   "foundingDate": "1985-01-01",
   "menuLink": "pdfmenu/ramen-taro-menu.pdf",
   "app": {
-    "language": "JA",
+    "language": "EN",
     "currency": "JPY"
   },
   "seo": {
@@ -24,20 +29,20 @@
       "pork bone broth ramen",
       "handmade noodles"
     ],
+    "noindex": false,
     "menuTitle": "Ramen Taro Menu | Ramen, Sushi & Prices",
     "menuDescription": "Explore Ramen Taro's full menu featuring tonkotsu ramen, miso ramen, gyoza, sushi, and more. View prices and download our menu PDF.",
-    "aboutTitle": "About Ramen Taro",
+    "aboutTitle": "",
     "aboutDescription": "Discover the heritage of Ramen Taro — from a humble Fukuoka street stall in 1985 to an authentic ramen destination in Tokyo. Meet our team and culinary philosophy.",
     "contactTitle": "Contact Ramen Taro | Reservations & Directions",
     "contactDescription": "Contact Ramen Taro for reservations and directions. Located in Higashiyamato, Tokyo. Open daily for lunch and dinner. Call +81 3-8765-4321.",
     "brandTitle": "Ramen Taro Brand Assets | Marketing Materials",
     "brandDescription": "Download professional marketing materials for Ramen Taro. Printable business cards, flyers, and brand assets for our partners and marketing teams.",
     "companyTitle": "Narayani Co., Ltd. | Corporate Information & Governance",
-    "companyDescription": "Official corporate details for Narayani Co., Ltd., the parent company of Ramen Taro. Registration, headquarters in Yokohama, and fiscal information.",
-    "noindex": false
+    "companyDescription": "Official corporate details for Narayani Co., Ltd., the parent company of Ramen Taro. Registration, headquarters in Yokohama, and fiscal information."
   },
   "social": {
-    "ogImage": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&q=80&w=1200&h=630",
+    "ogImage": null,
     "ogLocale": "ja_JP",
     "twitterCard": "summary_large_image",
     "sameAs": [
@@ -67,7 +72,6 @@
     }
   },
   "localSEO": {
-    "neighborhood": "Kiyohara",
     "city": "Higashiyamato",
     "region": "Tokyo",
     "country": "Japan",
@@ -77,45 +81,35 @@
     "googleMapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
     "timezone": "Asia/Tokyo"
   },
-    "images": {
-        "favicon": {
-            "url": ""
-        },
-        "logo": {
-            "id": "logo",
-            "url": "/images/restaurants/ramen-taro/logo.png",
-            "alt": "Ramen Taro restaurant logo",
-            "width": 200,
-            "height": 200
-        },
+  "images": {
+    "logo": {
+      "url": "/images/restaurants/ramen-taro/logo.png",
+      "alt": "Ramen Taro logo",
+      "width": 200,
+      "height": 200
+    },
     "gallery": [
       {
-        "id": "g1",
         "url": "/images/restaurants/ramen-taro/ourgallery/gallery-1.png",
         "alt": "Inside Ramen Taro restaurant — warm Japanese dining atmosphere"
       },
       {
-        "id": "g2",
         "url": "/images/restaurants/ramen-taro/ourgallery/gallery-2.png",
         "alt": "Authentic Ramen Bowl"
       },
       {
-        "id": "g3",
         "url": "/images/restaurants/ramen-taro/ourgallery/gallery-3.png",
         "alt": "Chef Masterfully Crafting Ramen"
       },
       {
-        "id": "g4",
         "url": "/images/restaurants/ramen-taro/ourgallery/gallery-4.png",
         "alt": "Cozy Japanese Dining Area"
       },
       {
-        "id": "g5",
         "url": "/images/restaurants/ramen-taro/ourgallery/gallery-5.png",
         "alt": "Fresh Ramen Ingredients"
       },
       {
-        "id": "g6",
         "url": "/images/restaurants/ramen-taro/ourgallery/gallery-6.png",
         "alt": "Ramen Taro Evening Exterior"
       }
@@ -191,35 +185,1215 @@
     "name": "Narayani Co., Ltd.",
     "legalName": "Narayani Company Limited",
     "registrationNumber": "6020001061694",
+    "representative": "Poudel Prakash",
     "address": "35 Minezawacho, Hodogaya Ward, Yokohama, Kanagawa 221-0061, Japan",
     "phone": "045-331-1303",
     "establishedDate": "2009-05-21",
     "capital": "5,000,000 JPY",
     "fiscalYearEnd": "End of March",
-    "representative": "Poudel Prakash",
+    "businessPurpose": "",
+    "annualReportUrl": "",
     "url": "/ramen-taro/company-information"
+  },
+  "openingHours": [
+    {
+      "day": "Mon - Thu",
+      "lunch": "11:30 - 15:00",
+      "lunchLO": "14:30",
+      "dinner": "17:00 - 22:00",
+      "dinnerLO": "21:30",
+      "isClosed": false,
+      "notes": ""
+    },
+    {
+      "day": "Fri - Sat",
+      "lunch": "11:30 - 15:00",
+      "lunchLO": "14:30",
+      "dinner": "17:00 - 23:30",
+      "dinnerLO": "23:00",
+      "isClosed": false,
+      "notes": ""
+    },
+    {
+      "day": "Sun",
+      "lunch": "12:00 - 15:30",
+      "lunchLO": "15:00",
+      "dinner": "17:00 - 21:00",
+      "dinnerLO": "20:30",
+      "isClosed": false,
+      "notes": ""
+    }
+  ],
+  "holidayNotes": "",
+  "operations": {
+    "paymentMethods": [
+      "Visa",
+      "Mastercard",
+      "JCB",
+      "Cash",
+      "PayPay"
+    ],
+    "dietaryOptions": {
+      "vegetarian": false,
+      "vegan": false,
+      "glutenFree": false,
+      "halal": false,
+      "kosher": false,
+      "dairyFree": false,
+      "nutFree": false
+    },
+    "features": {
+      "privateDining": false,
+      "privateDiningCapacity": 0,
+      "privateDiningDescription": "",
+      "outdoorSeating": false,
+      "wifi": false,
+      "wifiPassword": "",
+      "parking": "none",
+      "parkingDetails": "",
+      "wheelchairAccessible": false,
+      "petFriendly": false,
+      "romantic": false,
+      "goodForGroups": false,
+      "goodForFamilies": false,
+      "goodForDateNight": false
+    },
+    "services": {
+      "takeout": true,
+      "delivery": false,
+      "deliveryPlatforms": [
+        "Uber Eats",
+        "Demae-can",
+        "Wolt"
+      ],
+      "deliveryRadius": "",
+      "catering": false,
+      "cateringRadius": "",
+      "cateringMinimum": "",
+      "reservations": true,
+      "reservationMethods": [],
+      "onlineBookingUrl": "",
+      "banquets": false,
+      "banquetCapacity": 0
+    }
   },
   "menuCategories": [
     {
       "name": "Ramen",
       "items": [
         {
-          "name": "Tonkotsu Ramen",
+          "name": "01. Tonkotsu Ramen",
           "description": "Rich pork bone broth, thin noodles, chashu, soft-boiled egg.",
           "price": "15",
           "category": "Ramen",
           "image": "/images/restaurants/ramen-taro/ourfood/food-1.png"
+        },
+        {
+          "name": "02. Spicy Miso Ramen",
+          "description": "Miso-based broth with spicy ground pork and sweet corn.",
+          "price": "16.5",
+          "category": "Ramen",
+          "image": "/images/restaurants/ramen-taro/ourfood/food-2.png"
+        },
+        {
+          "name": "03. Shoyu Ramen",
+          "description": "Soy sauce based clear broth with bamboo shoots and nori.",
+          "price": "14.5",
+          "category": "Ramen",
+          "image": "/images/restaurants/ramen-taro/ourfood/food-3.png"
+        },
+        {
+          "name": "04. Vegetarian Miso",
+          "description": "Creamy miso broth with seasonal vegetables and tofu.",
+          "price": "15.5",
+          "category": "Ramen",
+          "image": "/images/restaurants/ramen-taro/ourfood/food-4.png"
+        },
+        {
+          "name": "05. Black Garlic Ramen",
+          "description": "Classic tonkotsu with a signature burnt garlic oil.",
+          "price": "17",
+          "category": "Ramen",
+          "image": "https://images.unsplash.com/photo-1591814468924-caf88d1232e1?auto=format&fit=crop&q=80&w=800"
+        },
+        {
+          "name": "06. Curry Ramen",
+          "description": "Japanese style curry broth with crispy chicken katsu.",
+          "price": "18",
+          "category": "Ramen"
+        },
+        {
+          "name": "07. Tsukemen",
+          "description": "Dipping noodles with a concentrated seafood and pork broth.",
+          "price": "17.5",
+          "category": "Ramen"
+        },
+        {
+          "name": "08. Cold Soba",
+          "description": "Buckwheat noodles served chilled with dashi dipping sauce.",
+          "price": "13",
+          "category": "Ramen"
+        },
+        {
+          "name": "09. Yaki Udon",
+          "description": "Stir-fried thick noodles with seafood and vegetables.",
+          "price": "16",
+          "category": "Ramen"
+        },
+        {
+          "name": "10. Spicy Seafood Ramen",
+          "description": "Clear broth with shrimp, scallops, and squid.",
+          "price": "19",
+          "category": "Ramen"
+        }
+      ]
+    },
+    {
+      "name": "Starters",
+      "items": [
+        {
+          "name": "11. Gyoza",
+          "description": "Pan-fried pork and vegetable dumplings (6pcs).",
+          "price": "8",
+          "category": "Starters",
+          "image": "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&q=80&w=800"
+        },
+        {
+          "name": "12. Edamame",
+          "description": "Steamed soybeans with sea salt.",
+          "price": "5",
+          "category": "Starters",
+          "image": "https://images.unsplash.com/photo-1605334458327-024508e77a10?auto=format&fit=crop&q=80&w=800"
+        },
+        {
+          "name": "13. Karaage",
+          "description": "Japanese style fried chicken with spicy mayo.",
+          "price": "10",
+          "category": "Starters",
+          "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=800"
+        },
+        {
+          "name": "14. Agedashi Tofu",
+          "description": "Deep fried tofu in savory dashi broth.",
+          "price": "7.5",
+          "category": "Starters"
+        },
+        {
+          "name": "15. Takoyaki",
+          "description": "Octopus balls with bonito flakes and mayo (5pcs).",
+          "price": "9",
+          "category": "Starters"
+        },
+        {
+          "name": "16. Seaweed Salad",
+          "description": "Marinated seaweed with sesame dressing.",
+          "price": "6",
+          "category": "Starters"
+        },
+        {
+          "name": "17. Shrimp Tempura",
+          "description": "Crispy battered shrimp served with tentsuyu (4pcs).",
+          "price": "12",
+          "category": "Starters"
+        },
+        {
+          "name": "18. Spring Rolls",
+          "description": "Crispy vegetable spring rolls with sweet chili sauce.",
+          "price": "7",
+          "category": "Starters"
+        },
+        {
+          "name": "19. Salmon Sashimi",
+          "description": "Freshly sliced premium salmon (5pcs).",
+          "price": "14",
+          "category": "Starters"
+        },
+        {
+          "name": "20. Miso Soup",
+          "description": "Traditional soybean paste soup with tofu and seaweed.",
+          "price": "4",
+          "category": "Starters"
+        }
+      ]
+    },
+    {
+      "name": "Drinks",
+      "items": [
+        {
+          "name": "21. Asahi Super Dry",
+          "description": "Classic Japanese lager.",
+          "price": "7",
+          "category": "Drinks",
+          "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png"
+        },
+        {
+          "name": "22. Sapporo Premium",
+          "description": "Golden lager with a crisp finish.",
+          "price": "7",
+          "category": "Drinks",
+          "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png"
+        },
+        {
+          "name": "23. Hot Sake",
+          "description": "Traditional rice wine served warm.",
+          "price": "12",
+          "category": "Drinks",
+          "image": "/images/restaurants/ramen-taro/ourdrink/drink-3.png"
+        },
+        {
+          "name": "24. Cold Sake",
+          "description": "Premium Junmai Ginjo served chilled.",
+          "price": "15",
+          "category": "Drinks",
+          "image": "/images/restaurants/ramen-taro/ourdrink/drink-4.png"
+        },
+        {
+          "name": "25. Matcha Latte",
+          "description": "Creamy green tea latte, hot or iced.",
+          "price": "6",
+          "category": "Drinks",
+          "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png"
+        },
+        {
+          "name": "26. Calpico",
+          "description": "Refreshing non-carbonated milky soft drink.",
+          "price": "4.5",
+          "category": "Drinks",
+          "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png"
+        },
+        {
+          "name": "27. Ramune",
+          "description": "Classic marble-stoppered Japanese soda.",
+          "price": "5",
+          "category": "Drinks",
+          "image": "/images/restaurants/ramen-taro/ourdrink/drink-3.png"
+        },
+        {
+          "name": "28. Iced Oolong Tea",
+          "description": "Unsweetened traditional Japanese tea.",
+          "price": "4",
+          "category": "Drinks",
+          "image": "/images/restaurants/ramen-taro/ourdrink/drink-4.png"
+        },
+        {
+          "name": "29. Sparkling Water",
+          "description": "Refreshing carbonated water with lime.",
+          "price": "3.5",
+          "category": "Drinks",
+          "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png"
+        },
+        {
+          "name": "30. Plum Wine",
+          "description": "Sweet and tangy Japanese Umeshu.",
+          "price": "9",
+          "category": "Drinks",
+          "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png"
+        }
+      ]
+    },
+    {
+      "name": "Desserts",
+      "items": [
+        {
+          "name": "31. Mochi Ice Cream",
+          "description": "Assorted flavors of mochi ice cream.",
+          "price": "6",
+          "category": "Desserts"
+        },
+        {
+          "name": "32. Matcha Cheesecake",
+          "description": "Rich green tea cheesecake.",
+          "price": "8",
+          "category": "Desserts"
+        }
+      ]
+    },
+    {
+      "name": "Specialty Rolls",
+      "items": [
+        {
+          "name": "33. Spicy Tuna Roll",
+          "description": "Fresh tuna with spicy mayo.",
+          "price": "12",
+          "category": "Specialty Rolls"
+        },
+        {
+          "name": "34. Dragon Roll",
+          "description": "Eel and cucumber topped with avocado.",
+          "price": "15",
+          "category": "Specialty Rolls"
+        }
+      ]
+    },
+    {
+      "name": "Bento Boxes",
+      "items": [
+        {
+          "name": "35. Chicken Teriyaki Bento",
+          "description": "Served with rice, salad, and miso soup.",
+          "price": "18",
+          "category": "Bento Boxes"
+        },
+        {
+          "name": "36. Salmon Teriyaki Bento",
+          "description": "Served with rice, salad, and miso soup.",
+          "price": "20",
+          "category": "Bento Boxes"
+        }
+      ]
+    },
+    {
+      "name": "Chef's Specials",
+      "items": [
+        {
+          "name": "37. Truffle Ramen",
+          "description": "Specialty ramen infused with truffle oil.",
+          "price": "25",
+          "category": "Chef's Specials"
+        },
+        {
+          "name": "38. Wagyu Beef Ramen",
+          "description": "Premium wagyu slices over rich broth.",
+          "price": "35",
+          "category": "Chef's Specials"
+        }
+      ]
+    },
+    {
+      "name": "Seasonal Offers",
+      "items": [
+        {
+          "name": "39. Summer Cold Noodles",
+          "description": "Refreshing cold noodles with sesame dressing.",
+          "price": "14",
+          "category": "Seasonal Offers"
+        },
+        {
+          "name": "40. Winter Hot Pot",
+          "description": "Hearty hot pot for the cold season.",
+          "price": "28",
+          "category": "Seasonal Offers"
+        }
+      ]
+    },
+    {
+      "name": "Nigiri",
+      "items": [
+        {
+          "name": "41. Tuna Nigiri",
+          "description": "Fresh tuna over vinegared rice (2pcs).",
+          "price": "8",
+          "category": "Nigiri"
+        },
+        {
+          "name": "42. Salmon Nigiri",
+          "description": "Fresh salmon over vinegared rice (2pcs).",
+          "price": "7",
+          "category": "Nigiri"
+        }
+      ]
+    },
+    {
+      "name": "Sashimi",
+      "items": [
+        {
+          "name": "43. Yellowtail Sashimi",
+          "description": "Freshly sliced premium yellowtail (5pcs).",
+          "price": "16",
+          "category": "Sashimi"
+        },
+        {
+          "name": "44. Octopus Sashimi",
+          "description": "Freshly sliced premium octopus (5pcs).",
+          "price": "14",
+          "category": "Sashimi"
+        }
+      ]
+    },
+    {
+      "name": "Maki",
+      "items": [
+        {
+          "name": "45. California Roll",
+          "description": "Crab stick, avocado, and cucumber.",
+          "price": "8",
+          "category": "Maki"
+        },
+        {
+          "name": "46. Philadelphia Roll",
+          "description": "Smoked salmon, cream cheese, and cucumber.",
+          "price": "10",
+          "category": "Maki"
+        }
+      ]
+    },
+    {
+      "name": "Temaki",
+      "items": [
+        {
+          "name": "47. Spicy Salmon Hand Roll",
+          "description": "Spicy salmon and cucumber wrapped in a cone.",
+          "price": "7",
+          "category": "Temaki"
+        },
+        {
+          "name": "48. Eel Hand Roll",
+          "description": "BBQ eel and cucumber wrapped in a cone.",
+          "price": "8",
+          "category": "Temaki"
         }
       ]
     }
   ],
+  "menu": [
+    {
+      "name": "01. Tonkotsu Ramen",
+      "description": "Rich pork bone broth, thin noodles, chashu, soft-boiled egg.",
+      "price": "15",
+      "category": "Ramen",
+      "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
+      "id": "01.-tonkotsu-ramen",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "02. Spicy Miso Ramen",
+      "description": "Miso-based broth with spicy ground pork and sweet corn.",
+      "price": "16.5",
+      "category": "Ramen",
+      "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
+      "id": "02.-spicy-miso-ramen",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "03. Shoyu Ramen",
+      "description": "Soy sauce based clear broth with bamboo shoots and nori.",
+      "price": "14.5",
+      "category": "Ramen",
+      "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
+      "id": "03.-shoyu-ramen",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "04. Vegetarian Miso",
+      "description": "Creamy miso broth with seasonal vegetables and tofu.",
+      "price": "15.5",
+      "category": "Ramen",
+      "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
+      "id": "04.-vegetarian-miso",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "05. Black Garlic Ramen",
+      "description": "Classic tonkotsu with a signature burnt garlic oil.",
+      "price": "17",
+      "category": "Ramen",
+      "image": "https://images.unsplash.com/photo-1591814468924-caf88d1232e1?auto=format&fit=crop&q=80&w=800",
+      "id": "05.-black-garlic-ramen",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "06. Curry Ramen",
+      "description": "Japanese style curry broth with crispy chicken katsu.",
+      "price": "18",
+      "category": "Ramen",
+      "id": "06.-curry-ramen",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "07. Tsukemen",
+      "description": "Dipping noodles with a concentrated seafood and pork broth.",
+      "price": "17.5",
+      "category": "Ramen",
+      "id": "07.-tsukemen",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "08. Cold Soba",
+      "description": "Buckwheat noodles served chilled with dashi dipping sauce.",
+      "price": "13",
+      "category": "Ramen",
+      "id": "08.-cold-soba",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "09. Yaki Udon",
+      "description": "Stir-fried thick noodles with seafood and vegetables.",
+      "price": "16",
+      "category": "Ramen",
+      "id": "09.-yaki-udon",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "10. Spicy Seafood Ramen",
+      "description": "Clear broth with shrimp, scallops, and squid.",
+      "price": "19",
+      "category": "Ramen",
+      "id": "10.-spicy-seafood-ramen",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "11. Gyoza",
+      "description": "Pan-fried pork and vegetable dumplings (6pcs).",
+      "price": "8",
+      "category": "Starters",
+      "image": "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&q=80&w=800",
+      "id": "11.-gyoza",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "12. Edamame",
+      "description": "Steamed soybeans with sea salt.",
+      "price": "5",
+      "category": "Starters",
+      "image": "https://images.unsplash.com/photo-1605334458327-024508e77a10?auto=format&fit=crop&q=80&w=800",
+      "id": "12.-edamame",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "13. Karaage",
+      "description": "Japanese style fried chicken with spicy mayo.",
+      "price": "10",
+      "category": "Starters",
+      "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=800",
+      "id": "13.-karaage",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "14. Agedashi Tofu",
+      "description": "Deep fried tofu in savory dashi broth.",
+      "price": "7.5",
+      "category": "Starters",
+      "id": "14.-agedashi-tofu",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "15. Takoyaki",
+      "description": "Octopus balls with bonito flakes and mayo (5pcs).",
+      "price": "9",
+      "category": "Starters",
+      "id": "15.-takoyaki",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "16. Seaweed Salad",
+      "description": "Marinated seaweed with sesame dressing.",
+      "price": "6",
+      "category": "Starters",
+      "id": "16.-seaweed-salad",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "17. Shrimp Tempura",
+      "description": "Crispy battered shrimp served with tentsuyu (4pcs).",
+      "price": "12",
+      "category": "Starters",
+      "id": "17.-shrimp-tempura",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "18. Spring Rolls",
+      "description": "Crispy vegetable spring rolls with sweet chili sauce.",
+      "price": "7",
+      "category": "Starters",
+      "id": "18.-spring-rolls",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "19. Salmon Sashimi",
+      "description": "Freshly sliced premium salmon (5pcs).",
+      "price": "14",
+      "category": "Starters",
+      "id": "19.-salmon-sashimi",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "20. Miso Soup",
+      "description": "Traditional soybean paste soup with tofu and seaweed.",
+      "price": "4",
+      "category": "Starters",
+      "id": "20.-miso-soup",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "21. Asahi Super Dry",
+      "description": "Classic Japanese lager.",
+      "price": "7",
+      "category": "Drinks",
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png",
+      "id": "21.-asahi-super-dry",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "22. Sapporo Premium",
+      "description": "Golden lager with a crisp finish.",
+      "price": "7",
+      "category": "Drinks",
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png",
+      "id": "22.-sapporo-premium",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "23. Hot Sake",
+      "description": "Traditional rice wine served warm.",
+      "price": "12",
+      "category": "Drinks",
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-3.png",
+      "id": "23.-hot-sake",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "24. Cold Sake",
+      "description": "Premium Junmai Ginjo served chilled.",
+      "price": "15",
+      "category": "Drinks",
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-4.png",
+      "id": "24.-cold-sake",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "25. Matcha Latte",
+      "description": "Creamy green tea latte, hot or iced.",
+      "price": "6",
+      "category": "Drinks",
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png",
+      "id": "25.-matcha-latte",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "26. Calpico",
+      "description": "Refreshing non-carbonated milky soft drink.",
+      "price": "4.5",
+      "category": "Drinks",
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png",
+      "id": "26.-calpico",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "27. Ramune",
+      "description": "Classic marble-stoppered Japanese soda.",
+      "price": "5",
+      "category": "Drinks",
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-3.png",
+      "id": "27.-ramune",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "28. Iced Oolong Tea",
+      "description": "Unsweetened traditional Japanese tea.",
+      "price": "4",
+      "category": "Drinks",
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-4.png",
+      "id": "28.-iced-oolong-tea",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "29. Sparkling Water",
+      "description": "Refreshing carbonated water with lime.",
+      "price": "3.5",
+      "category": "Drinks",
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png",
+      "id": "29.-sparkling-water",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "30. Plum Wine",
+      "description": "Sweet and tangy Japanese Umeshu.",
+      "price": "9",
+      "category": "Drinks",
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png",
+      "id": "30.-plum-wine",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "31. Mochi Ice Cream",
+      "description": "Assorted flavors of mochi ice cream.",
+      "price": "6",
+      "category": "Desserts",
+      "id": "31.-mochi-ice-cream",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "32. Matcha Cheesecake",
+      "description": "Rich green tea cheesecake.",
+      "price": "8",
+      "category": "Desserts",
+      "id": "32.-matcha-cheesecake",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "33. Spicy Tuna Roll",
+      "description": "Fresh tuna with spicy mayo.",
+      "price": "12",
+      "category": "Specialty Rolls",
+      "id": "33.-spicy-tuna-roll",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "34. Dragon Roll",
+      "description": "Eel and cucumber topped with avocado.",
+      "price": "15",
+      "category": "Specialty Rolls",
+      "id": "34.-dragon-roll",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "35. Chicken Teriyaki Bento",
+      "description": "Served with rice, salad, and miso soup.",
+      "price": "18",
+      "category": "Bento Boxes",
+      "id": "35.-chicken-teriyaki-bento",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "36. Salmon Teriyaki Bento",
+      "description": "Served with rice, salad, and miso soup.",
+      "price": "20",
+      "category": "Bento Boxes",
+      "id": "36.-salmon-teriyaki-bento",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "37. Truffle Ramen",
+      "description": "Specialty ramen infused with truffle oil.",
+      "price": "25",
+      "category": "Chef's Specials",
+      "id": "37.-truffle-ramen",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "38. Wagyu Beef Ramen",
+      "description": "Premium wagyu slices over rich broth.",
+      "price": "35",
+      "category": "Chef's Specials",
+      "id": "38.-wagyu-beef-ramen",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "39. Summer Cold Noodles",
+      "description": "Refreshing cold noodles with sesame dressing.",
+      "price": "14",
+      "category": "Seasonal Offers",
+      "id": "39.-summer-cold-noodles",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "40. Winter Hot Pot",
+      "description": "Hearty hot pot for the cold season.",
+      "price": "28",
+      "category": "Seasonal Offers",
+      "id": "40.-winter-hot-pot",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "41. Tuna Nigiri",
+      "description": "Fresh tuna over vinegared rice (2pcs).",
+      "price": "8",
+      "category": "Nigiri",
+      "id": "41.-tuna-nigiri",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "42. Salmon Nigiri",
+      "description": "Fresh salmon over vinegared rice (2pcs).",
+      "price": "7",
+      "category": "Nigiri",
+      "id": "42.-salmon-nigiri",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "43. Yellowtail Sashimi",
+      "description": "Freshly sliced premium yellowtail (5pcs).",
+      "price": "16",
+      "category": "Sashimi",
+      "id": "43.-yellowtail-sashimi",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "44. Octopus Sashimi",
+      "description": "Freshly sliced premium octopus (5pcs).",
+      "price": "14",
+      "category": "Sashimi",
+      "id": "44.-octopus-sashimi",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "45. California Roll",
+      "description": "Crab stick, avocado, and cucumber.",
+      "price": "8",
+      "category": "Maki",
+      "id": "45.-california-roll",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "46. Philadelphia Roll",
+      "description": "Smoked salmon, cream cheese, and cucumber.",
+      "price": "10",
+      "category": "Maki",
+      "id": "46.-philadelphia-roll",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "47. Spicy Salmon Hand Roll",
+      "description": "Spicy salmon and cucumber wrapped in a cone.",
+      "price": "7",
+      "category": "Temaki",
+      "id": "47.-spicy-salmon-hand-roll",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "48. Eel Hand Roll",
+      "description": "BBQ eel and cucumber wrapped in a cone.",
+      "price": "8",
+      "category": "Temaki",
+      "id": "48.-eel-hand-roll",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    }
+  ],
   "about": {
     "representative": {
-      "name": "Takeshi Yamamoto",
-      "position": "Master Chef & Founder",
-      "message": "Quality is the heartbeat of our kitchen. Every bowl I serve is a tribute to the traditions I learned in Fukuoka, brought to life with passion for our guests in Tokyo.",
-      "story": "Takeshi started his journey in 1985 at a small street stall. He believes that the essence of a great ramen lies in the patience of simmering the broth for 48 hours and the connection built with every customer who walks through our doors.",
-      "image": "/images/restaurants/ramen-taro/team/chef.png"
+      "name": "",
+      "role": "",
+      "bio": "",
+      "image": "/images/restaurants/ramen-taro/team/chef.png",
+      "message": "",
+      "story": "",
+      "position": ""
     }
   },
   "pages": {
@@ -237,22 +1411,22 @@
           "data": {
             "slides": [
               {
-              "id": "slide-1",
-              "image": "/images/restaurants/ramen-taro/homeslider/slide-1.jpg",
-              "alt": "Authentic Hakata tonkotsu ramen bowl with chashu pork and soft-boiled egg",
-              "subtitle": "",
-              "title": "",
-              "ctaText": "",
-              "ctaLink": "#menu"
-            },
-            {
-              "id": "slide-2",
-              "image": "/images/restaurants/ramen-taro/homeslider/slide-2.jpg",
-              "alt": "Ramen chef masterfully crafting a bowl",
-              "subtitle": "",
-              "title": "",
-              "ctaText": "",
-              "ctaLink": "#about"
+                "id": "slide-1",
+                "image": "/images/restaurants/ramen-taro/homeslider/slide-1.jpg",
+                "alt": "Authentic Hakata tonkotsu ramen bowl with chashu pork and soft-boiled egg",
+                "subtitle": "",
+                "title": "",
+                "ctaText": "",
+                "ctaLink": "#menu"
+              },
+              {
+                "id": "slide-2",
+                "image": "/images/restaurants/ramen-taro/homeslider/slide-2.jpg",
+                "alt": "Ramen chef masterfully crafting a bowl",
+                "subtitle": "",
+                "title": "",
+                "ctaText": "",
+                "ctaLink": "#about"
               }
             ]
           }
@@ -266,18 +1440,15 @@
             "layout": "image-right"
           },
           "data": {
-            "subtitle": "",
             "title": "",
-            "backgroundTitle": "",
             "content": "Founded in 1985, Ramen Taro began as a humble street stall in the vibrant Fukuoka district. Over the decades, we have evolved into a cornerstone of authentic Japanese dining in Tokyo, dedicated to preserving the time-honored traditions of ramen making while selectively embracing modern culinary innovations.",
             "additionalContent": [
               "Our secret lies in our signature 48-hour tonkotsu broth, which is simmered slowly using premium pork bones to achieve a rich, creamy, and deeply savory texture that has become our trademark.",
               "Beyond the food, Ramen Taro is a deep celebration of Japanese culture and hospitality. We strive to create an atmosphere of 'Omotenashi'—wholehearted hospitality where the needs of the guest are anticipated and met with grace.",
               "We believe that a great bowl of ramen has the power to bring people together. That's why we maintain an open kitchen concept, allowing our guests to witness the passion and precision that goes into every bowl."
             ],
-            "foundedYear": 1985
-          },
-          "foundedYear": 1985
+            "representative": "Poudel Prakash"
+          }
         },
         {
           "id": "menu-preview",
@@ -287,11 +1458,7 @@
             "visible": true
           },
           "data": {
-            "subtitle": "",
-            "title": "",
-            "backgroundTitle": "",
-            "description": "",
-            "description2": ""
+            "ref": "menu"
           }
         },
         {
@@ -331,7 +1498,7 @@
     },
     "about": {
       "id": "about",
-      "coverImage": "/images/restaurants/ramen-taro/homeslider/slide-1.jpg",
+      "coverImage": null,
       "sections": [
         {
           "id": "about-full",
@@ -360,7 +1527,7 @@
     },
     "menu": {
       "id": "menu",
-      "coverImage": "/images/restaurants/ramen-taro/homeslider/slide-1.jpg",
+      "coverImage": null,
       "sections": [
         {
           "id": "full-menu",
@@ -377,7 +1544,7 @@
     },
     "contact": {
       "id": "contact",
-      "coverImage": "/images/restaurants/ramen-taro/homeslider/slide-1.jpg",
+      "coverImage": null,
       "sections": [
         {
           "id": "contact-full",
@@ -402,7 +1569,7 @@
       "lng": 139.4449135,
       "mapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
       "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
-      "plusCode": "8Q7X+QR Higashiyamato, Tokyo, Japan"
+      "plusCode": ""
     },
     "openingHours": [
       {
@@ -508,369 +1675,23 @@
       "source": "Google Reviews"
     }
   ],
-  "menu": [
-    {
-      "id": "tonkotsu-ramen",
-      "name": "Tonkotsu Ramen",
-      "description": "Rich pork bone broth, thin noodles, chashu, soft-boiled egg.",
-      "price": "15",
-      "category": "Ramen",
-      "isPopular": true,
-      "image": "/images/restaurants/ramen-taro/ourfood/food-1.png"
-    },
-    {
-      "id": "spicy-miso-ramen",
-      "name": "Spicy Miso Ramen",
-      "description": "Miso-based broth with spicy ground pork and sweet corn.",
-      "price": "16.5",
-      "category": "Ramen",
-      "isPopular": true,
-      "image": "/images/restaurants/ramen-taro/ourfood/food-2.png"
-    },
-    {
-      "id": "shoyu-ramen",
-      "name": "Shoyu Ramen",
-      "description": "Soy sauce based clear broth with bamboo shoots and nori.",
-      "price": "14.5",
-      "category": "Ramen",
-      "image": "/images/restaurants/ramen-taro/ourfood/food-3.png"
-    },
-    {
-      "id": "vegetarian-miso",
-      "name": "Vegetarian Miso",
-      "description": "Creamy miso broth with seasonal vegetables and tofu.",
-      "price": "15.5",
-      "category": "Ramen",
-      "image": "/images/restaurants/ramen-taro/ourfood/food-4.png"
-    },
-    {
-      "id": "black-garlic-ramen",
-      "name": "Black Garlic Ramen",
-      "description": "Classic tonkotsu with a signature burnt garlic oil.",
-      "price": "17",
-      "category": "Ramen",
-      "isPopular": true,
-      "image": "https://images.unsplash.com/photo-1591814468924-caf88d1232e1?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      "id": "curry-ramen",
-      "name": "Curry Ramen",
-      "description": "Japanese style curry broth with crispy chicken katsu.",
-      "price": "18",
-      "category": "Ramen"
-    },
-    {
-      "id": "tsukemen",
-      "name": "Tsukemen",
-      "description": "Dipping noodles with a concentrated seafood and pork broth.",
-      "price": "17.5",
-      "category": "Ramen"
-    },
-    {
-      "id": "cold-soba",
-      "name": "Cold Soba",
-      "description": "Buckwheat noodles served chilled with dashi dipping sauce.",
-      "price": "13",
-      "category": "Ramen"
-    },
-    {
-      "id": "yaki-udon",
-      "name": "Yaki Udon",
-      "description": "Stir-fried thick noodles with seafood and vegetables.",
-      "price": "16",
-      "category": "Ramen"
-    },
-    {
-      "id": "spicy-seafood-ramen",
-      "name": "Spicy Seafood Ramen",
-      "description": "Clear broth with shrimp, scallops, and squid.",
-      "price": "19",
-      "category": "Ramen"
-    },
-    {
-      "id": "gyoza",
-      "name": "Gyoza",
-      "description": "Pan-fried pork and vegetable dumplings (6pcs).",
-      "price": "8",
-      "category": "Starters",
-      "isPopular": true,
-      "image": "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      "id": "edamame",
-      "name": "Edamame",
-      "description": "Steamed soybeans with sea salt.",
-      "price": "5",
-      "category": "Starters",
-      "image": "https://images.unsplash.com/photo-1605334458327-024508e77a10?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      "id": "karaage",
-      "name": "Karaage",
-      "description": "Japanese style fried chicken with spicy mayo.",
-      "price": "10",
-      "category": "Starters",
-      "isPopular": true,
-      "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      "id": "agedashi-tofu",
-      "name": "Agedashi Tofu",
-      "description": "Deep fried tofu in savory dashi broth.",
-      "price": "7.5",
-      "category": "Starters"
-    },
-    {
-      "id": "takoyaki",
-      "name": "Takoyaki",
-      "description": "Octopus balls with bonito flakes and mayo (5pcs).",
-      "price": "9",
-      "category": "Starters"
-    },
-    {
-      "id": "seaweed-salad",
-      "name": "Seaweed Salad",
-      "description": "Marinated seaweed with sesame dressing.",
-      "price": "6",
-      "category": "Starters"
-    },
-    {
-      "id": "shrimp-tempura",
-      "name": "Shrimp Tempura",
-      "description": "Crispy battered shrimp served with tentsuyu (4pcs).",
-      "price": "12",
-      "category": "Starters"
-    },
-    {
-      "id": "spring-rolls",
-      "name": "Spring Rolls",
-      "description": "Crispy vegetable spring rolls with sweet chili sauce.",
-      "price": "7",
-      "category": "Starters"
-    },
-    {
-      "id": "salmon-sashimi",
-      "name": "Salmon Sashimi",
-      "description": "Freshly sliced premium salmon (5pcs).",
-      "price": "14",
-      "category": "Starters"
-    },
-    {
-      "id": "miso-soup",
-      "name": "Miso Soup",
-      "description": "Traditional soybean paste soup with tofu and seaweed.",
-      "price": "4",
-      "category": "Starters"
-    },
-    {
-      "id": "asahi-super-dry",
-      "name": "Asahi Super Dry",
-      "description": "Classic Japanese lager.",
-      "price": "7",
-      "category": "Drinks",
-      "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png"
-    },
-    {
-      "id": "sapporo-premium",
-      "name": "Sapporo Premium",
-      "description": "Golden lager with a crisp finish.",
-      "price": "7",
-      "category": "Drinks",
-      "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png"
-    },
-    {
-      "id": "hot-sake",
-      "name": "Hot Sake",
-      "description": "Traditional rice wine served warm.",
-      "price": "12",
-      "category": "Drinks",
-      "image": "/images/restaurants/ramen-taro/ourdrink/drink-3.png"
-    },
-    {
-      "id": "cold-sake",
-      "name": "Cold Sake",
-      "description": "Premium Junmai Ginjo served chilled.",
-      "price": "15",
-      "category": "Drinks",
-      "image": "/images/restaurants/ramen-taro/ourdrink/drink-4.png"
-    },
-    {
-      "id": "matcha-latte",
-      "name": "Matcha Latte",
-      "description": "Creamy green tea latte, hot or iced.",
-      "price": "6",
-      "category": "Drinks",
-      "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png"
-    },
-    {
-      "id": "calpico",
-      "name": "Calpico",
-      "description": "Refreshing non-carbonated milky soft drink.",
-      "price": "4.5",
-      "category": "Drinks",
-      "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png"
-    },
-    {
-      "id": "ramune",
-      "name": "Ramune",
-      "description": "Classic marble-stoppered Japanese soda.",
-      "price": "5",
-      "category": "Drinks",
-      "image": "/images/restaurants/ramen-taro/ourdrink/drink-3.png"
-    },
-    {
-      "id": "iced-oolong-tea",
-      "name": "Iced Oolong Tea",
-      "description": "Unsweetened traditional Japanese tea.",
-      "price": "4",
-      "category": "Drinks",
-      "image": "/images/restaurants/ramen-taro/ourdrink/drink-4.png"
-    },
-    {
-      "id": "sparkling-water",
-      "name": "Sparkling Water",
-      "description": "Refreshing carbonated water with lime.",
-      "price": "3.5",
-      "category": "Drinks",
-      "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png"
-    },
-    {
-      "id": "plum-wine",
-      "name": "Plum Wine",
-      "description": "Sweet and tangy Japanese Umeshu.",
-      "price": "9",
-      "category": "Drinks",
-      "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png"
-    },
-    {
-      "id": "mochi-ice-cream",
-      "name": "Mochi Ice Cream",
-      "description": "Assorted flavors of mochi ice cream.",
-      "price": "6",
-      "category": "Desserts"
-    },
-    {
-      "id": "matcha-cheesecake",
-      "name": "Matcha Cheesecake",
-      "description": "Rich green tea cheesecake.",
-      "price": "8",
-      "category": "Desserts"
-    },
-    {
-      "id": "spicy-tuna-roll",
-      "name": "Spicy Tuna Roll",
-      "description": "Fresh tuna with spicy mayo.",
-      "price": "12",
-      "category": "Specialty Rolls"
-    },
-    {
-      "id": "dragon-roll",
-      "name": "Dragon Roll",
-      "description": "Eel and cucumber topped with avocado.",
-      "price": "15",
-      "category": "Specialty Rolls"
-    },
-    {
-      "id": "chicken-teriyaki-bento",
-      "name": "Chicken Teriyaki Bento",
-      "description": "Served with rice, salad, and miso soup.",
-      "price": "18",
-      "category": "Bento Boxes"
-    },
-    {
-      "id": "salmon-teriyaki-bento",
-      "name": "Salmon Teriyaki Bento",
-      "description": "Served with rice, salad, and miso soup.",
-      "price": "20",
-      "category": "Bento Boxes"
-    },
-    {
-      "id": "truffle-ramen",
-      "name": "Truffle Ramen",
-      "description": "Specialty ramen infused with truffle oil.",
-      "price": "25",
-      "category": "Chef's Specials"
-    },
-    {
-      "id": "wagyu-beef-ramen",
-      "name": "Wagyu Beef Ramen",
-      "description": "Premium wagyu slices over rich broth.",
-      "price": "35",
-      "category": "Chef's Specials"
-    },
-    {
-      "id": "summer-cold-noodles",
-      "name": "Summer Cold Noodles",
-      "description": "Refreshing cold noodles with sesame dressing.",
-      "price": "14",
-      "category": "Seasonal Offers"
-    },
-    {
-      "id": "winter-hot-pot",
-      "name": "Winter Hot Pot",
-      "description": "Hearty hot pot for the cold season.",
-      "price": "28",
-      "category": "Seasonal Offers"
-    },
-    {
-      "id": "tuna-nigiri",
-      "name": "Tuna Nigiri",
-      "description": "Fresh tuna over vinegared rice (2pcs).",
-      "price": "8",
-      "category": "Nigiri"
-    },
-    {
-      "id": "salmon-nigiri",
-      "name": "Salmon Nigiri",
-      "description": "Fresh salmon over vinegared rice (2pcs).",
-      "price": "7",
-      "category": "Nigiri"
-    },
-    {
-      "id": "yellowtail-sashimi",
-      "name": "Yellowtail Sashimi",
-      "description": "Freshly sliced premium yellowtail (5pcs).",
-      "price": "16",
-      "category": "Sashimi"
-    },
-    {
-      "id": "octopus-sashimi",
-      "name": "Octopus Sashimi",
-      "description": "Freshly sliced premium octopus (5pcs).",
-      "price": "14",
-      "category": "Sashimi"
-    },
-    {
-      "id": "california-roll",
-      "name": "California Roll",
-      "description": "Crab stick, avocado, and cucumber.",
-      "price": "8",
-      "category": "Maki"
-    },
-    {
-      "id": "philadelphia-roll",
-      "name": "Philadelphia Roll",
-      "description": "Smoked salmon, cream cheese, and cucumber.",
-      "price": "10",
-      "category": "Maki"
-    },
-    {
-      "id": "spicy-salmon-hand-roll",
-      "name": "Spicy Salmon Hand Roll",
-      "description": "Spicy salmon and cucumber wrapped in a cone.",
-      "price": "7",
-      "category": "Temaki"
-    },
-    {
-      "id": "eel-hand-roll",
-      "name": "Eel Hand Roll",
-      "description": "BBQ eel and cucumber wrapped in a cone.",
-      "price": "8",
-      "category": "Temaki"
-    }
-  ],
-  "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
-  "phone": "+81 3-8765-4321",
-  "email": "info@ramentaro.jp",
-  "tagline": "Where Tradition Meets Every Bowl"
+  "videos": [],
+  "virtualTour": "",
+  "advancedSchema": {
+    "foundedDate": "",
+    "foundingLocation": "",
+    "numberOfEmployees": 0,
+    "hasMap": "",
+    "currenciesAccepted": [],
+    "paymentAccepted": [],
+    "servesCuisine": [],
+    "menuType": [],
+    "starRating": 0,
+    "priceRange": "$",
+    "eventType": [],
+    "seats": 0,
+    "smoking": "No Smoking",
+    "music": "None",
+    "attire": "casual"
+  }
 }

@@ -360,15 +360,15 @@ export function SiteBuilderForm({
             <div className="space-y-2">
               <Label>Menu Page Title</Label>
               <Input
-                value={formData.seoTitle}
-                onChange={(e) => updateFormData("seoTitle", e.target.value)}
+                value={formData.menuTitle}
+                onChange={(e) => updateFormData("menuTitle", e.target.value)}
               />
             </div>
             <div className="space-y-2">
               <Label>About Page Title</Label>
               <Input
-                value={formData.seoTitle}
-                onChange={(e) => updateFormData("seoTitle", e.target.value)}
+                value={formData.aboutTitle}
+                onChange={(e) => updateFormData("aboutTitle", e.target.value)}
               />
             </div>
           </div>
@@ -376,15 +376,15 @@ export function SiteBuilderForm({
             <div className="space-y-2">
               <Label>Contact Page Title</Label>
               <Input
-                value={formData.seoTitle}
-                onChange={(e) => updateFormData("seoTitle", e.target.value)}
+                value={formData.contactTitle}
+                onChange={(e) => updateFormData("contactTitle", e.target.value)}
               />
             </div>
             <div className="space-y-2">
               <Label>Company Info Title</Label>
               <Input
-                value={formData.seoTitle}
-                onChange={(e) => updateFormData("seoTitle", e.target.value)}
+                value={formData.companyTitle}
+                onChange={(e) => updateFormData("companyTitle", e.target.value)}
               />
             </div>
           </div>
@@ -392,18 +392,18 @@ export function SiteBuilderForm({
             <div className="space-y-2">
               <Label>Menu Page Description</Label>
               <Input
-                value={formData.seoDescription}
+                value={formData.menuDescription}
                 onChange={(e) =>
-                  updateFormData("seoDescription", e.target.value)
+                  updateFormData("menuDescription", e.target.value)
                 }
               />
             </div>
             <div className="space-y-2">
               <Label>About Page Description</Label>
               <Input
-                value={formData.seoDescription}
+                value={formData.aboutDescription}
                 onChange={(e) =>
-                  updateFormData("seoDescription", e.target.value)
+                  updateFormData("aboutDescription", e.target.value)
                 }
               />
             </div>
@@ -412,17 +412,17 @@ export function SiteBuilderForm({
             <div className="space-y-2">
               <Label>Contact Page Description</Label>
               <Input
-                value={formData.seoDescription}
+                value={formData.contactDescription}
                 onChange={(e) =>
-                  updateFormData("seoDescription", e.target.value)
+                  updateFormData("contactDescription", e.target.value)
                 }
               />
             </div>
             <div className="space-y-2">
               <Label>Brand Title</Label>
               <Input
-                value={formData.seoTitle}
-                onChange={(e) => updateFormData("seoTitle", e.target.value)}
+                value={formData.brandTitle}
+                onChange={(e) => updateFormData("brandTitle", e.target.value)}
               />
             </div>
           </div>
@@ -430,18 +430,18 @@ export function SiteBuilderForm({
             <div className="space-y-2">
               <Label>Brand Description</Label>
               <Input
-                value={formData.seoDescription}
+                value={formData.brandDescription}
                 onChange={(e) =>
-                  updateFormData("seoDescription", e.target.value)
+                  updateFormData("brandDescription", e.target.value)
                 }
               />
             </div>
             <div className="space-y-2">
               <Label>Company Info Description</Label>
               <Input
-                value={formData.seoDescription}
+                value={formData.companyDescription}
                 onChange={(e) =>
-                  updateFormData("seoDescription", e.target.value)
+                  updateFormData("companyDescription", e.target.value)
                 }
               />
             </div>
@@ -495,21 +495,22 @@ export function SiteBuilderForm({
           <Input
             value={formData.city || ""}
             onChange={(e) => updateFormData("city", e.target.value)}
-            placeholder="Utsunomiya"
-          />
-        </div>{" "}
-        <div className="space-y-2">
-          <Label>City</Label>
-          <Input
-            value={formData.city || ""}
-            onChange={(e) => updateFormData("city", e.target.value)}
             placeholder="Higashiyamato"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>Google Maps Place ID</Label>
+          <Input
+            value={formData.placeId || ""}
+            onChange={(e) => updateFormData("placeId", e.target.value)}
+            placeholder="ChIJ..."
           />
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <Label>Region/State</Label>
+
           <Input
             value={formData.region || ""}
             onChange={(e) => updateFormData("region", e.target.value)}
@@ -1021,13 +1022,13 @@ export function SiteBuilderForm({
             image={formData.aboutRepresentative?.image || null}
             onImageSelect={(_, d) =>
               updateFormData("aboutRepresentative", {
-                ...formData.aboutRepresentative,
+                ...(formData.aboutRepresentative || {}),
                 image: d,
               })
             }
             onImageRemove={() =>
               updateFormData("aboutRepresentative", {
-                ...formData.aboutRepresentative,
+                ...(formData.aboutRepresentative || {}),
                 image: null,
               })
             }
@@ -1037,20 +1038,20 @@ export function SiteBuilderForm({
             <div className="grid gap-4 md:grid-cols-2">
               <Input
                 placeholder="Name"
-                value={formData.aboutRepresentative.name || ""}
+                value={formData.aboutRepresentative?.name || ""}
                 onChange={(e) =>
                   updateFormData("aboutRepresentative", {
-                    ...formData.aboutRepresentative,
+                    ...(formData.aboutRepresentative || {}),
                     name: e.target.value,
                   })
                 }
               />
               <Input
                 placeholder="Role"
-                value={formData.aboutRepresentative.role || ""}
+                value={formData.aboutRepresentative?.role || ""}
                 onChange={(e) =>
                   updateFormData("aboutRepresentative", {
-                    ...formData.aboutRepresentative,
+                    ...(formData.aboutRepresentative || {}),
                     role: e.target.value,
                   })
                 }
@@ -1058,30 +1059,30 @@ export function SiteBuilderForm({
             </div>
             <Input
               placeholder="Bio"
-              value={formData.aboutRepresentative.bio || ""}
+              value={formData.aboutRepresentative?.bio || ""}
               onChange={(e) =>
                 updateFormData("aboutRepresentative", {
-                  ...formData.aboutRepresentative,
+                  ...(formData.aboutRepresentative || {}),
                   bio: e.target.value,
                 })
               }
             />
             <Textarea
               placeholder="Message..."
-              value={formData.aboutRepresentative.message || ""}
+              value={formData.aboutRepresentative?.message || ""}
               onChange={(e) =>
                 updateFormData("aboutRepresentative", {
-                  ...formData.aboutRepresentative,
+                  ...(formData.aboutRepresentative || {}),
                   message: e.target.value,
                 })
               }
             />
             <Textarea
               placeholder="Story..."
-              value={formData.aboutRepresentative.story || ""}
+              value={formData.aboutRepresentative?.story || ""}
               onChange={(e) =>
                 updateFormData("aboutRepresentative", {
-                  ...formData.aboutRepresentative,
+                  ...(formData.aboutRepresentative || {}),
                   story: e.target.value,
                 })
               }
@@ -1470,6 +1471,110 @@ export function SiteBuilderForm({
                     "cuisineTypes",
                     formData.cuisineTypes.filter((_, idx) => idx !== i)
                   )
+                }
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-4 border-t pt-4">
+        <div className="flex items-center justify-between">
+          <Label className="text-lg font-bold">Payment Methods</Label>
+          <div className="flex gap-2">
+            <Input
+              id="newPayment"
+              placeholder="e.g. Visa"
+              className="h-8 w-40"
+            />
+            <Button
+              size="sm"
+              onClick={() => {
+                const val = (
+                  document.getElementById("newPayment") as HTMLInputElement
+                ).value
+                if (val) {
+                  updateFormData("paymentMethods", [
+                    ...(formData.paymentMethods || []),
+                    val,
+                  ])
+                  ;(
+                    document.getElementById("newPayment") as HTMLInputElement
+                  ).value = ""
+                }
+              }}
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {(formData.paymentMethods || []).map((c, i) => (
+            <Badge key={i} variant="secondary" className="gap-1 py-1 pr-1 pl-3">
+              {c}
+              <button
+                onClick={() =>
+                  updateFormData(
+                    "paymentMethods",
+                    formData.paymentMethods.filter((_, idx) => idx !== i)
+                  )
+                }
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-4 border-t pt-4">
+        <div className="flex items-center justify-between">
+          <Label className="text-lg font-bold">Delivery Platforms</Label>
+          <div className="flex gap-2">
+            <Input
+              id="newDelivery"
+              placeholder="e.g. Uber Eats"
+              className="h-8 w-40"
+            />
+            <Button
+              size="sm"
+              onClick={() => {
+                const val = (
+                  document.getElementById("newDelivery") as HTMLInputElement
+                ).value
+                if (val) {
+                  updateFormData("services", {
+                    ...formData.services,
+                    deliveryPlatforms: [
+                      ...(formData.services?.deliveryPlatforms || []),
+                      val,
+                    ],
+                  })
+                  ;(
+                    document.getElementById("newDelivery") as HTMLInputElement
+                  ).value = ""
+                }
+              }}
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {(formData.services?.deliveryPlatforms || []).map((c, i) => (
+            <Badge key={i} variant="secondary" className="gap-1 py-1 pr-1 pl-3">
+              {c}
+              <button
+                onClick={() =>
+                  updateFormData("services", {
+                    ...formData.services,
+                    deliveryPlatforms:
+                      formData.services.deliveryPlatforms.filter(
+                        (_, idx) => idx !== i
+                      ),
+                  })
                 }
               >
                 <X className="h-3 w-3" />

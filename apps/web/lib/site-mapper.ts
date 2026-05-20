@@ -10,6 +10,18 @@ const mapSeoData = (data: any): Partial<SiteBuilderData> => ({
   seoDescription: data.seo?.description || "",
   keywords: data.seo?.keywords || [],
   noindex: !!data.seo?.noindex,
+  menuTitle: data.seo?.menuTitle || data.seo?.title || "",
+  menuDescription: data.seo?.menuDescription || data.seo?.description || "",
+  aboutTitle: data.seo?.aboutTitle || data.seo?.title || "",
+  aboutDescription: data.seo?.aboutDescription || data.seo?.description || "",
+  contactTitle: data.seo?.contactTitle || data.seo?.title || "",
+  contactDescription:
+    data.seo?.contactDescription || data.seo?.description || "",
+  brandTitle: data.seo?.brandTitle || data.seo?.title || "",
+  brandDescription: data.seo?.brandDescription || data.seo?.description || "",
+  companyTitle: data.seo?.companyTitle || data.seo?.title || "",
+  companyDescription:
+    data.seo?.companyDescription || data.seo?.description || "",
   ogLocale: data.social?.ogLocale || "en_US",
   twitterCard: data.social?.twitterCard || "summary_large_image",
   twitterSite: data.social?.twitterSite || "",
@@ -56,6 +68,13 @@ const mapCompanyData = (data: any): Partial<SiteBuilderData> => ({
 })
 
 export function mapDataJsonToBuilder(data: any): Partial<SiteBuilderData> {
+  const aboutSection = (data.pages?.home?.sections ?? []).find(
+    (s: any) => s.id === "about" || s.type === "about"
+  )
+  const rawAboutImages =
+    data.images?.about || data.about?.images || aboutSection?.data?.images || []
+  const aboutImagesList = Array.isArray(rawAboutImages) ? rawAboutImages : []
+
   return {
     uid: data.uid || "",
     siteName: data.name || "",
@@ -91,26 +110,40 @@ export function mapDataJsonToBuilder(data: any): Partial<SiteBuilderData> {
         url: g.url || "",
         alt: g.alt || "",
       })) || [],
-    aboutImages:
-      data.images?.about?.map((g: any) => ({
-        id: g.id || "",
-        url: g.url || "",
-        alt: g.alt || "",
-      })) || [],
+    aboutImages: aboutImagesList.map((g: any) => {
+      if (typeof g === "string") {
+        return { id: `a-${g}`, url: g, alt: "" }
+      }
+      return {
+        id: g?.id || "",
+        url: g?.url || "",
+        alt: g?.alt || "",
+      }
+    }),
     heroSlides:
       data.hero?.slides ||
       (data.pages?.home?.sections ?? []).find((s: any) => s.type === "hero")
         ?.data?.slides ||
       [],
-    aboutTitle: data.about?.title || "",
+    aboutTitle: data.about?.title || aboutSection?.data?.title || "",
     aboutContent:
-      data.about?.content || data.about?.representative?.message || "",
-    aboutShortDescription: data.about?.shortDescription || "",
-    aboutMission: data.about?.mission || "",
-    aboutPhilosophy: data.about?.philosophy || "",
-    aboutAdditionalContent: data.about?.additionalContent || [],
-    aboutImage: data.about?.image || null,
-    representative: data.about?.founder ||
+      data.about?.content ||
+      aboutSection?.data?.content ||
+      data.about?.representative?.message ||
+      "",
+    aboutShortDescription:
+      data.about?.shortDescription ||
+      aboutSection?.data?.shortDescription ||
+      "",
+    aboutMission: data.about?.mission || aboutSection?.data?.mission || "",
+    aboutPhilosophy:
+      data.about?.philosophy || aboutSection?.data?.philosophy || "",
+    aboutAdditionalContent:
+      data.about?.additionalContent ||
+      aboutSection?.data?.additionalContent ||
+      [],
+    aboutImage: data.about?.image || aboutSection?.data?.image || null,
+    aboutRepresentative: data.about?.founder ||
       data.about?.representative || {
         name: "",
         role: "",
@@ -154,17 +187,18 @@ export function mapBuilderToDataJson(formData: SiteBuilderData): any {
       description: formData.seoDescription,
       keywords: formData.keywords,
       noindex: formData.noindex,
-      menuTitle: formData.seoTitle,
-      menuDescription: formData.seoDescription,
-      aboutTitle: formData.seoTitle,
-      aboutDescription: formData.seoDescription,
-      contactTitle: formData.seoTitle,
-      contactDescription: formData.seoDescription,
-      brandTitle: formData.seoTitle,
-      brandDescription: formData.seoDescription,
-      companyTitle: formData.seoTitle,
-      companyDescription: formData.seoDescription,
+      menuTitle: formData.menuTitle,
+      menuDescription: formData.menuDescription,
+      aboutTitle: formData.aboutTitle,
+      aboutDescription: formData.aboutDescription,
+      contactTitle: formData.contactTitle,
+      contactDescription: formData.contactDescription,
+      brandTitle: formData.brandTitle,
+      brandDescription: formData.brandDescription,
+      companyTitle: formData.companyTitle,
+      companyDescription: formData.companyDescription,
     },
+
     social: {
       ogImage: formData.coverImage,
       ogLocale: formData.ogLocale,
@@ -230,6 +264,18 @@ export function mapBuilderToDataJson(formData: SiteBuilderData): any {
     },
     openingHours: formData.openingHours,
     holidayNotes: formData.holidayNotes,
+    operations: {
+      paymentMethods: formData.paymentMethods,
+      dietaryOptions: formData.dietaryOptions,
+      features: formData.features,
+      services: {
+        ...formData.services,
+        takeout: formData.isTakeout,
+        delivery: formData.isDelivery,
+        reservations: formData.acceptsReservations,
+        deliveryPlatforms: formData.services?.deliveryPlatforms || [],
+      },
+    },
     menuCategories: formData.menuCategories,
     menu: formData.menuCategories.flatMap((c) =>
       c.items.map((i) => ({
@@ -246,7 +292,7 @@ export function mapBuilderToDataJson(formData: SiteBuilderData): any {
       }))
     ),
     about: {
-      representative: formData.representative,
+      representative: formData.aboutRepresentative,
     },
     pages: {
       home: {

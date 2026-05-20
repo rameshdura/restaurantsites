@@ -11,6 +11,7 @@ interface FoodMenuProps {
   categories?: MenuCategory[]
   hideHeader?: boolean
   menuLink?: string
+  currency?: string
   translations?: {
     common?: {
       foodMenu?: {
@@ -28,6 +29,7 @@ export function FoodMenu({
   categories = MOCK_MENU,
   hideHeader = false,
   menuLink,
+  currency,
   translations,
 }: FoodMenuProps) {
   const [activeTab, setActiveTab] = useState(categories[0]?.id || "")
@@ -76,7 +78,11 @@ export function FoodMenu({
 
       <div className="min-h-[400px]">
         {activeCategory && (
-          <MenuSection key={activeCategory.id} category={activeCategory} />
+          <MenuSection
+            key={activeCategory.id}
+            category={activeCategory}
+            currency={currency}
+          />
         )}
       </div>
     </div>

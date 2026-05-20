@@ -209,6 +209,11 @@ export interface RestaurantData extends BlockSchemaFields {
       url: string
       alt: string
     }>
+    about?: Array<{
+      id: string
+      url: string
+      alt: string
+    }>
   }
 
   // Operations & features
@@ -680,6 +685,12 @@ export function getImageSrc(
 ): string {
   if (!url) return ""
   if (/^https?:\/\//i.test(url)) return url
+
+  // Rewrite any static absolute restaurant image paths to be fully dynamic to the current slug
+  if (url.startsWith("/images/restaurants/")) {
+    const relativePart = url.replace(/^\/images\/restaurants\/[^/]+\//, "")
+    return `/images/restaurants/${slug}/${relativePart}`
+  }
 
   // If it's a relative path (doesn't start with /), assume it's in the restaurant's image folder
   if (!url.startsWith("/")) {

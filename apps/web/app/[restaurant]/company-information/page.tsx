@@ -134,6 +134,8 @@ export default async function CompanyInformationPage({
         email={data.email}
         location={data.location}
         embedUrl={null}
+        paymentMethods={data.operations?.paymentMethods}
+        deliveryPlatforms={data.operations?.services?.deliveryPlatforms}
         translations={translations}
       />
 

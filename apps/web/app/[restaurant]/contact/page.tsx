@@ -90,6 +90,8 @@ export default async function ContactPage({ params }: ContactPageProps) {
           embedUrl={data.location?.embedUrl ?? null}
           restaurantName={data.name}
           restaurantSlug={slug}
+          paymentMethods={data.operations?.paymentMethods}
+          deliveryPlatforms={data.operations?.services?.deliveryPlatforms}
           translations={t}
         />
       </main>

@@ -80,74 +80,74 @@
       "height": 200
     },
     "gallery": [
-    {
-      "url": "/images/restaurants/rato-bhale/ourgallery/gallery-1.png",
-      "alt": "g1"
-    },
-    {
-      "url": "/images/restaurants/rato-bhale/ourgallery/gallery-2.png",
-      "alt": "g1"
-    },
-    {
-      "url": "/images/restaurants/rato-bhale/ourgallery/gallery-3.png",
-      "alt": "g1"
-    },
-    {
-      "url": "/images/restaurants/rato-bhale/ourgallery/gallery-4.png",
-      "alt": "g1"
-    },
-    {
-      "url": "/images/restaurants/rato-bhale/ourgallery/gallery-5.png",
-      "alt": "g1"
-    },
-    {
-      "url": "/images/restaurants/rato-bhale/ourgallery/gallery-6.png",
-      "alt": "g1"
-    }
+      {
+        "url": "/images/restaurants/rato-bhale/ourgallery/gallery-1.png",
+        "alt": "g1"
+      },
+      {
+        "url": "/images/restaurants/rato-bhale/ourgallery/gallery-2.png",
+        "alt": "g1"
+      },
+      {
+        "url": "/images/restaurants/rato-bhale/ourgallery/gallery-3.png",
+        "alt": "g1"
+      },
+      {
+        "url": "/images/restaurants/rato-bhale/ourgallery/gallery-4.png",
+        "alt": "g1"
+      },
+      {
+        "url": "/images/restaurants/rato-bhale/ourgallery/gallery-5.png",
+        "alt": "g1"
+      },
+      {
+        "url": "/images/restaurants/rato-bhale/ourgallery/gallery-6.png",
+        "alt": "g1"
+      }
     ],
     "featured": [
-    {
-      "id": "f1",
-      "url": "/images/restaurants/rato-bhale/ourfood/food-1.png",
-      "alt": "f1"
-    },
-    {
-      "id": "f2",
-      "url": "/images/restaurants/rato-bhale/ourfood/food-2.png",
-      "alt": "f1"
-    },
-    {
-      "id": "f3",
-      "url": "/images/restaurants/rato-bhale/ourfood/food-3.png",
-      "alt": "f1"
-    },
-    {
-      "id": "f4",
-      "url": "/images/restaurants/rato-bhale/ourfood/food-4.png",
-      "alt": "f1"
-    }
+      {
+        "id": "f1",
+        "url": "/images/restaurants/rato-bhale/ourfood/food-1.png",
+        "alt": "f1"
+      },
+      {
+        "id": "f2",
+        "url": "/images/restaurants/rato-bhale/ourfood/food-2.png",
+        "alt": "f1"
+      },
+      {
+        "id": "f3",
+        "url": "/images/restaurants/rato-bhale/ourfood/food-3.png",
+        "alt": "f1"
+      },
+      {
+        "id": "f4",
+        "url": "/images/restaurants/rato-bhale/ourfood/food-4.png",
+        "alt": "f1"
+      }
     ],
     "drinks": [
-    {
-      "id": "d1",
-      "url": "/images/restaurants/rato-bhale/ourdrink/drink-1.png",
-      "alt": "d1"
-    },
-    {
-      "id": "d2",
-      "url": "/images/restaurants/rato-bhale/ourdrink/drink-2.png",
-      "alt": "d1"
-    },
-    {
-      "id": "d3",
-      "url": "/images/restaurants/rato-bhale/ourdrink/drink-3.png",
-      "alt": "d1"
-    },
-    {
-      "id": "d4",
-      "url": "/images/restaurants/rato-bhale/ourdrink/drink-4.png",
-      "alt": "d1"
-    }
+      {
+        "id": "d1",
+        "url": "/images/restaurants/rato-bhale/ourdrink/drink-1.png",
+        "alt": "d1"
+      },
+      {
+        "id": "d2",
+        "url": "/images/restaurants/rato-bhale/ourdrink/drink-2.png",
+        "alt": "d1"
+      },
+      {
+        "id": "d3",
+        "url": "/images/restaurants/rato-bhale/ourdrink/drink-3.png",
+        "alt": "d1"
+      },
+      {
+        "id": "d4",
+        "url": "/images/restaurants/rato-bhale/ourdrink/drink-4.png",
+        "alt": "d1"
+      }
     ],
     "about": [
       {
@@ -171,10 +171,8 @@
         "alt": "Our Story 4"
       }
     ]
-
-    },
-    "companyInfo": {
-
+  },
+  "companyInfo": {
     "name": "Rato Bhale Co., Ltd.",
     "legalName": "Rato Bhale Company Limited",
     "registrationNumber": "1011101098765",
@@ -205,7 +203,7 @@
       "name": "Thali Sets",
       "items": [
         {
-          "name": "Authentic Nepali Dal Bhat Set",
+          "name": "01. Authentic Nepali Dal Bhat Set",
           "description": "Traditional platter served with basmati rice, lentil soup (dal), choice of curry, seasonal vegetable tarkaari, pickles, and crisp papad.",
           "price": "1350",
           "category": "Thali Sets",
@@ -216,7 +214,7 @@
   ],
   "menu": [
     {
-      "name": "Authentic Nepali Dal Bhat Set",
+      "name": "01. Authentic Nepali Dal Bhat Set",
       "description": "Traditional platter served with basmati rice, lentil soup (dal), choice of curry, seasonal vegetable tarkaari, pickles, and crisp papad.",
       "price": "1350",
       "category": "Thali Sets",

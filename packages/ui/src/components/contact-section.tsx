@@ -18,6 +18,8 @@ import {
   ArrowDown01Icon,
   MapsCircle02Icon,
   InformationCircleIcon,
+  CreditCardIcon,
+  DeliveryTruck01Icon,
 } from "@hugeicons/core-free-icons"
 import { Button } from "./button"
 import { SectionHeader } from "./section-header"
@@ -104,6 +106,8 @@ interface ContactTranslations {
     serviceHours?: string
     serviceHoursDescription?: string
     requestReservation?: string
+    payments?: string
+    delivery?: string
     success?: string
     sendError?: string
     error?: string
@@ -140,6 +144,8 @@ export function ContactSection({
   openingHours = [],
   holidayNotes,
   restaurantName,
+  paymentMethods = [],
+  deliveryPlatforms = [],
   translations,
 }: {
   hideHeader?: boolean
@@ -165,6 +171,8 @@ export function ContactSection({
   }[]
   holidayNotes?: string
   restaurantName?: string
+  paymentMethods?: string[]
+  deliveryPlatforms?: string[]
   translations?: ContactTranslations
 }) {
   const [isSubmitting, setIsSubmitting] = React.useState(false)
@@ -410,6 +418,45 @@ export function ContactSection({
                         </p>
                       </div>
                     </div>
+                  </div>
+                )}
+
+                {(paymentMethods.length > 0 ||
+                  deliveryPlatforms.length > 0) && (
+                  <div className="relative z-10 mb-8 divide-y divide-border/40 border-y border-border/40">
+                    {paymentMethods.length > 0 && (
+                      <div className="flex items-center justify-between py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="shrink-0 text-muted-foreground/60">
+                            <HugeiconsIcon icon={CreditCardIcon} size={18} />
+                          </div>
+                          <h4 className="text-xs font-bold tracking-widest text-muted-foreground/60 uppercase">
+                            {translations?.contact?.payments || "Payments"}
+                          </h4>
+                        </div>
+                        <p className="text-sm font-semibold text-foreground">
+                          {paymentMethods.join(", ")}
+                        </p>
+                      </div>
+                    )}
+                    {deliveryPlatforms.length > 0 && (
+                      <div className="flex items-center justify-between py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="shrink-0 text-muted-foreground/60">
+                            <HugeiconsIcon
+                              icon={DeliveryTruck01Icon}
+                              size={18}
+                            />
+                          </div>
+                          <h4 className="text-xs font-bold tracking-widest text-muted-foreground/60 uppercase">
+                            {translations?.contact?.delivery || "Delivery"}
+                          </h4>
+                        </div>
+                        <p className="text-sm font-semibold text-foreground">
+                          {deliveryPlatforms.join(", ")}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
 

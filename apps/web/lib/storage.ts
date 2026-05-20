@@ -40,7 +40,18 @@ export interface SiteBuilderData {
   seoDescription: string
   keywords: string[]
   noindex: boolean
+  menuTitle: string
+  menuDescription: string
+  aboutTitle: string
+  aboutDescription: string
+  contactTitle: string
+  contactDescription: string
+  brandTitle: string
+  brandDescription: string
+  companyTitle: string
+  companyDescription: string
   ogLocale: string
+
   twitterCard: "summary" | "summary_large_image"
   twitterSite: string
   socialInstagram: string
@@ -90,7 +101,6 @@ export interface SiteBuilderData {
   }>
 
   // --- Content (About/Team) ---
-  aboutTitle: string
   aboutContent: string
   aboutShortDescription: string
   aboutMission: string

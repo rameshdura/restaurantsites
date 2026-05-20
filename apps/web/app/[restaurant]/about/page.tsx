@@ -50,9 +50,11 @@ export default async function AboutPage({ params }: AboutPageProps) {
     data.pages?.about?.coverImage || data.hero?.slides?.[0]?.image
   )
   const aboutImage = getImageSrc(slug, storyData?.image as string | undefined)
-  const aboutImages = data.images?.gallery?.map((im: { url: string }) =>
-    getImageSrc(slug, im.url)
-  )
+  const aboutImages = (
+    data.images?.about ||
+    data.about?.images ||
+    data.images?.gallery
+  )?.map((im: any) => getImageSrc(slug, typeof im === "string" ? im : im.url))
 
   return (
     <div className="flex min-h-svh flex-col">
@@ -174,45 +176,77 @@ export default async function AboutPage({ params }: AboutPageProps) {
             </div>
           </div>
 
-          {console.log("About data:", data.about)}
-          {(data.about as any)?.representative && (
-            <section className="mt-24 rounded-3xl bg-accent/30 p-12 lg:p-20">
-              <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-                {getImageSrc(
-                  slug,
-                  (data.about as any).representative.image
-                ) && (
-                  <div className="relative aspect-square overflow-hidden rounded-3xl">
-                    <Image
-                      src={getImageSrc(
-                        slug,
-                        (data.about as any).representative.image
+          {(() => {
+            const representative = (data.about as any)?.representative
+            if (!representative) return null
+
+            const lang = data.app?.language || "EN"
+            const defaultRep =
+              lang === "JA"
+                ? {
+                    name:
+                      (data.companyInfo as any)?.representative ||
+                      "ヘッドシェフ＆チーム",
+                    position: "代表者",
+                    message:
+                      "「私たちの情熱はシンプルです。最高の料理と心温まるおもてなしで、すべてのお客様に特別なひとときをお届けすることです。」",
+                    story:
+                      "私たちが提供する一皿一皿の裏には、食への妥協なき挑戦を続けるチームの情熱があります。新鮮な素材の厳選から、洗練されたレシピの追求に至るまで、私たちは心地よい空間づくりのために心を込めて取り組んでいます。素晴らしい料理は人々を結びつけるもの。私たちのキッチンのこだわりを、皆様と分かち合えることを誇りに思っています。",
+                    image: `/images/restaurants/${slug}/team/representative.png`,
+                  }
+                : {
+                    name:
+                      (data.companyInfo as any)?.representative ||
+                      "Head Chef & Team",
+                    position: "Representative",
+                    message:
+                      "Our passion is simple: serving incredible food with warm, attentive hospitality to make every meal memorable.",
+                    story:
+                      "Behind every dish we serve is a dedicated team committed to culinary excellence. From sourcing the freshest seasonal ingredients to perfecting our recipes, we pour our hearts into creating a welcoming dining experience. We believe that great food brings people together, and we are honored to share our kitchen's passion with you.",
+                    image: `/images/restaurants/${slug}/team/representative.png`,
+                  }
+
+            const repName = representative.name || defaultRep.name
+            const repPosition = representative.position || defaultRep.position
+            const repMessage = representative.message || defaultRep.message
+            const repStory = representative.story || defaultRep.story
+            const repImage = representative.image || defaultRep.image
+
+            return (
+              <section className="mt-24 rounded-3xl bg-accent/30 p-12 lg:p-20">
+                <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+                  {getImageSrc(slug, repImage) && (
+                    <div className="relative aspect-square overflow-hidden rounded-3xl">
+                      <Image
+                        src={getImageSrc(slug, repImage)}
+                        alt={repName}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="space-y-6">
+                    {repMessage && (
+                      <blockquote className="text-2xl font-medium text-primary italic md:text-3xl">
+                        &ldquo;{repMessage}&rdquo;
+                      </blockquote>
+                    )}
+                    <div>
+                      <h4 className="text-xl font-bold">{repName}</h4>
+                      {repPosition && (
+                        <p className="text-muted-foreground">{repPosition}</p>
                       )}
-                      alt={(data.about as any).representative.name}
-                      fill
-                      className="object-cover"
-                    />
+                    </div>
+                    {repStory && (
+                      <p className="text-lg leading-relaxed text-muted-foreground">
+                        {repStory}
+                      </p>
+                    )}
                   </div>
-                )}
-                <div className="space-y-6">
-                  <blockquote className="text-2xl font-medium text-primary italic md:text-3xl">
-                    &ldquo;{(data.about as any).representative.message}&rdquo;
-                  </blockquote>
-                  <div>
-                    <h4 className="text-xl font-bold">
-                      {(data.about as any).representative.name}
-                    </h4>
-                    <p className="text-muted-foreground">
-                      {(data.about as any).representative.position}
-                    </p>
-                  </div>
-                  <p className="text-lg leading-relaxed text-muted-foreground">
-                    {(data.about as any).representative.story}
-                  </p>
                 </div>
-              </div>
-            </section>
-          )}
+              </section>
+            )
+          })()}
 
           {data.team && (
             <TeamSection team={data.team} translations={translations} />
@@ -231,6 +265,8 @@ export default async function AboutPage({ params }: AboutPageProps) {
         email={data.email}
         location={data.location}
         embedUrl={null}
+        paymentMethods={data.operations?.paymentMethods}
+        deliveryPlatforms={data.operations?.services?.deliveryPlatforms}
         translations={translations}
       />
 

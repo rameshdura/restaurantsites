@@ -3,9 +3,20 @@ import { MenuItem } from "./types"
 
 interface MenuItemCardProps {
   item: MenuItem
+  currency?: string
 }
 
-export function MenuItemCard({ item }: MenuItemCardProps) {
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  JPY: "¥",
+  USD: "$",
+  EUR: "€",
+  GBP: "£",
+  KRW: "₩",
+  CNY: "¥",
+  INR: "₹",
+}
+
+export function MenuItemCard({ item, currency }: MenuItemCardProps) {
   const {
     name,
     secondaryName,
@@ -16,6 +27,9 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
     isSpicy,
     isPopular,
   } = item
+
+  const symbol = currency ? CURRENCY_SYMBOLS[currency] || "" : ""
+  const hasPrice = price !== undefined && price !== null && price !== ""
 
   return (
     <div className="group -mx-2 flex flex-row gap-4 border-b border-border/40 px-2 py-4 transition-colors last:border-0 hover:bg-accent/5">
@@ -43,9 +57,10 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
             )}
           </div>
 
-          {price !== undefined && (
+          {hasPrice && (
             <span className="text-base font-medium whitespace-nowrap text-foreground">
-              {typeof price === "number" ? `$${price}` : price}
+              {symbol}
+              {price}
             </span>
           )}
         </div>
