@@ -49,17 +49,33 @@ function setGoogleTranslateCookie(langCode: string) {
   document.cookie = `googtrans=/en/${langCode}; path=/; domain=${window.location.hostname}; expires=${date.toUTCString()}`
 }
 
+function removeGoogleTranslateCookie() {
+  document.cookie = "googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC"
+  if (typeof window !== "undefined") {
+    document.cookie = `googtrans=; path=/; domain=${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 UTC`
+  }
+}
+
+// Use our own cookie to track the user's language preference instead of
+// relying on Google's `googtrans` cookie. This decouples selection state
+// from the Google Translate script so we can defer script loading.
+function setSiteLangCookie(langCode: string) {
+  const date = new Date()
+  date.setTime(date.getTime() + 365 * 24 * 60 * 60 * 1000) // 1 year
+  document.cookie = `site_lang=${langCode}; path=/; expires=${date.toUTCString()}`
+}
+
+function removeSiteLangCookie() {
+  document.cookie =
+    "site_lang=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC"
+}
+
 function getInitialLang(defaultLanguage?: string): string {
   if (typeof document === "undefined") return defaultLanguage || "default"
-  const getCookie = (name: string) => {
-    if (typeof document === "undefined") return undefined
-    const value = `; ${document.cookie}`
-    const parts = value.split(`; ${name}=`)
-    if (parts.length === 2) return parts.pop()?.split(";").shift()
-  }
-  const savedLang = getCookie("googtrans")
-  if (savedLang) {
-    const lang = savedLang.split("/").pop()
+  const value = `; ${document.cookie}`
+  const parts = value.split("; site_lang=")
+  if (parts.length === 2) {
+    const lang = parts.pop()?.split(";").shift()
     if (lang) return lang
   }
   return defaultLanguage || "default"
@@ -188,9 +204,19 @@ export function Navbar({
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
-  // Google Translate Logic
+  // Google Translate — only loaded when a non-default language is active.
+  // This keeps the script entirely off the critical path for default-language
+  // visitors, avoiding Lighthouse and Core Web Vitals penalties.
   React.useEffect(() => {
-    // Ensure the translate element exists outside React's lifecycle
+    const lang = getInitialLang(defaultLanguage)
+    if (lang === "default") return // No script needed for default language
+
+    // A non-default language was previously selected — load Google Translate
+    // so it can apply the translation. The googtrans cookie tells Google
+    // which language to translate into once the widget initialises.
+    setGoogleTranslateCookie(lang)
+
+    // Ensure the hidden container exists
     if (!document.getElementById("google_translate_element")) {
       const gtDiv = document.createElement("div")
       gtDiv.id = "google_translate_element"
@@ -199,22 +225,16 @@ export function Navbar({
     }
 
     // Prevent multiple script injections
-    if (document.getElementById("google-translate-script")) {
-      return
-    }
+    if (document.getElementById("google-translate-script")) return
 
     const script = document.createElement("script")
     script.id = "google-translate-script"
     script.src =
       "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
     script.async = true
-    document.body.appendChild(script)
 
     window.googleTranslateElementInit = () => {
-      // Prevent multiple initializations
-      if (document.querySelector(".goog-te-combo")) {
-        return
-      }
+      if (document.querySelector(".goog-te-combo")) return
 
       try {
         new window.google!.translate.TranslateElement(
@@ -233,7 +253,9 @@ export function Navbar({
         console.error("Google Translate init error:", e)
       }
     }
-  }, [])
+
+    document.body.appendChild(script)
+  }, [defaultLanguage])
 
   const changeLanguage = (langCode: string) => {
     const langName = getLanguageName(langCode)
@@ -242,48 +264,52 @@ export function Navbar({
     setLangTransitionState("in")
 
     setTimeout(() => {
-      let needsReload = true
-
       try {
         if (langCode === "default") {
-          // Delete Google Translate cookie to revert to browser default
-          document.cookie =
-            "googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC"
-          document.cookie = `googtrans=; path=/; domain=${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 UTC`
+          // Clear both our tracking cookie and Google's cookie
+          removeSiteLangCookie()
+          removeGoogleTranslateCookie()
 
-          // Force a full reload for default to ensure DOM is perfectly reset
-          needsReload = true
+          // Full reload to reset the DOM (removes all Google Translate artefacts)
+          sessionStorage.setItem("lang-transition-name", langName)
+          window.location.reload()
+          return
+        }
+
+        // Persist the user's choice in our own cookie
+        setSiteLangCookie(langCode)
+        // Also set Google's cookie so the widget auto-translates on load
+        setGoogleTranslateCookie(langCode)
+
+        // If the Google Translate widget is already loaded, use it directly
+        const select = document.querySelector(
+          ".goog-te-combo"
+        ) as HTMLSelectElement
+        if (select) {
+          select.value = langCode
+          select.dispatchEvent(new Event("change"))
+
+          setTimeout(() => {
+            setLangTransitionState("out")
+
+            // Reset to idle after animation
+            setTimeout(() => {
+              setLangTransitionState("idle")
+              setCurrentLang(langCode) // Defer state update to prevent React reconciliation crashes
+            }, 700)
+          }, 2000)
         } else {
-          setGoogleTranslateCookie(langCode)
-
-          const select = document.querySelector(
-            ".goog-te-combo"
-          ) as HTMLSelectElement
-          if (select) {
-            select.value = langCode
-            select.dispatchEvent(new Event("change"))
-            needsReload = false
-          }
+          // Script not loaded yet — reload so the useEffect picks up the
+          // cookie and loads Google Translate with the right language.
+          sessionStorage.setItem("lang-transition-name", langName)
+          window.location.reload()
         }
       } catch (e) {
         console.error("Translation error:", e)
-      }
-
-      if (needsReload) {
         sessionStorage.setItem("lang-transition-name", langName)
         window.location.reload()
-      } else {
-        setTimeout(() => {
-          setLangTransitionState("out")
-
-          // Reset to idle after animation
-          setTimeout(() => {
-            setLangTransitionState("idle")
-            setCurrentLang(langCode) // Defer state update to prevent React reconciliation crashes
-          }, 700)
-        }, 2000)
       }
-    }, 700) // Wait for slide up animation
+    }, 700) // Wait for slide-up animation
   }
 
   const navLinks = [
