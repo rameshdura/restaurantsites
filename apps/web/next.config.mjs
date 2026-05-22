@@ -12,5 +12,16 @@ const nextConfig = {
       },
     ],
   },
+  headers: async () => [
+    {
+      source: '/:restaurant*',
+      headers: [
+        {
+          key: 'Cache-Control',
+          value: 'private, no-cache, must-revalidate',
+        },
+      ],
+    },
+  ],
 };
 export default nextConfig;

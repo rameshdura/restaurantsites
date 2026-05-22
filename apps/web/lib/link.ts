@@ -1,16 +1,13 @@
-import { headers } from "next/headers"
-
 /**
  * Creates a server-side link helper function `getLink` that mirrors
  * client-side hook logic, taking dedicated domains into account.
+ * Optionally accepts host to avoid forcing dynamic rendering.
  */
-export async function getServerRestaurantLink(slug: string) {
+export async function getServerRestaurantLink(slug: string, host?: string) {
   let isDedicatedDomain = false
 
   try {
-    const headersList = await headers()
-    const host = headersList.get("host") || "localhost"
-    const hostname = host.split(":")[0] || "localhost"
+    const hostname = host?.split(":")[0] || "localhost"
 
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost"
     const forceMain = process.env.NEXT_PUBLIC_FORCE_MAIN_SITE === "true"
@@ -19,9 +16,6 @@ export async function getServerRestaurantLink(slug: string) {
       isDedicatedDomain = true
     } else {
       // Check if we are on a dedicated domain
-      // If hostname is not localhost, doesn't contain 'localhost',
-      // and doesn't contain the root domain or 'restaurantsites',
-      // it's likely a dedicated domain.
       const isMain =
         hostname === "localhost" ||
         hostname.includes("localhost") ||
@@ -31,7 +25,7 @@ export async function getServerRestaurantLink(slug: string) {
       isDedicatedDomain = !isMain
     }
   } catch (error) {
-    console.error("Error reading headers in getServerRestaurantLink:", error)
+    console.error("Error determining domain in getServerRestaurantLink:", error)
   }
 
   const getLink = (path: string) => {
