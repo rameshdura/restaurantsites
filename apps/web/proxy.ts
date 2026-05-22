@@ -54,7 +54,16 @@ export default async function proxy(req: NextRequest) {
     }
 
     // Identify valid slugs to avoid matching Vercel's random deployment suffix
-    const validSlugs = ["hamro-khaja-ghar", "ramen-taro", "rato-bhale", "solmari", "royalgarden-restaurant", "satikmedia", "sonam", "gorkha"]
+    const validSlugs = [
+      "hamro-khaja-ghar",
+      "ramen-taro",
+      "rato-bhale",
+      "solmari",
+      "royalgarden-restaurant",
+      "satikmedia",
+      "sonam",
+      "gorkha",
+    ]
 
     // Check if the subdomain starts with any of the valid slugs
     slug = validSlugs.find((s) => subdomain.startsWith(s)) || ""
@@ -68,5 +77,11 @@ export default async function proxy(req: NextRequest) {
   }
 
   // Rewrite to /[restaurant]/[path]
-  return NextResponse.rewrite(new URL(`/${slug}${url.pathname}`, req.url))
+  // Avoid double-prepending the slug if the pathname already starts with /slug
+  let rewritePath = url.pathname
+  if (!url.pathname.startsWith(`/${slug}/`) && url.pathname !== `/${slug}`) {
+    rewritePath = `/${slug}${url.pathname}`
+  }
+
+  return NextResponse.rewrite(new URL(rewritePath, req.url))
 }

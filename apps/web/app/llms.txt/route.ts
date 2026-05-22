@@ -6,7 +6,9 @@ import {
   RestaurantData,
 } from "@/lib/restaurant"
 
-async function resolveRestaurantSlugFromHost(host: string): Promise<string | null> {
+async function resolveRestaurantSlugFromHost(
+  host: string
+): Promise<string | null> {
   const hostname = host.split(":")[0] || "localhost"
   const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000"
 
@@ -39,7 +41,9 @@ async function resolveRestaurantSlugFromHost(host: string): Promise<string | nul
   const firstPart = hostname.split(".")[0] || ""
   if (firstPart) {
     if (slugs.includes(firstPart)) return firstPart
-    const matchedSlug = slugs.find((s) => s.includes(firstPart) || firstPart.includes(s))
+    const matchedSlug = slugs.find(
+      (s) => s.includes(firstPart) || firstPart.includes(s)
+    )
     if (matchedSlug) return matchedSlug
   }
 
@@ -61,7 +65,8 @@ export async function GET() {
         return new Response(md, {
           headers: {
             "Content-Type": "text/plain; charset=utf-8",
-            "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+            "Cache-Control":
+              "public, s-maxage=3600, stale-while-revalidate=86400",
           },
         })
       }
@@ -80,7 +85,8 @@ export async function GET() {
       data: RestaurantData
     }[]
 
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
 
     let md = `# RestaurantSite.io Platform\n\n`
     md += `> A premium website builder and listing platform for the world's finest restaurants.\n\n`
@@ -88,7 +94,9 @@ export async function GET() {
 
     for (const r of activeRestaurants) {
       const desc = r.data.seo?.description || r.data.description || ""
-      const cuisines = r.data.schema?.servesCuisine || (r.data.cuisineType ? [r.data.cuisineType] : [])
+      const cuisines =
+        r.data.schema?.servesCuisine ||
+        (r.data.cuisineType ? [r.data.cuisineType] : [])
       const cuisineStr = cuisines.length > 0 ? ` (${cuisines.join(", ")})` : ""
       md += `- [${r.data.name}](${baseUrl}/${r.slug}): ${desc}${cuisineStr}. [AI Guide](${baseUrl}/${r.slug}/llms.txt)\n`
     }

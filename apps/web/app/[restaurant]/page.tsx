@@ -10,7 +10,7 @@ import { BlockRenderer } from "@/components/BlockRenderer"
 import { FloatingActions } from "@/components/floating-actions"
 import { getServerRestaurantLink } from "@/lib/link"
 
-export const revalidate = 60;
+export const revalidate = 60
 
 interface RestaurantPageProps {
   params: Promise<{ restaurant: string }>

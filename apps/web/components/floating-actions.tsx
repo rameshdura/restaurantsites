@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { cn } from "@workspace/ui/lib/utils"
 
+import { useRestaurantLink } from "@workspace/ui/hooks/use-restaurant-link"
+
 interface FloatingActionsProps {
   restaurantSlug: string
   onlineBookingUrl?: string
@@ -17,8 +19,9 @@ export function FloatingActions({
   onlineBookingUrl,
   translations,
 }: Omit<FloatingActionsProps, "restaurantSlug">) {
+  const { getLink } = useRestaurantLink()
   // Use onlineBookingUrl if provided, otherwise link to the contact/reservation form section
-  const reservationLink = onlineBookingUrl || `/contact`
+  const reservationLink = onlineBookingUrl || getLink("/contact")
   const isExternal =
     !!onlineBookingUrl &&
     (onlineBookingUrl.startsWith("http://") ||

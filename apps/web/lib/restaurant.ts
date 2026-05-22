@@ -734,7 +734,8 @@ export function groupMenuByCategory(
  * representing a restaurant's profile, contact info, hours, backstory, and complete menu.
  */
 export function generateRestaurantLlmTxt(data: RestaurantData): string {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://restaurantsites.vercel.app"
   const slug = data.uid || ""
   const restaurantUrl = `${baseUrl}/${slug}`
 
@@ -752,4 +753,3 @@ export function generateRestaurantLlmTxt(data: RestaurantData): string {
 
   return md
 }
-

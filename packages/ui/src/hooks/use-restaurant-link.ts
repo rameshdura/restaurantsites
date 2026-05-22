@@ -1,38 +1,34 @@
 "use client"
 
 import { useParams } from "next/navigation"
-import { useMemo } from "react"
+import { useState, useEffect } from "react"
 
 export function useRestaurantLink() {
   const params = useParams()
   const slug = params?.restaurant as string
 
-  const isDedicatedDomain = useMemo(() => {
-    // Guard against window being undefined (SSR)
-    if (typeof window === "undefined") {
-      return false
-    }
+  const [isDedicatedDomain, setIsDedicatedDomain] = useState(() => {
+    return process.env.NEXT_PUBLIC_FORCE_MAIN_SITE === "true"
+  })
+
+  useEffect(() => {
+    const forceMain = process.env.NEXT_PUBLIC_FORCE_MAIN_SITE === "true"
+    if (forceMain) return
 
     const hostname = window.location.hostname
     const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost"
-    const forceMain = process.env.NEXT_PUBLIC_FORCE_MAIN_SITE === "true"
-
-    if (forceMain) {
-      return true
-    }
-
-    // Check if we are on a dedicated domain
-    // If hostname is not localhost, doesn't contain 'localhost',
-    // and doesn't contain the root domain or 'restaurantsites',
-    // it's likely a dedicated domain.
     const isMain =
       hostname === "localhost" ||
       hostname.includes("localhost") ||
       hostname.includes("restaurantsites") ||
       (rootDomain !== "localhost" && hostname.includes(rootDomain))
 
-    return !isMain
-  }, [])
+    const newIsDedicated = !isMain
+    if (newIsDedicated !== isDedicatedDomain) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsDedicatedDomain(newIsDedicated)
+    }
+  }, [isDedicatedDomain])
 
   const getLink = (path: string) => {
     if (!slug) return path
