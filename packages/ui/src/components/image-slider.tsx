@@ -42,7 +42,7 @@ export function ImageSlider({
 
     const timer = setInterval(nextSlide, interval)
     return () => clearInterval(timer)
-  }, [autoPlay, interval, images.length, nextSlide])
+  }, [autoPlay, interval, images.length, nextSlide, currentIndex])
 
   if (!images || images.length === 0) return null
 
@@ -87,7 +87,18 @@ export function ImageSlider({
             opacity: { duration: 0.5 },
             scale: { duration: 0.7 },
           }}
-          className="absolute inset-0"
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.5}
+          onDragEnd={(e, { offset }) => {
+            const swipeThreshold = 50
+            if (offset.x < -swipeThreshold) {
+              nextSlide()
+            } else if (offset.x > swipeThreshold) {
+              prevSlide()
+            }
+          }}
+          className="absolute inset-0 cursor-grab touch-pan-y active:cursor-grabbing"
         >
           {images[currentIndex] && (
             <Image
@@ -97,6 +108,7 @@ export function ImageSlider({
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
               priority={currentIndex === 0}
+              draggable={false}
               onError={(e) => {
                 e.currentTarget.style.display = "none"
               }}

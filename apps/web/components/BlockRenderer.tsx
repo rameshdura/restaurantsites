@@ -132,8 +132,8 @@ function AboutBlock({
               <Link
                 href={getLink("/about")}
                 className={cn(
-                  buttonVariants({ variant: "outline", size: "lg" }),
-                  "group h-12 rounded-full px-6 text-sm font-semibold tracking-wider transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20 active:scale-95"
+                  buttonVariants({ variant: "default", size: "lg" }),
+                  "group h-12 min-w-[180px] px-6 text-sm font-semibold tracking-wider transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 active:scale-95"
                 )}
               >
                 {t.navbar?.about ?? "About Us"}
@@ -274,20 +274,43 @@ function MenuBlock({
         <div className="pointer-events-none absolute right-1/4 bottom-0 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
 
         <div className="relative z-10 mx-auto max-w-7xl px-6">
+          <div className="mb-8 text-center">
+            <SectionHeader
+              subtitle={subtitle}
+              title={title}
+              backgroundTitle={backgroundTitle}
+              align="center"
+            />
+          </div>
+
+          <div className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link
+              href={getLink("/menu")}
+              className={cn(
+                buttonVariants({ variant: "default", size: "lg" }),
+                "group h-12 min-w-[180px] px-6 text-sm font-semibold tracking-wider transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 active:scale-95"
+              )}
+            >
+              {openMenuButton}
+            </Link>
+            <Link
+              href={getLink("/contact")}
+              className={cn(
+                buttonVariants({ variant: "outline", size: "lg" }),
+                "group h-12 min-w-[180px] px-6 text-sm font-semibold tracking-wider transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20 active:scale-95"
+              )}
+            >
+              {makeReservationButton}
+            </Link>
+          </div>
+
+          <p className="mx-auto mb-20 max-w-2xl text-center text-lg leading-relaxed text-muted-foreground">
+            {description}
+          </p>
+
           {/* Featured food images — sourced from data.images.featured */}
           {featuredItems.length > 0 && (
             <div className="mb-20">
-              <div className="mb-12 text-center">
-                <SectionHeader
-                  subtitle={subtitle}
-                  title={title}
-                  backgroundTitle={backgroundTitle}
-                  align="center"
-                />
-              </div>
-              <p className="mx-auto mb-20 max-w-2xl text-center text-lg leading-relaxed text-muted-foreground">
-                {description}
-              </p>
               <div className="grid grid-cols-2 gap-6 max-sm:-mx-6 max-sm:gap-0 sm:grid-cols-4">
                 {featuredItems.map((item) => (
                   <div
@@ -341,26 +364,6 @@ function MenuBlock({
                     </p>
                   </div>
                 ))}
-              </div>
-              <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <Link
-                  href={getLink("/menu")}
-                  className={cn(
-                    buttonVariants({ size: "lg" }),
-                    "min-w-[180px] rounded-full text-sm font-semibold tracking-wider transition-all duration-300 active:scale-95"
-                  )}
-                >
-                  {openMenuButton}
-                </Link>
-                <Link
-                  href={getLink("/contact")}
-                  className={cn(
-                    buttonVariants({ variant: "outline", size: "lg" }),
-                    "min-w-[180px] rounded-full text-sm font-semibold tracking-wider transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20 active:scale-95"
-                  )}
-                >
-                  {makeReservationButton}
-                </Link>
               </div>
             </div>
           )}
@@ -468,8 +471,8 @@ function DrinksBlock({
           <Link
             href={getLink("/menu")}
             className={cn(
-              buttonVariants({ size: "lg" }),
-              "min-w-[180px] rounded-full text-sm font-semibold tracking-wider transition-all duration-300 active:scale-95"
+              buttonVariants({ variant: "default", size: "lg" }),
+              "group h-12 min-w-[180px] px-6 text-sm font-semibold tracking-wider transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 active:scale-95"
             )}
           >
             Open Menu
@@ -478,7 +481,7 @@ function DrinksBlock({
             href={getLink("/contact")}
             className={cn(
               buttonVariants({ variant: "outline", size: "lg" }),
-              "min-w-[180px] rounded-full text-sm font-semibold tracking-wider transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20 active:scale-95"
+              "group h-12 min-w-[180px] px-6 text-sm font-semibold tracking-wider transition-all duration-300 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20 active:scale-95"
             )}
           >
             Make Reservation

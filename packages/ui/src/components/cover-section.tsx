@@ -55,8 +55,8 @@ export function CoverSection({
         <div className="absolute inset-0 bg-black/30 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
       </div>
       {(title || subtitle) && (
-        <div className="relative z-10 flex h-full items-end pb-12">
-          <div className="mx-auto max-w-7xl px-6">
+        <div className="relative z-10 flex h-full items-center justify-center text-center">
+          <div className="mx-auto w-full max-w-7xl px-6">
             {subtitle && (
               <p className="text-sm font-bold tracking-widest text-white/80 uppercase">
                 {subtitle}

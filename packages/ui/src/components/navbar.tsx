@@ -419,14 +419,14 @@ export function Navbar({
                     "group/link relative text-[15px] font-medium transition-colors",
                     isScrolled
                       ? "text-muted-foreground hover:text-primary"
-                      : "text-white/90 hover:text-white"
+                      : "text-white/90 hover:text-primary"
                   )}
                 >
                   {link.name}
                   <span
                     className={cn(
                       "absolute -bottom-1 left-0 h-0.5 w-0 transition-all duration-300 group-hover/link:w-full",
-                      isScrolled ? "bg-primary" : "bg-white"
+                      "bg-primary"
                     )}
                   />
                 </Link>
@@ -440,7 +440,7 @@ export function Navbar({
                 <button
                   onClick={() => setIsLangOpen(!isLangOpen)}
                   className={cn(
-                    "notranslate flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium transition-colors",
+                    "notranslate flex h-8 items-center gap-2 rounded-full border px-3 text-sm font-medium transition-colors",
                     isScrolled
                       ? "border-border/50 bg-background text-foreground hover:bg-accent/50"
                       : "border-white/20 bg-white/10 text-white hover:bg-white/20"

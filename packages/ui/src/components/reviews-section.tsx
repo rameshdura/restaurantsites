@@ -104,10 +104,15 @@ export function ReviewsSection({
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mt-10 text-center"
           >
-            <Button asChild variant="outline">
+            <Button
+              asChild
+              variant="default"
+              size="lg"
+              className="group h-12 min-w-[180px] px-6 text-sm font-semibold tracking-wider transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 active:scale-95"
+            >
               <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer">
                 {t.viewAllButton || "View All Reviews"}
-                <ChevronRight className="ml-1 h-4 w-4" />
+                <ChevronRight className="ml-1.5 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </a>
             </Button>
           </motion.div>

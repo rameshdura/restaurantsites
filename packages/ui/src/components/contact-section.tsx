@@ -471,7 +471,7 @@ export function ContactSection({
                     className="flex items-center justify-center gap-3"
                   >
                     {translations?.contact?.requestReservation ||
-                      "Request Reservation"}
+                      "Make Reservation"}
                     <HugeiconsIcon
                       icon={ArrowDown01Icon}
                       size={22}

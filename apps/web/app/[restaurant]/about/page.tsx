@@ -119,7 +119,12 @@ export default async function AboutPage({ params }: AboutPageProps) {
                   )
                 )}
                 <div className="pt-4">
-                  <Button asChild variant="outline" className="rounded-full">
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="h-12 min-w-[180px] px-6 text-sm font-semibold tracking-wider transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 active:scale-95"
+                  >
                     <Link href={getLink("/company-information")}>
                       {translations.common?.aboutCompany || "About Company"}
                     </Link>

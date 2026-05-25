@@ -45,18 +45,13 @@ export function MenuItemCard({ item, currency }: MenuItemCardProps) {
       )}
 
       <div className="flex min-w-0 flex-grow flex-col justify-center">
-        <div className="mb-0.5 flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <h4 className="truncate text-base font-semibold tracking-tight text-foreground">
-              {name}
-            </h4>
-            {secondaryName && (
-              <span className="-mt-1 block text-[10px] font-medium tracking-widest text-muted-foreground/70 uppercase">
-                {secondaryName}
-              </span>
-            )}
-          </div>
-
+        <div className="mb-0.5 flex items-baseline gap-2">
+          <h4 className="truncate text-base font-semibold tracking-tight text-foreground">
+            {name}
+          </h4>
+          {hasPrice && (
+            <div className="h-0 min-w-[12px] flex-grow self-center border-b border-dotted border-muted-foreground/30" />
+          )}
           {hasPrice && (
             <span className="text-base font-medium whitespace-nowrap text-foreground">
               {symbol}
@@ -64,6 +59,11 @@ export function MenuItemCard({ item, currency }: MenuItemCardProps) {
             </span>
           )}
         </div>
+        {secondaryName && (
+          <span className="-mt-1 mb-1 block text-[10px] font-medium tracking-widest text-muted-foreground/70 uppercase">
+            {secondaryName}
+          </span>
+        )}
 
         {description && (
           <p className="mt-0.5 mb-1 line-clamp-2 max-w-[95%] text-xs text-muted-foreground">

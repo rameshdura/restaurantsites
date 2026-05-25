@@ -24,6 +24,32 @@ export function Hero({ slides, phone }: HeroProps) {
   const [currentSlide, setCurrentSlide] = React.useState(0)
   const [brokenSlides, setBrokenSlides] = React.useState<Set<number>>(new Set())
   const { getLink } = useRestaurantLink()
+  const touchStartX = React.useRef<number | null>(null)
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0]
+    if (touch) {
+      touchStartX.current = touch.clientX
+    }
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return
+    const touch = e.changedTouches[0]
+    if (!touch) return
+    const touchEndX = touch.clientX
+    const diffX = touchStartX.current - touchEndX
+    const threshold = 50
+
+    if (diffX > threshold) {
+      // Swipe left -> next slide
+      setCurrentSlide((prev) => (prev + 1) % slides.length)
+    } else if (diffX < -threshold) {
+      // Swipe right -> previous slide
+      setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+    }
+    touchStartX.current = null
+  }
 
   React.useEffect(() => {
     if (slides.length <= 1) return
@@ -33,12 +59,16 @@ export function Hero({ slides, phone }: HeroProps) {
     }, 6000)
 
     return () => clearInterval(timer)
-  }, [slides.length])
+  }, [slides.length, currentSlide])
 
   if (!slides || slides.length === 0) return null
 
   return (
-    <section className="relative h-[90svh] w-full overflow-hidden bg-background">
+    <section
+      className="relative h-[90svh] w-full touch-pan-y overflow-hidden bg-background"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Slides */}
       {slides.map((slide, index) => (
         <div

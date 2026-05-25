@@ -423,6 +423,26 @@ export interface RestaurantData extends BlockSchemaFields {
     language?: string
     currency?: string
   }
+  theme?: {
+    mode?: "light" | "dark" | "system"
+    palette?: {
+      primary?: string
+      primaryForeground?: string
+      background?: string
+      foreground?: string
+      accent?: string
+      muted?: string
+    }
+    layout?: {
+      buttonRadius?: string
+      cardRadius?: string
+      inputRadius?: string
+    }
+    typography?: {
+      fontHeading?: string
+      fontSans?: string
+    }
+  }
 }
 
 export interface MenuItem {

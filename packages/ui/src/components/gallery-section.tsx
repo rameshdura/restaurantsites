@@ -54,6 +54,18 @@ export function GallerySection({
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const trackRef = useRef<HTMLDivElement>(null)
 
+  const xRef = useRef(0)
+  const isDraggingRef = useRef(false)
+  const wasDraggingRef = useRef(false)
+  const startXRef = useRef(0)
+  const startTranslateXRef = useRef(0)
+  const widthRef = useRef(0)
+  const velocityRef = useRef(0)
+  const lastTimeRef = useRef(0)
+  const lastXRef = useRef(0)
+  const inertiaActiveRef = useRef(false)
+  const inertiaVelocityRef = useRef(0)
+
   const t = translations?.common?.gallery || {}
   const title = restaurantName
     ? t.title
@@ -61,27 +73,179 @@ export function GallerySection({
       : `Moments at ${restaurantName}`
     : t.title || "Moments"
 
+  const updateWidth = () => {
+    const track = trackRef.current
+    if (track && track.children.length > 0) {
+      const firstChild = track.children[0]
+      if (firstChild) {
+        widthRef.current = firstChild.getBoundingClientRect().width
+      }
+    }
+  }
+
   useEffect(() => {
+    updateWidth()
+    xRef.current = -widthRef.current
+
+    let animationFrameId: number
+
+    const tick = () => {
+      const track = trackRef.current
+      if (!track) return
+
+      if (widthRef.current === 0) {
+        updateWidth()
+        xRef.current = -widthRef.current
+      }
+
+      const W = widthRef.current
+      if (W > 0) {
+        if (isDraggingRef.current) {
+          // Dragging is updated synchronously in handlers
+        } else if (inertiaActiveRef.current) {
+          xRef.current += inertiaVelocityRef.current * 16 // step based on ~16ms frame
+          inertiaVelocityRef.current *= 0.95 // Friction
+
+          // Wrap-around
+          if (xRef.current < -2 * W) {
+            xRef.current += W
+          } else if (xRef.current > -W) {
+            xRef.current -= W
+          }
+
+          if (Math.abs(inertiaVelocityRef.current) < 0.05) {
+            inertiaActiveRef.current = false
+          }
+          track.style.transform = `translateX(${xRef.current}px)`
+        } else {
+          // Auto-scroll
+          const speed = 0.5 // px per frame
+          xRef.current -= speed
+
+          // Wrap-around
+          if (xRef.current < -2 * W) {
+            xRef.current += W
+          } else if (xRef.current > -W) {
+            xRef.current -= W
+          }
+          track.style.transform = `translateX(${xRef.current}px)`
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(tick)
+    }
+
+    animationFrameId = requestAnimationFrame(tick)
+
+    const handleResize = () => {
+      updateWidth()
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => {
+      cancelAnimationFrame(animationFrameId)
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [items.length])
+
+  const handleStart = (clientX: number) => {
+    isDraggingRef.current = true
+    wasDraggingRef.current = false
+    inertiaActiveRef.current = false
+    startXRef.current = clientX
+    startTranslateXRef.current = xRef.current
+    lastXRef.current = clientX
+    lastTimeRef.current = performance.now()
+    velocityRef.current = 0
+  }
+
+  const handleMove = (clientX: number) => {
+    if (!isDraggingRef.current) return
     const track = trackRef.current
     if (!track) return
 
-    const keyframes = `
-      @keyframes galleryScroll {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-33.333%); }
-      }
-    `
-    const styleSheet = document.createElement("style")
-    styleSheet.textContent = keyframes
-    document.head.appendChild(styleSheet)
+    const now = performance.now()
+    const dt = now - lastTimeRef.current
+    const dx = clientX - startXRef.current
+    const moveDx = clientX - lastXRef.current
 
-    const duration = items.length * 10
-    track.style.animation = `galleryScroll ${duration}s linear infinite`
-
-    return () => {
-      document.head.removeChild(styleSheet)
+    if (Math.abs(dx) > 5) {
+      wasDraggingRef.current = true
     }
-  }, [items.length])
+
+    if (dt > 0) {
+      velocityRef.current = moveDx / dt
+    }
+
+    lastXRef.current = clientX
+    lastTimeRef.current = now
+
+    const W = widthRef.current
+    let targetX = startTranslateXRef.current + dx
+
+    if (W > 0) {
+      if (targetX < -2 * W) {
+        startTranslateXRef.current += W
+        targetX += W
+      } else if (targetX > -W) {
+        startTranslateXRef.current -= W
+        targetX -= W
+      }
+    }
+
+    xRef.current = targetX
+    track.style.transform = `translateX(${xRef.current}px)`
+  }
+
+  const handleEnd = () => {
+    if (!isDraggingRef.current) return
+    isDraggingRef.current = false
+
+    if (Math.abs(velocityRef.current) > 0.1) {
+      inertiaVelocityRef.current = velocityRef.current
+      inertiaActiveRef.current = true
+    }
+
+    setTimeout(() => {
+      wasDraggingRef.current = false
+    }, 50)
+  }
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return // Only drag with left click
+    handleStart(e.clientX)
+    e.preventDefault()
+  }
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    handleMove(e.clientX)
+  }
+
+  const onMouseUp = () => {
+    handleEnd()
+  }
+
+  const onMouseLeave = () => {
+    handleEnd()
+  }
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0]
+    if (touch) {
+      handleStart(touch.clientX)
+    }
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    const touch = e.touches[0]
+    if (touch) {
+      handleMove(touch.clientX)
+    }
+  }
+
+  const onTouchEnd = () => {
+    handleEnd()
+  }
 
   return (
     <section className="overflow-hidden overflow-x-hidden border-t border-border/40 bg-background py-20">
@@ -96,7 +260,18 @@ export function GallerySection({
 
       <div className="relative w-full overflow-hidden">
         {/* Three identical copies for seamless infinite looping */}
-        <div ref={trackRef} className="flex w-fit cursor-pointer">
+        <div
+          ref={trackRef}
+          className="flex w-fit cursor-grab select-none active:cursor-grabbing"
+          style={{ touchAction: "pan-y" }}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
+          onMouseLeave={onMouseLeave}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           {Array.from({ length: 3 }).map((_, setIndex) => (
             <div
               key={`set-${setIndex}`}
@@ -105,15 +280,23 @@ export function GallerySection({
               {items.map((item, index) => (
                 <div
                   key={`item-${setIndex}-${index}`}
-                  onClick={() => setSelectedIndex(index)}
+                  onClick={(e) => {
+                    if (wasDraggingRef.current) {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      return
+                    }
+                    setSelectedIndex(index)
+                  }}
                   className="group relative h-[40vh] w-[80vw] shrink-0 overflow-hidden rounded-xl border border-border/20 md:h-[60vh] md:w-[400px] lg:h-[70vh] lg:w-[500px]"
                 >
                   <Image
                     src={item.src}
                     alt={item.alt}
                     fill
-                    className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+                    className="pointer-events-none object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
                     sizes="(max-width: 768px) 80vw, 500px"
+                    draggable={false}
                   />
                 </div>
               ))}
