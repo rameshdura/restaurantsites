@@ -39,6 +39,7 @@ export function MenuItemCard({ item, currency }: MenuItemCardProps) {
             src={image}
             alt={name}
             fill
+            sizes="112px"
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
         </div>

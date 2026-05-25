@@ -148,6 +148,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
                         : "About image"
                     }
                     fill
+                    sizes="(max-width: 1024px) 100vw, 600px"
                     className="object-cover transition-transform duration-700 hover:scale-105"
                   />
                 </div>
@@ -244,6 +245,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
                         src={getImageSrc(slug, repImage)}
                         alt={repName}
                         fill
+                        sizes="(max-width: 1024px) 100vw, 600px"
                         className="object-cover"
                       />
                     </div>

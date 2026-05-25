@@ -177,6 +177,7 @@ function AboutBlock({
                     src={getImageSrc(restaurantSlug, d.image)}
                     alt={d.title ?? "About image"}
                     fill
+                    sizes="(max-width: 1024px) 100vw, 600px"
                     className="object-cover transition-transform duration-700 hover:scale-105"
                   />
                 </div>
@@ -322,6 +323,7 @@ function MenuBlock({
                         src={item.image || "/images/placeholder.png"}
                         alt={item.alt}
                         fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 300px"
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       />
                       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -355,6 +357,7 @@ function MenuBlock({
                         src={item.image || "/images/placeholder.png"}
                         alt={item.alt}
                         fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 300px"
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       />
                       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -456,6 +459,7 @@ function DrinksBlock({
                   }
                   alt={item.alt}
                   fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 300px"
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-primary/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
