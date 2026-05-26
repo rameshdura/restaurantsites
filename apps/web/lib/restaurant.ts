@@ -636,6 +636,11 @@ function normaliseBlockSchema(data: RestaurantData): RestaurantData {
 }
 
 export async function getRestaurant(slug: string): Promise<Restaurant | null> {
+  // If the slug is empty or looks like a file/asset request (contains a dot), skip loading
+  if (!slug || slug.includes(".")) {
+    return null
+  }
+
   try {
     const restaurantPath = path.join(RESTAURANTS_PATH, slug)
 
