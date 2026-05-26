@@ -9,6 +9,21 @@ const DOMAIN =
 const DEFAULT_OG_IMAGE = `${DOMAIN}/og-default.jpg`
 
 /**
+ * Helper to get the canonical base URL for a restaurant.
+ * If a custom canonical URL is specified in data.seo.canonical, we use that as the base.
+ * Otherwise, we fall back to the platform DOMAIN + slug.
+ */
+export function getCanonicalBaseUrl(
+  data: RestaurantData,
+  slug: string
+): string {
+  if (data.seo?.canonical) {
+    return data.seo.canonical.replace(/\/$/, "")
+  }
+  return `${DOMAIN}/${slug}`
+}
+
+/**
  * Helper to ensure image URLs are absolute for Open Graph scrapers.
  */
 export function getAbsoluteImageUrl(url: string | undefined | null): string {
@@ -311,7 +326,7 @@ export function generateHomeMetadata(
     openGraph: {
       title,
       description,
-      url: `${DOMAIN}/${slug}${pathname}`,
+      url: getCanonicalBaseUrl(data, slug) + (pathname === "/" ? "" : pathname),
       siteName: data.name,
       images: [
         {
@@ -338,7 +353,8 @@ export function generateHomeMetadata(
       site: data.social?.twitterSite,
     },
     alternates: {
-      canonical: data.seo?.canonical || `${DOMAIN}/${slug}${pathname}`,
+      canonical:
+        getCanonicalBaseUrl(data, slug) + (pathname === "/" ? "" : pathname),
     },
     robots: {
       index: data.seo?.noindex ? false : true,
@@ -388,7 +404,7 @@ export function generateAboutMetadata(
     openGraph: {
       title,
       description,
-      url: `${DOMAIN}/${slug}/about`,
+      url: `${getCanonicalBaseUrl(data, slug)}/about`,
       images: [
         {
           url: aboutImage,
@@ -408,7 +424,7 @@ export function generateAboutMetadata(
       images: [aboutImage],
     },
     alternates: {
-      canonical: `${DOMAIN}/${slug}/about`,
+      canonical: `${getCanonicalBaseUrl(data, slug)}/about`,
     },
     icons: generateIcons(data),
   }
@@ -463,7 +479,7 @@ export function generateMenuMetadata(
     openGraph: {
       title,
       description,
-      url: `${DOMAIN}/${slug}/menu`,
+      url: `${getCanonicalBaseUrl(data, slug)}/menu`,
       images: [
         {
           url: menuImage,
@@ -481,7 +497,7 @@ export function generateMenuMetadata(
       images: [menuImage],
     },
     alternates: {
-      canonical: `${DOMAIN}/${slug}/menu`,
+      canonical: `${getCanonicalBaseUrl(data, slug)}/menu`,
     },
     icons: generateIcons(data),
   }
@@ -524,7 +540,7 @@ export function generateContactMetadata(
     openGraph: {
       title,
       description,
-      url: `${DOMAIN}/${slug}/contact`,
+      url: `${getCanonicalBaseUrl(data, slug)}/contact`,
       images: [
         {
           url: getAbsoluteImageUrl(data.images?.logo?.url || DEFAULT_OG_IMAGE),
@@ -541,7 +557,7 @@ export function generateContactMetadata(
       description,
     },
     alternates: {
-      canonical: `${DOMAIN}/${slug}/contact`,
+      canonical: `${getCanonicalBaseUrl(data, slug)}/contact`,
     },
     icons: generateIcons(data),
   }
@@ -583,7 +599,7 @@ export function generateBrandMetadata(
     openGraph: {
       title,
       description,
-      url: `${DOMAIN}/${slug}/brand`,
+      url: `${getCanonicalBaseUrl(data, slug)}/brand`,
       images: [
         {
           url: getAbsoluteImageUrl(data.images?.logo?.url || DEFAULT_OG_IMAGE),
@@ -594,7 +610,7 @@ export function generateBrandMetadata(
       ],
     },
     alternates: {
-      canonical: `${DOMAIN}/${slug}/brand`,
+      canonical: `${getCanonicalBaseUrl(data, slug)}/brand`,
     },
     icons: generateIcons(data),
   }
@@ -633,7 +649,7 @@ export function generateCompanyMetadata(
     openGraph: {
       title,
       description,
-      url: `${DOMAIN}/${slug}/company-information`,
+      url: `${getCanonicalBaseUrl(data, slug)}/company-information`,
       images: [
         {
           url: getAbsoluteImageUrl(data.images?.logo?.url || DEFAULT_OG_IMAGE),
@@ -645,7 +661,7 @@ export function generateCompanyMetadata(
       type: "website",
     },
     alternates: {
-      canonical: `${DOMAIN}/${slug}/company-information`,
+      canonical: `${getCanonicalBaseUrl(data, slug)}/company-information`,
     },
     icons: generateIcons(data),
   }
@@ -698,7 +714,7 @@ export function generateRestaurantSchema(
     },
     telephone: formatPhone(data.phone),
     email: data.email,
-    url: `${DOMAIN}/${slug}`,
+    url: getCanonicalBaseUrl(data, slug),
   }
 
   // Add opening hours
@@ -797,7 +813,7 @@ export function generateMenuSchema(
     hasMenuSection: hasMenuSection,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${DOMAIN}/${slug}/menu`,
+      "@id": `${getCanonicalBaseUrl(data, slug)}/menu`,
     },
   }
 }
@@ -890,7 +906,7 @@ export function generateAboutPageSchema(
     mainEntity,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${DOMAIN}/${slug}/about`,
+      "@id": `${getCanonicalBaseUrl(data, slug)}/about`,
     },
   }
 }
@@ -907,7 +923,7 @@ export function generateBrandSchema(
     "@type": "WebPage",
     name: `${data.name} Brand Assets`,
     description: `Marketing materials and brand assets for ${data.name}.`,
-    url: `${DOMAIN}/${slug}/brand`,
+    url: `${getCanonicalBaseUrl(data, slug)}/brand`,
     mainEntity: {
       "@type": "ItemList",
       itemListElement: [
@@ -955,7 +971,7 @@ export function generateOrganizationSchema(
     },
     telephone: formatPhone(info?.phone || data.phone),
     email: data.email,
-    url: `${DOMAIN}/${(info?.name || data.name).toLowerCase().replace(/\s+/g, "-")}/company-information`,
+    url: `${getCanonicalBaseUrl(data, data.uid || "")}/company-information`,
     logo: data.images?.logo?.url || data.logo,
     foundingDate: data.foundingDate || info?.establishedDate,
   }
@@ -1068,7 +1084,7 @@ export function generateRestaurantSitemapEntries(
   priority: number
 }> {
   const lastMod = new Date()
-  const baseUrl = `${DOMAIN}/${slug}`
+  const baseUrl = getCanonicalBaseUrl(data, slug)
 
   const pages: Array<{
     url: string
