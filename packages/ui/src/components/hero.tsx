@@ -18,9 +18,11 @@ interface HeroSlide {
 interface HeroProps {
   slides: HeroSlide[]
   phone?: string
+  name?: string
+  tagline?: string
 }
 
-export function Hero({ slides, phone }: HeroProps) {
+export function Hero({ slides, phone, name, tagline }: HeroProps) {
   const [currentSlide, setCurrentSlide] = React.useState(0)
   const [brokenSlides, setBrokenSlides] = React.useState<Set<number>>(new Set())
   const { getLink } = useRestaurantLink()
@@ -126,16 +128,30 @@ export function Hero({ slides, phone }: HeroProps) {
           {/* Content */}
           <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center text-white">
             <div className="max-w-4xl space-y-6">
-              <h1
-                className={cn(
-                  "text-5xl font-black tracking-tighter transition-all delay-300 duration-700 sm:text-7xl lg:text-8xl",
-                  index === currentSlide
-                    ? "translate-y-0 opacity-100"
-                    : "translate-y-8 opacity-0"
+              <div className="space-y-2">
+                {index === 0 && name && (
+                  <h1
+                    className={cn(
+                      "text-sm font-semibold tracking-[0.25em] text-white/70 uppercase transition-all delay-150 duration-700 sm:text-base",
+                      index === currentSlide
+                        ? "translate-y-0 opacity-100"
+                        : "translate-y-8 opacity-0"
+                    )}
+                  >
+                    {name} {tagline ? `— ${tagline}` : ""}
+                  </h1>
                 )}
-              >
-                {slide.title}
-              </h1>
+                <h2
+                  className={cn(
+                    "text-5xl font-black tracking-tighter transition-all delay-300 duration-700 sm:text-7xl lg:text-8xl",
+                    index === currentSlide
+                      ? "translate-y-0 opacity-100"
+                      : "translate-y-8 opacity-0"
+                  )}
+                >
+                  {slide.title}
+                </h2>
+              </div>
               <p
                 className={cn(
                   "mx-auto max-w-2xl text-lg font-medium text-white/90 transition-all delay-500 duration-700 sm:text-xl lg:text-2xl",

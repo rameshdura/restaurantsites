@@ -78,7 +78,14 @@ function HeroBlock({
     return merged
   })
 
-  return <Hero slides={slides} phone={data.phone} />
+  return (
+    <Hero
+      slides={slides}
+      phone={data.phone}
+      name={data.name}
+      tagline={data.tagline}
+    />
+  )
 }
 
 function AboutBlock({
