@@ -1,0 +1,84 @@
+
+> restaurantsite@0.0.1 lint
+> turbo lint
+
+
+   • Packages in scope: @workspace/eslint-config, @workspace/typescript-config, @workspace/ui, web
+   • Running lint in 4 packages
+   • Remote caching disabled
+
+@workspace/ui:lint: cache hit, replaying logs 172c479979beb944
+@workspace/ui:lint: 
+@workspace/ui:lint: 
+@workspace/ui:lint: > @workspace/ui@0.0.0 lint
+@workspace/ui:lint: > eslint
+@workspace/ui:lint: 
+@workspace/ui:lint: ⠙[1G[0K
+web:lint: cache hit, replaying logs 1fffb315922d0b47
+web:lint: 
+web:lint: > web@0.0.1 lint
+web:lint: > eslint
+web:lint: 
+web:lint: 
+web:lint: /Users/rameshdura/web/nextjs/restaurant/restaurantsite/apps/web/app/[restaurant]/owner/activity/OwnerActivityClient.tsx
+web:lint:    18:9    warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+web:lint:    19:19   warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+web:lint:    59:3    warning  'restaurantName' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+web:lint:    96:5    warning  Error: Calling setState synchronously within an effect can trigger cascading renders
+web:lint: 
+web:lint: Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+web:lint: * Update external systems with the latest state from React.
+web:lint: * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+web:lint: 
+web:lint: Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+web:lint: 
+web:lint: /Users/rameshdura/web/nextjs/restaurant/restaurantsite/apps/web/app/[restaurant]/owner/activity/OwnerActivityClient.tsx:96:5
+web:lint:   94 |
+web:lint:   95 |   useEffect(() => {
+web:lint: > 96 |     fetchSessions(true)
+web:lint:      |     ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+web:lint:   97 |   }, [fetchSessions])
+web:lint:   98 |
+web:lint:   99 |   useEffect(() => {  react-hooks/set-state-in-effect
+web:lint:   293:117  warning  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+web:lint:   293:130  warning  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+web:lint: 
+web:lint: /Users/rameshdura/web/nextjs/restaurant/restaurantsite/apps/web/app/[restaurant]/owner/scan/OwnerScanClient.tsx
+web:lint:    28:9    warning  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+web:lint:    29:19   warning  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+web:lint:    42:42   warning  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+web:lint:    71:21   warning  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+web:lint:   143:43   warning  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+web:lint:   169:46   warning  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+web:lint:   228:31   warning  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+web:lint:   237:92   warning  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+web:lint:   237:105  warning  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+web:lint: 
+web:lint: /Users/rameshdura/web/nextjs/restaurant/restaurantsite/apps/web/app/[restaurant]/owner/sessions/[sessionId]/OwnerSessionDetailClient.tsx
+web:lint:    14:3   warning  'restaurantSlug' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+web:lint:    18:42  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-explicit-any
+web:lint:    40:5   warning  Error: Calling setState synchronously within an effect can trigger cascading renders
+web:lint: 
+web:lint: Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+web:lint: * Update external systems with the latest state from React.
+web:lint: * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+web:lint: 
+web:lint: Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+web:lint: 
+web:lint: /Users/rameshdura/web/nextjs/restaurant/restaurantsite/apps/web/app/[restaurant]/owner/sessions/[sessionId]/OwnerSessionDetailClient.tsx:40:5
+web:lint:   38 |
+web:lint:   39 |   useEffect(() => {
+web:lint: > 40 |     fetchSession()
+web:lint:      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+web:lint:   41 |   }, [fetchSession])
+web:lint:   42 |
+web:lint:   43 |   const formatCurrency = (amount: number) => {  react-hooks/set-state-in-effect
+web:lint:   144:54  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-explicit-any
+web:lint: 
+web:lint: ✖ 19 problems (0 errors, 19 warnings)
+web:lint: 
+
+ Tasks:    2 successful, 2 total
+Cached:    2 cached, 2 total
+  Time:    16ms >>> FULL TURBO
+

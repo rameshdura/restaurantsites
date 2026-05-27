@@ -44,7 +44,11 @@
   },
   "schema": {
     "priceRange": "¥¥",
-    "servesCuisine": ["Nepalese", "Himalayan", "Asian"],
+    "servesCuisine": [
+      "Nepalese",
+      "Himalayan",
+      "Asian"
+    ],
     "acceptsReservations": true,
     "isTakeout": true,
     "isDelivery": true,
@@ -466,11 +470,13 @@
   "tables": [
     {
       "id": 1,
-      "label": "Table 1"
+      "label": "Table 1",
+      "persons": 4
     },
     {
       "id": 2,
-      "label": "Table 2"
+      "label": "Table 2",
+      "persons": 4
     }
   ]
 }

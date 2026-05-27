@@ -62,7 +62,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const { tableNumber, restaurantSlug } = await request.json()
+    const { tableNumber, restaurantSlug, persons } = await request.json()
 
     if (tableNumber === undefined || !restaurantSlug) {
       return NextResponse.json(
@@ -110,6 +110,7 @@ export async function POST(request: Request) {
         status: "active",
         expires_at: expiresAt,
         orders: defaultOrders,
+        persons: persons ? Number(persons) : null,
       })
       .select()
       .single()

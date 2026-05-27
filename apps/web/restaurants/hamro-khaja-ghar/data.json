@@ -44,7 +44,11 @@
   },
   "schema": {
     "priceRange": "¥",
-    "servesCuisine": ["Nepalese", "Himalayan", "Newari"],
+    "servesCuisine": [
+      "Nepalese",
+      "Himalayan",
+      "Newari"
+    ],
     "acceptsReservations": true,
     "isTakeout": true,
     "isDelivery": true,
@@ -521,11 +525,13 @@
   "tables": [
     {
       "id": 1,
-      "label": "Table 1"
+      "label": "Table 1",
+      "persons": 4
     },
     {
       "id": 2,
-      "label": "Table 2"
+      "label": "Table 2",
+      "persons": 4
     }
   ]
 }

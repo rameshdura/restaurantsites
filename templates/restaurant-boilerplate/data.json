@@ -51,7 +51,11 @@
   },
   "schema": {
     "priceRange": "$$",
-    "servesCuisine": ["Indian", "Nepali", "Himalayan"],
+    "servesCuisine": [
+      "Indian",
+      "Nepali",
+      "Himalayan"
+    ],
     "acceptsReservations": true,
     "isTakeout": true,
     "isDelivery": false,
@@ -220,7 +224,13 @@
   ],
   "holidayNotes": "",
   "operations": {
-    "paymentMethods": ["Visa", "Mastercard", "JCB", "Cash", "PayPay"],
+    "paymentMethods": [
+      "Visa",
+      "Mastercard",
+      "JCB",
+      "Cash",
+      "PayPay"
+    ],
     "dietaryOptions": {
       "vegetarian": false,
       "vegan": false,
@@ -249,7 +259,11 @@
     "services": {
       "takeout": true,
       "delivery": false,
-      "deliveryPlatforms": ["Uber Eats", "Demae-can", "Wolt"],
+      "deliveryPlatforms": [
+        "Uber Eats",
+        "Demae-can",
+        "Wolt"
+      ],
       "deliveryRadius": "",
       "catering": false,
       "cateringRadius": "",
@@ -820,11 +834,13 @@
   "tables": [
     {
       "id": 1,
-      "label": "Table 1"
+      "label": "Table 1",
+      "persons": 4
     },
     {
       "id": 2,
-      "label": "Table 2"
+      "label": "Table 2",
+      "persons": 4
     }
   ]
 }

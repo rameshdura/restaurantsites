@@ -404,6 +404,14 @@ You MUST output **only** a valid JSON object with this exact structure. Do NOT w
     }
   },
 
+  "tables": [
+    {
+      "id": 1,
+      "label": "Table 1",
+      "persons": 4
+    }
+  ],
+
   "numberOfEmployees": 15,
   "knowsLanguage": ["Japanese", "English", "Nepali"],
   "cuisineType": "Japanese",

@@ -52,7 +52,10 @@
   },
   "schema": {
     "priceRange": "$$",
-    "servesCuisine": ["Asian", "Ethnic Fusion"],
+    "servesCuisine": [
+      "Asian",
+      "Ethnic Fusion"
+    ],
     "acceptsReservations": true,
     "isTakeout": true,
     "isDelivery": true,
@@ -257,13 +260,19 @@
     "services": {
       "takeout": true,
       "delivery": true,
-      "deliveryPlatforms": ["Uber Eats", "Demae-can"],
+      "deliveryPlatforms": [
+        "Uber Eats",
+        "Demae-can"
+      ],
       "deliveryRadius": "3km",
       "catering": false,
       "cateringRadius": "",
       "cateringMinimum": "",
       "reservations": true,
-      "reservationMethods": ["Phone", "Website"],
+      "reservationMethods": [
+        "Phone",
+        "Website"
+      ],
       "onlineBookingUrl": "https://solmari.jp/reserve",
       "banquets": true,
       "banquetCapacity": 40
@@ -380,7 +389,9 @@
       "size": "Regular",
       "limited": false,
       "spiceLevel": 0,
-      "allergens": ["Seafood"]
+      "allergens": [
+        "Seafood"
+      ]
     },
     {
       "name": "Crispy Garlic Dumplings",
@@ -395,7 +406,9 @@
       "size": "6 pieces",
       "limited": false,
       "spiceLevel": 0,
-      "allergens": ["Wheat"]
+      "allergens": [
+        "Wheat"
+      ]
     },
     {
       "name": "Premium Draft Beer",
@@ -703,13 +716,27 @@
     "foundingLocation": "Shin-Okubo, Tokyo",
     "numberOfEmployees": 15,
     "hasMap": "https://maps.app.goo.gl/solmari-placeholder",
-    "currenciesAccepted": ["JPY"],
-    "paymentAccepted": ["Cash", "Credit Card", "Electronic Money"],
-    "servesCuisine": ["Asian Fusion"],
-    "menuType": ["Lunch", "Dinner"],
+    "currenciesAccepted": [
+      "JPY"
+    ],
+    "paymentAccepted": [
+      "Cash",
+      "Credit Card",
+      "Electronic Money"
+    ],
+    "servesCuisine": [
+      "Asian Fusion"
+    ],
+    "menuType": [
+      "Lunch",
+      "Dinner"
+    ],
     "starRating": 4.5,
     "priceRange": "$$",
-    "eventType": ["Banquets", "Parties"],
+    "eventType": [
+      "Banquets",
+      "Parties"
+    ],
     "seats": 40,
     "smoking": "No Smoking",
     "music": "Lounge Ambient",
@@ -718,11 +745,13 @@
   "tables": [
     {
       "id": 1,
-      "label": "Table 1"
+      "label": "Table 1",
+      "persons": 4
     },
     {
       "id": 2,
-      "label": "Table 2"
+      "label": "Table 2",
+      "persons": 4
     }
   ]
 }

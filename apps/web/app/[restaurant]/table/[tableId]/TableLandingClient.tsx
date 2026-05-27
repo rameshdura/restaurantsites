@@ -31,6 +31,7 @@ export function TableLandingClient({
   const [session, setSession] = useState<Record<string, unknown> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isStartingSession, setIsStartingSession] = useState(false)
+  const [persons, setPersons] = useState<string>("")
 
   useEffect(() => {
     async function initSession() {
@@ -72,6 +73,7 @@ export function TableLandingClient({
         body: JSON.stringify({
           tableNumber: Number(tableId),
           restaurantSlug,
+          persons: Number(persons),
         }),
       })
       const data = await res.json()
@@ -125,9 +127,45 @@ export function TableLandingClient({
               </p>
             </div>
             
+            <div className="w-full max-w-xs mx-auto mb-6">
+              <label className="text-sm font-semibold tracking-wider text-muted-foreground uppercase block mb-3 text-center">Number of People</label>
+              <div className="bg-background rounded-2xl p-4 text-center text-4xl font-black mb-4 min-h-[72px] flex items-center justify-center border-2 border-primary/20 shadow-inner">
+                {persons || <span className="text-muted-foreground/30">0</span>}
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                  <button
+                    key={num}
+                    onClick={() => setPersons(prev => (prev.length < 2 ? prev + num : prev))}
+                    className="bg-card hover:bg-accent border border-border rounded-xl py-4 text-2xl font-bold transition-all active:scale-90 shadow-sm"
+                  >
+                    {num}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setPersons("")}
+                  className="bg-card hover:bg-red-500/10 border border-border rounded-xl py-4 text-lg font-bold transition-all text-red-500 active:scale-90 shadow-sm"
+                >
+                  CLR
+                </button>
+                <button
+                  onClick={() => setPersons(prev => (prev.length < 2 ? prev + "0" : prev))}
+                  className="bg-card hover:bg-accent border border-border rounded-xl py-4 text-2xl font-bold transition-all active:scale-90 shadow-sm"
+                >
+                  0
+                </button>
+                <button
+                  onClick={() => setPersons(prev => prev.slice(0, -1))}
+                  className="bg-card hover:bg-accent border border-border rounded-xl py-4 text-2xl font-bold transition-all flex items-center justify-center active:scale-90 shadow-sm"
+                >
+                  ⌫
+                </button>
+              </div>
+            </div>
+
             <button
               onClick={handleStartSession}
-              disabled={isStartingSession}
+              disabled={isStartingSession || !persons || Number(persons) === 0}
               className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-8 py-5 text-lg font-black text-primary-foreground shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-primary/30 transition-all hover:-translate-y-1 hover:shadow-primary/40 active:scale-95 active:translate-y-0 disabled:pointer-events-none disabled:opacity-50"
             >
               {isStartingSession ? (
@@ -138,7 +176,7 @@ export function TableLandingClient({
               ) : (
                 <>
                   <Utensils className="h-6 w-6" />
-                  Start Ordering
+                  Open Menu
                 </>
               )}
             </button>

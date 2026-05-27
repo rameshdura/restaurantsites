@@ -53,7 +53,11 @@
   },
   "schema": {
     "priceRange": "￥￥￥",
-    "servesCuisine": ["Modern International", "Bar Bite", "Cocktails"],
+    "servesCuisine": [
+      "Modern International",
+      "Bar Bite",
+      "Cocktails"
+    ],
     "acceptsReservations": true,
     "isTakeout": false,
     "isDelivery": false,
@@ -258,13 +262,20 @@
     "services": {
       "takeout": false,
       "delivery": false,
-      "deliveryPlatforms": ["Uber Eats", "Demae-can", "Wolt"],
+      "deliveryPlatforms": [
+        "Uber Eats",
+        "Demae-can",
+        "Wolt"
+      ],
       "deliveryRadius": "",
       "catering": true,
       "cateringRadius": "東京23区内",
       "cateringMinimum": "150000",
       "reservations": true,
-      "reservationMethods": ["Phone", "Website"],
+      "reservationMethods": [
+        "Phone",
+        "Website"
+      ],
       "onlineBookingUrl": "https://royalgarden-lounge.jp/reserve",
       "banquets": true,
       "banquetCapacity": 80
@@ -653,13 +664,29 @@
     "foundingLocation": "東京都渋谷区",
     "numberOfEmployees": 24,
     "hasMap": "https://maps.google.com/?cid=royalgarden",
-    "currenciesAccepted": ["JPY", "USD"],
-    "paymentAccepted": ["Credit Card", "Cash"],
-    "servesCuisine": ["Modern International", "Cocktails"],
-    "menuType": ["Dinner", "Late Night"],
+    "currenciesAccepted": [
+      "JPY",
+      "USD"
+    ],
+    "paymentAccepted": [
+      "Credit Card",
+      "Cash"
+    ],
+    "servesCuisine": [
+      "Modern International",
+      "Cocktails"
+    ],
+    "menuType": [
+      "Dinner",
+      "Late Night"
+    ],
     "starRating": 4.7,
     "priceRange": "￥￥￥",
-    "eventType": ["Anniversary", "Corporate Banquet", "Date Night"],
+    "eventType": [
+      "Anniversary",
+      "Corporate Banquet",
+      "Date Night"
+    ],
     "seats": 60,
     "smoking": "全席禁煙（別途喫煙ブースあり）",
     "music": "Lounge / Deep House / Jazz",
@@ -668,11 +695,13 @@
   "tables": [
     {
       "id": 1,
-      "label": "Table 1"
+      "label": "Table 1",
+      "persons": 4
     },
     {
       "id": 2,
-      "label": "Table 2"
+      "label": "Table 2",
+      "persons": 4
     }
   ]
 }
