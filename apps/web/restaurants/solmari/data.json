@@ -52,10 +52,7 @@
   },
   "schema": {
     "priceRange": "$$",
-    "servesCuisine": [
-      "Asian",
-      "Ethnic Fusion"
-    ],
+    "servesCuisine": ["Asian", "Ethnic Fusion"],
     "acceptsReservations": true,
     "isTakeout": true,
     "isDelivery": true,
@@ -260,19 +257,13 @@
     "services": {
       "takeout": true,
       "delivery": true,
-      "deliveryPlatforms": [
-        "Uber Eats",
-        "Demae-can"
-      ],
+      "deliveryPlatforms": ["Uber Eats", "Demae-can"],
       "deliveryRadius": "3km",
       "catering": false,
       "cateringRadius": "",
       "cateringMinimum": "",
       "reservations": true,
-      "reservationMethods": [
-        "Phone",
-        "Website"
-      ],
+      "reservationMethods": ["Phone", "Website"],
       "onlineBookingUrl": "https://solmari.jp/reserve",
       "banquets": true,
       "banquetCapacity": 40
@@ -283,18 +274,20 @@
       "name": "Signatures",
       "items": [
         {
-          "name": "01. SOLMARI Special Platter",
+          "name": "SOLMARI Special Platter",
           "description": "An assortment of our finest seasoned meats, artisanal side dishes, and house sauces.",
           "price": "2800",
           "category": "Signatures",
-          "image": "/images/restaurants/solmari/ourfood/food-1.png"
+          "image": "/images/restaurants/solmari/ourfood/food-1.png",
+          "id": "item_solmari_special_platter"
         },
         {
-          "name": "02. Spicy Stir-fry Fusion",
+          "name": "Spicy Stir-fry Fusion",
           "description": "Wok-tossed vegetables and protein infused with our signature fiery chili paste.",
           "price": "1650",
           "category": "Signatures",
-          "image": "/images/restaurants/solmari/ourfood/food-2.png"
+          "image": "/images/restaurants/solmari/ourfood/food-2.png",
+          "id": "item_spicy_stir_fry_fusion"
         }
       ]
     },
@@ -302,17 +295,19 @@
       "name": "Starters",
       "items": [
         {
-          "name": "03. House Savory Pancakes",
+          "name": "House Savory Pancakes",
           "description": "Crispy golden-brown pancakes packed with fresh green onions and local seafood.",
           "price": "1200",
           "category": "Starters",
-          "image": "/images/restaurants/solmari/ourfood/food-3.png"
+          "image": "/images/restaurants/solmari/ourfood/food-3.png",
+          "id": "item_house_savory_pancakes"
         },
         {
-          "name": "04. Crispy Garlic Dumplings",
+          "name": "Crispy Garlic Dumplings",
           "description": "Pan-fried house dumplings filled with savory pork, chives, and deep roasted garlic.",
           "price": "750",
-          "category": "Starters"
+          "category": "Starters",
+          "id": "item_crispy_garlic_dumplings"
         }
       ]
     },
@@ -320,30 +315,32 @@
       "name": "Drinks",
       "items": [
         {
-          "name": "05. Premium Draft Beer",
+          "name": "Premium Draft Beer",
           "description": "Crisp, cold lager served straight from the tap in a chilled mug.",
           "price": "600",
           "category": "Drinks",
-          "image": "/images/restaurants/solmari/ourdrink/drink-1.png"
+          "image": "/images/restaurants/solmari/ourdrink/drink-1.png",
+          "id": "item_premium_draft_beer"
         },
         {
-          "name": "06. House Specialty Highball",
+          "name": "House Specialty Highball",
           "description": "Premium Japanese whisky blended flawlessly with carbonated soda and fresh lemon squeeze.",
           "price": "550",
           "category": "Drinks",
-          "image": "/images/restaurants/solmari/ourdrink/drink-2.png"
+          "image": "/images/restaurants/solmari/ourdrink/drink-2.png",
+          "id": "item_house_specialty_highball"
         }
       ]
     }
   ],
   "menu": [
     {
-      "name": "01. SOLMARI Special Platter",
+      "name": "SOLMARI Special Platter",
       "description": "An assortment of our finest seasoned meats, artisanal side dishes, and house sauces.",
       "price": "2800",
       "category": "Signatures",
       "image": "/images/restaurants/solmari/ourfood/food-1.png",
-      "id": "01-solmari-special-platter",
+      "id": "item_solmari_special_platter",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -354,12 +351,12 @@
       "allergens": []
     },
     {
-      "name": "02. Spicy Stir-fry Fusion",
+      "name": "Spicy Stir-fry Fusion",
       "description": "Wok-tossed vegetables and protein infused with our signature fiery chili paste.",
       "price": "1650",
       "category": "Signatures",
       "image": "/images/restaurants/solmari/ourfood/food-2.png",
-      "id": "02-spicy-stir-fry-fusion",
+      "id": "item_spicy_stir_fry_fusion",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -370,12 +367,12 @@
       "allergens": []
     },
     {
-      "name": "03. House Savory Pancakes",
+      "name": "House Savory Pancakes",
       "description": "Crispy golden-brown pancakes packed with fresh green onions and local seafood.",
       "price": "1200",
       "category": "Starters",
       "image": "/images/restaurants/solmari/ourfood/food-3.png",
-      "id": "03-house-savory-pancakes",
+      "id": "item_house_savory_pancakes",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -383,16 +380,14 @@
       "size": "Regular",
       "limited": false,
       "spiceLevel": 0,
-      "allergens": [
-        "Seafood"
-      ]
+      "allergens": ["Seafood"]
     },
     {
-      "name": "04. Crispy Garlic Dumplings",
+      "name": "Crispy Garlic Dumplings",
       "description": "Pan-fried house dumplings filled with savory pork, chives, and deep roasted garlic.",
       "price": "750",
       "category": "Starters",
-      "id": "04-crispy-garlic-dumplings",
+      "id": "item_crispy_garlic_dumplings",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -400,17 +395,15 @@
       "size": "6 pieces",
       "limited": false,
       "spiceLevel": 0,
-      "allergens": [
-        "Wheat"
-      ]
+      "allergens": ["Wheat"]
     },
     {
-      "name": "05. Premium Draft Beer",
+      "name": "Premium Draft Beer",
       "description": "Crisp, cold lager served straight from the tap in a chilled mug.",
       "price": "600",
       "category": "Drinks",
       "image": "/images/restaurants/solmari/ourdrink/drink-1.png",
-      "id": "05-premium-draft-beer",
+      "id": "item_premium_draft_beer",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -421,12 +414,12 @@
       "allergens": []
     },
     {
-      "name": "06. House Specialty Highball",
+      "name": "House Specialty Highball",
       "description": "Premium Japanese whisky blended flawlessly with carbonated soda and fresh lemon squeeze.",
       "price": "550",
       "category": "Drinks",
       "image": "/images/restaurants/solmari/ourdrink/drink-2.png",
-      "id": "06-house-specialty-highball",
+      "id": "item_house_specialty_highball",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -710,30 +703,26 @@
     "foundingLocation": "Shin-Okubo, Tokyo",
     "numberOfEmployees": 15,
     "hasMap": "https://maps.app.goo.gl/solmari-placeholder",
-    "currenciesAccepted": [
-      "JPY"
-    ],
-    "paymentAccepted": [
-      "Cash",
-      "Credit Card",
-      "Electronic Money"
-    ],
-    "servesCuisine": [
-      "Asian Fusion"
-    ],
-    "menuType": [
-      "Lunch",
-      "Dinner"
-    ],
+    "currenciesAccepted": ["JPY"],
+    "paymentAccepted": ["Cash", "Credit Card", "Electronic Money"],
+    "servesCuisine": ["Asian Fusion"],
+    "menuType": ["Lunch", "Dinner"],
     "starRating": 4.5,
     "priceRange": "$$",
-    "eventType": [
-      "Banquets",
-      "Parties"
-    ],
+    "eventType": ["Banquets", "Parties"],
     "seats": 40,
     "smoking": "No Smoking",
     "music": "Lounge Ambient",
     "attire": "Casual"
-  }
+  },
+  "tables": [
+    {
+      "id": 1,
+      "label": "Table 1"
+    },
+    {
+      "id": 2,
+      "label": "Table 2"
+    }
+  ]
 }

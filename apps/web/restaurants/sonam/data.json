@@ -51,11 +51,7 @@
   },
   "schema": {
     "priceRange": "$$",
-    "servesCuisine": [
-      "Indian",
-      "Nepali",
-      "Himalayan"
-    ],
+    "servesCuisine": ["Indian", "Nepali", "Himalayan"],
     "acceptsReservations": true,
     "isTakeout": true,
     "isDelivery": false,
@@ -224,13 +220,7 @@
   ],
   "holidayNotes": "",
   "operations": {
-    "paymentMethods": [
-      "Visa",
-      "Mastercard",
-      "JCB",
-      "Cash",
-      "PayPay"
-    ],
+    "paymentMethods": ["Visa", "Mastercard", "JCB", "Cash", "PayPay"],
     "dietaryOptions": {
       "vegetarian": false,
       "vegan": false,
@@ -259,11 +249,7 @@
     "services": {
       "takeout": true,
       "delivery": false,
-      "deliveryPlatforms": [
-        "Uber Eats",
-        "Demae-can",
-        "Wolt"
-      ],
+      "deliveryPlatforms": ["Uber Eats", "Demae-can", "Wolt"],
       "deliveryRadius": "",
       "catering": false,
       "cateringRadius": "",
@@ -280,25 +266,28 @@
       "name": "Lunch",
       "items": [
         {
-          "name": "01. Everest Chicken Momo",
+          "name": "Everest Chicken Momo",
           "description": "Steamed spiced chicken dumplings served with tomato-sesame chutney.",
           "price": "1300",
           "category": "Lunch",
-          "image": "/images/restaurants/sonam/ourfood/food-1.png"
+          "image": "/images/restaurants/sonam/ourfood/food-1.png",
+          "id": "item_everest_chicken_momo"
         },
         {
-          "name": "02. Sherpa Khaja Set",
+          "name": "Sherpa Khaja Set",
           "description": "Authentic Nepali lunch platter with beaten rice, spiced chickpeas, and potato-bamboo shoot curry.",
           "price": "1500",
           "category": "Lunch",
-          "image": "/images/restaurants/sonam/ourfood/food-2.png"
+          "image": "/images/restaurants/sonam/ourfood/food-2.png",
+          "id": "item_sherpa_khaja_set"
         },
         {
-          "name": "03. Veg Samosa Chaat",
+          "name": "Veg Samosa Chaat",
           "description": "Crispy samosas topped with spicy chickpeas, yogurt, sweet and tangy chutneys.",
           "price": "900",
           "category": "Lunch",
-          "image": "/images/restaurants/sonam/ourfood/food-3.png"
+          "image": "/images/restaurants/sonam/ourfood/food-3.png",
+          "id": "item_veg_samosa_chaat"
         }
       ]
     },
@@ -306,32 +295,36 @@
       "name": "Dinner",
       "items": [
         {
-          "name": "04. Himalayan Goat Curry (Khasi ko Masu)",
+          "name": "Himalayan Goat Curry (Khasi ko Masu)",
           "description": "Tender goat meat slow-cooked in a rich gravy of traditional spices.",
           "price": "2200",
           "category": "Dinner",
-          "image": "/images/restaurants/sonam/ourfood/food-4.png"
+          "image": "/images/restaurants/sonam/ourfood/food-4.png",
+          "id": "item_himalayan_goat_curry_khasi_ko_masu"
         },
         {
-          "name": "05. Classic Chicken Tikka Masala",
+          "name": "Classic Chicken Tikka Masala",
           "description": "Tandoori-grilled chicken in a creamy, butter-infused spiced tomato sauce.",
           "price": "1800",
           "category": "Dinner",
-          "image": "/images/restaurants/sonam/ourfood/food-1.png"
+          "image": "/images/restaurants/sonam/ourfood/food-1.png",
+          "id": "item_classic_chicken_tikka_masala"
         },
         {
-          "name": "06. Palak Paneer",
+          "name": "Palak Paneer",
           "description": "Fresh cottage cheese cubes simmered in a smooth, spiced spinach purée.",
           "price": "1600",
           "category": "Dinner",
-          "image": "/images/restaurants/sonam/ourfood/food-2.png"
+          "image": "/images/restaurants/sonam/ourfood/food-2.png",
+          "id": "item_palak_paneer"
         },
         {
-          "name": "07. Everest Dal Bhat Thali",
+          "name": "Everest Dal Bhat Thali",
           "description": "A traditional Nepali feast with yellow lentil soup, rice, and vegetable curry.",
           "price": "2000",
           "category": "Dinner",
-          "image": "/images/restaurants/sonam/ourfood/food-3.png"
+          "image": "/images/restaurants/sonam/ourfood/food-3.png",
+          "id": "item_everest_dal_bhat_thali"
         }
       ]
     },
@@ -339,11 +332,12 @@
       "name": "Drinks",
       "items": [
         {
-          "name": "08. Mango Lassi",
+          "name": "Mango Lassi",
           "description": "A creamy, refreshing yogurt drink blended with sweet ripe mangoes and cardamom.",
           "price": "550",
           "category": "Drinks",
-          "image": "/images/restaurants/sonam/ourdrink/drink-1.png"
+          "image": "/images/restaurants/sonam/ourdrink/drink-1.png",
+          "id": "item_mango_lassi"
         }
       ]
     },
@@ -351,30 +345,32 @@
       "name": "Dessert",
       "items": [
         {
-          "name": "09. Warm Gulab Jamun",
+          "name": "Warm Gulab Jamun",
           "description": "Milk-solid dumplings soaked in warm, cardamom-infused sugar syrup.",
           "price": "600",
           "category": "Dessert",
-          "image": "/images/restaurants/sonam/ourfood/food-4.png"
+          "image": "/images/restaurants/sonam/ourfood/food-4.png",
+          "id": "item_warm_gulab_jamun"
         },
         {
-          "name": "10. Kheer (Himalayan Rice Pudding)",
+          "name": "Kheer (Himalayan Rice Pudding)",
           "description": "Creamy basmati rice pudding slow-simmered with nuts, cardamom, and saffron.",
           "price": "750",
           "category": "Dessert",
-          "image": "/images/restaurants/sonam/ourdrink/drink-2.png"
+          "image": "/images/restaurants/sonam/ourdrink/drink-2.png",
+          "id": "item_kheer_himalayan_rice_pudding"
         }
       ]
     }
   ],
   "menu": [
     {
-      "name": "01. Everest Chicken Momo",
+      "name": "Everest Chicken Momo",
       "description": "Steamed spiced chicken dumplings served with tomato-sesame chutney.",
       "price": "1300",
       "category": "Lunch",
       "image": "/images/restaurants/sonam/ourfood/food-1.png",
-      "id": "01-everest-chicken-momo",
+      "id": "item_everest_chicken_momo",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -385,12 +381,12 @@
       "allergens": []
     },
     {
-      "name": "02. Sherpa Khaja Set",
+      "name": "Sherpa Khaja Set",
       "description": "Authentic Nepali lunch platter with beaten rice, spiced chickpeas, and potato-bamboo shoot curry.",
       "price": "1500",
       "category": "Lunch",
       "image": "/images/restaurants/sonam/ourfood/food-2.png",
-      "id": "02-sherpa-khaja-set",
+      "id": "item_sherpa_khaja_set",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -401,12 +397,12 @@
       "allergens": []
     },
     {
-      "name": "03. Veg Samosa Chaat",
+      "name": "Veg Samosa Chaat",
       "description": "Crispy samosas topped with spicy chickpeas, yogurt, sweet and tangy chutneys.",
       "price": "900",
       "category": "Lunch",
       "image": "/images/restaurants/sonam/ourfood/food-3.png",
-      "id": "03-veg-samosa-chaat",
+      "id": "item_veg_samosa_chaat",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -417,12 +413,12 @@
       "allergens": []
     },
     {
-      "name": "04. Himalayan Goat Curry (Khasi ko Masu)",
+      "name": "Himalayan Goat Curry (Khasi ko Masu)",
       "description": "Tender goat meat slow-cooked in a rich gravy of traditional spices.",
       "price": "2200",
       "category": "Dinner",
       "image": "/images/restaurants/sonam/ourfood/food-4.png",
-      "id": "04-himalayan-goat-curry-khasi-ko-masu",
+      "id": "item_himalayan_goat_curry_khasi_ko_masu",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -433,12 +429,12 @@
       "allergens": []
     },
     {
-      "name": "05. Classic Chicken Tikka Masala",
+      "name": "Classic Chicken Tikka Masala",
       "description": "Tandoori-grilled chicken in a creamy, butter-infused spiced tomato sauce.",
       "price": "1800",
       "category": "Dinner",
       "image": "/images/restaurants/sonam/ourfood/food-1.png",
-      "id": "05-classic-chicken-tikka-masala",
+      "id": "item_classic_chicken_tikka_masala",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -449,12 +445,12 @@
       "allergens": []
     },
     {
-      "name": "06. Palak Paneer",
+      "name": "Palak Paneer",
       "description": "Fresh cottage cheese cubes simmered in a smooth, spiced spinach purée.",
       "price": "1600",
       "category": "Dinner",
       "image": "/images/restaurants/sonam/ourfood/food-2.png",
-      "id": "06-palak-paneer",
+      "id": "item_palak_paneer",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -465,12 +461,12 @@
       "allergens": []
     },
     {
-      "name": "07. Everest Dal Bhat Thali",
+      "name": "Everest Dal Bhat Thali",
       "description": "A traditional Nepali feast with yellow lentil soup, rice, and vegetable curry.",
       "price": "2000",
       "category": "Dinner",
       "image": "/images/restaurants/sonam/ourfood/food-3.png",
-      "id": "07-everest-dal-bhat-thali",
+      "id": "item_everest_dal_bhat_thali",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -481,12 +477,12 @@
       "allergens": []
     },
     {
-      "name": "08. Mango Lassi",
+      "name": "Mango Lassi",
       "description": "A creamy, refreshing yogurt drink blended with sweet ripe mangoes and cardamom.",
       "price": "550",
       "category": "Drinks",
       "image": "/images/restaurants/sonam/ourdrink/drink-1.png",
-      "id": "08-mango-lassi",
+      "id": "item_mango_lassi",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -497,12 +493,12 @@
       "allergens": []
     },
     {
-      "name": "09. Warm Gulab Jamun",
+      "name": "Warm Gulab Jamun",
       "description": "Milk-solid dumplings soaked in warm, cardamom-infused sugar syrup.",
       "price": "600",
       "category": "Dessert",
       "image": "/images/restaurants/sonam/ourfood/food-4.png",
-      "id": "09-warm-gulab-jamun",
+      "id": "item_warm_gulab_jamun",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -513,12 +509,12 @@
       "allergens": []
     },
     {
-      "name": "10. Kheer (Himalayan Rice Pudding)",
+      "name": "Kheer (Himalayan Rice Pudding)",
       "description": "Creamy basmati rice pudding slow-simmered with nuts, cardamom, and saffron.",
       "price": "750",
       "category": "Dessert",
       "image": "/images/restaurants/sonam/ourdrink/drink-2.png",
-      "id": "10-kheer-himalayan-rice-pudding",
+      "id": "item_kheer_himalayan_rice_pudding",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -820,5 +816,15 @@
     "smoking": "No Smoking",
     "music": "None",
     "attire": "casual"
-  }
+  },
+  "tables": [
+    {
+      "id": 1,
+      "label": "Table 1"
+    },
+    {
+      "id": 2,
+      "label": "Table 2"
+    }
+  ]
 }

@@ -360,6 +360,7 @@ export interface RestaurantData extends BlockSchemaFields {
     notes?: string
   }[]
   holidayNotes?: string
+  tables?: Array<{ id: number | string; label: string; capacity?: number }>
   menu?: MenuItem[]
   menuCategories?: any[]
   reviews?:
@@ -453,6 +454,9 @@ export interface MenuItem {
   category: string
   image?: string
   isPopular?: boolean
+  isSpicy?: boolean
+  isVegetarian?: boolean
+  secondaryName?: string
 }
 
 export interface Restaurant {
@@ -470,6 +474,10 @@ export interface MenuCategory {
     description: string
     price: string
     image?: string
+    isPopular?: boolean
+    isSpicy?: boolean
+    isVegetarian?: boolean
+    secondaryName?: string
   }>
 }
 
@@ -734,11 +742,15 @@ export function groupMenuByCategory(
   return menu.reduce((acc, item) => {
     const existingCategory = acc.find((c) => c.title === item.category)
     const menuItem = {
-      id: item.name.toLowerCase().replace(/\s+/g, "-"),
+      id: item.id || item.name.toLowerCase().replace(/\s+/g, "-"),
       name: item.name,
       description: item.description,
       price: item.price,
       image: getImageSrc(slug, item.image),
+      isPopular: item.isPopular,
+      isSpicy: item.isSpicy,
+      isVegetarian: item.isVegetarian,
+      secondaryName: item.secondaryName,
     }
 
     if (existingCategory) {

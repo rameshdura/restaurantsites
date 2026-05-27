@@ -160,6 +160,7 @@ export function mapDataJsonToBuilder(data: any): Partial<SiteBuilderData> {
     dietaryOptions: data.operations?.dietaryOptions || {},
     features: data.operations?.features || {},
     services: data.operations?.services || {},
+    tables: data.tables || [],
     menuCategories: data.menuCategories || [],
     reviews: data.reviews || [],
     videos: data.videos || [],
@@ -276,11 +277,12 @@ export function mapBuilderToDataJson(formData: SiteBuilderData): any {
         deliveryPlatforms: formData.services?.deliveryPlatforms || [],
       },
     },
+    tables: formData.tables || [],
     menuCategories: formData.menuCategories,
     menu: formData.menuCategories.flatMap((c) =>
       c.items.map((i) => ({
         ...i,
-        id: i.name.toLowerCase().replace(/\s+/g, "-"),
+        id: i.id || i.name.toLowerCase().replace(/\s+/g, "-"),
         available: true,
         availableFrom: "",
         availableTo: "",

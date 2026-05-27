@@ -44,11 +44,7 @@
   },
   "schema": {
     "priceRange": "¥¥",
-    "servesCuisine": [
-      "Nepalese",
-      "Himalayan",
-      "Asian"
-    ],
+    "servesCuisine": ["Nepalese", "Himalayan", "Asian"],
     "acceptsReservations": true,
     "isTakeout": true,
     "isDelivery": true,
@@ -203,23 +199,24 @@
       "name": "Thali Sets",
       "items": [
         {
-          "name": "01. Authentic Nepali Dal Bhat Set",
+          "name": "Authentic Nepali Dal Bhat Set",
           "description": "Traditional platter served with basmati rice, lentil soup (dal), choice of curry, seasonal vegetable tarkaari, pickles, and crisp papad.",
           "price": "1350",
           "category": "Thali Sets",
-          "image": "/images/restaurants/rato-bhale/ourfood/food-1.png"
+          "image": "/images/restaurants/rato-bhale/ourfood/food-1.png",
+          "id": "item_authentic_nepali_dal_bhat_set"
         }
       ]
     }
   ],
   "menu": [
     {
-      "name": "01. Authentic Nepali Dal Bhat Set",
+      "name": "Authentic Nepali Dal Bhat Set",
       "description": "Traditional platter served with basmati rice, lentil soup (dal), choice of curry, seasonal vegetable tarkaari, pickles, and crisp papad.",
       "price": "1350",
       "category": "Thali Sets",
       "image": "/images/restaurants/rato-bhale/ourfood/food-1.png",
-      "id": "authentic-nepali-dal-bhat-set",
+      "id": "item_authentic_nepali_dal_bhat_set",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -465,5 +462,15 @@
   ],
   "videos": [],
   "virtualTour": "",
-  "advancedSchema": {}
+  "advancedSchema": {},
+  "tables": [
+    {
+      "id": 1,
+      "label": "Table 1"
+    },
+    {
+      "id": 2,
+      "label": "Table 2"
+    }
+  ]
 }

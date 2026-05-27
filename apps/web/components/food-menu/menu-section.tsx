@@ -5,9 +5,18 @@ import { MenuItemCard } from "./menu-item"
 interface MenuSectionProps {
   category: MenuCategory
   currency?: string
+  tableMode?: boolean
+  activeOrderItems?: Array<{ item_id: string; qty: number; notes: string }>
+  onUpdateQty?: (item_id: string, qty: number, notes: string) => void
 }
 
-export function MenuSection({ category, currency }: MenuSectionProps) {
+export function MenuSection({
+  category,
+  currency,
+  tableMode = false,
+  activeOrderItems = [],
+  onUpdateQty,
+}: MenuSectionProps) {
   const { title, description, coverImage, items, id } = category
 
   return (
@@ -48,9 +57,28 @@ export function MenuSection({ category, currency }: MenuSectionProps) {
       </div>
 
       <div className="grid grid-cols-1 gap-x-8 gap-y-1 md:grid-cols-2">
-        {items.map((item) => (
-          <MenuItemCard key={item.id} item={item} currency={currency} />
-        ))}
+        {items.map((item) => {
+          // Find if there are any active session orders matching this item ID
+          // (Can support multiple instances if they have different notes)
+          const activeItems = activeOrderItems.filter(
+            (i) => i.item_id === item.id
+          )
+          const firstActive = activeItems[0]
+          const currentQty = firstActive ? firstActive.qty : 0
+          const currentNotes = firstActive ? firstActive.notes : ""
+
+          return (
+            <MenuItemCard
+              key={item.id}
+              item={item}
+              currency={currency}
+              tableMode={tableMode}
+              currentQty={currentQty}
+              currentNotes={currentNotes}
+              onUpdateQty={(qty, notes) => onUpdateQty?.(item.id, qty, notes)}
+            />
+          )
+        })}
       </div>
     </section>
   )

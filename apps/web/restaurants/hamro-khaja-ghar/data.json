@@ -44,11 +44,7 @@
   },
   "schema": {
     "priceRange": "¥",
-    "servesCuisine": [
-      "Nepalese",
-      "Himalayan",
-      "Newari"
-    ],
+    "servesCuisine": ["Nepalese", "Himalayan", "Newari"],
     "acceptsReservations": true,
     "isTakeout": true,
     "isDelivery": true,
@@ -203,18 +199,20 @@
       "name": "Khaja & Thali Sets",
       "items": [
         {
-          "name": "01. Traditional Newari Khaja Set",
+          "name": "Traditional Newari Khaja Set",
           "description": "Authentic feast featuring beaten rice (chiura), roasted spiced soybeans (bhatmas), choice of marinated meat (choila), spiced potatoes, and house chutneys.",
           "price": "1200",
           "category": "Khaja & Thali Sets",
-          "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-1.png"
+          "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-1.png",
+          "id": "item_traditional_newari_khaja_set"
         },
         {
-          "name": "02. Hamro Thakali Dal Bhat Set",
+          "name": "Hamro Thakali Dal Bhat Set",
           "description": "A wholesome traditional platter with basmati rice, slow-cooked black lentils, seasonal vegetable tarkaari, fresh spinach greens, spicy pickles, and papad.",
           "price": "1100",
           "category": "Khaja & Thali Sets",
-          "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-3.png"
+          "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-3.png",
+          "id": "item_hamro_thakali_dal_bhat_set"
         }
       ]
     },
@@ -222,23 +220,24 @@
       "name": "Himalayan Momos",
       "items": [
         {
-          "name": "03. Classic Steamed Chicken Momo",
+          "name": "Classic Steamed Chicken Momo",
           "description": "Hand-folded Nepalese dumplings stuffed with lean seasoned minced chicken, herbs, and warm spices. Served alongside fresh tomato-sesame sauce.",
           "price": "750",
           "category": "Himalayan Momos",
-          "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-2.png"
+          "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-2.png",
+          "id": "item_classic_steamed_chicken_momo"
         }
       ]
     }
   ],
   "menu": [
     {
-      "name": "01. Traditional Newari Khaja Set",
+      "name": "Traditional Newari Khaja Set",
       "description": "Authentic feast featuring beaten rice (chiura), roasted spiced soybeans (bhatmas), choice of marinated meat (choila), spiced potatoes, and house chutneys.",
       "price": "1200",
       "category": "Khaja & Thali Sets",
       "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-1.png",
-      "id": "traditional-newari-khaja-set",
+      "id": "item_traditional_newari_khaja_set",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -249,12 +248,12 @@
       "allergens": []
     },
     {
-      "name": "02. Hamro Thakali Dal Bhat Set",
+      "name": "Hamro Thakali Dal Bhat Set",
       "description": "A wholesome traditional platter with basmati rice, slow-cooked black lentils, seasonal vegetable tarkaari, fresh spinach greens, spicy pickles, and papad.",
       "price": "1100",
       "category": "Khaja & Thali Sets",
       "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-3.png",
-      "id": "hamro-thakali-dal-bhat-set",
+      "id": "item_hamro_thakali_dal_bhat_set",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -265,12 +264,12 @@
       "allergens": []
     },
     {
-      "name": "03. Classic Steamed Chicken Momo",
+      "name": "Classic Steamed Chicken Momo",
       "description": "Hand-folded Nepalese dumplings stuffed with lean seasoned minced chicken, herbs, and warm spices. Served alongside fresh tomato-sesame sauce.",
       "price": "750",
       "category": "Himalayan Momos",
       "image": "/images/restaurants/hamro-khaja-ghar/ourfood/food-2.png",
-      "id": "classic-steamed-chicken-momo",
+      "id": "item_classic_steamed_chicken_momo",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -518,5 +517,15 @@
   ],
   "videos": [],
   "virtualTour": "",
-  "advancedSchema": {}
+  "advancedSchema": {},
+  "tables": [
+    {
+      "id": 1,
+      "label": "Table 1"
+    },
+    {
+      "id": 2,
+      "label": "Table 2"
+    }
+  ]
 }

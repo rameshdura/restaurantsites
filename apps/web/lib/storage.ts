@@ -183,9 +183,11 @@ export interface SiteBuilderData {
   }
 
   // --- Menu & Content ---
+  tables?: Array<{ id: number | string; label: string; capacity?: number }>
   menuCategories: Array<{
     name: string
     items: Array<{
+      id?: string
       name: string
       description: string
       price: string

@@ -53,11 +53,7 @@
   },
   "schema": {
     "priceRange": "￥￥￥",
-    "servesCuisine": [
-      "Modern International",
-      "Bar Bite",
-      "Cocktails"
-    ],
+    "servesCuisine": ["Modern International", "Bar Bite", "Cocktails"],
     "acceptsReservations": true,
     "isTakeout": false,
     "isDelivery": false,
@@ -262,20 +258,13 @@
     "services": {
       "takeout": false,
       "delivery": false,
-      "deliveryPlatforms": [
-        "Uber Eats",
-        "Demae-can",
-        "Wolt"
-      ],
+      "deliveryPlatforms": ["Uber Eats", "Demae-can", "Wolt"],
       "deliveryRadius": "",
       "catering": true,
       "cateringRadius": "東京23区内",
       "cateringMinimum": "150000",
       "reservations": true,
-      "reservationMethods": [
-        "Phone",
-        "Website"
-      ],
+      "reservationMethods": ["Phone", "Website"],
       "onlineBookingUrl": "https://royalgarden-lounge.jp/reserve",
       "banquets": true,
       "banquetCapacity": 80
@@ -286,18 +275,20 @@
       "name": "メインディッシュ",
       "items": [
         {
-          "name": "01. 極上和牛のグリル",
+          "name": "極上和牛のグリル",
           "description": "厳選されたA5ランク和牛を、熟成赤ワインソースとトリュフ塩で。極上の柔らかさをお楽しみください。",
           "price": "5800",
           "category": "メインディッシュ",
-          "image": "/images/restaurants/royalgarden-restaurant/ourfood/food-1.png"
+          "image": "/images/restaurants/royalgarden-restaurant/ourfood/food-1.png",
+          "id": "item_"
         },
         {
-          "name": "02. 真鯛のポワレ 〜ハーブバターソース〜",
+          "name": "真鯛のポワレ 〜ハーブバターソース〜",
           "description": "皮目はパリッと、身はジューシーに焼き上げた新鮮な真鯛。爽やかな香りのハーブバターとともに。",
           "price": "3400",
           "category": "メインディッシュ",
-          "image": "/images/restaurants/royalgarden-restaurant/ourfood/food-2.png"
+          "image": "/images/restaurants/royalgarden-restaurant/ourfood/food-2.png",
+          "id": "item_"
         }
       ]
     },
@@ -305,30 +296,32 @@
       "name": "シグネチャーカクテル",
       "items": [
         {
-          "name": "03. ロイヤル・ミスト",
+          "name": "ロイヤル・ミスト",
           "description": "プレミアムジンに自家製のラベンダーシロップとフレッシュシトラスを合わせた、幻想的な香りのカクテル。",
           "price": "1800",
           "category": "シグネチャーカクテル",
-          "image": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-1.png"
+          "image": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-1.png",
+          "id": "item_"
         },
         {
-          "name": "04. 渋みとボタニカルのジントニック",
+          "name": "渋みとボタニカルのジントニック",
           "description": "厳選した日本のクラフトジンに、特製トニックウォーターとフレッシュハーブをブレンドした極上の一杯。",
           "price": "1600",
           "category": "シグネチャーカクテル",
-          "image": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-3.png"
+          "image": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-3.png",
+          "id": "item_"
         }
       ]
     }
   ],
   "menu": [
     {
-      "name": "01. 極上和牛のグリル",
+      "name": "極上和牛のグリル",
       "description": "厳選されたA5ランク和牛を、熟成赤ワインソースとトリュフ塩で。極上の柔らかさをお楽しみください。",
       "price": "5800",
       "category": "メインディッシュ",
       "image": "/images/restaurants/royalgarden-restaurant/ourfood/food-1.png",
-      "id": "01.-極上和牛のグリル",
+      "id": "item_",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -339,12 +332,12 @@
       "allergens": []
     },
     {
-      "name": "02. 真鯛のポワレ 〜ハーブバターソース〜",
+      "name": "真鯛のポワレ 〜ハーブバターソース〜",
       "description": "皮目はパリッと、身はジューシーに焼き上げた新鮮な真鯛。爽やかな香りのハーブバターとともに。",
       "price": "3400",
       "category": "メインディッシュ",
       "image": "/images/restaurants/royalgarden-restaurant/ourfood/food-2.png",
-      "id": "02.-真鯛のポワレ-〜ハーブバターソース〜",
+      "id": "item_",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -355,12 +348,12 @@
       "allergens": []
     },
     {
-      "name": "03. ロイヤル・ミスト",
+      "name": "ロイヤル・ミスト",
       "description": "プレミアムジンに自家製のラベンダーシロップとフレッシュシトラスを合わせた、幻想的な香りのカクテル。",
       "price": "1800",
       "category": "シグネチャーカクテル",
       "image": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-1.png",
-      "id": "03.-ロイヤル・ミスト",
+      "id": "item_",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -371,12 +364,12 @@
       "allergens": []
     },
     {
-      "name": "04. 渋みとボタニカルのジントニック",
+      "name": "渋みとボタニカルのジントニック",
       "description": "厳選した日本のクラフトジンに、特製トニックウォーターとフレッシュハーブをブレンドした極上の一杯。",
       "price": "1600",
       "category": "シグネチャーカクテル",
       "image": "/images/restaurants/royalgarden-restaurant/ourdrink/drink-3.png",
-      "id": "04.-渋みとボタニカルのジントニック",
+      "id": "item_",
       "available": true,
       "availableFrom": "",
       "availableTo": "",
@@ -660,32 +653,26 @@
     "foundingLocation": "東京都渋谷区",
     "numberOfEmployees": 24,
     "hasMap": "https://maps.google.com/?cid=royalgarden",
-    "currenciesAccepted": [
-      "JPY",
-      "USD"
-    ],
-    "paymentAccepted": [
-      "Credit Card",
-      "Cash"
-    ],
-    "servesCuisine": [
-      "Modern International",
-      "Cocktails"
-    ],
-    "menuType": [
-      "Dinner",
-      "Late Night"
-    ],
+    "currenciesAccepted": ["JPY", "USD"],
+    "paymentAccepted": ["Credit Card", "Cash"],
+    "servesCuisine": ["Modern International", "Cocktails"],
+    "menuType": ["Dinner", "Late Night"],
     "starRating": 4.7,
     "priceRange": "￥￥￥",
-    "eventType": [
-      "Anniversary",
-      "Corporate Banquet",
-      "Date Night"
-    ],
+    "eventType": ["Anniversary", "Corporate Banquet", "Date Night"],
     "seats": 60,
     "smoking": "全席禁煙（別途喫煙ブースあり）",
     "music": "Lounge / Deep House / Jazz",
     "attire": "スマートカジュアル"
-  }
+  },
+  "tables": [
+    {
+      "id": 1,
+      "label": "Table 1"
+    },
+    {
+      "id": 2,
+      "label": "Table 2"
+    }
+  ]
 }
