@@ -30,6 +30,7 @@ export function TableLandingClient({
 }: TableLandingClientProps) {
   const [session, setSession] = useState<Record<string, unknown> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isStartingSession, setIsStartingSession] = useState(false)
 
   useEffect(() => {
     async function initSession() {
@@ -50,27 +51,8 @@ export function TableLandingClient({
           }
         }
 
-        // If no valid session, delete cookie and create a new session
+        // If no valid session, just clear cookie. User will need to manually start a session.
         clearSessionCookie()
-        const res = await fetch(`/api/table/session`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            tableNumber: Number(tableId),
-            restaurantSlug,
-          }),
-        })
-        const data = await res.json()
-
-        if (data.success && data.session) {
-          const expiresAt = new Date(data.session.expires_at).getTime() / 1000
-          setSessionCookie(
-            data.session.session_id,
-            data.session.table_number,
-            expiresAt
-          )
-          setSession(data.session)
-        }
       } catch (err) {
         console.error("Error setting up table session:", err)
       } finally {
@@ -80,6 +62,35 @@ export function TableLandingClient({
 
     initSession()
   }, [tableId, restaurantSlug])
+
+  const handleStartSession = async () => {
+    setIsStartingSession(true)
+    try {
+      const res = await fetch(`/api/table/session`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tableNumber: Number(tableId),
+          restaurantSlug,
+        }),
+      })
+      const data = await res.json()
+
+      if (data.success && data.session) {
+        const expiresAt = new Date(data.session.expires_at).getTime() / 1000
+        setSessionCookie(
+          data.session.session_id,
+          data.session.table_number,
+          expiresAt
+        )
+        setSession(data.session)
+      }
+    } catch (err) {
+      console.error("Error creating table session:", err)
+    } finally {
+      setIsStartingSession(false)
+    }
+  }
 
   return (
     <div className="relative flex min-h-svh flex-col bg-background text-foreground antialiased">
@@ -95,8 +106,47 @@ export function TableLandingClient({
               <Utensils className="h-8 w-8 animate-bounce text-primary" />
             </div>
             <p className="mt-4 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-              Loading Table Session...
+              Loading Table...
             </p>
+          </div>
+        ) : !session ? (
+          <div className="mx-auto flex flex-1 flex-col items-center justify-center p-6 text-center select-none w-full max-w-md">
+            <div className="mb-10 flex flex-col items-center">
+              <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border-4 border-primary/20 bg-primary/10 shadow-xl">
+                <Utensils className="h-10 w-10 text-primary" />
+              </div>
+              <h1 className="mb-2 text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
+                {restaurantName}
+              </h1>
+              <p className="text-lg font-medium text-muted-foreground">
+                {tableLabel.toLowerCase().includes("table")
+                  ? tableLabel
+                  : `Table ${tableLabel}`}
+              </p>
+            </div>
+            
+            <button
+              onClick={handleStartSession}
+              disabled={isStartingSession}
+              className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-8 py-5 text-lg font-black text-primary-foreground shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-primary/30 transition-all hover:-translate-y-1 hover:shadow-primary/40 active:scale-95 active:translate-y-0 disabled:pointer-events-none disabled:opacity-50"
+            >
+              {isStartingSession ? (
+                <>
+                  <Utensils className="h-6 w-6 animate-bounce" />
+                  Starting Order...
+                </>
+              ) : (
+                <>
+                  <Utensils className="h-6 w-6" />
+                  Start Ordering
+                </>
+              )}
+            </button>
+            
+            <div className="mt-8 flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground">
+              <Lock className="h-3.5 w-3.5 opacity-70" />
+              <span>Secure Table Session</span>
+            </div>
           </div>
         ) : (
           <div className="mx-auto flex w-full max-w-7xl flex-col px-4 py-8 select-none sm:px-6 md:py-12">
