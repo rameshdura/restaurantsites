@@ -1,6 +1,4 @@
 "use client"
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useState, useEffect, useCallback } from "react"
 import { supabase } from "@/lib/supabase"
@@ -10,20 +8,44 @@ import { useRouter } from "next/navigation"
 import { MenuCategory } from "@/components/food-menu/types"
 
 interface OwnerSessionDetailClientProps {
-  restaurantSlug: string
   sessionId: string
   currency?: string
   categories?: MenuCategory[]
 }
 
+interface TableSession {
+  session_id: string
+  table_number: string
+  status: string
+  created_at: string
+  last_activity: string
+  orders?: {
+    total?: number
+    subtotal?: number
+    service_charge?: number
+    tax?: number
+    tips?: number
+    discount?: number
+    items?: {
+      item_id: string
+      qty?: number
+      quantity?: number
+      name?: string
+      price?: string | number
+      notes?: string
+      [key: string]: unknown
+    }[]
+  }
+  [key: string]: unknown
+}
+
 export function OwnerSessionDetailClient({
-  restaurantSlug,
   sessionId,
   currency = "USD",
   categories = [],
 }: OwnerSessionDetailClientProps) {
   const router = useRouter()
-  const [session, setSession] = useState<any>(null)
+  const [session, setSession] = useState<TableSession | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   const fetchSession = useCallback(async () => {
@@ -36,7 +58,7 @@ export function OwnerSessionDetailClient({
         .single()
 
       if (error) throw error
-      setSession(data)
+      setSession(data as TableSession)
     } catch (err) {
       console.error("Error loading session:", err)
     } finally {
@@ -163,43 +185,41 @@ export function OwnerSessionDetailClient({
                     No items recorded for this session.
                   </div>
                 ) : (
-                  <div className="divide-y divide-border">
-                    {session.orders.items.map(
-                       
-                      (item: any, idx: number) => {
-                        const itemDetails = flatItems.find(
-                          (i) => i.id === item.item_id
-                        )
-                      const name = itemDetails?.name || item.name || item.item_id
-                      const itemPrice = itemDetails
-                        ? parseFloat(String(itemDetails.price)) || 0
-                        : parseFloat(String(item.price)) || 0
+                <div className="divide-y divide-border">
+                  {session.orders.items.map((item, idx: number) => {
+                    const itemDetails = flatItems.find(
+                      (i) => i.id === item.item_id
+                    )
+                    const name = itemDetails?.name || item.name || item.item_id
+                    const itemPrice = itemDetails
+                      ? parseFloat(String(itemDetails.price)) || 0
+                      : parseFloat(String(item.price)) || 0
 
-                      return (
-                        <div
-                          key={idx}
-                          className="flex items-start justify-between p-4 sm:p-6"
-                        >
-                          <div>
-                            <p className="font-semibold">{name}</p>
-                            {item.notes && (
-                              <p className="mt-1 text-sm text-muted-foreground">
-                                Note: {item.notes}
-                              </p>
-                            )}
-                          </div>
-                          <div className="text-right">
-                            <p className="font-medium">
-                              {formatCurrency(itemPrice)}
+                    return (
+                      <div
+                        key={idx}
+                        className="flex items-start justify-between p-4 sm:p-6"
+                      >
+                        <div>
+                          <p className="font-semibold">{name}</p>
+                          {item.notes && (
+                            <p className="mt-1 text-sm text-muted-foreground">
+                              Note: {item.notes}
                             </p>
-                            <p className="text-sm text-muted-foreground">
-                              Qty: {item.quantity || item.qty}
-                            </p>
-                          </div>
+                          )}
                         </div>
-                      )
-                    })}
-                  </div>
+                        <div className="text-right">
+                          <p className="font-medium">
+                            {formatCurrency(itemPrice)}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Qty: {item.quantity || item.qty}
+                          </p>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
                 )}
 
                 {session.orders?.subtotal !== undefined && (

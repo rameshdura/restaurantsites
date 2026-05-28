@@ -20,7 +20,6 @@ export default async function SessionDetailPage({
 
   return (
     <OwnerSessionDetailClient
-      restaurantSlug={decodedSlug}
       sessionId={resolvedParams.sessionId}
       currency={data.app?.currency || "USD"}
       categories={categories}

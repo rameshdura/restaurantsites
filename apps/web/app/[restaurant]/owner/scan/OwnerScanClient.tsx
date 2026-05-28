@@ -1,6 +1,4 @@
 "use client"
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/no-unescaped-entities */
 
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
@@ -27,8 +25,39 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
 interface OwnerScanClientProps {
   restaurantSlug: string
   currency: string
-  menu: any[]
-  menuCategories: any[]
+  menu: { id: string; name: string; price: string | number; [key: string]: unknown }[]
+  menuCategories: {
+    name: string
+    items: {
+      id: string
+      name: string
+      price: string | number
+      [key: string]: unknown
+    }[]
+  }[]
+}
+
+interface TableSession {
+  session_id: string
+  table_number: string
+  status: string
+  created_at: string
+  last_activity: string
+  orders?: {
+    total?: number
+    subtotal?: number
+    service_charge?: number
+    tax?: number
+    tips?: number
+    discount?: number
+    items?: {
+      item_id: string
+      qty: number
+      notes?: string
+      [key: string]: unknown
+    }[]
+  }
+  [key: string]: unknown
 }
 
 function ScanContent({
@@ -41,7 +70,7 @@ function ScanContent({
   const router = useRouter()
   const initialSessionId = searchParams.get("session_id")
 
-  const [session, setSession] = useState<any>(null)
+  const [session, setSession] = useState<TableSession | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isFinalizing, setIsFinalizing] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -70,9 +99,9 @@ function ScanContent({
             "Session not found. It may have been already closed or invalid."
           )
         } else {
-          setSession(data)
+          setSession(data as TableSession)
         }
-      } catch (err: any) {
+      } catch (err) {
         console.error("Error fetching session:", err)
         setError("Failed to load session details.")
       } finally {
@@ -145,7 +174,9 @@ function ScanContent({
     let found = menu.find((i) => i.id === itemId)
     if (!found) {
       for (const cat of menuCategories) {
-        const match = cat.items?.find((i: any) => i.id === itemId)
+        const match = cat.items?.find(
+          (i: { id?: string; [key: string]: unknown }) => i.id === itemId
+        )
         if (match) {
           found = match
           break
@@ -173,7 +204,7 @@ function ScanContent({
           <QrCode className="mx-auto mb-4 h-12 w-12 text-primary" />
           <h2 className="text-2xl font-bold">Scan Guest Receipt</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Point your camera at the customer's checkout QR code to view and
+            Point your camera at the customer&apos;s checkout QR code to view and
             finalize their bill.
           </p>
         </div>
@@ -237,35 +268,42 @@ function ScanContent({
           </div>
 
           <div className="mb-6 space-y-3">
-            {items.map((item: any) => {
-              const details = getMenuItemDetails(item.item_id)
-              const name = details?.name || item.item_id
-              const itemPrice = details
-                ? parseFloat(String(details.price)) || 0
-                : 0
-              return (
-                <div
-                  key={item.item_id + (item.notes || "")}
-                  className="flex items-start justify-between text-sm"
-                >
-                  <div>
-                    <span className="font-semibold">{name}</span>
-                    <span className="ml-2 font-bold text-primary">
-                      x{item.qty}
+            {items.map(
+              (item: {
+                item_id: string
+                qty: number
+                notes?: string
+                [key: string]: unknown
+              }) => {
+                const details = getMenuItemDetails(item.item_id)
+                const name = details?.name || item.item_id
+                const itemPrice = details
+                  ? parseFloat(String(details.price)) || 0
+                  : 0
+                return (
+                  <div
+                    key={item.item_id + (item.notes || "")}
+                    className="flex items-start justify-between text-sm"
+                  >
+                    <div>
+                      <span className="font-semibold">{name}</span>
+                      <span className="ml-2 font-bold text-primary">
+                        x{item.qty}
+                      </span>
+                      {item.notes && (
+                        <p className="text-[11px] text-muted-foreground italic">
+                          &quot;{item.notes}&quot;
+                        </p>
+                      )}
+                    </div>
+                    <span className="font-medium">
+                      {symbol}
+                      {itemPrice * item.qty}
                     </span>
-                    {item.notes && (
-                      <p className="text-[11px] text-muted-foreground italic">
-                        "{item.notes}"
-                      </p>
-                    )}
                   </div>
-                  <span className="font-medium">
-                    {symbol}
-                    {itemPrice * item.qty}
-                  </span>
-                </div>
-              )
-            })}
+                )
+              }
+            )}
             {items.length === 0 && (
               <p className="py-2 text-center text-sm text-muted-foreground italic">
                 No items found.

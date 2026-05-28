@@ -37,7 +37,6 @@ export default async function OwnerActivityPage({
   return (
     <OwnerActivityClient
       restaurantSlug={decodedSlug}
-      restaurantName={restaurant.data.name || decodedSlug}
       currency={restaurant.data.app?.currency || "USD"}
       menu={menuItems}
       menuCategories={restaurant.data.menuCategories || []}

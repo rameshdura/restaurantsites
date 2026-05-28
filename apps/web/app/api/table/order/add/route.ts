@@ -23,6 +23,7 @@ export async function POST(request: Request) {
       tips,
       discount,
       cartItems,
+      isOwner,
     } = await request.json()
 
     if (!session_id || !restaurantSlug) {
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Session not found" }, { status: 404 })
     }
 
-    if (session.status === "closed" || session.status === "payment_pending") {
+    if (session.status === "closed" || (!isOwner && session.status === "payment_pending")) {
       return NextResponse.json(
         { error: "Session is closed or awaiting payment" },
         { status: 400 }

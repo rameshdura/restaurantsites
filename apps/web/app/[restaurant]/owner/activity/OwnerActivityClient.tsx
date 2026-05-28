@@ -1,7 +1,4 @@
 "use client"
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react/no-unescaped-entities */
 
 import { useState, useEffect, useCallback } from "react"
 import { supabase } from "@/lib/supabase"
@@ -16,10 +13,17 @@ import {
 
 interface OwnerActivityClientProps {
   restaurantSlug: string
-  restaurantName: string
   currency: string
-  menu: any[]
-  menuCategories: any[]
+  menu: { id: string; name: string; price: string | number; [key: string]: unknown }[]
+  menuCategories: {
+    name: string
+    items: {
+      id: string
+      name: string
+      price: string | number
+      [key: string]: unknown
+    }[]
+  }[]
 }
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
@@ -59,7 +63,6 @@ function ElapsedTime({ createdString }: { createdString: string }) {
 
 export function OwnerActivityClient({
   restaurantSlug,
-  restaurantName,
   currency,
   menu,
   menuCategories,
@@ -394,7 +397,7 @@ export function OwnerActivityClient({
                                         </p>
                                         {item.notes && (
                                           <p className="mt-0.5 text-[10px] text-muted-foreground italic">
-                                            "{item.notes}"
+                                            &quot;{item.notes}&quot;
                                           </p>
                                         )}
                                       </div>

@@ -11,6 +11,8 @@ import {
   Receipt,
   Trash2,
   Banknote,
+  Plus,
+  Minus,
 } from "lucide-react"
 import Link from "next/link"
 import {
@@ -68,6 +70,7 @@ export function OwnerTableDetailClient({
   const [isCompleting, setIsCompleting] = useState(false)
   const [isFlushDialogOpen, setIsFlushDialogOpen] = useState(false)
   const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false)
+  const [isUpdatingOrder, setIsUpdatingOrder] = useState<string | null>(null)
 
   const fetchTableData = useCallback(async () => {
     setIsLoading(true)
@@ -145,6 +148,37 @@ export function OwnerTableDetailClient({
       alert("Error completing session.")
     } finally {
       setIsCompleting(false)
+    }
+  }
+
+  const updateOrderItem = async (itemId: string, newQty: number, notes?: string) => {
+    if (!activeSession) return
+    setIsUpdatingOrder(`${itemId}-${notes || ""}`)
+    try {
+      const res = await fetch("/api/table/order/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: activeSession.session_id,
+          restaurantSlug,
+          item_id: itemId,
+          qty: newQty,
+          notes: notes || "",
+          isOwner: true,
+        }),
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: "Unknown error" }))
+        throw new Error(errorData.error || "Failed to update item")
+      }
+      
+      await fetchTableData()
+    } catch (err) {
+      console.error(err)
+      alert("Error updating item.")
+    } finally {
+      setIsUpdatingOrder(null)
     }
   }
 
@@ -297,10 +331,14 @@ export function OwnerTableDetailClient({
                         ? parseFloat(String(itemDetails.price)) || 0
                         : parseFloat(String(item.price)) || 0
 
+                      const qty = item.quantity || item.qty || 1
+                      const uniqueKey = `${item.item_id}-${item.notes || ""}`
+                      const isUpdatingThis = isUpdatingOrder === uniqueKey
+
                       return (
                         <div
                           key={idx}
-                          className="flex items-start justify-between p-4 sm:p-6"
+                          className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between p-4 sm:p-6"
                         >
                           <div>
                             <p className="font-semibold">{name}</p>
@@ -310,13 +348,43 @@ export function OwnerTableDetailClient({
                               </p>
                             )}
                           </div>
-                          <div className="text-right">
-                            <p className="font-medium">
-                              {formatCurrency(itemPrice)}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              Qty: {item.quantity || item.qty}
-                            </p>
+                          <div className="flex items-center justify-between sm:flex-col sm:items-end gap-3 sm:gap-2 w-full sm:w-auto">
+                            <div className="text-left sm:text-right">
+                              <p className="font-medium">
+                                {formatCurrency(itemPrice)}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {isUpdatingThis ? (
+                                <RefreshCw className="h-5 w-5 animate-spin text-muted-foreground" />
+                              ) : (
+                                <>
+                                  <button
+                                    onClick={() => updateOrderItem(item.item_id, qty - 1, item.notes)}
+                                    className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
+                                    disabled={qty <= 0}
+                                  >
+                                    <Minus className="h-4 w-4" />
+                                  </button>
+                                  <span className="w-6 text-center text-sm font-medium">
+                                    {qty}
+                                  </span>
+                                  <button
+                                    onClick={() => updateOrderItem(item.item_id, qty + 1, item.notes)}
+                                    className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent"
+                                  >
+                                    <Plus className="h-4 w-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => updateOrderItem(item.item_id, 0, item.notes)}
+                                    className="ml-2 flex h-8 w-8 items-center justify-center rounded-md border border-red-500/20 bg-red-50 text-red-600 transition-colors hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20"
+                                    title="Remove Item"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </button>
+                                </>
+                              )}
+                            </div>
                           </div>
                         </div>
                       )
