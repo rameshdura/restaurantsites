@@ -14,7 +14,9 @@ export function OwnerTablesClient({
   restaurantSlug,
   tables,
 }: OwnerTablesClientProps) {
-  const [sessions, setSessions] = useState<{ table_number: string; status: string; persons?: number }[]>([])
+  const [sessions, setSessions] = useState<
+    { table_number: string; status: string; persons?: number }[]
+  >([])
   const [isLoading, setIsLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [autoRefresh, setAutoRefresh] = useState(true)
@@ -61,16 +63,16 @@ export function OwnerTablesClient({
       {/* Header Controls */}
       <div className="mx-auto mb-8 flex max-w-7xl items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold flex items-center gap-2">
+          <h2 className="flex items-center gap-2 text-xl font-bold">
             <LayoutGrid className="h-5 w-5 text-primary" />
             Table Overview
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             Real-time status of all tables in your restaurant.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <label className="flex cursor-pointer items-center gap-2 rounded-xl bg-card border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground select-none">
+          <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-muted-foreground select-none">
             <input
               type="checkbox"
               checked={autoRefresh}
@@ -83,9 +85,11 @@ export function OwnerTablesClient({
           <button
             onClick={() => fetchSessions(false)}
             disabled={isRefreshing}
-            className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-1.5 text-xs font-semibold hover:bg-accent transition-all disabled:opacity-50"
+            className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-1.5 text-xs font-semibold transition-all hover:bg-accent disabled:opacity-50"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`h-3.5 w-3.5 ${isRefreshing ? "animate-spin" : ""}`}
+            />
             Refresh
           </button>
         </div>
@@ -100,7 +104,7 @@ export function OwnerTablesClient({
             </p>
           </div>
         ) : tables.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-border p-20 text-center flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-border p-20 text-center">
             <LayoutGrid className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
             <p className="text-sm font-medium text-muted-foreground">
               No tables are currently defined for this restaurant.
@@ -121,10 +125,10 @@ export function OwnerTablesClient({
                 <Link
                   href={`/${restaurantSlug}/owner/tables/${table.id}`}
                   key={table.id}
-                  className={`relative flex aspect-square flex-col items-center justify-center rounded-2xl border-2 p-4 text-center transition-all duration-300 cursor-pointer ${
+                  className={`relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-2xl border-2 p-4 text-center transition-all duration-300 ${
                     isPacked
-                      ? "border-red-900/40 bg-red-900/10 dark:border-red-500/20 dark:bg-red-950/30 text-red-700 dark:text-red-400 shadow-sm shadow-red-900/5 hover:-translate-y-1 hover:shadow-md"
-                      : "border-emerald-700/30 bg-emerald-700/10 dark:border-emerald-500/20 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 shadow-sm shadow-emerald-700/5 hover:-translate-y-1 hover:shadow-md"
+                      ? "border-red-900/40 bg-red-900/10 text-red-700 shadow-sm shadow-red-900/5 hover:-translate-y-1 hover:shadow-md dark:border-red-500/20 dark:bg-red-950/30 dark:text-red-400"
+                      : "border-emerald-700/30 bg-emerald-700/10 text-emerald-700 shadow-sm shadow-emerald-700/5 hover:-translate-y-1 hover:shadow-md dark:border-emerald-500/20 dark:bg-emerald-950/20 dark:text-emerald-400"
                   }`}
                 >
                   <div className="mb-3">
@@ -134,11 +138,11 @@ export function OwnerTablesClient({
                       <CheckCircle2 className="h-8 w-8 opacity-80" />
                     )}
                   </div>
-                  
-                  <h3 className="text-lg font-black tracking-tight mb-1 truncate w-full px-2">
+
+                  <h3 className="mb-1 w-full truncate px-2 text-lg font-black tracking-tight">
                     {table.label}
                   </h3>
-                  
+
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-widest uppercase ${
                       isPacked
@@ -146,12 +150,14 @@ export function OwnerTablesClient({
                         : "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300"
                     }`}
                   >
-                    {isPacked ? `${activeSession.persons || "?"}/${table.persons || 4} P` : `Max ${table.persons || 4}P`}
+                    {isPacked
+                      ? `${activeSession.persons || "?"}/${table.persons || 4} P`
+                      : `Max ${table.persons || 4}P`}
                   </span>
 
                   {/* Decorative glowing orb effect behind the icon based on status */}
                   <div
-                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-16 w-16 rounded-full blur-[24px] pointer-events-none ${
+                    className={`pointer-events-none absolute top-1/2 left-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[24px] ${
                       isPacked ? "bg-red-500/10" : "bg-emerald-500/10"
                     }`}
                   />

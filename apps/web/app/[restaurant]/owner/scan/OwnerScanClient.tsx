@@ -66,7 +66,9 @@ function ScanContent({
 
         if (error) throw error
         if (!data) {
-          setError("Session not found. It may have been already closed or invalid.")
+          setError(
+            "Session not found. It may have been already closed or invalid."
+          )
         } else {
           setSession(data)
         }
@@ -95,9 +97,10 @@ function ScanContent({
         setError("Invalid QR Code: No session_id found.")
       }
     } catch {
-      // If it's not a URL, maybe it's just the raw session ID (though our app uses URL)
+      // If it's not a URL, maybe it's just the raw session ID
       if (text.length > 10) {
         setScannedId(text)
+        router.replace(`/${restaurantSlug}/owner/scan?session_id=${text}`)
       } else {
         setError("Invalid QR Code format.")
       }
@@ -156,7 +159,9 @@ function ScanContent({
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center p-6 text-center">
         <RefreshCw className="h-10 w-10 animate-spin text-primary" />
-        <p className="mt-4 text-sm font-medium text-muted-foreground">Loading bill details...</p>
+        <p className="mt-4 text-sm font-medium text-muted-foreground">
+          Loading bill details...
+        </p>
       </div>
     )
   }
@@ -168,7 +173,8 @@ function ScanContent({
           <QrCode className="mx-auto mb-4 h-12 w-12 text-primary" />
           <h2 className="text-2xl font-bold">Scan Guest Receipt</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Point your camera at the customer's checkout QR code to view and finalize their bill.
+            Point your camera at the customer's checkout QR code to view and
+            finalize their bill.
           </p>
         </div>
 
@@ -180,11 +186,11 @@ function ScanContent({
         )}
 
         <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-lg">
-          <Scanner 
+          <Scanner
             onScan={(result) => {
-              const text = result[0]?.rawValue;
-              if (text) handleScan(text);
-            }} 
+              const text = result[0]?.rawValue
+              if (text) handleScan(text)
+            }}
             allowMultiple={false}
           />
         </div>
@@ -199,7 +205,7 @@ function ScanContent({
     <div className="mx-auto max-w-lg p-4 sm:p-8">
       <button
         onClick={resetScanner}
-        className="mb-6 flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+        className="mb-6 flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
         Scan Another
@@ -207,15 +213,19 @@ function ScanContent({
 
       <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-lg">
         {/* Header */}
-        <div className={`p-6 text-center ${session.status === "closed" ? "bg-green-500/10 border-b border-green-500/20" : "bg-primary/10 border-b border-primary/20"}`}>
+        <div
+          className={`p-6 text-center ${session.status === "closed" ? "border-b border-green-500/20 bg-green-500/10" : "border-b border-primary/20 bg-primary/10"}`}
+        >
           {session.status === "closed" ? (
             <CheckCircle className="mx-auto mb-2 h-10 w-10 text-green-500" />
           ) : (
             <QrCode className="mx-auto mb-2 h-10 w-10 text-primary" />
           )}
           <h2 className="text-2xl font-black">Table {session.table_number}</h2>
-          <span className="mt-1 inline-flex rounded-full bg-background px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase text-muted-foreground">
-            {session.status === "payment_pending" ? "Awaiting Payment" : session.status}
+          <span className="mt-1 inline-flex rounded-full bg-background px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+            {session.status === "payment_pending"
+              ? "Awaiting Payment"
+              : session.status}
           </span>
         </div>
 
@@ -230,52 +240,86 @@ function ScanContent({
             {items.map((item: any) => {
               const details = getMenuItemDetails(item.item_id)
               const name = details?.name || item.item_id
-              const itemPrice = details ? parseFloat(String(details.price)) || 0 : 0
+              const itemPrice = details
+                ? parseFloat(String(details.price)) || 0
+                : 0
               return (
-                <div key={item.item_id + (item.notes || "")} className="flex items-start justify-between text-sm">
+                <div
+                  key={item.item_id + (item.notes || "")}
+                  className="flex items-start justify-between text-sm"
+                >
                   <div>
                     <span className="font-semibold">{name}</span>
-                    <span className="ml-2 font-bold text-primary">x{item.qty}</span>
-                    {item.notes && <p className="text-[11px] text-muted-foreground italic">"{item.notes}"</p>}
+                    <span className="ml-2 font-bold text-primary">
+                      x{item.qty}
+                    </span>
+                    {item.notes && (
+                      <p className="text-[11px] text-muted-foreground italic">
+                        "{item.notes}"
+                      </p>
+                    )}
                   </div>
-                  <span className="font-medium">{symbol}{itemPrice * item.qty}</span>
+                  <span className="font-medium">
+                    {symbol}
+                    {itemPrice * item.qty}
+                  </span>
                 </div>
               )
             })}
             {items.length === 0 && (
-              <p className="text-sm text-muted-foreground italic text-center py-2">No items found.</p>
+              <p className="py-2 text-center text-sm text-muted-foreground italic">
+                No items found.
+              </p>
             )}
           </div>
 
           <div className="space-y-2 border-t border-border/60 pt-4 text-sm">
             <div className="flex justify-between text-muted-foreground">
               <span>Subtotal</span>
-              <span>{symbol}{orders.subtotal || 0}</span>
+              <span>
+                {symbol}
+                {orders.subtotal || 0}
+              </span>
             </div>
             <div className="flex justify-between text-muted-foreground">
               <span>Service Charge</span>
-              <span>{symbol}{orders.service_charge || 0}</span>
+              <span>
+                {symbol}
+                {orders.service_charge || 0}
+              </span>
             </div>
             <div className="flex justify-between text-muted-foreground">
               <span>Tax</span>
-              <span>{symbol}{orders.tax || 0}</span>
+              <span>
+                {symbol}
+                {orders.tax || 0}
+              </span>
             </div>
             {Number(orders.tips) > 0 && (
               <div className="flex justify-between text-muted-foreground">
                 <span>Tip</span>
-                <span className="font-semibold text-primary">+{symbol}{orders.tips}</span>
+                <span className="font-semibold text-primary">
+                  +{symbol}
+                  {orders.tips}
+                </span>
               </div>
             )}
             {Number(orders.discount) > 0 && (
               <div className="flex justify-between text-muted-foreground">
                 <span>Discount</span>
-                <span className="font-semibold text-green-500">-{symbol}{orders.discount}</span>
+                <span className="font-semibold text-green-500">
+                  -{symbol}
+                  {orders.discount}
+                </span>
               </div>
             )}
-            
+
             <div className="flex justify-between border-t border-border/60 pt-3 text-xl font-black">
               <span>Total Due</span>
-              <span className="text-primary">{symbol}{orders.total || 0}</span>
+              <span className="text-primary">
+                {symbol}
+                {orders.total || 0}
+              </span>
             </div>
           </div>
         </div>
@@ -293,7 +337,11 @@ function ScanContent({
               disabled={isFinalizing}
               className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary py-4 text-sm font-bold text-primary-foreground shadow-lg transition-all hover:bg-primary/90 active:scale-95 disabled:opacity-50"
             >
-              {isFinalizing ? <RefreshCw className="h-5 w-5 animate-spin" /> : <CheckCircle className="h-5 w-5" />}
+              {isFinalizing ? (
+                <RefreshCw className="h-5 w-5 animate-spin" />
+              ) : (
+                <CheckCircle className="h-5 w-5" />
+              )}
               {isFinalizing ? "Processing..." : "Accept Payment & Finalize"}
             </button>
           )}
@@ -305,7 +353,13 @@ function ScanContent({
 
 export function OwnerScanClient(props: OwnerScanClientProps) {
   return (
-    <Suspense fallback={<div className="p-8 text-center"><RefreshCw className="mx-auto h-8 w-8 animate-spin text-primary" /></div>}>
+    <Suspense
+      fallback={
+        <div className="p-8 text-center">
+          <RefreshCw className="mx-auto h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
       <ScanContent {...props} />
     </Suspense>
   )

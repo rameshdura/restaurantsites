@@ -52,7 +52,10 @@ export async function POST(request: Request) {
     }
 
     if (session.status === "closed" || session.status === "payment_pending") {
-      return NextResponse.json({ error: "Session is closed or awaiting payment" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Session is closed or awaiting payment" },
+        { status: 400 }
+      )
     }
 
     if (new Date(session.expires_at).getTime() < Date.now()) {
@@ -113,7 +116,8 @@ export async function POST(request: Request) {
 
         const targetNotes = cartItem.notes || ""
         const existingItemIndex = items.findIndex(
-          (i) => i.item_id === cartItem.item_id && (i.notes || "") === targetNotes
+          (i) =>
+            i.item_id === cartItem.item_id && (i.notes || "") === targetNotes
         )
 
         if (existingItemIndex > -1) {

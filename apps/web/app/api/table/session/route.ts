@@ -83,12 +83,18 @@ export async function POST(request: Request) {
       .maybeSingle()
 
     if (checkError) {
-      console.error("[POST /api/table/session] Check existing session error:", checkError)
+      console.error(
+        "[POST /api/table/session] Check existing session error:",
+        checkError
+      )
     }
 
     if (existingActiveSession) {
       // Return the existing active session so the new user joins the same table session
-      return NextResponse.json({ success: true, session: existingActiveSession })
+      return NextResponse.json({
+        success: true,
+        session: existingActiveSession,
+      })
     }
 
     const expiresAt = new Date(Date.now() + 5 * 60 * 60 * 1000).toISOString() // 5 hours expiry

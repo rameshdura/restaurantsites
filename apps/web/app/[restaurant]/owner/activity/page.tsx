@@ -21,7 +21,9 @@ export async function generateMetadata({
   }
 }
 
-export default async function OwnerActivityPage({ params }: OwnerActivityPageProps) {
+export default async function OwnerActivityPage({
+  params,
+}: OwnerActivityPageProps) {
   const { restaurant: slug } = await params
   const decodedSlug = decodeURIComponent(slug)
   const restaurant = await getRestaurant(decodedSlug)

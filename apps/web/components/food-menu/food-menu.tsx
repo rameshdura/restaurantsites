@@ -7,6 +7,7 @@ import { CategoryNav } from "./category-nav"
 import { MenuSection } from "./menu-section"
 import { MOCK_MENU } from "./mock-data"
 import { SectionHeader } from "@workspace/ui/components/section-header"
+import { useToast } from "@workspace/ui/hooks/use-toast"
 import { getSessionCookie, clearSessionCookie } from "@/lib/cookies"
 import {
   ShoppingBag,
@@ -63,19 +64,27 @@ export function FoodMenu({
 }: FoodMenuProps) {
   const params = useParams()
   const restaurantSlug = (params?.restaurant as string) || ""
+  const { toast } = useToast()
 
   const [activeTab, setActiveTab] = useState(categories[0]?.id || "")
   const [tableMode, setTableMode] = useState(initialTableMode)
-  const [session, setSession] = useState<Record<string, any> | null>(initialSession)
+  const [session, setSession] = useState<Record<string, any> | null>(
+    initialSession
+  )
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
   const [isCheckingOut, setIsCheckingOut] = useState(false)
   const [showReceipt, setShowReceipt] = useState(false)
-  const [receiptSession, setReceiptSession] = useState<Record<string, any> | null>(null)
+  const [receiptSession, setReceiptSession] = useState<Record<
+    string,
+    any
+  > | null>(null)
   const [customTip, setCustomTip] = useState("")
   const [showCustomTipInput, setShowCustomTipInput] = useState(false)
   const [sidebarTab, setSidebarTab] = useState<"cart" | "orders">("cart")
-  const [cart, setCart] = useState<{ item_id: string; qty: number; notes: string }[]>([])
+  const [cart, setCart] = useState<
+    { item_id: string; qty: number; notes: string }[]
+  >([])
 
   const [prevInitialSession, setPrevInitialSession] = useState(initialSession)
   const [prevInitialTableMode, setPrevInitialTableMode] =
@@ -95,7 +104,8 @@ export function FoodMenu({
   const activeCategory = categories.find((c) => c.id === activeTab)
   const t = translations?.common?.foodMenu || {}
 
-  const currency = (session as any)?.orders?.priceCurrency || initialCurrency || "USD"
+  const currency =
+    (session as any)?.orders?.priceCurrency || initialCurrency || "USD"
   const symbol = CURRENCY_SYMBOLS[currency] || ""
 
   // 1. Check for active session cookie on mount
@@ -139,21 +149,32 @@ export function FoodMenu({
 
   // 1c. Automatically show receipt if session is loaded as closed
   useEffect(() => {
-    if (session && (session.status === "closed" || session.status === "payment_pending") && !showReceipt) {
+    if (
+      session &&
+      (session.status === "closed" || session.status === "payment_pending") &&
+      !showReceipt
+    ) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setReceiptSession(session)
-       
+
       setShowReceipt(true)
     }
   }, [session, showReceipt])
 
   // 1d. Poll for session status if showing receipt and payment_pending
   useEffect(() => {
-    if (!showReceipt || !receiptSession || receiptSession.status !== "payment_pending") return
+    if (
+      !showReceipt ||
+      !receiptSession ||
+      receiptSession.status !== "payment_pending"
+    )
+      return
 
     const intervalId = setInterval(async () => {
       try {
-        const res = await fetch(`/api/table/session?session_id=${receiptSession.session_id}`)
+        const res = await fetch(
+          `/api/table/session?session_id=${receiptSession.session_id}`
+        )
         const data = await res.json()
         if (data.valid && data.session) {
           if (data.session.status !== "payment_pending") {
@@ -162,7 +183,9 @@ export function FoodMenu({
             onSessionChange?.(data.session)
           }
         } else {
-           setReceiptSession(prev => prev ? { ...prev, status: "closed" } : null)
+          setReceiptSession((prev) =>
+            prev ? { ...prev, status: "closed" } : null
+          )
         }
       } catch (err) {
         console.error("Failed to poll session status:", err)
@@ -188,7 +211,12 @@ export function FoodMenu({
           return newCart
         }
         const newCart = [...prev]
-        newCart[existingIndex] = { ...newCart[existingIndex], item_id: newCart[existingIndex]!.item_id, qty, notes }
+        newCart[existingIndex] = {
+          ...newCart[existingIndex],
+          item_id: newCart[existingIndex]!.item_id,
+          qty,
+          notes,
+        }
         return newCart
       } else if (qty > 0) {
         return [...prev, { item_id: itemId, qty, notes }]
@@ -222,7 +250,11 @@ export function FoodMenu({
         data.error === "Session is closed or awaiting payment" ||
         data.error === "Session not found"
       ) {
-        alert("This ordering session has been closed by the host.")
+        toast({
+          title: "Session Closed",
+          description: "This ordering session has been closed by the host.",
+          variant: "destructive",
+        })
         clearSessionCookie()
         setTableMode(false)
         setSession(null)
@@ -264,20 +296,16 @@ export function FoodMenu({
   // 4. Checkout / Close Session handler
   const handleCheckout = async () => {
     if (!session) return
-    if (
-      !confirm(
-        "Are you ready to checkout? This will close your table session so you can pay at the counter, and free up the table for new guests."
-      )
-    ) {
-      return
-    }
 
     setIsCheckingOut(true)
     try {
       const res = await fetch("/api/table/session/close", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_id: session.session_id, status: "payment_pending" }),
+        body: JSON.stringify({
+          session_id: session.session_id,
+          status: "payment_pending",
+        }),
       })
       const data = await res.json()
       if (data.success) {
@@ -287,11 +315,19 @@ export function FoodMenu({
         setShowReceipt(true)
         // We do NOT clear the session cookie here. It will be cleared when the user clicks "Done" on the receipt.
       } else {
-        alert("Failed to checkout. Please ask a staff member.")
+        toast({
+          title: "Checkout Failed",
+          description: "Failed to checkout. Please ask a staff member.",
+          variant: "destructive",
+        })
       }
     } catch (err) {
       console.error("Failed to checkout:", err)
-      alert("Failed to checkout. Please ask a staff member.")
+      toast({
+        title: "Checkout Error",
+        description: "An error occurred during checkout. Please ask a staff member.",
+        variant: "destructive",
+      })
     } finally {
       setIsCheckingOut(false)
     }
@@ -627,11 +663,15 @@ export function FoodMenu({
 
                 <div className="mt-6 flex flex-col gap-3">
                   <button
-                    disabled={isUpdating || isCheckingOut || orderItems.length === 0}
+                    disabled={
+                      isUpdating || isCheckingOut || orderItems.length === 0
+                    }
                     onClick={handleCheckout}
                     className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-bold text-primary-foreground shadow-lg transition-all hover:bg-primary/90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {isCheckingOut ? "Closing Table..." : "Checkout & Close Table"}
+                    {isCheckingOut
+                      ? "Closing Table..."
+                      : "Checkout & Close Table"}
                   </button>
 
                   <p className="text-center text-[10px] tracking-wider text-muted-foreground uppercase">
@@ -680,24 +720,43 @@ export function FoodMenu({
   )
 
   if (showReceipt && receiptSession) {
-    const origin = typeof window !== "undefined" ? window.location.origin : ""
-    const qrUrl = `${origin}/${restaurantSlug}/owner?session_id=${receiptSession.session_id}`
+    const qrUrl = receiptSession.session_id
     const receiptOrderItems = receiptSession.orders?.items || []
 
     return (
       <div className="mx-auto max-w-md px-4 py-12 sm:px-6">
         <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
           {/* Header */}
-          <div className="border-b border-primary/20 bg-primary/10 p-6 text-center">
-            <CheckCircle className="mx-auto mb-3 h-12 w-12 text-primary" />
-            <h2 className="text-2xl font-black text-foreground">Checkout Complete</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Please show this at the register</p>
+          <div
+            className={`border-b p-6 text-center transition-colors duration-500 ${
+              receiptSession.status === "closed"
+                ? "border-green-500/20 bg-green-500/10"
+                : "border-primary/20 bg-primary/10"
+            }`}
+          >
+            <CheckCircle
+              className={`mx-auto mb-3 h-12 w-12 transition-colors duration-500 ${
+                receiptSession.status === "closed"
+                  ? "text-green-500"
+                  : "text-primary"
+              }`}
+            />
+            <h2 className="text-2xl font-black text-foreground">
+              {receiptSession.status === "closed"
+                ? "Payment Accepted"
+                : "Checkout Complete"}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {receiptSession.status === "closed"
+                ? "Thank you for dining with us!"
+                : "Please show this at the register"}
+            </p>
           </div>
 
           {/* QR Code */}
           <div className="flex flex-col items-center justify-center bg-white p-8 text-black">
             <QRCode value={qrUrl} size={180} level="M" />
-            <p className="mt-4 font-mono text-[10px] uppercase text-zinc-500">
+            <p className="mt-4 font-mono text-[10px] text-zinc-500 uppercase">
               Table {receiptSession.table_number}
             </p>
           </div>
@@ -705,8 +764,13 @@ export function FoodMenu({
           {/* Amount & Summary */}
           <div className="p-6 text-sm">
             <div className="mb-6 text-center">
-              <span className="block text-xs font-bold tracking-widest text-muted-foreground uppercase">Amount Due</span>
-              <span className="text-4xl font-black text-primary">{symbol}{receiptSession.orders?.total}</span>
+              <span className="block text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                Amount Due
+              </span>
+              <span className="text-4xl font-black text-primary">
+                {symbol}
+                {receiptSession.orders?.total}
+              </span>
             </div>
 
             <div className="mb-4 border-b border-border/60 pb-2 text-xs font-bold tracking-wider text-muted-foreground uppercase">
@@ -717,16 +781,26 @@ export function FoodMenu({
               {receiptOrderItems.map((item: any) => {
                 const itemDetails = flatItems.find((i) => i.id === item.item_id)
                 const name = itemDetails?.name || item.item_id
-                const itemPrice = itemDetails ? parseFloat(String(itemDetails.price)) || 0 : 0
+                const itemPrice = itemDetails
+                  ? parseFloat(String(itemDetails.price)) || 0
+                  : 0
                 return (
-                  <div key={item.item_id + (item.notes || "")} className="flex items-start justify-between">
+                  <div
+                    key={item.item_id + (item.notes || "")}
+                    className="flex items-start justify-between"
+                  >
                     <div>
                       <p className="font-semibold text-foreground">
                         {name}
-                        <span className="ml-1.5 text-xs font-bold text-primary">x{item.qty}</span>
+                        <span className="ml-1.5 text-xs font-bold text-primary">
+                          x{item.qty}
+                        </span>
                       </p>
                     </div>
-                    <span className="font-medium text-foreground">{symbol}{itemPrice * item.qty}</span>
+                    <span className="font-medium text-foreground">
+                      {symbol}
+                      {itemPrice * item.qty}
+                    </span>
                   </div>
                 )
               })}
@@ -736,16 +810,25 @@ export function FoodMenu({
             <div className="mt-4 space-y-2 border-t border-border/60 pt-4 text-xs">
               <div className="flex justify-between text-muted-foreground">
                 <span>Subtotal</span>
-                <span>{symbol}{receiptSession.orders?.subtotal}</span>
+                <span>
+                  {symbol}
+                  {receiptSession.orders?.subtotal}
+                </span>
               </div>
               <div className="flex justify-between text-muted-foreground">
                 <span>Tax (10%)</span>
-                <span>{symbol}{receiptSession.orders?.tax}</span>
+                <span>
+                  {symbol}
+                  {receiptSession.orders?.tax}
+                </span>
               </div>
               {Number(receiptSession.orders?.tips) > 0 && (
                 <div className="flex justify-between text-muted-foreground">
                   <span>Tip</span>
-                  <span className="font-semibold text-primary">+{symbol}{receiptSession.orders?.tips}</span>
+                  <span className="font-semibold text-primary">
+                    +{symbol}
+                    {receiptSession.orders?.tips}
+                  </span>
                 </div>
               )}
             </div>
@@ -769,8 +852,9 @@ export function FoodMenu({
                   setIsSidebarOpen(false)
                   clearSessionCookie()
                 }}
-                className="w-full cursor-pointer rounded-xl bg-accent py-3.5 text-sm font-bold text-foreground transition-all hover:bg-accent/80 active:scale-95"
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-green-500 py-3.5 text-sm font-bold text-white shadow-lg transition-all hover:bg-green-600 active:scale-95"
               >
+                <CheckCircle className="h-5 w-5" />
                 Done
               </button>
             )}

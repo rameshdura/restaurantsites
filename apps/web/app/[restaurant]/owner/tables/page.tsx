@@ -21,7 +21,9 @@ export async function generateMetadata({
   }
 }
 
-export default async function OwnerTablesPage({ params }: OwnerTablesPageProps) {
+export default async function OwnerTablesPage({
+  params,
+}: OwnerTablesPageProps) {
   const { restaurant: slug } = await params
   const decodedSlug = decodeURIComponent(slug)
   const restaurant = await getRestaurant(decodedSlug)
@@ -32,10 +34,5 @@ export default async function OwnerTablesPage({ params }: OwnerTablesPageProps) 
 
   const tables = restaurant.data.tables || []
 
-  return (
-    <OwnerTablesClient
-      restaurantSlug={decodedSlug}
-      tables={tables}
-    />
-  )
+  return <OwnerTablesClient restaurantSlug={decodedSlug} tables={tables} />
 }

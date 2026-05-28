@@ -6,6 +6,6 @@ interface OwnerPageProps {
 
 export default async function OwnerPage({ params }: OwnerPageProps) {
   const { restaurant: slug } = await params
-  
+
   redirect(`/${slug}/owner/scan`)
 }
