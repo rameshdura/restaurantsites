@@ -41,6 +41,7 @@ interface TableSessionItem {
   notes?: string
   quantity?: number
   qty?: number
+  served_qty?: number
 }
 
 interface TableSession {
@@ -71,6 +72,7 @@ export function OwnerTableDetailClient({
   const [isFlushDialogOpen, setIsFlushDialogOpen] = useState(false)
   const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false)
   const [isUpdatingOrder, setIsUpdatingOrder] = useState<string | null>(null)
+  const [isUpdatingServe, setIsUpdatingServe] = useState<string | null>(null)
 
   const fetchTableData = useCallback(async () => {
     setIsLoading(true)
@@ -179,6 +181,35 @@ export function OwnerTableDetailClient({
       alert("Error updating item.")
     } finally {
       setIsUpdatingOrder(null)
+    }
+  }
+
+  const updateServedQty = async (itemId: string, newServedQty: number, notes?: string) => {
+    if (!activeSession) return
+    setIsUpdatingServe(`${itemId}-${notes || ""}`)
+    try {
+      const res = await fetch("/api/table/order/serve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: activeSession.session_id,
+          item_id: itemId,
+          notes: notes || "",
+          served_qty: newServedQty,
+        }),
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: "Unknown error" }))
+        throw new Error(errorData.error || "Failed to update serving status")
+      }
+      
+      await fetchTableData()
+    } catch (err) {
+      console.error(err)
+      alert("Error updating serving status.")
+    } finally {
+      setIsUpdatingServe(null)
     }
   }
 
@@ -332,22 +363,63 @@ export function OwnerTableDetailClient({
                         : parseFloat(String(item.price)) || 0
 
                       const qty = item.quantity || item.qty || 1
+                      const servedQty = item.served_qty || 0
+                      const isFullyServed = servedQty >= qty
                       const uniqueKey = `${item.item_id}-${item.notes || ""}`
                       const isUpdatingThis = isUpdatingOrder === uniqueKey
+                      const isUpdatingThisServe = isUpdatingServe === uniqueKey
 
                       return (
                         <div
                           key={idx}
-                          className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between p-4 sm:p-6"
+                          className={`flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between p-4 sm:p-6 transition-colors ${
+                            isFullyServed ? "bg-muted/30 opacity-70" : ""
+                          }`}
                         >
-                          <div>
-                            <p className="font-semibold">{name}</p>
+                          <div className="flex-1">
+                            <p className="font-semibold flex items-center gap-2">
+                              {name}
+                              {isFullyServed && (
+                                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                              )}
+                            </p>
                             {item.notes && (
                               <p className="mt-1 text-sm text-muted-foreground">
                                 Note: {item.notes}
                               </p>
                             )}
+                            
+                            {/* Serving Tracker */}
+                            <div className="mt-3 flex items-center gap-2">
+                              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                                Served:
+                              </span>
+                              {isUpdatingThisServe ? (
+                                <RefreshCw className="h-4 w-4 animate-spin text-muted-foreground" />
+                              ) : (
+                                <div className="flex items-center gap-1.5">
+                                  <button
+                                    onClick={() => updateServedQty(item.item_id, servedQty - 1, item.notes)}
+                                    className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
+                                    disabled={servedQty <= 0}
+                                  >
+                                    <Minus className="h-3 w-3" />
+                                  </button>
+                                  <span className={`text-xs font-medium ${isFullyServed ? "text-emerald-500" : ""}`}>
+                                    {servedQty} / {qty}
+                                  </span>
+                                  <button
+                                    onClick={() => updateServedQty(item.item_id, servedQty + 1, item.notes)}
+                                    className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
+                                    disabled={servedQty >= qty}
+                                  >
+                                    <Plus className="h-3 w-3" />
+                                  </button>
+                                </div>
+                              )}
+                            </div>
                           </div>
+                          
                           <div className="flex items-center justify-between sm:flex-col sm:items-end gap-3 sm:gap-2 w-full sm:w-auto">
                             <div className="text-left sm:text-right">
                               <p className="font-medium">
@@ -359,6 +431,9 @@ export function OwnerTableDetailClient({
                                 <RefreshCw className="h-5 w-5 animate-spin text-muted-foreground" />
                               ) : (
                                 <>
+                                  <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mr-1 hidden sm:inline">
+                                    Qty:
+                                  </span>
                                   <button
                                     onClick={() => updateOrderItem(item.item_id, qty - 1, item.notes)}
                                     className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"

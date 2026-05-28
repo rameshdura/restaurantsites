@@ -77,7 +77,7 @@ export async function POST(request: Request) {
 
     const currency = restaurant.data.app?.currency || "USD"
     const currentOrders = session.orders || { items: [] }
-    const items: Array<{ item_id: string; qty: number; notes?: string }> = [
+    const items: Array<{ item_id: string; qty: number; notes?: string; served_qty?: number; cooked_qty?: number }> = [
       ...(currentOrders.items || []),
     ]
 
@@ -106,6 +106,7 @@ export async function POST(request: Request) {
           item_id,
           qty,
           notes: targetNotes,
+          served_qty: 0,
         })
       }
     }
@@ -130,6 +131,7 @@ export async function POST(request: Request) {
             item_id: cartItem.item_id,
             qty: cartItem.qty,
             notes: targetNotes,
+            served_qty: 0,
           })
         }
       }

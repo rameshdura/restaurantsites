@@ -30,6 +30,7 @@ interface TableSession {
       item_id: string
       qty?: number
       quantity?: number
+      served_qty?: number
       name?: string
       price?: string | number
       notes?: string
@@ -208,12 +209,19 @@ export function OwnerSessionDetailClient({
                           )}
                         </div>
                         <div className="text-right">
-                          <p className="font-medium">
+                          <p className="font-medium mb-1">
                             {formatCurrency(itemPrice)}
                           </p>
-                          <p className="text-sm text-muted-foreground">
-                            Qty: {item.quantity || item.qty}
-                          </p>
+                          <div className="flex flex-col items-end gap-1">
+                            <span className="text-sm text-muted-foreground">
+                              Qty: {item.quantity || item.qty}
+                            </span>
+                            {item.served_qty !== undefined && (
+                              <span className="text-[11px] font-bold tracking-wide text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full uppercase">
+                                {item.served_qty} Served
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     )

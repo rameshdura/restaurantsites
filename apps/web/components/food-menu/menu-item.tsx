@@ -114,80 +114,38 @@ export function MenuItemCard({
         {tableMode && (
           <div className="mt-3 flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              {currentQty === 0 ? (
-                <div className="flex items-center gap-3">
-                  {/* Quantity Selector preceding Add to Cart */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setLocalQty(Math.max(1, localQty - 1))}
-                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-border bg-background font-bold text-foreground transition-all hover:bg-accent hover:text-accent-foreground"
-                    >
-                      -
-                    </button>
-                    <span className="w-4 text-center text-sm font-semibold text-foreground select-none">
-                      {localQty}
-                    </span>
-                    <button
-                      onClick={() => setLocalQty(localQty + 1)}
-                      className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-border bg-background font-bold text-foreground transition-all hover:bg-accent hover:text-accent-foreground"
-                    >
-                      +
-                    </button>
-                  </div>
-
+              <div className="flex items-center gap-3">
+                {/* Quantity Selector preceding Add to Cart */}
+                <div className="flex items-center gap-2">
                   <button
-                    onClick={() => {
-                      onUpdateQty?.(localQty, noteInput)
-                      setLocalQty(1)
-                    }}
-                    className="cursor-pointer rounded-full bg-primary px-4 py-1.5 text-xs font-bold text-white shadow-md shadow-primary/15 transition-all hover:scale-[1.03] hover:bg-primary/95"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => onUpdateQty?.(currentQty - 1, noteInput)}
+                    onClick={() => setLocalQty(Math.max(1, localQty - 1))}
                     className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-border bg-background font-bold text-foreground transition-all hover:bg-accent hover:text-accent-foreground"
                   >
                     -
                   </button>
                   <span className="w-4 text-center text-sm font-semibold text-foreground select-none">
-                    {currentQty}
+                    {localQty}
                   </span>
                   <button
-                    onClick={() => onUpdateQty?.(currentQty + 1, noteInput)}
+                    onClick={() => setLocalQty(localQty + 1)}
                     className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-border bg-background font-bold text-foreground transition-all hover:bg-accent hover:text-accent-foreground"
                   >
                     +
                   </button>
-                  <span className="ml-1 text-[10px] font-bold tracking-wider text-primary uppercase">
-                    In Cart
-                  </span>
                 </div>
-              )}
+
+                <button
+                  onClick={() => {
+                    onUpdateQty?.(currentQty + localQty, noteInput)
+                    setLocalQty(1)
+                  }}
+                  className="cursor-pointer rounded-full bg-primary px-4 py-1.5 text-xs font-bold text-white shadow-md shadow-primary/15 transition-all hover:scale-[1.03] hover:bg-primary/95"
+                >
+                  Add to Cart
+                </button>
+              </div>
             </div>
 
-            {currentQty > 0 && (
-              <input
-                type="text"
-                placeholder="Special notes (e.g. less spicy)..."
-                value={noteInput}
-                onChange={(e) => setNoteInput(e.target.value)}
-                onBlur={() => {
-                  if (noteInput !== currentNotes) {
-                    onUpdateQty?.(currentQty, noteInput)
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.currentTarget.blur()
-                  }
-                }}
-                className="w-full max-w-xs rounded-lg border border-border/60 bg-background/50 px-2.5 py-1 text-[11px] text-foreground placeholder-muted-foreground/60 transition-colors focus:border-primary focus:outline-none"
-              />
-            )}
           </div>
         )}
       </div>

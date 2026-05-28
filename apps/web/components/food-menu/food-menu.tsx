@@ -196,20 +196,45 @@ export function FoodMenu({
   }, [showReceipt, receiptSession, onSessionChange])
 
   // 2. Local Cart update handler
-  const handleUpdateCart = (itemId: string, qty: number, notes: string) => {
+  const handleUpdateCart = (
+    itemId: string,
+    qty: number,
+    notes: string,
+    oldNotes?: string
+  ) => {
     if (qty > 0) {
       setSidebarTab("cart")
     }
     setCart((prev) => {
+      const searchNotes = oldNotes !== undefined ? oldNotes : notes
       const existingIndex = prev.findIndex(
-        (i) => i.item_id === itemId && (i.notes || "") === (notes || "")
+        (i) => i.item_id === itemId && (i.notes || "") === (searchNotes || "")
       )
+      
       if (existingIndex > -1) {
         if (qty <= 0) {
           const newCart = [...prev]
           newCart.splice(existingIndex, 1)
           return newCart
         }
+
+        // Merge logic: what if changing notes makes it identical to another item?
+        if (notes !== searchNotes) {
+          const collisionIndex = prev.findIndex(
+            (i) => i.item_id === itemId && (i.notes || "") === (notes || "")
+          )
+          if (collisionIndex > -1 && collisionIndex !== existingIndex) {
+            const newCart = [...prev]
+            newCart[collisionIndex] = {
+              item_id: newCart[collisionIndex]!.item_id,
+              notes: newCart[collisionIndex]!.notes,
+              qty: newCart[collisionIndex]!.qty + qty,
+            }
+            newCart.splice(existingIndex, 1)
+            return newCart
+          }
+        }
+
         const newCart = [...prev]
         newCart[existingIndex] = {
           ...newCart[existingIndex],
@@ -461,7 +486,8 @@ export function FoodMenu({
                                 handleUpdateCart(
                                   cartItem.item_id,
                                   cartItem.qty,
-                                  e.target.value
+                                  e.target.value,
+                                  cartItem.notes || ""
                                 )
                               }
                             }}
