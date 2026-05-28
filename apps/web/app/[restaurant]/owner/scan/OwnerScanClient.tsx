@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Scanner } from "@yudiel/react-qr-scanner"
 import { supabase } from "@/lib/supabase"
+import { MenuItem } from "@/lib/restaurant"
 import {
   CheckCircle,
   RefreshCw,
@@ -25,15 +26,10 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
 interface OwnerScanClientProps {
   restaurantSlug: string
   currency: string
-  menu: { id: string; name: string; price: string | number; [key: string]: unknown }[]
+  menu: MenuItem[]
   menuCategories: {
     name: string
-    items: {
-      id: string
-      name: string
-      price: string | number
-      [key: string]: unknown
-    }[]
+    items: MenuItem[]
   }[]
 }
 
@@ -174,9 +170,7 @@ function ScanContent({
     let found = menu.find((i) => i.id === itemId)
     if (!found) {
       for (const cat of menuCategories) {
-        const match = cat.items?.find(
-          (i: { id?: string; [key: string]: unknown }) => i.id === itemId
-        )
+        const match = cat.items?.find((i: MenuItem) => i.id === itemId)
         if (match) {
           found = match
           break

@@ -158,14 +158,13 @@ export function OwnerSessionDetailClient({
                     </p>
                   </div>
 
-                  {(session.orders?.total > 0 ||
-                    session.orders?.total === 0) && (
+                  {((session.orders?.total ?? -1) >= 0) && (
                     <div className="border-t border-border pt-4">
                       <p className="mb-1 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                         Total Paid
                       </p>
                       <p className="text-3xl font-black text-primary">
-                        {formatCurrency(session.orders.total)}
+                        {formatCurrency(session.orders?.total || 0)}
                       </p>
                     </div>
                   )}
@@ -228,33 +227,33 @@ export function OwnerSessionDetailClient({
                       <span>Subtotal</span>
                       <span>{formatCurrency(session.orders.subtotal)}</span>
                     </div>
-                    {session.orders.service_charge > 0 && (
+                    {(session.orders.service_charge ?? 0) > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
                         <span>Service Charge</span>
-                        <span>{formatCurrency(session.orders.service_charge)}</span>
+                        <span>{formatCurrency(session.orders.service_charge || 0)}</span>
                       </div>
                     )}
-                    {session.orders.tax > 0 && (
+                    {(session.orders.tax ?? 0) > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
                         <span>Tax</span>
-                        <span>{formatCurrency(session.orders.tax)}</span>
+                        <span>{formatCurrency(session.orders.tax || 0)}</span>
                       </div>
                     )}
-                    {session.orders.tips > 0 && (
+                    {(session.orders.tips ?? 0) > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
                         <span>Tip</span>
-                        <span>{formatCurrency(session.orders.tips)}</span>
+                        <span>{formatCurrency(session.orders.tips || 0)}</span>
                       </div>
                     )}
-                    {session.orders.discount > 0 && (
+                    {(session.orders.discount ?? 0) > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
                         <span>Discount</span>
-                        <span className="text-green-500">-{formatCurrency(session.orders.discount)}</span>
+                        <span className="text-green-500">-{formatCurrency(session.orders.discount || 0)}</span>
                       </div>
                     )}
                     <div className="mt-2 flex justify-between border-t border-border pt-2 text-lg font-bold">
                       <span>Total</span>
-                      <span>{formatCurrency(session.orders.total)}</span>
+                      <span>{formatCurrency(session.orders.total || 0)}</span>
                     </div>
                   </div>
                 )}

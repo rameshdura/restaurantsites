@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { supabase } from "@/lib/supabase"
+import { MenuItem } from "@/lib/restaurant"
 import {
   RefreshCw,
   Sparkles,
@@ -14,15 +15,10 @@ import {
 interface OwnerActivityClientProps {
   restaurantSlug: string
   currency: string
-  menu: { id: string; name: string; price: string | number; [key: string]: unknown }[]
+  menu: MenuItem[]
   menuCategories: {
     name: string
-    items: {
-      id: string
-      name: string
-      price: string | number
-      [key: string]: unknown
-    }[]
+    items: MenuItem[]
   }[]
 }
 
@@ -138,9 +134,7 @@ export function OwnerActivityClient({
     let found = menu.find((i) => i.id === itemId)
     if (!found) {
       for (const cat of menuCategories) {
-        const match = cat.items?.find(
-          (i: { id?: string; [key: string]: unknown }) => i.id === itemId
-        )
+        const match = cat.items?.find((i: MenuItem) => i.id === itemId)
         if (match) {
           found = match
           break
