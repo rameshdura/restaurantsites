@@ -10,8 +10,18 @@ import {
   Clock,
   Receipt,
   Trash2,
+  Banknote,
 } from "lucide-react"
 import Link from "next/link"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@workspace/ui/components/dialog"
+import { Button } from "@workspace/ui/components/button"
 
 import { MenuCategory } from "@/components/food-menu/types"
 
@@ -22,16 +32,42 @@ interface OwnerTableDetailClientProps {
   categories?: MenuCategory[]
 }
 
+interface TableSessionItem {
+  item_id: string
+  name?: string
+  price?: string | number
+  notes?: string
+  quantity?: number
+  qty?: number
+}
+
+interface TableSession {
+  session_id: string
+  status: string
+  created_at: string
+  orders?: {
+    items?: TableSessionItem[]
+    subtotal: number
+    service_charge: number
+    tax: number
+    tips: number
+    discount: number
+    total: number
+  }
+}
+
 export function OwnerTableDetailClient({
   restaurantSlug,
   tableId,
   currency = "USD",
   categories = [],
 }: OwnerTableDetailClientProps) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [sessions, setSessions] = useState<any[]>([])
+  const [sessions, setSessions] = useState<TableSession[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isClosing, setIsClosing] = useState(false)
+  const [isCompleting, setIsCompleting] = useState(false)
+  const [isFlushDialogOpen, setIsFlushDialogOpen] = useState(false)
+  const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false)
 
   const fetchTableData = useCallback(async () => {
     setIsLoading(true)
@@ -66,15 +102,10 @@ export function OwnerTableDetailClient({
     .slice(0, 5)
   const isPacked = !!activeSession
 
-  const handleFlushSession = async () => {
-    if (!activeSession) return
-    if (
-      !confirm(
-        "Are you sure you want to flush this session? This will mark the table as available."
-      )
-    )
-      return
+  const handleFlushSession = () => setIsFlushDialogOpen(true)
 
+  const confirmFlushSession = async () => {
+    if (!activeSession) return
     setIsClosing(true)
     try {
       const res = await fetch("/api/table/session/close", {
@@ -84,13 +115,36 @@ export function OwnerTableDetailClient({
       })
       if (!res.ok) throw new Error("Failed to close session")
 
-      // Refresh data
+      setIsFlushDialogOpen(false)
       await fetchTableData()
     } catch (err) {
       console.error(err)
       alert("Error closing session.")
     } finally {
       setIsClosing(false)
+    }
+  }
+
+  const handleCompleteSession = () => setIsCompleteDialogOpen(true)
+
+  const confirmCompleteSession = async () => {
+    if (!activeSession) return
+    setIsCompleting(true)
+    try {
+      const res = await fetch("/api/table/session/close", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: activeSession.session_id, status: "completed" }),
+      })
+      if (!res.ok) throw new Error("Failed to complete session")
+
+      setIsCompleteDialogOpen(false)
+      await fetchTableData()
+    } catch (err) {
+      console.error(err)
+      alert("Error completing session.")
+    } finally {
+      setIsCompleting(false)
     }
   }
 
@@ -187,18 +241,35 @@ export function OwnerTableDetailClient({
                 </div>
 
                 {isPacked && (
-                  <button
-                    onClick={handleFlushSession}
-                    disabled={isClosing}
-                    title="Flush Session"
-                    className="flex cursor-pointer items-center justify-center h-12 w-12 rounded-xl bg-red-600 text-sm font-semibold text-white shadow-sm shadow-red-900/20 transition-all hover:bg-red-700 disabled:opacity-50"
-                  >
-                    {isClosing ? (
-                      <RefreshCw className="h-5 w-5 animate-spin" />
-                    ) : (
-                      <Trash2 className="h-5 w-5" />
-                    )}
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={handleCompleteSession}
+                      disabled={isCompleting || isClosing}
+                      title="Mark as Paid & Completed"
+                      className="flex cursor-pointer items-center justify-center h-12 px-4 gap-2 rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:bg-primary/90 disabled:opacity-50"
+                    >
+                      {isCompleting ? (
+                        <RefreshCw className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <>
+                          <Banknote className="h-5 w-5" />
+                          <span className="hidden sm:inline">Pay & Close</span>
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={handleFlushSession}
+                      disabled={isClosing || isCompleting}
+                      title="Flush Session"
+                      className="flex cursor-pointer items-center justify-center h-12 w-12 rounded-xl bg-red-600 text-sm font-semibold text-white shadow-sm shadow-red-900/20 transition-all hover:bg-red-700 disabled:opacity-50"
+                    >
+                      {isClosing ? (
+                        <RefreshCw className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
                 )}
               </div>
             </section>
@@ -217,8 +288,7 @@ export function OwnerTableDetailClient({
                 ) : (
                   <div className="divide-y divide-border">
                     {activeSession.orders.items.map(
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (item: any, idx: number) => {
+                      (item: TableSessionItem, idx: number) => {
                         const itemDetails = flatItems.find(
                           (i) => i.id === item.item_id
                         )
@@ -354,6 +424,44 @@ export function OwnerTableDetailClient({
           </>
         )}
       </main>
+
+      <Dialog open={isFlushDialogOpen} onOpenChange={setIsFlushDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Flush Session</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to flush this session? This will mark the table as available.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsFlushDialogOpen(false)} disabled={isClosing}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmFlushSession} disabled={isClosing}>
+              {isClosing ? "Flushing..." : "Flush Session"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isCompleteDialogOpen} onOpenChange={setIsCompleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Complete Session</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to mark this session as paid and completed?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCompleteDialogOpen(false)} disabled={isCompleting}>
+              Cancel
+            </Button>
+            <Button onClick={confirmCompleteSession} disabled={isCompleting}>
+              {isCompleting ? "Completing..." : "Pay & Close"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
