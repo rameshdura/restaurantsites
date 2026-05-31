@@ -207,11 +207,11 @@ export function KitchenClient({
       {/* Header Controls */}
       <div className="mx-auto mb-8 flex max-w-7xl items-center justify-between">
         <div>
-          <h2 className="text-2xl font-black tracking-tight flex items-center gap-2">
-            <ChefHat className="h-7 w-7 text-primary" />
+          <h2 className="flex items-center gap-2 text-xl font-bold">
+            <ChefHat className="h-5 w-5 text-primary" />
             Kitchen Display
           </h2>
-          <p className="text-sm font-medium text-muted-foreground mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             Live order tickets
           </p>
         </div>

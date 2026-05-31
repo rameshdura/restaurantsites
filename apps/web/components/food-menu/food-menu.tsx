@@ -40,6 +40,9 @@ interface FoodMenuProps {
   initialTableMode?: boolean
   initialSession?: Record<string, any> | null
   onSessionChange?: (session: Record<string, any> | null) => void
+  /** Set true on public-facing menu pages where ordering is disabled.
+   *  Prevents stale session cookies from activating the checkout UI. */
+  disableTableMode?: boolean
 }
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
@@ -61,6 +64,7 @@ export function FoodMenu({
   initialTableMode = false,
   initialSession = null,
   onSessionChange,
+  disableTableMode = false,
 }: FoodMenuProps) {
   const params = useParams()
   const restaurantSlug = (params?.restaurant as string) || ""
@@ -109,8 +113,10 @@ export function FoodMenu({
   const symbol = CURRENCY_SYMBOLS[currency] || ""
 
   // 1. Check for active session cookie on mount
+  // Skip entirely on public menu pages (disableTableMode=true) so stale
+  // cookies from a previous table visit never show the checkout UI here.
   useEffect(() => {
-    if (initialTableMode) return
+    if (disableTableMode || initialTableMode) return
 
     async function loadTableSession() {
       const cookie = getSessionCookie()
@@ -133,7 +139,7 @@ export function FoodMenu({
       }
     }
     loadTableSession()
-  }, [initialTableMode])
+  }, [disableTableMode, initialTableMode])
 
   // 1b. Prevent background scrolling when mobile sidebar is open
   useEffect(() => {
@@ -748,143 +754,157 @@ export function FoodMenu({
   if (showReceipt && receiptSession) {
     const qrUrl = receiptSession.session_id
     const receiptOrderItems = receiptSession.orders?.items || []
+    const isPaid = receiptSession.status === "closed"
 
     return (
-      <div className="mx-auto max-w-md px-4 py-12 sm:px-6">
+      <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6">
         <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
-          {/* Header */}
+
+          {/* ── Shared header strip ───────────────────────────── */}
           <div
             className={`border-b p-6 text-center transition-colors duration-500 ${
-              receiptSession.status === "closed"
+              isPaid
                 ? "border-green-500/20 bg-green-500/10"
                 : "border-primary/20 bg-primary/10"
             }`}
           >
             <CheckCircle
               className={`mx-auto mb-3 h-12 w-12 transition-colors duration-500 ${
-                receiptSession.status === "closed"
-                  ? "text-green-500"
-                  : "text-primary"
+                isPaid ? "text-green-500" : "text-primary"
               }`}
             />
             <h2 className="text-2xl font-black text-foreground">
-              {receiptSession.status === "closed"
-                ? "Payment Accepted"
-                : "Checkout Complete"}
+              {isPaid ? "Payment Accepted" : "Checkout Complete"}
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              {receiptSession.status === "closed"
+              {isPaid
                 ? "Thank you for dining with us!"
                 : "Please show this at the register"}
             </p>
           </div>
 
-          {/* QR Code */}
-          <div className="flex flex-col items-center justify-center bg-white p-8 text-black">
-            <QRCode value={qrUrl} size={180} level="M" />
-            <p className="mt-4 font-mono text-[10px] text-zinc-500 uppercase">
-              Table {receiptSession.table_number}
-            </p>
-          </div>
+          {/* ── Two-column body (md+), single-column (mobile) ── */}
+          <div className="grid grid-cols-1 md:grid-cols-2">
 
-          {/* Amount & Summary */}
-          <div className="p-6 text-sm">
-            <div className="mb-6 text-center">
-              <span className="block text-xs font-bold tracking-widest text-muted-foreground uppercase">
-                Amount Due
-              </span>
-              <span className="text-4xl font-black text-primary">
-                {symbol}
-                {receiptSession.orders?.total}
-              </span>
+            {/* LEFT — QR code */}
+            <div className="flex flex-col items-center justify-center border-b border-border/40 bg-white p-10 text-black md:border-b-0 md:border-r">
+              <QRCode value={qrUrl} size={200} level="M" />
+              <p className="mt-5 font-mono text-xs text-zinc-400 uppercase tracking-widest">
+                Table {receiptSession.table_number}
+              </p>
+              <p className="mt-1 text-[10px] text-zinc-400 uppercase tracking-wider">
+                {isPaid ? "Session Closed" : "Scan to verify"}
+              </p>
             </div>
 
-            <div className="mb-4 border-b border-border/60 pb-2 text-xs font-bold tracking-wider text-muted-foreground uppercase">
-              Order Summary
-            </div>
+            {/* RIGHT — Amount + order summary + action */}
+            <div className="flex flex-col overflow-y-auto p-6 text-sm">
 
-            <div className="max-h-48 space-y-3 overflow-y-auto pr-1">
-              {receiptOrderItems.map((item: any) => {
-                const itemDetails = flatItems.find((i) => i.id === item.item_id)
-                const name = itemDetails?.name || item.item_id
-                const itemPrice = itemDetails
-                  ? parseFloat(String(itemDetails.price)) || 0
-                  : 0
-                return (
-                  <div
-                    key={item.item_id + (item.notes || "")}
-                    className="flex items-start justify-between"
-                  >
-                    <div>
-                      <p className="font-semibold text-foreground">
+              {/* Amount due */}
+              <div className="mb-6 rounded-2xl border border-border/40 bg-accent/20 p-4 text-center">
+                <span className="block text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                  Amount Due
+                </span>
+                <span className="text-4xl font-black text-primary">
+                  {symbol}
+                  {receiptSession.orders?.total}
+                </span>
+              </div>
+
+              {/* Order summary */}
+              <div className="mb-3 border-b border-border/60 pb-2 text-xs font-bold tracking-wider text-muted-foreground uppercase">
+                Order Summary
+              </div>
+
+              <div className="max-h-52 flex-1 space-y-2.5 overflow-y-auto pr-1">
+                {receiptOrderItems.map((item: any) => {
+                  const itemDetails = flatItems.find((i) => i.id === item.item_id)
+                  const name = itemDetails?.name || item.item_id
+                  const itemPrice = itemDetails
+                    ? parseFloat(String(itemDetails.price)) || 0
+                    : 0
+                  return (
+                    <div
+                      key={item.item_id + (item.notes || "")}
+                      className="flex items-start justify-between gap-3"
+                    >
+                      <p className="min-w-0 flex-1 font-semibold text-foreground">
                         {name}
                         <span className="ml-1.5 text-xs font-bold text-primary">
                           x{item.qty}
                         </span>
                       </p>
+                      <span className="shrink-0 font-medium text-foreground">
+                        {symbol}
+                        {itemPrice * item.qty}
+                      </span>
                     </div>
-                    <span className="font-medium text-foreground">
-                      {symbol}
-                      {itemPrice * item.qty}
-                    </span>
-                  </div>
-                )
-              })}
-            </div>
+                  )
+                })}
+              </div>
 
-            {/* Totals */}
-            <div className="mt-4 space-y-2 border-t border-border/60 pt-4 text-xs">
-              <div className="flex justify-between text-muted-foreground">
-                <span>Subtotal</span>
-                <span>
-                  {symbol}
-                  {receiptSession.orders?.subtotal}
-                </span>
-              </div>
-              <div className="flex justify-between text-muted-foreground">
-                <span>Tax (10%)</span>
-                <span>
-                  {symbol}
-                  {receiptSession.orders?.tax}
-                </span>
-              </div>
-              {Number(receiptSession.orders?.tips) > 0 && (
+              {/* Bill breakdown */}
+              <div className="mt-4 space-y-2 border-t border-border/60 pt-4 text-xs">
                 <div className="flex justify-between text-muted-foreground">
-                  <span>Tip</span>
-                  <span className="font-semibold text-primary">
-                    +{symbol}
-                    {receiptSession.orders?.tips}
+                  <span>Subtotal</span>
+                  <span>
+                    {symbol}
+                    {receiptSession.orders?.subtotal}
                   </span>
                 </div>
-              )}
+                <div className="flex justify-between text-muted-foreground">
+                  <span>Tax (10%)</span>
+                  <span>
+                    {symbol}
+                    {receiptSession.orders?.tax}
+                  </span>
+                </div>
+                {Number(receiptSession.orders?.tips) > 0 && (
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Tip</span>
+                    <span className="font-semibold text-primary">
+                      +{symbol}
+                      {receiptSession.orders?.tips}
+                    </span>
+                  </div>
+                )}
+                <div className="flex justify-between border-t border-border/40 pt-2 text-sm font-bold text-foreground">
+                  <span>Grand Total</span>
+                  <span className="text-primary">
+                    {symbol}
+                    {receiptSession.orders?.total}
+                  </span>
+                </div>
+              </div>
+
+              {/* Action */}
+              <div className="mt-6">
+                {receiptSession.status === "payment_pending" ? (
+                  <div className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-amber-500/20 bg-amber-500/10 py-3.5 text-sm font-bold text-amber-600 transition-all">
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    Waiting for Confirmation...
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setShowReceipt(false)
+                      setReceiptSession(null)
+                      setTableMode(false)
+                      setSession(null)
+                      onSessionChange?.(null)
+                      setIsSidebarOpen(false)
+                      clearSessionCookie()
+                    }}
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-green-500 py-3.5 text-sm font-bold text-white shadow-lg transition-all hover:bg-green-600 active:scale-95"
+                  >
+                    <CheckCircle className="h-5 w-5" />
+                    Done
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Action */}
-          <div className="p-6 pt-0">
-            {receiptSession.status === "payment_pending" ? (
-              <div className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-amber-500/20 bg-amber-500/10 py-3.5 text-sm font-bold text-amber-600 transition-all">
-                <RefreshCw className="h-4 w-4 animate-spin" />
-                Waiting for Confirmation...
-              </div>
-            ) : (
-              <button
-                onClick={() => {
-                  setShowReceipt(false)
-                  setReceiptSession(null)
-                  setTableMode(false)
-                  setSession(null)
-                  onSessionChange?.(null)
-                  setIsSidebarOpen(false)
-                  clearSessionCookie()
-                }}
-                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-green-500 py-3.5 text-sm font-bold text-white shadow-lg transition-all hover:bg-green-600 active:scale-95"
-              >
-                <CheckCircle className="h-5 w-5" />
-                Done
-              </button>
-            )}
-          </div>
         </div>
       </div>
     )

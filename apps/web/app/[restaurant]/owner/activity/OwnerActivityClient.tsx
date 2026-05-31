@@ -11,6 +11,8 @@ import {
   Activity,
   CheckCircle,
   AlertTriangle,
+  LayoutGrid,
+  Receipt,
 } from "lucide-react"
 
 interface OwnerActivityClientProps {
@@ -93,8 +95,38 @@ export function OwnerActivityClient({
   const [isLoading, setIsLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [autoRefresh, setAutoRefresh] = useState(true)
+  const [isClosing, setIsClosing] = useState<string | null>(null)
 
   const symbol = CURRENCY_SYMBOLS[currency] || ""
+
+  const handlePayAndClose = async (sessionId: string) => {
+    if (!confirm("Are you sure you want to finalize this session and mark it as paid?")) {
+      return
+    }
+
+    setIsClosing(sessionId)
+    try {
+      const response = await fetch("/api/table/session/close", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ session_id: sessionId, status: "closed" }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to close session")
+      }
+
+      // Refresh data
+      await fetchSessions(false)
+    } catch (err) {
+      console.error("Error closing session:", err)
+      alert("Failed to close session. Please try again.")
+    } finally {
+      setIsClosing(null)
+    }
+  }
 
   const fetchSessions = useCallback(
     async (showLoading = false) => {
@@ -121,7 +153,6 @@ export function OwnerActivityClient({
   )
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchSessions(true)
   }, [fetchSessions])
 
@@ -170,7 +201,10 @@ export function OwnerActivityClient({
       {/* Header Controls */}
       <div className="mx-auto mb-8 flex max-w-7xl items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold">Activity Dashboard</h2>
+          <h2 className="flex items-center gap-2 text-xl font-bold">
+            <Activity className="h-5 w-5 text-primary" />
+            Activity Dashboard
+          </h2>
           <p className="text-sm text-muted-foreground">
             Monitor live tables and sales.
           </p>
@@ -275,7 +309,10 @@ export function OwnerActivityClient({
             </section>
 
             {/* Active Tables List */}
-            <h2 className="mb-4 text-lg font-bold">Active Tables</h2>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-bold">
+              <LayoutGrid className="h-5 w-5 text-primary" />
+              Active Tables
+            </h2>
             {activeSessions.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-border p-20 text-center">
                 <AlertTriangle className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
@@ -456,10 +493,40 @@ export function OwnerActivityClient({
                           )}
                         </div>
 
-                        <div className="flex w-full items-center justify-center gap-1.5 rounded-2xl bg-muted px-4 py-2 text-xs font-bold text-muted-foreground select-none">
-                          {isActive
-                            ? "Use Scanner to Finalize"
-                            : "Session Finalized"}
+                        <div className="mt-4 flex flex-col gap-2">
+                          {isActive ? (
+                            <>
+                              <button
+                                onClick={() =>
+                                  handlePayAndClose(session.session_id)
+                                }
+                                disabled={isClosing === session.session_id}
+                                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-xs font-bold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md active:scale-[0.98] disabled:opacity-50"
+                              >
+                                {isClosing === session.session_id ? (
+                                  <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                                ) : (
+                                  <CheckCircle className="h-3.5 w-3.5" />
+                                )}
+                                Pay and Close
+                              </button>
+                              <button
+                                onClick={() =>
+                                  router.push(
+                                    `/${restaurantSlug}/owner/tables/${session.table_number}`
+                                  )
+                                }
+                                className="flex w-full items-center justify-center gap-2 rounded-2xl border border-border bg-card px-4 py-2.5 text-xs font-bold text-foreground transition-all hover:bg-accent active:scale-[0.98]"
+                              >
+                                <LayoutGrid className="h-3.5 w-3.5 text-muted-foreground" />
+                                Update
+                              </button>
+                            </>
+                          ) : (
+                            <div className="flex w-full items-center justify-center gap-1.5 rounded-2xl bg-muted px-4 py-2 text-xs font-bold text-muted-foreground select-none">
+                              Session Finalized
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -469,7 +536,10 @@ export function OwnerActivityClient({
             )}
 
             {/* Recent Transactions List */}
-            <h2 className="mt-12 mb-4 text-lg font-bold">Recent Transactions</h2>
+            <h2 className="mt-12 mb-4 flex items-center gap-2 text-lg font-bold">
+              <Receipt className="h-5 w-5 text-primary" />
+              Recent Transactions
+            </h2>
             {closedSessions.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-border p-12 text-center">
                 <p className="text-sm font-medium text-muted-foreground">

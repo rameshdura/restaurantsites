@@ -237,7 +237,7 @@ export function ContactSection({
 
   return (
     <section
-      className={`relative overflow-hidden bg-background pb-20 ${
+      className={`relative overflow-hidden bg-background ${embedUrl ? "" : "pb-20"} ${
         hideHeader ? "pt-10" : "pt-20"
       }`}
       id="contact"
@@ -662,7 +662,7 @@ export function ContactSection({
 
       {/* Full Width Google Maps Section */}
       {embedUrl && (
-        <div className="mt-20 h-[450px] w-full overflow-hidden border-y border-border bg-background lg:h-[600px]">
+        <div className="mt-16 h-[450px] w-full overflow-hidden bg-background lg:h-[600px]">
           <iframe
             src={embedUrl}
             width="100%"

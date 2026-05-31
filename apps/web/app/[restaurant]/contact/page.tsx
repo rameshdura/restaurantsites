@@ -68,7 +68,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
         />
       )}
 
-      <main className={cn("flex-1", !coverImage ? "pt-32" : "pt-0", "pb-20")}>
+      <main className={cn("flex-1", !coverImage ? "pt-32" : "pt-0")}>
         {!coverImage && (
           <div className="mx-auto mb-12 max-w-7xl px-6">
             <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-6xl">

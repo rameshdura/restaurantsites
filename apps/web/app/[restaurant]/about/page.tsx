@@ -15,6 +15,7 @@ import { CoverSection } from "@workspace/ui/components/cover-section"
 import { cn } from "@workspace/ui/lib/utils"
 import { ImageSlider } from "@workspace/ui/components/image-slider"
 import { getServerRestaurantLink } from "@/lib/link"
+import { SectionHeader } from "@workspace/ui/components/section-header"
 
 interface AboutPageProps {
   params: Promise<{ restaurant: string }>
@@ -89,19 +90,27 @@ export default async function AboutPage({ params }: AboutPageProps) {
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
             <div>
-              {!coverImage && (
-                <p className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
-                  {(
+              <SectionHeader
+                subtitle={
+                  (
                     translations as { home?: { about?: { subtitle?: string } } }
-                  ).home?.about?.subtitle || "Our Story"}
-                </p>
-              )}
-              {!coverImage && (
-                <h1 className="mb-8 text-4xl font-bold tracking-tight md:text-6xl">
-                  {(translations as { home?: { about?: { title?: string } } })
-                    .home?.about?.title || "Our Story"}
-                </h1>
-              )}
+                  ).home?.about?.subtitle ?? "Our Story"
+                }
+                title={
+                  (translations as { home?: { about?: { title?: string } } })
+                    .home?.about?.title ||
+                  (typeof storyData?.title === "string"
+                    ? storyData.title
+                    : "Our Story")
+                }
+                backgroundTitle={
+                  (
+                    translations as {
+                      home?: { about?: { backgroundTitle?: string } }
+                    }
+                  ).home?.about?.backgroundTitle ?? "Heritage"
+                }
+              />
               <div className="space-y-6">
                 <p className="text-xl leading-relaxed text-muted-foreground">
                   {typeof storyData?.content === "string"
@@ -250,9 +259,19 @@ export default async function AboutPage({ params }: AboutPageProps) {
                       />
                     </div>
                   )}
-                  <div className="space-y-6">
+                  <div className="relative space-y-6">
+                    {/* Decorative SVG quote mark background */}
+                    <svg
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -top-6 -left-4 h-32 w-32 text-primary/10 select-none md:h-40 md:w-40"
+                      viewBox="0 0 100 80"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M0 80V48.571C0 23.81 13.333 7.143 40 0l5.714 8.571C27.619 13.333 18.095 24.762 17.143 40H40V80H0ZM57.143 80V48.571C57.143 23.81 70.476 7.143 97.143 0L102.857 8.571C84.762 13.333 75.238 24.762 74.286 40H97.143V80H57.143Z" />
+                    </svg>
                     {repMessage && (
-                      <blockquote className="text-2xl font-medium text-primary italic md:text-3xl">
+                      <blockquote className="relative text-2xl font-medium text-primary italic md:text-3xl">
                         &ldquo;{repMessage}&rdquo;
                       </blockquote>
                     )}

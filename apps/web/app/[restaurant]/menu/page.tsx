@@ -111,6 +111,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
               hideHeader={true}
               currency={data.app?.currency}
               translations={translations}
+              disableTableMode={true}
             />
           ) : (
             <div className="mx-auto max-w-7xl px-6">
