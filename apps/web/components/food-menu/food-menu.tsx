@@ -17,6 +17,7 @@ import {
   ArrowLeft,
   ClipboardList,
   CheckCircle,
+  Receipt,
   RefreshCw,
 } from "lucide-react"
 import QRCode from "react-qr-code"
@@ -119,7 +120,7 @@ export function FoodMenu({
     if (disableTableMode || initialTableMode) return
 
     async function loadTableSession() {
-      const cookie = getSessionCookie()
+      const cookie = getSessionCookie(restaurantSlug)
       if (!cookie) return
 
       try {
@@ -132,7 +133,7 @@ export function FoodMenu({
           setSession(data.session)
         } else {
           // If expired or closed, remove cookie
-          clearSessionCookie()
+          clearSessionCookie(restaurantSlug)
         }
       } catch (err) {
         console.error("Failed to fetch table session:", err)
@@ -286,7 +287,7 @@ export function FoodMenu({
           description: "This ordering session has been closed by the host.",
           variant: "destructive",
         })
-        clearSessionCookie()
+        clearSessionCookie(restaurantSlug)
         setTableMode(false)
         setSession(null)
         onSessionChange?.(null)
@@ -768,13 +769,17 @@ export function FoodMenu({
                 : "border-primary/20 bg-primary/10"
             }`}
           >
-            <CheckCircle
-              className={`mx-auto mb-3 h-12 w-12 transition-colors duration-500 ${
-                isPaid ? "text-green-500" : "text-primary"
-              }`}
-            />
+            {isPaid ? (
+              <CheckCircle
+                className="mx-auto mb-3 h-12 w-12 text-green-500 transition-colors duration-500"
+              />
+            ) : (
+              <Receipt
+                className="mx-auto mb-3 h-12 w-12 text-primary transition-colors duration-500"
+              />
+            )}
             <h2 className="text-2xl font-black text-foreground">
-              {isPaid ? "Payment Accepted" : "Checkout Complete"}
+              {isPaid ? "Payment Accepted" : "Make Payment"}
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               {isPaid
@@ -893,7 +898,7 @@ export function FoodMenu({
                       setSession(null)
                       onSessionChange?.(null)
                       setIsSidebarOpen(false)
-                      clearSessionCookie()
+                      clearSessionCookie(restaurantSlug)
                     }}
                     className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-green-500 py-3.5 text-sm font-bold text-white shadow-lg transition-all hover:bg-green-600 active:scale-95"
                   >

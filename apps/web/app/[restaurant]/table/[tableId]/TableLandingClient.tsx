@@ -47,7 +47,7 @@ export function TableLandingClient({
     async function initSession() {
       setIsLoading(true)
       try {
-        const existing = getSessionCookie()
+        const existing = getSessionCookie(restaurantSlug)
 
         // If cookie matches current table, validate with backend
         if (existing && Number(existing.table) === Number(tableId)) {
@@ -63,7 +63,7 @@ export function TableLandingClient({
         }
 
         // If no valid session, just clear cookie. User will need to manually start a session.
-        clearSessionCookie()
+        clearSessionCookie(restaurantSlug)
       } catch (err) {
         console.error("Error setting up table session:", err)
       } finally {
@@ -91,6 +91,7 @@ export function TableLandingClient({
       if (data.success && data.session) {
         const expiresAt = new Date(data.session.expires_at).getTime() / 1000
         setSessionCookie(
+          restaurantSlug,
           data.session.session_id,
           data.session.table_number,
           expiresAt

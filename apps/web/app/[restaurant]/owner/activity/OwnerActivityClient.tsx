@@ -223,7 +223,7 @@ export function OwnerActivityClient({
           <button
             onClick={() => fetchSessions(false)}
             disabled={isRefreshing}
-            className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-1.5 text-xs font-semibold transition-all hover:bg-accent disabled:opacity-50"
+            className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-1.5 text-xs font-semibold text-muted-foreground transition-all hover:bg-accent disabled:opacity-50"
           >
             <RefreshCw
               className={`h-3.5 w-3.5 ${isRefreshing ? "animate-spin" : ""}`}

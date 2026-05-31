@@ -5,7 +5,7 @@ export interface RestaurantSession {
   expires_at: number
 }
 
-const COOKIE_NAME = "restaurant_session"
+const getCookieName = (slug: string) => `restaurant_session_${slug}`
 
 export function getCookie(name: string): string | null {
   if (typeof document === "undefined") return null
@@ -44,8 +44,8 @@ export function deleteCookie(name: string): void {
     "=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax; Secure"
 }
 
-export function getSessionCookie(): RestaurantSession | null {
-  const raw = getCookie(COOKIE_NAME)
+export function getSessionCookie(slug: string): RestaurantSession | null {
+  const raw = getCookie(getCookieName(slug))
   if (!raw) return null
   try {
     const session: RestaurantSession = JSON.parse(raw)
@@ -60,17 +60,18 @@ export function getSessionCookie(): RestaurantSession | null {
     // Check local timestamp expiry
     const now = Math.floor(Date.now() / 1000)
     if (session.expires_at < now) {
-      clearSessionCookie()
+      clearSessionCookie(slug)
       return null
     }
     return session
   } catch {
-    clearSessionCookie()
+    clearSessionCookie(slug)
     return null
   }
 }
 
 export function setSessionCookie(
+  slug: string,
   sessionId: string,
   tableNumber: number,
   expiresAt: number
@@ -86,9 +87,9 @@ export function setSessionCookie(
     expires_at: expiresAt,
   }
 
-  setCookie(COOKIE_NAME, JSON.stringify(session), maxAge)
+  setCookie(getCookieName(slug), JSON.stringify(session), maxAge)
 }
 
-export function clearSessionCookie(): void {
-  deleteCookie(COOKIE_NAME)
+export function clearSessionCookie(slug: string): void {
+  deleteCookie(getCookieName(slug))
 }
