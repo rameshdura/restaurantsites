@@ -24,7 +24,7 @@ const Dialog = ({
 
 const DialogTrigger = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+  React.HTMLAttributes<HTMLDivElement> & { asChild?: boolean }
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={cn("cursor-pointer", className)} {...props} />
 ))

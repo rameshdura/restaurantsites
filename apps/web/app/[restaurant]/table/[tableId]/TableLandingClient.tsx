@@ -105,7 +105,7 @@ export function TableLandingClient({
   }
 
   return (
-    <div className="relative flex min-h-svh flex-col bg-background text-foreground antialiased">
+    <div className="relative flex min-h-svh flex-col overflow-x-hidden bg-background text-foreground antialiased">
       {/* Dynamic Background Glows */}
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[100px]" />
       <div className="pointer-events-none absolute top-1/3 left-1/3 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-600/5 blur-[80px]" />
