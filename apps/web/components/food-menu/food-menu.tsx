@@ -224,7 +224,9 @@ export function FoodMenu({
           }
           const newCart = [...prev]
           newCart[existingIndex] = {
-            ...newCart[existingIndex],
+            ...newCart[existingIndex]!,
+            cart_id: newCart[existingIndex]!.cart_id,
+            item_id: newCart[existingIndex]!.item_id,
             qty,
             notes,
           }

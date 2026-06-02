@@ -308,7 +308,7 @@ export function KitchenClient({
         const filteredEntries = Object.entries(itemMap).filter(([key, info]) => {
             // Keep visible if this item has pending updates in any session
             const hasPendingForItem = Object.keys(pendingUpdates).some(sessionId =>
-                pendingUpdates[sessionId][key]
+                pendingUpdates[sessionId]?.[key]
             )
             if (hasPendingForItem) return true
 
@@ -339,9 +339,9 @@ export function KitchenClient({
             // Determine if this item has any pending updates across any sessions
             const pendingSessions = new Set<string>();
             Object.keys(pendingUpdates).forEach(sessionId => {
-                if (pendingUpdates[sessionId][key]) {
-                    pendingSessions.add(sessionId);
-                }
+              if (pendingUpdates[sessionId]?.[key]) {
+                pendingSessions.add(sessionId);
+              }
             });
 
             const hasPending = pendingSessions.size > 0;
