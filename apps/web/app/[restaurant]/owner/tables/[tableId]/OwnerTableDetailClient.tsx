@@ -39,6 +39,7 @@ interface OwnerTableDetailClientProps {
 }
 
 interface TableSessionItem {
+  order_item_id: string
   item_id: string
   name?: string
   price?: string | number
@@ -46,6 +47,7 @@ interface TableSessionItem {
   quantity?: number
   qty?: number
   served_qty?: number
+  cooked_qty?: number
 }
 
 interface TableSession {
@@ -86,6 +88,7 @@ export function OwnerTableDetailClient({
   const [newSessionPersons, setNewSessionPersons] = useState<number>(2)
   const [isUpdatingOrder, setIsUpdatingOrder] = useState<string | null>(null)
   const [isUpdatingServe, setIsUpdatingServe] = useState<string | null>(null)
+  const [isUpdatingCook, setIsUpdatingCook] = useState<string | null>(null)
 
   const fetchTableData = useCallback(async () => {
     setIsLoading(true)
@@ -194,9 +197,10 @@ export function OwnerTableDetailClient({
     }
   }
 
-  const updateOrderItem = async (itemId: string, newQty: number, notes?: string) => {
+  const updateOrderItem = async (order_item_id: string, newQty: number) => {
     if (!activeSession) return
-    setIsUpdatingOrder(`${itemId}-${notes || ""}`)
+    
+    setIsUpdatingOrder(`item-${order_item_id}`)
     try {
       const res = await fetch("/api/table/order/add", {
         method: "POST",
@@ -204,9 +208,8 @@ export function OwnerTableDetailClient({
         body: JSON.stringify({
           session_id: activeSession.session_id,
           restaurantSlug,
-          item_id: itemId,
+          order_item_id: order_item_id,
           qty: newQty,
-          notes: notes || "",
           isOwner: true,
         }),
       })
@@ -254,17 +257,16 @@ export function OwnerTableDetailClient({
     }
   }
 
-  const updateServedQty = async (itemId: string, newServedQty: number, notes?: string) => {
+  const updateServedQty = async (order_item_id: string, newServedQty: number) => {
     if (!activeSession) return
-    setIsUpdatingServe(`${itemId}-${notes || ""}`)
+    setIsUpdatingServe(`item-${order_item_id}`)
     try {
       const res = await fetch("/api/table/order/serve", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           session_id: activeSession.session_id,
-          item_id: itemId,
-          notes: notes || "",
+          order_item_id: order_item_id,
           served_qty: newServedQty,
         }),
       })
@@ -280,6 +282,36 @@ export function OwnerTableDetailClient({
       alert("Error updating serving status.")
     } finally {
       setIsUpdatingServe(null)
+    }
+  }
+
+  const updateCookedQty = async (order_item_id: string, newCookedQty: number) => {
+    if (!activeSession) return
+    setIsUpdatingCook(`item-${order_item_id}`)
+    try {
+      const res = await fetch("/api/table/order/cook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: activeSession.session_id,
+          updates: [{
+            order_item_id: order_item_id,
+            cooked_qty: newCookedQty,
+          }],
+        }),
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({ error: "Unknown error" }))
+        throw new Error(errorData.error || "Failed to update cooking status")
+      }
+      
+      await fetchTableData()
+    } catch (err) {
+      console.error(err)
+      alert("Error updating cooking status.")
+    } finally {
+      setIsUpdatingCook(null)
     }
   }
 
@@ -489,7 +521,7 @@ export function OwnerTableDetailClient({
                 ) : (
                   <div className="divide-y divide-border">
                     {activeSession.orders.items.map(
-                      (item: TableSessionItem) => {
+                      (item: TableSessionItem, index: number) => {
                         const itemDetails = flatItems.find(
                           (i) => i.id === item.item_id
                         )
@@ -501,13 +533,16 @@ export function OwnerTableDetailClient({
                       const qty = item.quantity || item.qty || 1
                       const servedQty = item.served_qty || 0
                       const isFullyServed = servedQty >= qty
-                      const uniqueKey = `${item.item_id}-${item.notes || ""}`
+                      const cookedQty = item.cooked_qty || 0
+                      const isFullyCooked = cookedQty >= qty
+                      const uniqueKey = item.order_item_id
                       const isUpdatingThis = isUpdatingOrder === uniqueKey
                       const isUpdatingThisServe = isUpdatingServe === uniqueKey
+                      const isUpdatingThisCook = isUpdatingCook === uniqueKey
 
                       return (
                         <div
-                          key={uniqueKey}
+                          key={item.order_item_id || index}
                           className={`flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between p-4 sm:p-6 transition-colors ${
                             isFullyServed ? "bg-muted/30 opacity-70" : ""
                           }`}
@@ -515,6 +550,9 @@ export function OwnerTableDetailClient({
                           <div className="flex-1">
                             <p className="font-semibold flex items-center gap-2">
                               {name}
+                              <span className="text-xs font-normal text-muted-foreground">
+                                ({formatCurrency(itemPrice)})
+                              </span>
                               {isFullyServed && (
                                 <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                               )}
@@ -524,9 +562,39 @@ export function OwnerTableDetailClient({
                                 Note: {item.notes}
                               </p>
                             )}
-                            
+
+                            {/* Cooking Tracker */}
+                            <div className="mt-2 flex items-center gap-2">
+                              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                                Cooked:
+                              </span>
+                              {isUpdatingThisCook ? (
+                                <RefreshCw className="h-4 w-4 animate-spin text-muted-foreground" />
+                              ) : (
+                                <div className="flex items-center gap-1.5">
+                                  <button
+                                    onClick={() => updateCookedQty(item.order_item_id, cookedQty - 1)}
+                                    className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
+                                    disabled={cookedQty <= 0}
+                                  >
+                                    <Minus className="h-3 w-3" />
+                                  </button>
+                                  <span className={`text-xs font-medium ${isFullyCooked ? "text-emerald-500" : ""}`}>
+                                    {cookedQty} / {qty}
+                                  </span>
+                                  <button
+                                    onClick={() => updateCookedQty(item.order_item_id, cookedQty + 1)}
+                                    className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
+                                    disabled={cookedQty >= qty}
+                                  >
+                                    <Plus className="h-3 w-3" />
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+
                             {/* Serving Tracker */}
-                            <div className="mt-3 flex items-center gap-2">
+                            <div className="mt-2 flex items-center gap-2">
                               <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                                 Served:
                               </span>
@@ -535,7 +603,7 @@ export function OwnerTableDetailClient({
                               ) : (
                                 <div className="flex items-center gap-1.5">
                                   <button
-                                    onClick={() => updateServedQty(item.item_id, servedQty - 1, item.notes)}
+                                    onClick={() => updateServedQty(item.order_item_id, servedQty - 1)}
                                     className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
                                     disabled={servedQty <= 0}
                                   >
@@ -545,7 +613,7 @@ export function OwnerTableDetailClient({
                                     {servedQty} / {qty}
                                   </span>
                                   <button
-                                    onClick={() => updateServedQty(item.item_id, servedQty + 1, item.notes)}
+                                    onClick={() => updateServedQty(item.order_item_id, servedQty + 1)}
                                     className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
                                     disabled={servedQty >= qty}
                                   >
@@ -558,8 +626,8 @@ export function OwnerTableDetailClient({
                           
                           <div className="flex items-center justify-between sm:flex-col sm:items-end gap-3 sm:gap-2 w-full sm:w-auto">
                             <div className="text-left sm:text-right">
-                              <p className="font-medium">
-                                {formatCurrency(itemPrice)}
+                              <p className="font-bold text-lg">
+                                {formatCurrency(itemPrice * qty)}
                               </p>
                             </div>
                             <div className="flex items-center gap-2">
@@ -571,7 +639,7 @@ export function OwnerTableDetailClient({
                                     Qty:
                                   </span>
                                   <button
-                                    onClick={() => updateOrderItem(item.item_id, qty - 1, item.notes)}
+                                    onClick={() => updateOrderItem(item.order_item_id, qty - 1)}
                                     className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
                                     disabled={qty <= 0}
                                   >
@@ -581,13 +649,13 @@ export function OwnerTableDetailClient({
                                     {qty}
                                   </span>
                                   <button
-                                    onClick={() => updateOrderItem(item.item_id, qty + 1, item.notes)}
+                                    onClick={() => updateOrderItem(item.order_item_id, qty + 1)}
                                     className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent"
                                   >
                                     <Plus className="h-4 w-4" />
                                   </button>
                                   <button
-                                    onClick={() => updateOrderItem(item.item_id, 0, item.notes)}
+                                    onClick={() => updateOrderItem(item.order_item_id, 0)}
                                     className="ml-2 flex h-8 w-8 items-center justify-center rounded-md border border-red-500/20 bg-red-50 text-red-600 transition-colors hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20"
                                     title="Remove Item"
                                   >

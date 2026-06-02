@@ -17,6 +17,7 @@ export async function POST(request: Request) {
     const {
       session_id,
       restaurantSlug,
+      order_item_id,
       item_id,
       qty,
       notes,
@@ -77,38 +78,30 @@ export async function POST(request: Request) {
 
     const currency = restaurant.data.app?.currency || "USD"
     const currentOrders = session.orders || { items: [] }
-    const items: Array<{ item_id: string; qty: number; notes?: string; served_qty?: number; cooked_qty?: number }> = [
+    const items: Array<{ order_item_id: string; item_id: string; qty: number; notes?: string; served_qty?: number; cooked_qty?: number }> = [
       ...(currentOrders.items || []),
     ]
 
     // 3. Update items list
-    // 3a. Handle single item update (existing logic)
-    if (item_id !== undefined && qty !== undefined) {
-      const targetNotes = notes || ""
-      const existingItemIndex = items.findIndex(
-        (i) => i.item_id === item_id && (i.notes || "") === targetNotes
-      )
-
+    // 3a. Handle single item update
+    if (order_item_id && qty !== undefined) {
+      const existingItemIndex = items.findIndex((i) => i.order_item_id === order_item_id)
       if (existingItemIndex > -1) {
-        const existingItem = items[existingItemIndex]
-        if (existingItem) {
-          if (qty <= 0) {
-            // Remove item
-            items.splice(existingItemIndex, 1)
-          } else {
-            // Update quantity
-            existingItem.qty = qty
-          }
+        if (qty <= 0) {
+          items.splice(existingItemIndex, 1)
+        } else {
+          items[existingItemIndex]!.qty = qty
         }
-      } else if (qty > 0) {
-        // Add new item
-        items.push({
-          item_id,
-          qty,
-          notes: targetNotes,
-          served_qty: 0,
-        })
       }
+    } else if (item_id !== undefined && qty !== undefined) {
+      // Add new item
+      items.push({
+        order_item_id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+        item_id: item_id,
+        qty: qty,
+        notes: notes || "",
+        served_qty: 0,
+      })
     }
 
     // 3b. Handle bulk cart items (new logic)
@@ -116,24 +109,14 @@ export async function POST(request: Request) {
       for (const cartItem of cartItems) {
         if (!cartItem.item_id || !cartItem.qty || cartItem.qty <= 0) continue
 
-        const targetNotes = cartItem.notes || ""
-        const existingItemIndex = items.findIndex(
-          (i) =>
-            i.item_id === cartItem.item_id && (i.notes || "") === targetNotes
-        )
-
-        if (existingItemIndex > -1) {
-          // Add to existing quantity
-          items[existingItemIndex]!.qty += cartItem.qty
-        } else {
-          // Add as new entry
-          items.push({
-            item_id: cartItem.item_id,
-            qty: cartItem.qty,
-            notes: targetNotes,
-            served_qty: 0,
-          })
-        }
+        // Add as a new entry with a unique ID
+        items.push({
+          order_item_id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+          item_id: cartItem.item_id,
+          qty: cartItem.qty,
+          notes: cartItem.notes || "",
+          served_qty: 0,
+        })
       }
     }
 

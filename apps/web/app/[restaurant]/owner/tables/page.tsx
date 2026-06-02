@@ -1,7 +1,7 @@
 import { Metadata } from "next"
-import { getRestaurant } from "@/lib/restaurant"
+import { getRestaurant, groupMenuByCategory } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
-import { OwnerTablesClient } from "./OwnerTablesClient"
+import { OwnerTablesManagementPage } from "./OwnerTablesManagementPage"
 
 interface OwnerTablesPageProps {
   params: Promise<{ restaurant: string }>
@@ -32,7 +32,16 @@ export default async function OwnerTablesPage({
     notFound()
   }
 
-  const tables = restaurant.data.tables || []
+  const { data, menu } = restaurant
+  const tables = data.tables || []
+  const categories = groupMenuByCategory(menu, decodedSlug)
 
-  return <OwnerTablesClient restaurantSlug={decodedSlug} tables={tables} />
+  return (
+    <OwnerTablesManagementPage
+      restaurantSlug={decodedSlug}
+      tables={tables}
+      categories={categories}
+      currency={data.app?.currency || "USD"}
+    />
+  )
 }

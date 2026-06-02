@@ -5,11 +5,11 @@ export const dynamic = "force-dynamic"
 
 export async function POST(request: Request) {
   try {
-    const { session_id, item_id, notes, served_qty } = await request.json()
+    const { session_id, order_item_id, served_qty } = await request.json()
 
-    if (!session_id || !item_id || served_qty === undefined) {
+    if (!session_id || !order_item_id || served_qty === undefined) {
       return NextResponse.json(
-        { error: "Missing session_id, item_id, or served_qty" },
+        { error: "Missing session_id, order_item_id, or served_qty" },
         { status: 400 }
       )
     }
@@ -34,14 +34,11 @@ export async function POST(request: Request) {
     }
 
     const currentOrders = session.orders || { items: [] }
-    const items: Array<{ item_id: string; qty: number; notes?: string; served_qty?: number }> = [
+    const items: Array<{ order_item_id: string; item_id: string; qty: number; notes?: string; served_qty?: number }> = [
       ...(currentOrders.items || []),
     ]
 
-    const targetNotes = notes || ""
-    const existingItemIndex = items.findIndex(
-      (i) => i.item_id === item_id && (i.notes || "") === targetNotes
-    )
+    const existingItemIndex = items.findIndex((i) => i.order_item_id === order_item_id)
 
     if (existingItemIndex > -1) {
       const existingItem = items[existingItemIndex]

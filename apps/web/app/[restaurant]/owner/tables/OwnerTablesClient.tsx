@@ -8,11 +8,13 @@ import Link from "next/link"
 interface OwnerTablesClientProps {
   restaurantSlug: string
   tables: { id: string | number; label: string; persons?: number }[]
+  useQueryParam?: boolean
 }
 
 export function OwnerTablesClient({
   restaurantSlug,
   tables,
+  useQueryParam = false,
 }: OwnerTablesClientProps) {
   const [sessions, setSessions] = useState<
     { table_number: string; status: string; persons?: number }[]
@@ -123,7 +125,11 @@ export function OwnerTablesClient({
 
               return (
                 <Link
-                  href={`/${restaurantSlug}/owner/tables/${table.id}`}
+                  href={
+                    useQueryParam
+                      ? `?tableId=${table.id}`
+                      : `/${restaurantSlug}/owner/tables/${table.id}`
+                  }
                   key={table.id}
                   className={`relative flex aspect-square cursor-pointer flex-col items-center justify-center rounded-2xl border-2 p-4 text-center transition-all duration-300 ${
                     isPacked

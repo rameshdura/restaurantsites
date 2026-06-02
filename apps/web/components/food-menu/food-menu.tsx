@@ -88,7 +88,7 @@ export function FoodMenu({
   const [showCustomTipInput, setShowCustomTipInput] = useState(false)
   const [sidebarTab, setSidebarTab] = useState<"cart" | "orders">("cart")
   const [cart, setCart] = useState<
-    { item_id: string; qty: number; notes: string }[]
+    { cart_id: string; item_id: string; qty: number; notes: string }[]
   >([])
 
   const [prevInitialSession, setPrevInitialSession] = useState(initialSession)
@@ -140,7 +140,7 @@ export function FoodMenu({
       }
     }
     loadTableSession()
-  }, [disableTableMode, initialTableMode])
+  }, [disableTableMode, initialTableMode, restaurantSlug])
 
   // 1b. Prevent background scrolling when mobile sidebar is open
   useEffect(() => {
@@ -207,51 +207,40 @@ export function FoodMenu({
     itemId: string,
     qty: number,
     notes: string,
-    oldNotes?: string
+    cartId?: string
   ) => {
     if (qty > 0) {
       setSidebarTab("cart")
     }
     setCart((prev) => {
-      const searchNotes = oldNotes !== undefined ? oldNotes : notes
-      const existingIndex = prev.findIndex(
-        (i) => i.item_id === itemId && (i.notes || "") === (searchNotes || "")
-      )
-      
-      if (existingIndex > -1) {
-        if (qty <= 0) {
-          const newCart = [...prev]
-          newCart.splice(existingIndex, 1)
-          return newCart
-        }
-
-        // Merge logic: what if changing notes makes it identical to another item?
-        if (notes !== searchNotes) {
-          const collisionIndex = prev.findIndex(
-            (i) => i.item_id === itemId && (i.notes || "") === (notes || "")
-          )
-          if (collisionIndex > -1 && collisionIndex !== existingIndex) {
+      if (cartId) {
+        // Update specific item
+        const existingIndex = prev.findIndex((i) => i.cart_id === cartId)
+        if (existingIndex > -1) {
+          if (qty <= 0) {
             const newCart = [...prev]
-            newCart[collisionIndex] = {
-              item_id: newCart[collisionIndex]!.item_id,
-              notes: newCart[collisionIndex]!.notes,
-              qty: newCart[collisionIndex]!.qty + qty,
-            }
             newCart.splice(existingIndex, 1)
             return newCart
           }
+          const newCart = [...prev]
+          newCart[existingIndex] = {
+            ...newCart[existingIndex],
+            qty,
+            notes,
+          }
+          return newCart
         }
-
-        const newCart = [...prev]
-        newCart[existingIndex] = {
-          ...newCart[existingIndex],
-          item_id: newCart[existingIndex]!.item_id,
-          qty,
-          notes,
-        }
-        return newCart
       } else if (qty > 0) {
-        return [...prev, { item_id: itemId, qty, notes }]
+        // Add new item
+        return [
+          ...prev,
+          {
+            cart_id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+            item_id: itemId,
+            qty,
+            notes,
+          },
+        ]
       }
       return prev
     })
@@ -431,7 +420,7 @@ export function FoodMenu({
                       : 0
                     return (
                       <div
-                        key={cartItem.item_id + (cartItem.notes || "")}
+                        key={cartItem.cart_id}
                         className="border-b border-border/40 pb-3 last:border-0 last:pb-0"
                       >
                         <div className="flex items-start justify-between gap-2">
@@ -459,7 +448,8 @@ export function FoodMenu({
                                 handleUpdateCart(
                                   cartItem.item_id,
                                   cartItem.qty - 1,
-                                  cartItem.notes || ""
+                                  cartItem.notes || "",
+                                  cartItem.cart_id
                                 )
                               }
                               className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-border bg-background text-xs font-bold text-foreground hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
@@ -475,7 +465,8 @@ export function FoodMenu({
                                 handleUpdateCart(
                                   cartItem.item_id,
                                   cartItem.qty + 1,
-                                  cartItem.notes || ""
+                                  cartItem.notes || "",
+                                  cartItem.cart_id
                                 )
                               }
                               className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-border bg-background text-xs font-bold text-foreground hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
@@ -494,7 +485,7 @@ export function FoodMenu({
                                   cartItem.item_id,
                                   cartItem.qty,
                                   e.target.value,
-                                  cartItem.notes || ""
+                                  cartItem.cart_id
                                 )
                               }
                             }}
@@ -543,24 +534,28 @@ export function FoodMenu({
               <div className="space-y-4">
                 <div className="max-h-[300px] space-y-3 overflow-y-auto pr-1">
                   {orderItems.map((orderItem: any) => {
-                    const itemDetails = flatItems.find(
-                      (i) => i.id === orderItem.item_id
-                    )
-                    const name = itemDetails?.name || orderItem.item_id
-                    const itemPrice = itemDetails
-                      ? parseFloat(String(itemDetails.price)) || 0
-                      : 0
-                    return (
-                      <div
-                        key={orderItem.item_id + (orderItem.notes || "")}
-                        className="border-b border-border/30 pb-2 last:border-0"
-                      >
+                  const itemDetails = flatItems.find(
+                    (i) => i.id === orderItem.item_id
+                  )
+                  const name = itemDetails?.name || orderItem.item_id
+                  const itemPrice = itemDetails
+                    ? parseFloat(String(itemDetails.price)) || 0
+                    : 0
+                  return (
+                    <div
+                      key={orderItem.order_item_id}
+                      className="border-b border-border/30 pb-2 last:border-0"
+                    >
+
                         <div className="flex items-start justify-between text-xs">
                           <div>
                             <p className="font-semibold text-foreground">
                               {name}
                               <span className="ml-1.5 text-xs font-bold text-primary">
                                 x{orderItem.qty}
+                              </span>
+                              <span className="ml-2 text-[10px] text-muted-foreground font-medium">
+                                (C: {orderItem.cooked_qty || 0} | S: {orderItem.served_qty || 0})
                               </span>
                             </p>
                             {orderItem.notes && (

@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import Link from "next/link"
-import { ScanLine, ActivitySquare, Utensils, Settings, ChefHat, Globe } from "lucide-react"
+import { ScanLine, ActivitySquare, Utensils, Settings, ChefHat, Globe, LayoutList } from "lucide-react"
 
 interface OwnerLayoutProps {
   children: ReactNode
@@ -39,6 +39,13 @@ export default async function OwnerLayout({
             >
               <ChefHat className="h-4 w-4" />
               <span className="hidden sm:inline">Kitchen</span>
+            </Link>
+            <Link
+              href={`/${decodedSlug}/owner/kitchen-by-category`}
+              className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground active:scale-95"
+            >
+              <LayoutList className="h-4 w-4" />
+              <span className="hidden sm:inline">Category</span>
             </Link>
             <Link
               href={`/${decodedSlug}/owner/scan`}

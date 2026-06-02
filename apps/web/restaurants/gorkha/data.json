@@ -833,15 +833,15 @@
     "attire": "casual"
   },
   "tables": [
-    {
-      "id": 1,
-      "label": "Table 1",
-      "persons": 4
-    },
-    {
-      "id": 2,
-      "label": "Table 2",
-      "persons": 4
-    }
+    { "id": 1, "label": "Table 1", "persons": 4 },
+    { "id": 2, "label": "Table 2", "persons": 4 },
+    { "id": 3, "label": "Table 3", "persons": 2 },
+    { "id": 4, "label": "Table 4", "persons": 2 },
+    { "id": 5, "label": "Table 5", "persons": 6 },
+    { "id": 6, "label": "Table 6", "persons": 4 },
+    { "id": 7, "label": "Table 7", "persons": 4 },
+    { "id": 8, "label": "Table 8", "persons": 2 },
+    { "id": 9, "label": "Table 9", "persons": 2 },
+    { "id": 10, "label": "Table 10", "persons": 6 }
   ]
 }

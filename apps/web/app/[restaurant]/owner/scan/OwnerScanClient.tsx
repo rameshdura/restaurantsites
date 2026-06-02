@@ -71,6 +71,7 @@ function ScanContent({
   const [isFinalizing, setIsFinalizing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [scannedId, setScannedId] = useState<string | null>(initialSessionId)
+  const [manualCode, setManualCode] = useState("")
 
   const symbol = CURRENCY_SYMBOLS[currency] || ""
 
@@ -218,6 +219,27 @@ function ScanContent({
             }}
             allowMultiple={false}
           />
+        </div>
+
+        <div className="mt-8 pt-6 border-t border-border">
+          <p className="mb-4 text-center text-sm font-medium text-muted-foreground">
+            Or enter code manually
+          </p>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={manualCode}
+              onChange={(e) => setManualCode(e.target.value)}
+              placeholder="Enter session code"
+              className="flex-1 rounded-lg border border-border bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <button
+              onClick={() => handleScan(manualCode)}
+              className="rounded-lg bg-primary px-6 py-3 text-sm font-bold text-primary-foreground hover:bg-primary/90"
+            >
+              Go
+            </button>
+          </div>
         </div>
       </div>
     )
