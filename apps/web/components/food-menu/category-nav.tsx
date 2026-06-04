@@ -16,25 +16,23 @@ export function CategoryNav({
   children,
 }: CategoryNavProps) {
   return (
-    <nav className="sticky top-[72px] z-30 -mx-4 mb-8 border-b border-border/40 bg-background/80 px-4 py-2 backdrop-blur-md">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4">
-        <div className="no-scrollbar flex-1 overflow-x-auto">
-          <div className="flex w-max items-center gap-1">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => onTabChange(category.id)}
-                className={cn(
-                  "rounded-full px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-all",
-                  activeId === category.id
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                )}
-              >
-                {category.title}
-              </button>
-            ))}
-          </div>
+    <nav className="sticky top-[72px] z-30 mb-8 border-b border-border/40 bg-background/95 py-4 backdrop-blur-md">
+      <div className="mx-auto flex w-full max-w-7xl flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+        <div className="flex w-full flex-wrap items-center gap-2">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => onTabChange(category.id)}
+              className={cn(
+                "rounded-full border px-4 py-1.5 text-sm font-medium transition-all",
+                activeId === category.id
+                  ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                  : "border-border/50 bg-muted/50 text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              {category.title}
+            </button>
+          ))}
         </div>
         {children && <div className="shrink-0">{children}</div>}
       </div>

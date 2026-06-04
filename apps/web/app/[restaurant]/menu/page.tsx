@@ -84,21 +84,6 @@ export default async function MenuPage({ params }: MenuPageProps) {
           </div>
         )}
 
-        {data.menuLink && data.menuLink.trim() !== "" && (
-          <div className="mt-12 flex justify-center pb-8">
-            <Button size="lg" asChild className="rounded-full px-8">
-              <a
-                href={getImageSrc(slug, data.menuLink)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Download className="mr-2 h-5 w-5" />
-                {translations.menuPage?.downloadButton || "Download Menu PDF"}
-              </a>
-            </Button>
-          </div>
-        )}
-
         <section
           className={cn(
             "border-y border-border/40 bg-accent/5",
@@ -124,6 +109,21 @@ export default async function MenuPage({ params }: MenuPageProps) {
             </div>
           )}
         </section>
+
+        {data.menuLink && data.menuLink.trim() !== "" && (
+          <div className="mt-12 flex justify-center pb-8">
+            <Button size="lg" asChild className="rounded-full px-8">
+              <a
+                href={getImageSrc(slug, data.menuLink)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Download className="mr-2 h-5 w-5" />
+                {translations.menuPage?.downloadButton || "Download Menu PDF"}
+              </a>
+            </Button>
+          </div>
+        )}
       </main>
 
       <ContactSection

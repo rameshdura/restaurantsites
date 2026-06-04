@@ -62,7 +62,8 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const { tableNumber, restaurantSlug, persons } = await request.json()
+    const { tableNumber, restaurantSlug, persons, device_id } =
+      await request.json()
 
     if (tableNumber === undefined || !restaurantSlug) {
       return NextResponse.json(
@@ -90,11 +91,28 @@ export async function POST(request: Request) {
     }
 
     if (existingActiveSession) {
-      // Return the existing active session so the new user joins the same table session
-      return NextResponse.json({
-        success: true,
-        session: existingActiveSession,
-      })
+      // If the requesting device is the same one that created the session, allow reconnection
+      if (
+        device_id &&
+        existingActiveSession.device_id &&
+        device_id === existingActiveSession.device_id
+      ) {
+        return NextResponse.json({
+          success: true,
+          session: existingActiveSession,
+        })
+      }
+
+      // Otherwise, reject — table is occupied by another device
+      return NextResponse.json(
+        {
+          success: false,
+          occupied: true,
+          error:
+            "Previous guest has not checked out. Please call the staff or retry after 1 minute.",
+        },
+        { status: 409 }
+      )
     }
 
     const expiresAt = new Date(Date.now() + 5 * 60 * 60 * 1000).toISOString() // 5 hours expiry
@@ -117,6 +135,7 @@ export async function POST(request: Request) {
         expires_at: expiresAt,
         orders: defaultOrders,
         persons: persons ? Number(persons) : null,
+        device_id: device_id || null,
       })
       .select()
       .single()

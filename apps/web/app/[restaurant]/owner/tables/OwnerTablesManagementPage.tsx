@@ -1,11 +1,12 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { useSearchParams } from "next/navigation"
 import { supabase } from "@/lib/supabase"
 import { TableListSidebar } from "./TableListSidebar"
 import { OwnerTableDetailClient } from "./[tableId]/OwnerTableDetailClient"
 import { OwnerTablesClient } from "./OwnerTablesClient"
+import { MenuCategory } from "@/lib/restaurant"
 
 interface TableSession {
   session_id: string
@@ -39,7 +40,7 @@ export function OwnerTablesManagementPage({
 }: {
   restaurantSlug: string
   tables: { id: string | number; label: string; persons?: number }[]
-  categories: any[]
+  categories: MenuCategory[]
   currency: string
 }) {
   const searchParams = useSearchParams()
@@ -62,11 +63,17 @@ export function OwnerTablesManagementPage({
     }
   }, [restaurantSlug])
 
+  const fetchSessionsRef = useRef(fetchSessions)
+
   useEffect(() => {
-    fetchSessions()
-    const interval = setInterval(fetchSessions, 5000)
-    return () => clearInterval(interval)
+    fetchSessionsRef.current = fetchSessions
   }, [fetchSessions])
+
+  useEffect(() => {
+    void fetchSessionsRef.current()
+    const interval = setInterval(() => { void fetchSessionsRef.current() }, 5000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div className="flex h-screen w-full">

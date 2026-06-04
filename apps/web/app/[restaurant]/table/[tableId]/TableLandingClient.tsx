@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Lock, Utensils } from "lucide-react"
+import { useState, useEffect, useCallback, useRef } from "react"
+import { Lock, Utensils, AlertTriangle, HandHelping, RotateCw } from "lucide-react"
 import {
   getSessionCookie,
   setSessionCookie,
@@ -20,6 +20,19 @@ interface TableLandingClientProps {
   categories: MenuCategory[]
 }
 
+/* ── Device fingerprint helpers ── */
+const DEVICE_ID_KEY = "rs_device_id"
+
+function getDeviceId(): string {
+  if (typeof window === "undefined") return ""
+  let id = localStorage.getItem(DEVICE_ID_KEY)
+  if (!id) {
+    id = crypto.randomUUID()
+    localStorage.setItem(DEVICE_ID_KEY, id)
+  }
+  return id
+}
+
 export function TableLandingClient({
   restaurantName,
   restaurantSlug,
@@ -33,6 +46,10 @@ export function TableLandingClient({
   const [isStartingSession, setIsStartingSession] = useState(false)
   const [showPersonSelection, setShowPersonSelection] = useState(false)
   const [persons, setPersons] = useState<string>("")
+  const [occupied, setOccupied] = useState(false)
+  const [occupiedMessage, setOccupiedMessage] = useState("")
+  const [retryCountdown, setRetryCountdown] = useState(0)
+  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
     if (!session) {
@@ -57,6 +74,7 @@ export function TableLandingClient({
           const data = await res.json()
           if (data.valid && data.session) {
             setSession(data.session)
+            setOccupied(false)
             setIsLoading(false)
             return
           }
@@ -74,9 +92,73 @@ export function TableLandingClient({
     initSession()
   }, [tableId, restaurantSlug])
 
+  // Cleanup countdown timer on unmount
+  useEffect(() => {
+    return () => {
+      if (countdownRef.current) clearInterval(countdownRef.current)
+    }
+  }, [])
+
+  const startRetryCountdown = useCallback(() => {
+    setRetryCountdown(60) // 1 minute
+    if (countdownRef.current) clearInterval(countdownRef.current)
+    countdownRef.current = setInterval(() => {
+      setRetryCountdown((prev) => {
+        if (prev <= 1) {
+          if (countdownRef.current) clearInterval(countdownRef.current)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+  }, [])
+
+  const handleRetry = async () => {
+    setIsLoading(true)
+    setOccupied(false)
+    try {
+      const deviceId = getDeviceId()
+      const res = await fetch(`/api/table/session`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tableNumber: Number(tableId),
+          restaurantSlug,
+          persons: 1,
+          device_id: deviceId,
+        }),
+      })
+      const data = await res.json()
+
+      if (res.status === 409 && data.occupied) {
+        setOccupied(true)
+        setOccupiedMessage(
+          data.error ||
+            "Previous guest has not checked out. Please call the staff or retry after 1 minute."
+        )
+        startRetryCountdown()
+      } else if (data.success && data.session) {
+        const expiresAt = new Date(data.session.expires_at).getTime() / 1000
+        setSessionCookie(
+          restaurantSlug,
+          data.session.session_id,
+          data.session.table_number,
+          expiresAt
+        )
+        setSession(data.session)
+        setOccupied(false)
+      }
+    } catch (err) {
+      console.error("Error retrying session:", err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const handleStartSession = async () => {
     setIsStartingSession(true)
     try {
+      const deviceId = getDeviceId()
       const res = await fetch(`/api/table/session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -84,11 +166,20 @@ export function TableLandingClient({
           tableNumber: Number(tableId),
           restaurantSlug,
           persons: Number(persons),
+          device_id: deviceId,
         }),
       })
       const data = await res.json()
 
-      if (data.success && data.session) {
+      if (res.status === 409 && data.occupied) {
+        // Table is occupied by another device
+        setOccupied(true)
+        setOccupiedMessage(
+          data.error ||
+            "Previous guest has not checked out. Please call the staff or retry after 1 minute."
+        )
+        startRetryCountdown()
+      } else if (data.success && data.session) {
         const expiresAt = new Date(data.session.expires_at).getTime() / 1000
         setSessionCookie(
           restaurantSlug,
@@ -103,6 +194,12 @@ export function TableLandingClient({
     } finally {
       setIsStartingSession(false)
     }
+  }
+
+  const formatCountdown = (secs: number) => {
+    const m = Math.floor(secs / 60)
+    const s = secs % 60
+    return `${m}:${s.toString().padStart(2, "0")}`
   }
 
   return (
@@ -121,6 +218,60 @@ export function TableLandingClient({
             <p className="mt-4 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
               Loading Table...
             </p>
+          </div>
+        ) : occupied ? (
+          /* ─── Table Occupied Blocking Screen ─── */
+          <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center p-6 text-center select-none">
+            <div className="mb-8 flex flex-col items-center">
+              {/* Animated warning icon */}
+              <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border-4 border-amber-500/30 bg-amber-500/10 shadow-xl shadow-amber-500/10 animate-pulse">
+                <AlertTriangle className="h-10 w-10 text-amber-500" />
+              </div>
+
+              <h1 className="mb-2 text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+                Table Occupied
+              </h1>
+              <p className="mb-1 text-base font-medium text-muted-foreground">
+                {tableLabel.toLowerCase().includes("table")
+                  ? tableLabel
+                  : `Table ${tableLabel}`}
+              </p>
+            </div>
+
+            {/* Message card */}
+            <div className="mb-8 w-full rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6 text-left shadow-lg shadow-amber-500/5">
+              <p className="text-sm leading-relaxed font-medium text-foreground/90">
+                {occupiedMessage}
+              </p>
+            </div>
+
+            {/* Retry button */}
+            <button
+              onClick={handleRetry}
+              disabled={retryCountdown > 0}
+              className="mb-6 flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-8 py-4 text-base font-bold text-primary-foreground shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-primary/30 transition-all hover:-translate-y-0.5 hover:shadow-primary/40 active:translate-y-0 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
+            >
+              <RotateCw className={`h-5 w-5 ${retryCountdown > 0 ? "" : "animate-none"}`} />
+              {retryCountdown > 0
+                ? `Retry in ${formatCountdown(retryCountdown)}`
+                : "Retry Now"}
+            </button>
+
+            {/* Notify Staff info box */}
+            <div className="w-full rounded-2xl border border-border bg-muted/30 p-5">
+              <div className="mb-2 flex items-center gap-2.5">
+                <HandHelping className="h-5 w-5 text-amber-500" />
+                <span className="text-sm font-bold text-foreground">Notify a Staff</span>
+              </div>
+              <p className="text-[13px] leading-relaxed text-muted-foreground">
+                Please raise your hand or approach the nearest staff member for assistance. They can clear the table session so you can start a new order.
+              </p>
+            </div>
+
+            <div className="mt-6 flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground/60">
+              <Lock className="h-3.5 w-3.5 opacity-70" />
+              <span>One device per table session</span>
+            </div>
           </div>
         ) : !session ? (
           !showPersonSelection ? (
@@ -270,3 +421,4 @@ export function TableLandingClient({
     </div>
   )
 }
+

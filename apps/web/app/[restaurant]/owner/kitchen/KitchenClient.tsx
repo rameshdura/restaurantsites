@@ -12,6 +12,26 @@ import {
   UtensilsCrossed
 } from "lucide-react"
 
+export interface OrderItem {
+  item_id: string
+  order_item_id: string
+  qty: number
+  cooked_qty?: number
+  notes?: string
+  name?: string
+}
+
+export interface KitchenSession {
+  session_id: string
+  table_number: string
+  created_at: string
+  status: string
+  orders?: {
+    items?: OrderItem[]
+  }
+  [key: string]: unknown
+}
+
 interface KitchenClientProps {
   menu: MenuItem[]
   menuCategories: {
@@ -19,7 +39,7 @@ interface KitchenClientProps {
     items: MenuItem[]
   }[]
   view: 'orders' | 'items' | 'category'
-  sessions: any[]
+  sessions: KitchenSession[]
 }
 
 function ElapsedTime({ createdString }: { createdString: string }) {
@@ -158,10 +178,10 @@ export function KitchenClient({
             const sessionPending = pendingUpdates[session.session_id] || {}
             const hasPending = Object.keys(sessionPending).length > 0
 
-            const totalItemsCount = items.reduce((sum: number, i: any) => sum + (i.qty || 0), 0)
+            const totalItemsCount = items.reduce((sum: number, i: OrderItem) => sum + (i.qty || 0), 0)
             
             // Calculate total cooked based on real value + local overrides
-            const totalCookedCount = items.reduce((sum: number, i: any) => {
+            const totalCookedCount = items.reduce((sum: number, i: OrderItem) => {
               const uniqueKey = `${i.order_item_id || i.item_id}::${i.notes || ""}`
               const localOverride = sessionPending[uniqueKey]
               const cookedQty = localOverride ? localOverride.cooked_qty : (i.cooked_qty || 0)
@@ -199,7 +219,7 @@ export function KitchenClient({
 
                 {/* Ticket Items */}
                 <div className="p-2 divide-y divide-border/50">
-                  {items.map((item: any, idx: number) => {
+                  {items.map((item: OrderItem, idx: number) => {
                     console.log("[KitchenClient] Rendering item:", item);
                     const details = getMenuItemDetails(item.item_id)
                     const name = details?.name || item.item_id
@@ -284,7 +304,7 @@ export function KitchenClient({
     
     activeOrders.forEach(session => {
         if (!session.orders?.items) return
-        session.orders.items.forEach((item: any) => {
+        session.orders.items.forEach((item: OrderItem) => {
         const details = getMenuItemDetails(item.item_id);
         const name = details?.name || item.name || item.item_id;
         const uniqueKey = `${item.order_item_id || item.item_id}::${item.notes || ""}`
@@ -470,7 +490,7 @@ export function KitchenClient({
 
     activeOrders.forEach((session) => {
       if (!session.orders?.items) return
-      session.orders.items.forEach((item: any) => {
+      session.orders.items.forEach((item: OrderItem) => {
         const details = getMenuItemDetails(item.item_id)
         const name = details?.name || item.name || item.item_id
         const category = itemCategoryMap[item.item_id] || "Uncategorized"
