@@ -47,18 +47,27 @@ const DialogPortal = React.forwardRef<
 ))
 DialogPortal.displayName = "DialogPortal"
 
+import { X } from "lucide-react"
+
 const DialogClose = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <button
     ref={ref}
     className={cn(
-      "absolute top-4 right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+      "absolute -top-3 -right-3 z-50 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background shadow-md opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none",
       className
     )}
     {...props}
-  />
+  >
+    {children || (
+      <>
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
+      </>
+    )}
+  </button>
 ))
 DialogClose.displayName = "DialogClose"
 

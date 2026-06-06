@@ -940,99 +940,100 @@ export function OwnerTableDetailClient({
       </main>
 
       <Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
-        <DialogContent className="flex max-h-[90vh] max-w-5xl flex-col overflow-hidden p-0">
-          <DialogHeader className="shrink-0 border-b border-border p-6 pb-2">
-            <DialogTitle>Add Items to Order</DialogTitle>
-            <DialogDescription>
-              Select items from the menu and add them to the temporary cart
-              before confirming.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="flex max-h-[90vh] max-w-5xl flex-col p-0">
+          <div className="flex flex-1 flex-col overflow-hidden rounded-lg">
+            <DialogHeader className="sr-only">
+              <DialogTitle>Add Items to Order</DialogTitle>
+              <DialogDescription>
+                Select items from the menu and add them to the temporary cart
+                before confirming.
+              </DialogDescription>
+            </DialogHeader>
 
-          {/* Mobile Tab Toggle */}
-          <div className="flex shrink-0 border-b border-border md:hidden">
-            <button
-              onClick={() => setActiveDialogTab("menu")}
-              className={`flex-1 border-b-2 py-3 text-center text-sm font-bold transition-all ${
-                activeDialogTab === "menu"
-                  ? "border-primary bg-primary/5 text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Browse Menu
-            </button>
-            <button
-              onClick={() => setActiveDialogTab("cart")}
-              className={`relative flex-1 border-b-2 py-3 text-center text-sm font-bold transition-all ${
-                activeDialogTab === "cart"
-                  ? "border-primary bg-primary/5 text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Cart
-              {localCart.length > 0 && (
-                <span className="ml-1.5 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-                  {localCart.reduce((sum, item) => sum + item.qty, 0)}
-                </span>
-              )}
-            </button>
-          </div>
+            {/* Mobile Tab Toggle */}
+            <div className="flex shrink-0 border-b border-border md:hidden">
+              <button
+                onClick={() => setActiveDialogTab("menu")}
+                className={`flex-1 border-b-2 py-3 text-center text-sm font-bold transition-all ${
+                  activeDialogTab === "menu"
+                    ? "border-primary bg-primary/5 text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Browse Menu
+              </button>
+              <button
+                onClick={() => setActiveDialogTab("cart")}
+                className={`relative flex-1 border-b-2 py-3 text-center text-sm font-bold transition-all ${
+                  activeDialogTab === "cart"
+                    ? "border-primary bg-primary/5 text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Cart
+                {localCart.length > 0 && (
+                  <span className="ml-1.5 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                    {localCart.reduce((sum, item) => sum + item.qty, 0)}
+                  </span>
+                )}
+              </button>
+            </div>
 
-          <div className="flex flex-1 flex-col overflow-hidden md:flex-row">
-            {/* Left Column: Menu (Visible on mobile if tab is 'menu', always visible on desktop) */}
-            <div
-              className={`flex flex-1 flex-col overflow-hidden border-r border-border ${activeDialogTab === "menu" ? "flex" : "hidden md:flex"}`}
-            >
-              <div className="shrink-0 border-b border-border/60 p-4">
-                <div className="relative">
-                  <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    placeholder="Search menu items by name or description..."
-                    className="pl-9"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
+            <div className="flex flex-1 flex-col overflow-hidden md:flex-row">
+              {/* Left Column: Menu (Visible on mobile if tab is 'menu', always visible on desktop) */}
+              <div
+                className={`flex flex-1 flex-col overflow-hidden border-r border-border ${activeDialogTab === "menu" ? "flex" : "hidden md:flex"}`}
+              >
+                <div className="shrink-0 border-b border-border/60 p-4">
+                  <div className="relative">
+                    <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      placeholder="Search menu items by name or description..."
+                      className="pl-9"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-6 pt-4">
+                  {filteredCategories.length === 0 ? (
+                    <div className="py-12 text-center text-muted-foreground">
+                      No items found matching your search.
+                    </div>
+                  ) : (
+                    <div className="space-y-8">
+                      {filteredCategories.map((category) => (
+                        <div key={category.title}>
+                          <h4 className="mb-3 text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                            {category.title}
+                          </h4>
+                          <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
+                            {category.items.map((item) => {
+                              return (
+                                <MenuItemCard
+                                  key={item.id}
+                                  item={item}
+                                  currency={currency}
+                                  tableMode={true}
+                                  onUpdateQty={(qty, notes) =>
+                                    handleUpdateLocalCart(item.id, qty, notes)
+                                  }
+                                />
+                              )
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6 pt-4">
-                {filteredCategories.length === 0 ? (
-                  <div className="py-12 text-center text-muted-foreground">
-                    No items found matching your search.
-                  </div>
-                ) : (
-                  <div className="space-y-8">
-                    {filteredCategories.map((category) => (
-                      <div key={category.title}>
-                        <h4 className="mb-3 text-xs font-bold tracking-widest text-muted-foreground uppercase">
-                          {category.title}
-                        </h4>
-                        <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
-                          {category.items.map((item) => {
-                            return (
-                              <MenuItemCard
-                                key={item.id}
-                                item={item}
-                                currency={currency}
-                                tableMode={true}
-                                onUpdateQty={(qty, notes) =>
-                                  handleUpdateLocalCart(item.id, qty, notes)
-                                }
-                              />
-                            )
-                          })}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Right Column: Cart (Visible on mobile if tab is 'cart', always visible on desktop) */}
-            <div
-              className={`flex w-full shrink-0 flex-col overflow-hidden bg-muted/5 md:w-[360px] ${activeDialogTab === "cart" ? "flex" : "hidden md:flex"}`}
-            >
+              {/* Right Column: Cart (Visible on mobile if tab is 'cart', always visible on desktop) */}
+              <div
+                className={`flex w-full flex-1 flex-col overflow-hidden bg-muted/5 md:w-[360px] md:flex-none md:shrink-0 ${activeDialogTab === "cart" ? "flex" : "hidden md:flex"}`}
+              >
               <div className="flex shrink-0 items-center justify-between border-b border-border/60 bg-muted/20 p-4">
                 <h4 className="text-sm font-bold tracking-wider text-muted-foreground uppercase">
                   Temporary Cart
@@ -1149,7 +1150,7 @@ export function OwnerTableDetailClient({
                                   cartItem.cart_id
                                 )
                               }
-                              className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs transition-all focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                              className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-base md:text-xs transition-all focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
                             />
                           </div>
                         </div>
@@ -1202,6 +1203,7 @@ export function OwnerTableDetailClient({
                 </div>
               </div>
             </div>
+          </div>
           </div>
         </DialogContent>
       </Dialog>
