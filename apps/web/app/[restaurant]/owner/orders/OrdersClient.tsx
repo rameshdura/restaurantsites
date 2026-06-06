@@ -4,13 +4,14 @@ import { useState, useEffect } from "react"
 import { MenuItem } from "@/lib/restaurant"
 import {
   RefreshCw,
-  ChefHat,
+  HandPlatter,
   CheckCircle,
   Clock,
   Plus,
   Minus,
   UtensilsCrossed,
   Menu,
+  Check,
 } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 
@@ -19,6 +20,7 @@ export interface OrderItem {
   order_item_id: string
   qty: number
   cooked_qty?: number
+  served_qty?: number
   notes?: string
   name?: string
 }
@@ -34,7 +36,7 @@ export interface KitchenSession {
   [key: string]: unknown
 }
 
-interface KitchenClientProps {
+interface OrdersClientProps {
   menu: MenuItem[]
   menuCategories: {
     name: string
@@ -83,19 +85,18 @@ function ElapsedTime({ createdString }: { createdString: string }) {
   )
 }
 
-export function KitchenClient({
+export function OrdersClient({
   menu,
   menuCategories,
   view,
   sessions,
   onToggleSidebar,
-}: KitchenClientProps) {
+}: OrdersClientProps) {
   const [isUpdatingSession, setIsUpdatingSession] = useState<string | null>(
     null
   )
 
   // Local state for pending quantity updates.
-  // Record<sessionId, Record<uniqueKey, { item_id, order_item_id, notes, cooked_qty }>>
   const [pendingUpdates, setPendingUpdates] = useState<
     Record<
       string,
@@ -105,7 +106,7 @@ export function KitchenClient({
           item_id: string
           order_item_id: string
           notes: string
-          cooked_qty: number
+          served_qty: number
         }
       >
     >
@@ -141,7 +142,7 @@ export function KitchenClient({
           item_id: itemId,
           order_item_id: orderItemId,
           notes: notes || "",
-          cooked_qty: qty,
+          served_qty: qty,
         },
       },
     }))
@@ -157,15 +158,10 @@ export function KitchenClient({
         order_item_id: u.order_item_id,
         item_id: u.item_id,
         notes: u.notes,
-        cooked_qty: u.cooked_qty,
+        served_qty: u.served_qty,
       }))
 
-      console.log("[KitchenClient] Sending updates to API:", {
-        session_id: sessionId,
-        updates,
-      })
-
-      const res = await fetch("/api/table/order/cook", {
+      const res = await fetch("/api/table/order/serve-batch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -178,7 +174,7 @@ export function KitchenClient({
         const errorData = await res
           .json()
           .catch(() => ({ error: "Unknown error" }))
-        throw new Error(errorData.error || "Failed to update cooking status")
+        throw new Error(errorData.error || "Failed to update served status")
       }
 
       setPendingUpdates((prev) => {
@@ -186,16 +182,15 @@ export function KitchenClient({
         delete next[sessionId]
         return next
       })
-      // Refreshing sessions is handled by the parent wrapper's fetchSessions
     } catch (err) {
       console.error(err)
-      alert("Error updating cooking status.")
+      alert("Error updating served status.")
     } finally {
       setIsUpdatingSession(null)
     }
   }
 
-  // Filter out sessions that have no items to cook
+  // Filter out sessions that have no items
   const activeOrders = sessions.filter(
     (s) => s.orders?.items && s.orders.items.length > 0
   )
@@ -212,30 +207,29 @@ export function KitchenClient({
           0
         )
 
-        // Calculate total cooked based on real value + local overrides
-        const totalCookedCount = items.reduce((sum: number, i: OrderItem) => {
+        const totalServedCount = items.reduce((sum: number, i: OrderItem) => {
           const uniqueKey = `${i.order_item_id || i.item_id}::${i.notes || ""}`
           const localOverride = sessionPending[uniqueKey]
-          const cookedQty = localOverride
-            ? localOverride.cooked_qty
-            : i.cooked_qty || 0
-          return sum + cookedQty
+          const servedQty = localOverride
+            ? localOverride.served_qty
+            : i.served_qty || 0
+          return sum + servedQty
         }, 0)
 
-        const isFullyCooked = totalCookedCount >= totalItemsCount && !hasPending
+        const isFullyServed = totalServedCount >= totalItemsCount && !hasPending
 
         return (
           <div
             key={session.session_id}
             className={`relative flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm transition-all duration-300 ${
-              isFullyCooked
+              isFullyServed
                 ? "border-emerald-500/30 opacity-70"
                 : "border-border shadow-md"
             }`}
           >
             {/* Ticket Header */}
             <div
-              className={`border-b p-4 ${isFullyCooked ? "border-emerald-500/20 bg-emerald-500/10" : "border-border bg-primary/5"}`}
+              className={`border-b p-4 ${isFullyServed ? "border-emerald-500/20 bg-emerald-500/10" : "border-border bg-primary/5"}`}
             >
               <div className="mb-2 flex items-start justify-between">
                 <h3 className="text-2xl font-black tracking-tight tabular-nums">
@@ -249,12 +243,12 @@ export function KitchenClient({
                 <span>{totalItemsCount} Items</span>
                 <span
                   className={
-                    isFullyCooked
+                    isFullyServed
                       ? "text-emerald-600 dark:text-emerald-400"
                       : ""
                   }
                 >
-                  {totalCookedCount} / {totalItemsCount} Cooked
+                  {totalServedCount} / {totalItemsCount} Served
                 </span>
               </div>
             </div>
@@ -268,26 +262,34 @@ export function KitchenClient({
                 const uniqueKey = `${item.order_item_id || item.item_id}::${item.notes || ""}`
                 const localOverride =
                   pendingUpdates[session.session_id]?.[uniqueKey]
-                const cookedQty = localOverride
-                  ? localOverride.cooked_qty
-                  : item.cooked_qty || 0
-                const isItemFullyCooked = cookedQty >= qty
+                const servedQty = localOverride
+                  ? localOverride.served_qty
+                  : item.served_qty || 0
+                const isItemFullyServed = servedQty >= qty
+                const isItemCooked = (item.cooked_qty || 0) >= qty
 
                 return (
                   <div
                     key={idx}
                     className={`rounded-xl p-3 transition-colors ${
-                      isItemFullyCooked ? "bg-muted/50" : "bg-card"
+                      isItemFullyServed ? "bg-muted/50" : "bg-card"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
-                        <p
-                          className={`text-base leading-tight font-bold ${isItemFullyCooked ? "text-muted-foreground line-through" : "text-foreground"}`}
-                        >
-                          <span className="mr-1.5 text-primary">{qty}x</span>
-                          {name}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p
+                            className={`text-base leading-tight font-bold ${isItemFullyServed ? "text-muted-foreground line-through" : "text-foreground"}`}
+                          >
+                            <span className="mr-1.5 text-primary">{qty}x</span>
+                            {name}
+                          </p>
+                          {isItemCooked && !isItemFullyServed && (
+                            <span className="flex items-center gap-0.5 rounded bg-orange-100 px-1.5 py-0.5 text-[10px] font-black text-orange-600 uppercase dark:bg-orange-900/30 dark:text-orange-400">
+                              <Check className="h-3 w-3" /> Ready
+                            </span>
+                          )}
+                        </div>
                         {item.notes && (
                           <p className="mt-1 inline-block rounded bg-red-50 px-2 py-0.5 text-left text-sm font-medium text-red-600 dark:bg-red-950/30 dark:text-red-400">
                             {item.notes}
@@ -295,7 +297,7 @@ export function KitchenClient({
                         )}
                       </div>
 
-                      {/* Cooked Tracker Controls */}
+                      {/* Served Tracker Controls */}
                       <div className="flex shrink-0 items-center gap-1 rounded-lg bg-muted p-1">
                         <button
                           onClick={() =>
@@ -304,16 +306,16 @@ export function KitchenClient({
                               item.item_id,
                               item.order_item_id,
                               item.notes,
-                              cookedQty - 1
+                              servedQty - 1
                             )
                           }
                           className="flex h-8 w-8 items-center justify-center rounded-md bg-background shadow-sm transition-colors hover:bg-accent disabled:opacity-50"
-                          disabled={cookedQty <= 0}
+                          disabled={servedQty <= 0}
                         >
                           <Minus className="h-4 w-4" />
                         </button>
                         <span className="w-6 text-center text-sm font-bold tabular-nums">
-                          {cookedQty}
+                          {servedQty}
                         </span>
                         <button
                           onClick={() =>
@@ -322,11 +324,11 @@ export function KitchenClient({
                               item.item_id,
                               item.order_item_id,
                               item.notes,
-                              cookedQty + 1
+                              servedQty + 1
                             )
                           }
                           className="flex h-8 w-8 items-center justify-center rounded-md bg-background shadow-sm transition-colors hover:bg-accent disabled:opacity-50"
-                          disabled={cookedQty >= qty}
+                          disabled={servedQty >= qty}
                         >
                           <Plus className="h-4 w-4" />
                         </button>
@@ -373,8 +375,9 @@ export function KitchenClient({
           table: string
           qty: number
           notes?: string
-          cooked_qty: number
+          served_qty: number
           order_item_id: string
+          cooked_qty: number
         }[]
       }
     > = {}
@@ -398,6 +401,7 @@ export function KitchenClient({
           session_id: session.session_id,
           table: session.table_number,
           qty: item.qty,
+          served_qty: item.served_qty || 0,
           cooked_qty: item.cooked_qty || 0,
           notes: item.notes,
           order_item_id: item.order_item_id,
@@ -414,10 +418,10 @@ export function KitchenClient({
       return info.tables.some((t) => {
         const uKey = `${t.order_item_id || info.item_id}::${t.notes || ""}`
         const localOverride = pendingUpdates[t.session_id]?.[uKey]
-        const cookedQty = localOverride
-          ? localOverride.cooked_qty
-          : t.cooked_qty
-        return cookedQty < t.qty
+        const servedQty = localOverride
+          ? localOverride.served_qty
+          : t.served_qty
+        return servedQty < t.qty
       })
     })
 
@@ -426,10 +430,10 @@ export function KitchenClient({
         <div className="rounded-3xl border border-dashed border-border bg-card p-20 text-center shadow-sm">
           <UtensilsCrossed className="mx-auto mb-4 h-12 w-12 text-muted-foreground/50" />
           <h3 className="text-lg font-bold text-foreground">
-            All Items Cooked
+            All Items Served
           </h3>
           <p className="mt-1 text-sm font-medium text-muted-foreground">
-            Everything has been prepared.
+            Everything has been delivered to tables.
           </p>
         </div>
       )
@@ -451,17 +455,16 @@ export function KitchenClient({
             const uKey = `${t.order_item_id || info.item_id}::${t.notes || ""}`
             const localOverride = pendingUpdates[t.session_id]?.[uKey]
             if (localOverride) return true
-            const cookedQty = t.cooked_qty
-            return cookedQty < t.qty
+            return t.served_qty < t.qty
           })
 
           const remainingQty = activeTables.reduce((sum, t) => {
             const uKey = `${t.order_item_id || info.item_id}::${t.notes || ""}`
             const localOverride = pendingUpdates[t.session_id]?.[uKey]
-            const cookedQty = localOverride
-              ? localOverride.cooked_qty
-              : t.cooked_qty
-            return sum + (t.qty - cookedQty)
+            const servedQty = localOverride
+              ? localOverride.served_qty
+              : t.served_qty
+            return sum + (t.qty - servedQty)
           }, 0)
 
           return (
@@ -480,10 +483,11 @@ export function KitchenClient({
                   const uniqueKey = `${t.order_item_id || info.item_id}::${t.notes || ""}`
                   const localOverride =
                     pendingUpdates[t.session_id]?.[uniqueKey]
-                  const cookedQty = localOverride
-                    ? localOverride.cooked_qty
-                    : t.cooked_qty
-                  const remaining = t.qty - cookedQty
+                  const servedQty = localOverride
+                    ? localOverride.served_qty
+                    : t.served_qty
+                  const remaining = t.qty - servedQty
+                  const isCooked = t.cooked_qty >= t.qty
 
                   return (
                     <div
@@ -491,9 +495,16 @@ export function KitchenClient({
                       className="flex items-center justify-between p-3"
                     >
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold">
-                          Table {t.table}
-                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm font-bold">
+                            Table {t.table}
+                          </span>
+                          {isCooked && (
+                            <span className="rounded bg-orange-100 px-1 text-[8px] font-black text-orange-600 uppercase dark:bg-orange-900/30 dark:text-orange-400">
+                              Ready
+                            </span>
+                          )}
+                        </div>
                         <span className="text-xs text-muted-foreground">
                           {t.qty}x
                           {t.notes && (
@@ -511,17 +522,17 @@ export function KitchenClient({
                               info.item_id,
                               t.order_item_id,
                               t.notes,
-                              cookedQty - 1
+                              servedQty - 1
                             )
                           }
                           className="flex h-8 w-8 items-center justify-center rounded-md bg-background shadow-sm transition-colors hover:bg-accent disabled:opacity-50"
-                          disabled={cookedQty <= 0}
+                          disabled={servedQty <= 0}
                         >
                           <Minus className="h-4 w-4" />
                         </button>
                         <div className="flex w-16 flex-col items-center">
                           <span className="text-sm font-bold tabular-nums">
-                            {cookedQty} / {t.qty}
+                            {servedQty} / {t.qty}
                           </span>
                           <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400">
                             {remaining} left
@@ -534,11 +545,11 @@ export function KitchenClient({
                               info.item_id,
                               t.order_item_id,
                               t.notes,
-                              cookedQty + 1
+                              servedQty + 1
                             )
                           }
                           className="flex h-8 w-8 items-center justify-center rounded-md bg-background shadow-sm transition-colors hover:bg-accent disabled:opacity-50"
-                          disabled={cookedQty >= t.qty}
+                          disabled={servedQty >= t.qty}
                         >
                           <Plus className="h-4 w-4" />
                         </button>
@@ -597,6 +608,7 @@ export function KitchenClient({
           table: string
           qty: number
           notes?: string
+          served_qty: number
           cooked_qty: number
           order_item_id: string
         }[]
@@ -624,6 +636,7 @@ export function KitchenClient({
           session_id: session.session_id,
           table: session.table_number,
           qty: item.qty,
+          served_qty: item.served_qty || 0,
           cooked_qty: item.cooked_qty || 0,
           notes: item.notes,
           order_item_id: item.order_item_id,
@@ -640,10 +653,10 @@ export function KitchenClient({
       return info.tables.some((t) => {
         const uKey = `${t.order_item_id || info.item_id}::${t.notes || ""}`
         const localOverride = pendingUpdates[t.session_id]?.[uKey]
-        const cookedQty = localOverride
-          ? localOverride.cooked_qty
-          : t.cooked_qty
-        return cookedQty < t.qty
+        const servedQty = localOverride
+          ? localOverride.served_qty
+          : t.served_qty
+        return servedQty < t.qty
       })
     })
 
@@ -652,10 +665,10 @@ export function KitchenClient({
         <div className="rounded-3xl border border-dashed border-border bg-card p-20 text-center shadow-sm">
           <UtensilsCrossed className="mx-auto mb-4 h-12 w-12 text-muted-foreground/50" />
           <h3 className="text-lg font-bold text-foreground">
-            All Items Cooked
+            All Items Served
           </h3>
           <p className="mt-1 text-sm font-medium text-muted-foreground">
-            Everything has been prepared.
+            Everything has been prepared and served.
           </p>
         </div>
       )
@@ -687,10 +700,10 @@ export function KitchenClient({
               info.tables.reduce((tSum, t) => {
                 const uKey = `${t.order_item_id || info.item_id}::${t.notes || ""}`
                 const localOverride = pendingUpdates[t.session_id]?.[uKey]
-                const cookedQty = localOverride
-                  ? localOverride.cooked_qty
-                  : t.cooked_qty
-                return tSum + (t.qty - cookedQty)
+                const servedQty = localOverride
+                  ? localOverride.served_qty
+                  : t.served_qty
+                return tSum + (t.qty - servedQty)
               }, 0)
             )
           }, 0)
@@ -721,16 +734,16 @@ export function KitchenClient({
                     const uKey = `${t.order_item_id || info.item_id}::${t.notes || ""}`
                     const localOverride = pendingUpdates[t.session_id]?.[uKey]
                     if (localOverride) return true
-                    return t.cooked_qty < t.qty
+                    return t.served_qty < t.qty
                   })
 
                   const remainingQty = activeTables.reduce((sum, t) => {
                     const uKey = `${t.order_item_id || info.item_id}::${t.notes || ""}`
                     const localOverride = pendingUpdates[t.session_id]?.[uKey]
-                    const cookedQty = localOverride
-                      ? localOverride.cooked_qty
-                      : t.cooked_qty
-                    return sum + (t.qty - cookedQty)
+                    const servedQty = localOverride
+                      ? localOverride.served_qty
+                      : t.served_qty
+                    return sum + (t.qty - servedQty)
                   }, 0)
 
                   return (
@@ -749,10 +762,11 @@ export function KitchenClient({
                           const uniqueKey = `${t.order_item_id || info.item_id}::${t.notes || ""}`
                           const localOverride =
                             pendingUpdates[t.session_id]?.[uniqueKey]
-                          const cookedQty = localOverride
-                            ? localOverride.cooked_qty
-                            : t.cooked_qty
-                          const remaining = t.qty - cookedQty
+                          const servedQty = localOverride
+                            ? localOverride.served_qty
+                            : t.served_qty
+                          const remaining = t.qty - servedQty
+                          const isCooked = t.cooked_qty >= t.qty
 
                           return (
                             <div
@@ -760,10 +774,17 @@ export function KitchenClient({
                               className="flex items-center justify-between p-3"
                             >
                               <div className="flex flex-col">
-                                <span className="text-sm font-bold">
-                                  Table {t.table}
-                                </span>
-                                <span className="text-xs text-muted-foreground">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-sm font-bold">
+                                    Table {t.table}
+                                  </span>
+                                  {isCooked && (
+                                    <span className="rounded bg-orange-100 px-1 text-[8px] font-black text-orange-600 uppercase dark:bg-orange-900/30 dark:text-orange-400">
+                                      Ready
+                                    </span>
+                                  )}
+                                </div>
+                                <span className="text-sm text-muted-foreground">
                                   {t.qty}x
                                   {t.notes && (
                                     <span className="ml-1 text-red-500 italic">
@@ -780,17 +801,17 @@ export function KitchenClient({
                                       info.item_id,
                                       t.order_item_id,
                                       t.notes,
-                                      cookedQty - 1
+                                      servedQty - 1
                                     )
                                   }
                                   className="flex h-8 w-8 items-center justify-center rounded-md bg-background shadow-sm transition-colors hover:bg-accent disabled:opacity-50"
-                                  disabled={cookedQty <= 0}
+                                  disabled={servedQty <= 0}
                                 >
                                   <Minus className="h-4 w-4" />
                                 </button>
                                 <div className="flex w-16 flex-col items-center">
                                   <span className="text-sm font-bold tabular-nums">
-                                    {cookedQty} / {t.qty}
+                                    {servedQty} / {t.qty}
                                   </span>
                                   <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400">
                                     {remaining} left
@@ -803,11 +824,11 @@ export function KitchenClient({
                                       info.item_id,
                                       t.order_item_id,
                                       t.notes,
-                                      cookedQty + 1
+                                      servedQty + 1
                                     )
                                   }
                                   className="flex h-8 w-8 items-center justify-center rounded-md bg-background shadow-sm transition-colors hover:bg-accent disabled:opacity-50"
-                                  disabled={cookedQty >= t.qty}
+                                  disabled={servedQty >= t.qty}
                                 >
                                   <Plus className="h-4 w-4" />
                                 </button>
@@ -849,7 +870,6 @@ export function KitchenClient({
   }
 
   const renderAllItemsView = () => {
-    // Collect every individual order item that is not fully cooked
     const allPendingItems: {
       session_id: string
       table: string
@@ -857,6 +877,7 @@ export function KitchenClient({
       order_item_id: string
       name: string
       qty: number
+      served_qty: number
       cooked_qty: number
       notes?: string
       created_at: string
@@ -867,11 +888,11 @@ export function KitchenClient({
       session.orders.items.forEach((item: OrderItem) => {
         const uniqueKey = `${item.order_item_id || item.item_id}::${item.notes || ""}`
         const localOverride = pendingUpdates[session.session_id]?.[uniqueKey]
-        const cookedQty = localOverride
-          ? localOverride.cooked_qty
-          : item.cooked_qty || 0
+        const servedQty = localOverride
+          ? localOverride.served_qty
+          : item.served_qty || 0
 
-        if (cookedQty < item.qty) {
+        if (servedQty < item.qty) {
           const details = getMenuItemDetails(item.item_id)
           allPendingItems.push({
             session_id: session.session_id,
@@ -880,7 +901,8 @@ export function KitchenClient({
             order_item_id: item.order_item_id,
             name: details?.name || item.name || item.item_id,
             qty: item.qty,
-            cooked_qty: cookedQty,
+            served_qty: servedQty,
+            cooked_qty: item.cooked_qty || 0,
             notes: item.notes,
             created_at: session.created_at,
           })
@@ -888,7 +910,6 @@ export function KitchenClient({
       })
     })
 
-    // Sort by created_at (oldest first)
     allPendingItems.sort(
       (a, b) =>
         new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
@@ -902,7 +923,7 @@ export function KitchenClient({
             No Pending Items
           </h3>
           <p className="mt-1 text-sm font-medium text-muted-foreground">
-            All ordered items have been cooked.
+            All items have been served.
           </p>
         </div>
       )
@@ -914,6 +935,7 @@ export function KitchenClient({
           const uniqueKey = `${item.order_item_id || item.item_id}::${item.notes || ""}`
           const hasPendingUpdate =
             !!pendingUpdates[item.session_id]?.[uniqueKey]
+          const isCooked = item.cooked_qty >= item.qty
 
           return (
             <div
@@ -922,7 +944,14 @@ export function KitchenClient({
             >
               <div className="flex items-start justify-between border-b border-border bg-primary/5 p-4">
                 <div>
-                  <h4 className="text-lg font-black">{item.name}</h4>
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-lg font-black">{item.name}</h4>
+                    {isCooked && (
+                      <span className="rounded bg-orange-100 px-1.5 py-0.5 text-[10px] font-black text-orange-600 uppercase dark:bg-orange-900/30 dark:text-orange-400">
+                        Ready
+                      </span>
+                    )}
+                  </div>
                   <div className="mt-1 flex items-center gap-2">
                     <span className="rounded-md border border-border bg-background px-2 py-0.5 text-xs font-bold">
                       Table {item.table}
@@ -954,20 +983,20 @@ export function KitchenClient({
                           item.item_id,
                           item.order_item_id,
                           item.notes,
-                          item.cooked_qty - 1
+                          item.served_qty - 1
                         )
                       }
                       className="flex h-8 w-8 items-center justify-center rounded-md bg-background shadow-sm transition-colors hover:bg-accent disabled:opacity-50"
-                      disabled={item.cooked_qty <= 0}
+                      disabled={item.served_qty <= 0}
                     >
                       <Minus className="h-4 w-4" />
                     </button>
                     <div className="flex w-16 flex-col items-center">
                       <span className="text-sm font-bold tabular-nums">
-                        {item.cooked_qty} / {item.qty}
+                        {item.served_qty} / {item.qty}
                       </span>
                       <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400">
-                        {item.qty - item.cooked_qty} left
+                        {item.qty - item.served_qty} left
                       </span>
                     </div>
                     <button
@@ -977,11 +1006,11 @@ export function KitchenClient({
                           item.item_id,
                           item.order_item_id,
                           item.notes,
-                          item.cooked_qty + 1
+                          item.served_qty + 1
                         )
                       }
                       className="flex h-8 w-8 items-center justify-center rounded-md bg-background shadow-sm transition-colors hover:bg-accent disabled:opacity-50"
-                      disabled={item.cooked_qty >= item.qty}
+                      disabled={item.served_qty >= item.qty}
                     >
                       <Plus className="h-4 w-4" />
                     </button>
@@ -1030,17 +1059,17 @@ export function KitchenClient({
 
           <div>
             <h2 className="flex items-center gap-2 text-xl font-bold">
-              <ChefHat className="h-5 w-5 text-primary" />
-              Kitchen Display
+              <HandPlatter className="h-5 w-5 text-primary" />
+              Server Management
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               {view === "orders"
-                ? "Live table preparation tickets"
+                ? "Live table delivery tickets"
                 : view === "items"
-                  ? "Aggregated item preparation list"
+                  ? "Aggregated item delivery list"
                   : view === "category"
                     ? "Items grouped by menu category"
-                    : "All pending individual items"}
+                    : "All pending delivery items"}
             </p>
           </div>
         </div>
@@ -1054,7 +1083,7 @@ export function KitchenClient({
               No Active Orders
             </h3>
             <p className="mt-1 text-sm font-medium text-muted-foreground">
-              The kitchen is all caught up.
+              All orders have been served.
             </p>
           </div>
         ) : view === "orders" ? (

@@ -92,9 +92,8 @@ export default async function AboutPage({ params }: AboutPageProps) {
             <div>
               <SectionHeader
                 subtitle={
-                  (
-                    translations as { home?: { about?: { subtitle?: string } } }
-                  ).home?.about?.subtitle ?? "Our Story"
+                  (translations as { home?: { about?: { subtitle?: string } } })
+                    .home?.about?.subtitle ?? "Our Story"
                 }
                 title={
                   (translations as { home?: { about?: { title?: string } } })

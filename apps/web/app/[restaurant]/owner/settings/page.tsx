@@ -45,7 +45,8 @@ export default async function OwnerSettingsPage({
           Restaurant Settings
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Download QR codes for your tables. Guests can scan these to start an order.
+          Download QR codes for your tables. Guests can scan these to start an
+          order.
         </p>
       </div>
 

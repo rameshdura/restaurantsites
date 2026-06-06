@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
     if (fetchError) {
       console.error(
-        "[POST /api/table/order/cook] Fetch session error:",
+        "[POST /api/table/order/serve-batch] Fetch session error:",
         fetchError
       )
       return NextResponse.json({ error: fetchError.message }, { status: 500 })
@@ -32,17 +32,8 @@ export async function POST(request: Request) {
     if (!session) {
       return NextResponse.json({ error: "Session not found" }, { status: 404 })
     }
-    const currentOrders = session.orders || { items: [] }
-    console.log(`[POST /api/table/order/cook] session_id: ${session_id}`)
-    console.log(
-      `[POST /api/table/order/cook] Current session items:`,
-      JSON.stringify(currentOrders.items, null, 2)
-    )
-    console.log(
-      `[POST /api/table/order/cook] Received updates:`,
-      JSON.stringify(updates, null, 2)
-    )
 
+    const currentOrders = session.orders || { items: [] }
     const items: Array<{
       order_item_id: string
       item_id: string
@@ -54,14 +45,9 @@ export async function POST(request: Request) {
 
     let updatedCount = 0
     for (const update of updates) {
-      const { order_item_id, item_id, notes, cooked_qty } = update
+      const { order_item_id, item_id, notes, served_qty } = update
 
-      if (cooked_qty === undefined) {
-        console.log(
-          `[POST /api/table/order/cook] Skipping update: cooked_qty is undefined`
-        )
-        continue
-      }
+      if (served_qty === undefined) continue
 
       // Try matching by order_item_id first (primary key)
       let existingItemIndex = -1
@@ -69,12 +55,9 @@ export async function POST(request: Request) {
         existingItemIndex = items.findIndex(
           (i) => String(i.order_item_id) === String(order_item_id)
         )
-        console.log(
-          `[POST /api/table/order/cook] Match by order_item_id '${order_item_id}': index ${existingItemIndex}`
-        )
       }
 
-      // Fallback: match by item_id + notes if order_item_id didn't match
+      // Fallback: match by item_id + notes
       if (existingItemIndex === -1 && item_id) {
         const normalizedNotes = (notes || "").trim()
         existingItemIndex = items.findIndex(
@@ -82,25 +65,18 @@ export async function POST(request: Request) {
             String(i.item_id) === String(item_id) &&
             (i.notes || "").trim() === normalizedNotes
         )
-        console.log(
-          `[POST /api/table/order/cook] Fallback match by item_id '${item_id}' + notes '${normalizedNotes}': index ${existingItemIndex}`
-        )
       }
 
       if (existingItemIndex > -1) {
         const existingItem = items[existingItemIndex]
         if (existingItem) {
-          // Ensure cooked_qty doesn't exceed qty and isn't less than 0
-          existingItem.cooked_qty = Math.max(
+          // Ensure served_qty doesn't exceed qty and isn't less than 0
+          existingItem.served_qty = Math.max(
             0,
-            Math.min(cooked_qty, existingItem.qty)
+            Math.min(served_qty, existingItem.qty)
           )
           updatedCount++
         }
-      } else {
-        console.log(
-          `[POST /api/table/order/cook] Item not found. order_item_id: '${order_item_id}', item_id: '${item_id}'`
-        )
       }
     }
 
@@ -129,7 +105,7 @@ export async function POST(request: Request) {
 
     if (updateError) {
       console.error(
-        "[POST /api/table/order/cook] Update session error:",
+        "[POST /api/table/order/serve-batch] Update session error:",
         updateError
       )
       return NextResponse.json({ error: updateError.message }, { status: 500 })
@@ -137,7 +113,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, session: updatedSession })
   } catch (error) {
-    console.error("[POST /api/table/order/cook] Internal Error:", error)
+    console.error("[POST /api/table/order/serve-batch] Internal Error:", error)
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

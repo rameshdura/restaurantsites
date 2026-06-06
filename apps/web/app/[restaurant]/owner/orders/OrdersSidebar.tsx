@@ -2,26 +2,26 @@
 
 import { useRouter } from "next/navigation"
 import {
-  ChefHat,
+  HandPlatter,
   ClipboardList,
   Utensils,
   LayoutList,
   LayoutGrid,
 } from "lucide-react"
 
-interface KitchenSidebarProps {
+interface OrdersSidebarProps {
   restaurantSlug: string
   view: "orders" | "items" | "category" | "all"
   onViewChange: (view: "orders" | "items" | "category" | "all") => void
   onHeaderClick?: () => void
 }
 
-export function KitchenSidebar({
+export function OrdersSidebar({
   restaurantSlug,
   view,
   onViewChange,
   onHeaderClick,
-}: KitchenSidebarProps) {
+}: OrdersSidebarProps) {
   const router = useRouter()
 
   return (
@@ -29,13 +29,13 @@ export function KitchenSidebar({
       <div className="border-b border-border p-4">
         <button
           onClick={() => {
-            router.push(`/${restaurantSlug}/owner/kitchen`)
+            router.push(`/${restaurantSlug}/owner/orders`)
             onHeaderClick?.()
           }}
           className="flex items-center gap-2 text-lg font-bold transition-colors hover:text-primary"
         >
-          <ChefHat className="h-5 w-5" />
-          Kitchen
+          <HandPlatter className="h-5 w-5" />
+          Server
         </button>
       </div>
 

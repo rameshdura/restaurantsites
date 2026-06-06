@@ -7,6 +7,7 @@ import { TableListSidebar } from "./TableListSidebar"
 import { OwnerTableDetailClient } from "./[tableId]/OwnerTableDetailClient"
 import { OwnerTablesClient } from "./OwnerTablesClient"
 import { MenuCategory } from "@/lib/restaurant"
+import { Sheet, SheetContent } from "@workspace/ui/components/sheet"
 
 interface TableSession {
   session_id: string
@@ -47,6 +48,7 @@ export function OwnerTablesManagementPage({
   const tableId = searchParams.get("tableId")
 
   const [sessions, setSessions] = useState<TableSession[]>([])
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const fetchSessions = useCallback(async () => {
     try {
@@ -71,19 +73,35 @@ export function OwnerTablesManagementPage({
 
   useEffect(() => {
     void fetchSessionsRef.current()
-    const interval = setInterval(() => { void fetchSessionsRef.current() }, 5000)
+    const interval = setInterval(() => {
+      void fetchSessionsRef.current()
+    }, 5000)
     return () => clearInterval(interval)
   }, [])
 
   return (
-    <div className="flex h-screen w-full">
-      <div className="w-40 flex-shrink-0">
+    <div className="flex h-screen w-full overflow-hidden">
+      {/* Desktop Sidebar */}
+      <div className="hidden w-40 flex-shrink-0 md:block">
         <TableListSidebar
           restaurantSlug={restaurantSlug}
           tables={tables}
           sessions={sessions}
         />
       </div>
+
+      {/* Mobile Sidebar (Off-canvas) */}
+      <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+        <SheetContent side="left" className="w-64 p-0">
+          <TableListSidebar
+            restaurantSlug={restaurantSlug}
+            tables={tables}
+            sessions={sessions}
+            onTableSelect={() => setIsSidebarOpen(false)}
+          />
+        </SheetContent>
+      </Sheet>
+
       <div className="flex-1 overflow-y-auto">
         {tableId ? (
           <OwnerTableDetailClient
@@ -91,12 +109,14 @@ export function OwnerTablesManagementPage({
             tableId={tableId}
             currency={currency}
             categories={categories}
+            onToggleSidebar={() => setIsSidebarOpen(true)}
           />
         ) : (
           <OwnerTablesClient
             restaurantSlug={restaurantSlug}
             tables={tables}
             useQueryParam={true}
+            onToggleSidebar={() => setIsSidebarOpen(true)}
           />
         )}
       </div>

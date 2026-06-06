@@ -34,20 +34,32 @@ export async function POST(request: Request) {
     }
 
     const currentOrders = session.orders || { items: [] }
-    const items: Array<{ order_item_id: string; item_id: string; qty: number; notes?: string; served_qty?: number }> = [
-      ...(currentOrders.items || []),
-    ]
+    const items: Array<{
+      order_item_id: string
+      item_id: string
+      qty: number
+      notes?: string
+      served_qty?: number
+    }> = [...(currentOrders.items || [])]
 
-    const existingItemIndex = items.findIndex((i) => i.order_item_id === order_item_id)
+    const existingItemIndex = items.findIndex(
+      (i) => i.order_item_id === order_item_id
+    )
 
     if (existingItemIndex > -1) {
       const existingItem = items[existingItemIndex]
       if (existingItem) {
         // Ensure served_qty doesn't exceed qty and isn't less than 0
-        existingItem.served_qty = Math.max(0, Math.min(served_qty, existingItem.qty))
+        existingItem.served_qty = Math.max(
+          0,
+          Math.min(served_qty, existingItem.qty)
+        )
       }
     } else {
-      return NextResponse.json({ error: "Item not found in order" }, { status: 404 })
+      return NextResponse.json(
+        { error: "Item not found in order" },
+        { status: 404 }
+      )
     }
 
     const updatedOrders = {

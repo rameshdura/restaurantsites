@@ -2,19 +2,22 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { supabase } from "@/lib/supabase"
-import { RefreshCw, LayoutGrid, CheckCircle2, UserX } from "lucide-react"
+import { RefreshCw, LayoutGrid, CheckCircle2, UserX, Menu } from "lucide-react"
 import Link from "next/link"
+import { Button } from "@workspace/ui/components/button"
 
 interface OwnerTablesClientProps {
   restaurantSlug: string
   tables: { id: string | number; label: string; persons?: number }[]
   useQueryParam?: boolean
+  onToggleSidebar?: () => void
 }
 
 export function OwnerTablesClient({
   restaurantSlug,
   tables,
   useQueryParam = false,
+  onToggleSidebar,
 }: OwnerTablesClientProps) {
   const [sessions, setSessions] = useState<
     { table_number: string; status: string; persons?: number }[]
@@ -64,14 +67,27 @@ export function OwnerTablesClient({
     <div className="p-4 sm:p-8">
       {/* Header Controls */}
       <div className="mx-auto mb-8 flex max-w-7xl items-center justify-between">
-        <div>
-          <h2 className="flex items-center gap-2 text-xl font-bold">
-            <LayoutGrid className="h-5 w-5 text-primary" />
-            Table Overview
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Real-time status of all tables in your restaurant.
-          </p>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 rounded-xl md:hidden"
+            onClick={onToggleSidebar}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+
+          <div className="h-6 w-px bg-border md:hidden" aria-hidden="true" />
+
+          <div>
+            <h2 className="flex items-center gap-2 text-xl font-bold">
+              <LayoutGrid className="h-5 w-5 text-primary" />
+              Table Overview
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Real-time status of all tables in your restaurant.
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-3">
           <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-muted-foreground select-none">

@@ -100,7 +100,11 @@ export function OwnerActivityClient({
   const symbol = CURRENCY_SYMBOLS[currency] || ""
 
   const handlePayAndClose = async (sessionId: string) => {
-    if (!confirm("Are you sure you want to finalize this session and mark it as paid?")) {
+    if (
+      !confirm(
+        "Are you sure you want to finalize this session and mark it as paid?"
+      )
+    ) {
       return
     }
 
@@ -394,13 +398,23 @@ export function OwnerActivityClient({
 
                         {/* Order Items Breakdown */}
                         <div className="mb-6">
-                          <div className="flex items-center justify-between mb-2">
+                          <div className="mb-2 flex items-center justify-between">
                             <h4 className="text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
                               Order details ({totalItemsCount} items)
                             </h4>
                             {totalItemsCount > 0 && (
                               <div className="text-[10px] font-bold tracking-wider text-emerald-500 uppercase">
-                                {items.reduce((sum: number, i: { served_qty?: number; [key: string]: unknown }) => sum + (i.served_qty || 0), 0)} / {totalItemsCount} Served
+                                {items.reduce(
+                                  (
+                                    sum: number,
+                                    i: {
+                                      served_qty?: number
+                                      [key: string]: unknown
+                                    }
+                                  ) => sum + (i.served_qty || 0),
+                                  0
+                                )}{" "}
+                                / {totalItemsCount} Served
                               </div>
                             )}
                           </div>
@@ -435,14 +449,14 @@ export function OwnerActivityClient({
                                         isFullyServed ? "opacity-50" : ""
                                       }`}
                                     >
-                                      <div className="pr-4 flex-1">
-                                        <p className="font-semibold text-foreground flex items-center gap-1.5">
+                                      <div className="flex-1 pr-4">
+                                        <p className="flex items-center gap-1.5 font-semibold text-foreground">
                                           {name}
                                           <span className="font-bold text-primary">
                                             x{item.qty}
                                           </span>
                                           {isFullyServed && (
-                                            <CheckCircle className="h-3 w-3 text-emerald-500 inline" />
+                                            <CheckCircle className="inline h-3 w-3 text-emerald-500" />
                                           )}
                                         </p>
                                         {item.notes && (
@@ -451,7 +465,7 @@ export function OwnerActivityClient({
                                           </p>
                                         )}
                                         {servedQty > 0 && !isFullyServed && (
-                                          <p className="mt-0.5 text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
+                                          <p className="mt-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
                                             {servedQty} served
                                           </p>
                                         )}
@@ -549,7 +563,7 @@ export function OwnerActivityClient({
             ) : (
               <div className="overflow-x-auto rounded-xl border border-border bg-card">
                 <table className="w-full text-left text-sm">
-                  <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
+                  <thead className="bg-muted/50 text-xs text-muted-foreground uppercase">
                     <tr>
                       <th className="px-4 py-3 font-semibold">Table</th>
                       <th className="px-4 py-3 font-semibold">Amount</th>
@@ -559,12 +573,18 @@ export function OwnerActivityClient({
                   </thead>
                   <tbody className="divide-y divide-border">
                     {closedSessions.slice(0, 10).map((session) => {
-                      const date = new Date(session.last_activity || session.created_at)
+                      const date = new Date(
+                        session.last_activity || session.created_at
+                      )
                       return (
-                        <tr 
-                          key={session.session_id} 
-                          className="transition-colors hover:bg-muted/50 cursor-pointer"
-                          onClick={() => router.push(`/${restaurantSlug}/owner/sessions/${session.session_id}`)}
+                        <tr
+                          key={session.session_id}
+                          className="cursor-pointer transition-colors hover:bg-muted/50"
+                          onClick={() =>
+                            router.push(
+                              `/${restaurantSlug}/owner/sessions/${session.session_id}`
+                            )
+                          }
                         >
                           <td className="px-4 py-3 font-medium">
                             Table {session.table_number}
@@ -573,8 +593,14 @@ export function OwnerActivityClient({
                             {symbol}
                             {session.orders?.total || 0}
                           </td>
-                          <td className="px-4 py-3">{date.toLocaleDateString()}</td>
-                          <td className="px-4 py-3 text-muted-foreground">{formatTime(session.last_activity || session.created_at)}</td>
+                          <td className="px-4 py-3">
+                            {date.toLocaleDateString()}
+                          </td>
+                          <td className="px-4 py-3 text-muted-foreground">
+                            {formatTime(
+                              session.last_activity || session.created_at
+                            )}
+                          </td>
                         </tr>
                       )
                     })}

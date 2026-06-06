@@ -102,7 +102,7 @@ export function MenuItemCard({
           onClick={() => tableMode && setIsDialogOpen(true)}
         >
           <div className="mb-1">
-            <h4 className="text-base font-semibold leading-tight text-foreground">
+            <h4 className="text-base leading-tight font-semibold text-foreground">
               {name}
             </h4>
             {secondaryName && (
@@ -206,4 +206,3 @@ export function MenuItemCard({
     </Dialog>
   )
 }
-

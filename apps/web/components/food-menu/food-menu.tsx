@@ -237,7 +237,8 @@ export function FoodMenu({
         return [
           ...prev,
           {
-            cart_id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+            cart_id:
+              Date.now().toString() + Math.random().toString(36).substr(2, 5),
             item_id: itemId,
             qty,
             notes,
@@ -348,7 +349,8 @@ export function FoodMenu({
       console.error("Failed to checkout:", err)
       toast({
         title: "Checkout Error",
-        description: "An error occurred during checkout. Please ask a staff member.",
+        description:
+          "An error occurred during checkout. Please ask a staff member.",
         variant: "destructive",
       })
     } finally {
@@ -536,19 +538,18 @@ export function FoodMenu({
               <div className="space-y-4">
                 <div className="max-h-[300px] space-y-3 overflow-y-auto pr-1">
                   {orderItems.map((orderItem: any) => {
-                  const itemDetails = flatItems.find(
-                    (i) => i.id === orderItem.item_id
-                  )
-                  const name = itemDetails?.name || orderItem.item_id
-                  const itemPrice = itemDetails
-                    ? parseFloat(String(itemDetails.price)) || 0
-                    : 0
-                  return (
-                    <div
-                      key={orderItem.order_item_id}
-                      className="border-b border-border/30 pb-2 last:border-0"
-                    >
-
+                    const itemDetails = flatItems.find(
+                      (i) => i.id === orderItem.item_id
+                    )
+                    const name = itemDetails?.name || orderItem.item_id
+                    const itemPrice = itemDetails
+                      ? parseFloat(String(itemDetails.price)) || 0
+                      : 0
+                    return (
+                      <div
+                        key={orderItem.order_item_id}
+                        className="border-b border-border/30 pb-2 last:border-0"
+                      >
                         <div className="flex items-start justify-between text-xs">
                           <div>
                             <p className="font-semibold text-foreground">
@@ -556,8 +557,9 @@ export function FoodMenu({
                               <span className="ml-1.5 text-xs font-bold text-primary">
                                 x{orderItem.qty}
                               </span>
-                              <span className="ml-2 text-[10px] text-muted-foreground font-medium">
-                                (C: {orderItem.cooked_qty || 0} | S: {orderItem.served_qty || 0})
+                              <span className="ml-2 text-[10px] font-medium text-muted-foreground">
+                                (C: {orderItem.cooked_qty || 0} | S:{" "}
+                                {orderItem.served_qty || 0})
                               </span>
                             </p>
                             {orderItem.notes && (
@@ -757,7 +759,6 @@ export function FoodMenu({
     return (
       <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6">
         <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-2xl">
-
           {/* ── Shared header strip ───────────────────────────── */}
           <div
             className={`border-b p-6 text-center transition-colors duration-500 ${
@@ -767,13 +768,9 @@ export function FoodMenu({
             }`}
           >
             {isPaid ? (
-              <CheckCircle
-                className="mx-auto mb-3 h-12 w-12 text-green-500 transition-colors duration-500"
-              />
+              <CheckCircle className="mx-auto mb-3 h-12 w-12 text-green-500 transition-colors duration-500" />
             ) : (
-              <Receipt
-                className="mx-auto mb-3 h-12 w-12 text-primary transition-colors duration-500"
-              />
+              <Receipt className="mx-auto mb-3 h-12 w-12 text-primary transition-colors duration-500" />
             )}
             <h2 className="text-2xl font-black text-foreground">
               {isPaid ? "Payment Accepted" : "Make Payment"}
@@ -787,21 +784,19 @@ export function FoodMenu({
 
           {/* ── Two-column body (md+), single-column (mobile) ── */}
           <div className="grid grid-cols-1 md:grid-cols-2">
-
             {/* LEFT — QR code */}
-            <div className="flex flex-col items-center justify-center border-b border-border/40 bg-white p-10 text-black md:border-b-0 md:border-r">
+            <div className="flex flex-col items-center justify-center border-b border-border/40 bg-white p-10 text-black md:border-r md:border-b-0">
               <QRCode value={qrUrl} size={200} level="M" />
-              <p className="mt-5 font-mono text-xs text-zinc-400 uppercase tracking-widest">
+              <p className="mt-5 font-mono text-xs tracking-widest text-zinc-400 uppercase">
                 Table {receiptSession.table_number}
               </p>
-              <p className="mt-1 text-[10px] text-zinc-400 uppercase tracking-wider">
+              <p className="mt-1 text-[10px] tracking-wider text-zinc-400 uppercase">
                 {isPaid ? "Session Closed" : "Scan to verify"}
               </p>
             </div>
 
             {/* RIGHT — Amount + order summary + action */}
             <div className="flex flex-col overflow-y-auto p-6 text-sm">
-
               {/* Amount due */}
               <div className="mb-6 rounded-2xl border border-border/40 bg-accent/20 p-4 text-center">
                 <span className="block text-xs font-bold tracking-widest text-muted-foreground uppercase">
@@ -820,7 +815,9 @@ export function FoodMenu({
 
               <div className="max-h-52 flex-1 space-y-2.5 overflow-y-auto pr-1">
                 {receiptOrderItems.map((item: any) => {
-                  const itemDetails = flatItems.find((i) => i.id === item.item_id)
+                  const itemDetails = flatItems.find(
+                    (i) => i.id === item.item_id
+                  )
                   const name = itemDetails?.name || item.item_id
                   const itemPrice = itemDetails
                     ? parseFloat(String(itemDetails.price)) || 0
@@ -906,7 +903,6 @@ export function FoodMenu({
               </div>
             </div>
           </div>
-
         </div>
       </div>
     )

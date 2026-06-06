@@ -159,7 +159,7 @@ export function OwnerSessionDetailClient({
                     </p>
                   </div>
 
-                  {((session.orders?.total ?? -1) >= 0) && (
+                  {(session.orders?.total ?? -1) >= 0 && (
                     <div className="border-t border-border pt-4">
                       <p className="mb-1 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                         Total Paid
@@ -185,48 +185,49 @@ export function OwnerSessionDetailClient({
                     No items recorded for this session.
                   </div>
                 ) : (
-                <div className="divide-y divide-border">
-                  {session.orders.items.map((item, idx: number) => {
-                    const itemDetails = flatItems.find(
-                      (i) => i.id === item.item_id
-                    )
-                    const name = itemDetails?.name || item.name || item.item_id
-                    const itemPrice = itemDetails
-                      ? parseFloat(String(itemDetails.price)) || 0
-                      : parseFloat(String(item.price)) || 0
+                  <div className="divide-y divide-border">
+                    {session.orders.items.map((item, idx: number) => {
+                      const itemDetails = flatItems.find(
+                        (i) => i.id === item.item_id
+                      )
+                      const name =
+                        itemDetails?.name || item.name || item.item_id
+                      const itemPrice = itemDetails
+                        ? parseFloat(String(itemDetails.price)) || 0
+                        : parseFloat(String(item.price)) || 0
 
-                    return (
-                      <div
-                        key={idx}
-                        className="flex items-start justify-between p-4 sm:p-6"
-                      >
-                        <div>
-                          <p className="font-semibold">{name}</p>
-                          {item.notes && (
-                            <p className="mt-1 text-sm text-muted-foreground">
-                              Note: {item.notes}
-                            </p>
-                          )}
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium mb-1">
-                            {formatCurrency(itemPrice)}
-                          </p>
-                          <div className="flex flex-col items-end gap-1">
-                            <span className="text-sm text-muted-foreground">
-                              Qty: {item.quantity || item.qty}
-                            </span>
-                            {item.served_qty !== undefined && (
-                              <span className="text-[11px] font-bold tracking-wide text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full uppercase">
-                                {item.served_qty} Served
-                              </span>
+                      return (
+                        <div
+                          key={idx}
+                          className="flex items-start justify-between p-4 sm:p-6"
+                        >
+                          <div>
+                            <p className="font-semibold">{name}</p>
+                            {item.notes && (
+                              <p className="mt-1 text-sm text-muted-foreground">
+                                Note: {item.notes}
+                              </p>
                             )}
                           </div>
+                          <div className="text-right">
+                            <p className="mb-1 font-medium">
+                              {formatCurrency(itemPrice)}
+                            </p>
+                            <div className="flex flex-col items-end gap-1">
+                              <span className="text-sm text-muted-foreground">
+                                Qty: {item.quantity || item.qty}
+                              </span>
+                              {item.served_qty !== undefined && (
+                                <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold tracking-wide text-emerald-600 uppercase dark:text-emerald-400">
+                                  {item.served_qty} Served
+                                </span>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    )
-                  })}
-                </div>
+                      )
+                    })}
+                  </div>
                 )}
 
                 {session.orders?.subtotal !== undefined && (
@@ -238,7 +239,9 @@ export function OwnerSessionDetailClient({
                     {(session.orders.service_charge ?? 0) > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
                         <span>Service Charge</span>
-                        <span>{formatCurrency(session.orders.service_charge || 0)}</span>
+                        <span>
+                          {formatCurrency(session.orders.service_charge || 0)}
+                        </span>
                       </div>
                     )}
                     {(session.orders.tax ?? 0) > 0 && (
@@ -256,7 +259,9 @@ export function OwnerSessionDetailClient({
                     {(session.orders.discount ?? 0) > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
                         <span>Discount</span>
-                        <span className="text-green-500">-{formatCurrency(session.orders.discount || 0)}</span>
+                        <span className="text-green-500">
+                          -{formatCurrency(session.orders.discount || 0)}
+                        </span>
                       </div>
                     )}
                     <div className="mt-2 flex justify-between border-t border-border pt-2 text-lg font-bold">

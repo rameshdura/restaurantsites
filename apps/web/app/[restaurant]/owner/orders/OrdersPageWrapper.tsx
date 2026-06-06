@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-import { KitchenClient, KitchenSession } from "./KitchenClient"
-import { KitchenSidebar } from "./KitchenSidebar"
+import { OrdersClient, KitchenSession } from "./OrdersClient"
+import { OrdersSidebar } from "./OrdersSidebar"
 import { MenuItem } from "@/lib/restaurant"
 import { supabase } from "@/lib/supabase"
 import { Sheet, SheetContent } from "@workspace/ui/components/sheet"
@@ -12,19 +12,19 @@ interface MenuCategoryGroup {
   items: MenuItem[]
 }
 
-interface KitchenPageWrapperProps {
+interface OrdersPageWrapperProps {
   restaurantSlug: string
   menu: MenuItem[]
   menuCategories: MenuCategoryGroup[]
   initialView?: "orders" | "items" | "category" | "all"
 }
 
-export function KitchenPageWrapper({
+export function OrdersPageWrapper({
   restaurantSlug,
   menu,
   menuCategories,
   initialView = "orders",
-}: KitchenPageWrapperProps) {
+}: OrdersPageWrapperProps) {
   const [sessions, setSessions] = useState<KitchenSession[]>([])
   const [view, setView] = useState<"orders" | "items" | "category" | "all">(
     initialView
@@ -42,7 +42,7 @@ export function KitchenPageWrapper({
       if (error) throw error
       setSessions((data as KitchenSession[]) || [])
     } catch (err) {
-      console.error("Error loading kitchen sessions:", err)
+      console.error("Error loading orders sessions:", err)
     }
   }, [restaurantSlug])
 
@@ -53,8 +53,6 @@ export function KitchenPageWrapper({
   }, [fetchSessions])
 
   useEffect(() => {
-    // Use ref to avoid the set-state-in-effect warning while keeping
-    // the initial fetch + polling pattern.
     void fetchSessionsRef.current()
     const interval = setInterval(() => {
       void fetchSessionsRef.current()
@@ -66,7 +64,7 @@ export function KitchenPageWrapper({
     <div className="flex h-screen w-full overflow-hidden">
       {/* Desktop Sidebar */}
       <div className="hidden w-48 flex-shrink-0 md:block">
-        <KitchenSidebar
+        <OrdersSidebar
           restaurantSlug={restaurantSlug}
           view={view}
           onViewChange={setView}
@@ -76,7 +74,7 @@ export function KitchenPageWrapper({
       {/* Mobile Sidebar (Off-canvas) */}
       <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
         <SheetContent side="left" className="w-64 p-0">
-          <KitchenSidebar
+          <OrdersSidebar
             restaurantSlug={restaurantSlug}
             view={view}
             onViewChange={(newView) => {
@@ -89,7 +87,7 @@ export function KitchenPageWrapper({
       </Sheet>
 
       <div className="flex-1 overflow-y-auto">
-        <KitchenClient
+        <OrdersClient
           menu={menu}
           menuCategories={menuCategories}
           view={view}

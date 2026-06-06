@@ -15,7 +15,8 @@ import {
   Minus,
   UserPlus,
   Search,
-  MessageSquare,
+  Menu,
+  ShoppingBag,
 } from "lucide-react"
 import Link from "next/link"
 import {
@@ -30,12 +31,14 @@ import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 
 import { MenuCategory } from "@/components/food-menu/types"
+import { MenuItemCard } from "@/components/food-menu/menu-item"
 
 interface OwnerTableDetailClientProps {
   restaurantSlug: string
   tableId: string
   currency?: string
   categories?: MenuCategory[]
+  onToggleSidebar?: () => void
 }
 
 interface TableSessionItem {
@@ -70,6 +73,7 @@ export function OwnerTableDetailClient({
   tableId,
   currency = "USD",
   categories = [],
+  onToggleSidebar,
 }: OwnerTableDetailClientProps) {
   const [sessions, setSessions] = useState<TableSession[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -81,14 +85,122 @@ export function OwnerTableDetailClient({
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const [activeNotes, setActiveNotes] = useState<Record<string, string>>({})
-  const [activeQuantities, setActiveQuantities] = useState<Record<string, number>>({})
-  const [visibleNoteInputs, setVisibleNoteInputs] = useState<Record<string, boolean>>({})
-  const [completedSession, setCompletedSession] = useState<TableSession | null>(null)
+  const [completedSession, setCompletedSession] = useState<TableSession | null>(
+    null
+  )
   const [newSessionPersons, setNewSessionPersons] = useState<number>(2)
   const [isUpdatingOrder, setIsUpdatingOrder] = useState<string | null>(null)
   const [isUpdatingServe, setIsUpdatingServe] = useState<string | null>(null)
   const [isUpdatingCook, setIsUpdatingCook] = useState<string | null>(null)
+
+  const [localCart, setLocalCart] = useState<
+    {
+      cart_id: string
+      item_id: string
+      qty: number
+      notes: string
+    }[]
+  >([])
+  const [activeDialogTab, setActiveDialogTab] = useState<"menu" | "cart">(
+    "menu"
+  )
+  const [isSubmittingCart, setIsSubmittingCart] = useState(false)
+
+  useEffect(() => {
+    if (!isAddItemDialogOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLocalCart([])
+      setActiveDialogTab("menu")
+    }
+  }, [isAddItemDialogOpen])
+
+  const handleUpdateLocalCart = (
+    itemId: string,
+    qty: number,
+    notes: string,
+    cartId?: string
+  ) => {
+    setLocalCart((prev) => {
+      if (cartId) {
+        const existingIndex = prev.findIndex((i) => i.cart_id === cartId)
+        if (existingIndex > -1) {
+          if (qty <= 0) {
+            const newCart = [...prev]
+            newCart.splice(existingIndex, 1)
+            return newCart
+          }
+          const newCart = [...prev]
+          newCart[existingIndex] = {
+            ...newCart[existingIndex]!,
+            qty,
+            notes,
+          }
+          return newCart
+        }
+      } else {
+        const existingIndex = prev.findIndex(
+          (i) => i.item_id === itemId && i.notes === notes
+        )
+        if (existingIndex > -1) {
+          const newCart = [...prev]
+          newCart[existingIndex]!.qty += qty
+          return newCart
+        } else {
+          return [
+            ...prev,
+            {
+              cart_id:
+                Date.now().toString() +
+                Math.random().toString(36).substring(2, 7),
+              item_id: itemId,
+              qty,
+              notes,
+            },
+          ]
+        }
+      }
+      return prev
+    })
+  }
+
+  const handlePlaceLocalCartOrder = async () => {
+    if (!activeSession) return
+    if (localCart.length === 0) return
+
+    setIsSubmittingCart(true)
+    try {
+      const res = await fetch("/api/table/order/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: activeSession.session_id,
+          restaurantSlug,
+          cartItems: localCart.map((item) => ({
+            item_id: item.item_id,
+            qty: item.qty,
+            notes: item.notes,
+          })),
+          isOwner: true,
+        }),
+      })
+
+      if (!res.ok) {
+        const errorData = await res
+          .json()
+          .catch(() => ({ error: "Unknown error" }))
+        throw new Error(errorData.error || "Failed to add items to order")
+      }
+
+      setLocalCart([])
+      setIsAddItemDialogOpen(false)
+      await fetchTableData()
+    } catch (err) {
+      console.error(err)
+      alert("Error adding items to table.")
+    } finally {
+      setIsSubmittingCart(false)
+    }
+  }
 
   const fetchTableData = useCallback(async () => {
     setIsLoading(true)
@@ -111,7 +223,6 @@ export function OwnerTableDetailClient({
   }, [restaurantSlug, tableId])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchTableData()
   }, [fetchTableData])
 
@@ -155,7 +266,10 @@ export function OwnerTableDetailClient({
       const res = await fetch("/api/table/session/close", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_id: activeSession.session_id, status: "completed" }),
+        body: JSON.stringify({
+          session_id: activeSession.session_id,
+          status: "completed",
+        }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error("Failed to complete session")
@@ -199,7 +313,7 @@ export function OwnerTableDetailClient({
 
   const updateOrderItem = async (order_item_id: string, newQty: number) => {
     if (!activeSession) return
-    
+
     setIsUpdatingOrder(`item-${order_item_id}`)
     try {
       const res = await fetch("/api/table/order/add", {
@@ -215,10 +329,12 @@ export function OwnerTableDetailClient({
       })
 
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ error: "Unknown error" }))
+        const errorData = await res
+          .json()
+          .catch(() => ({ error: "Unknown error" }))
         throw new Error(errorData.error || "Failed to update item")
       }
-      
+
       await fetchTableData()
     } catch (err) {
       console.error(err)
@@ -228,36 +344,10 @@ export function OwnerTableDetailClient({
     }
   }
 
-  const addOrderItem = async (itemId: string, qty: number, notes?: string) => {
-    if (!activeSession) return
-    setIsUpdatingOrder(`${itemId}-${notes || ""}`)
-    try {
-      const res = await fetch("/api/table/order/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          session_id: activeSession.session_id,
-          restaurantSlug,
-          cartItems: [{ item_id: itemId, qty, notes: notes || "" }],
-          isOwner: true,
-        }),
-      })
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ error: "Unknown error" }))
-        throw new Error(errorData.error || "Failed to add item")
-      }
-      
-      await fetchTableData()
-    } catch (err) {
-      console.error(err)
-      alert("Error adding item.")
-    } finally {
-      setIsUpdatingOrder(null)
-    }
-  }
-
-  const updateServedQty = async (order_item_id: string, newServedQty: number) => {
+  const updateServedQty = async (
+    order_item_id: string,
+    newServedQty: number
+  ) => {
     if (!activeSession) return
     setIsUpdatingServe(`item-${order_item_id}`)
     try {
@@ -272,10 +362,12 @@ export function OwnerTableDetailClient({
       })
 
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ error: "Unknown error" }))
+        const errorData = await res
+          .json()
+          .catch(() => ({ error: "Unknown error" }))
         throw new Error(errorData.error || "Failed to update serving status")
       }
-      
+
       await fetchTableData()
     } catch (err) {
       console.error(err)
@@ -285,7 +377,10 @@ export function OwnerTableDetailClient({
     }
   }
 
-  const updateCookedQty = async (order_item_id: string, newCookedQty: number) => {
+  const updateCookedQty = async (
+    order_item_id: string,
+    newCookedQty: number
+  ) => {
     if (!activeSession) return
     setIsUpdatingCook(`item-${order_item_id}`)
     try {
@@ -294,18 +389,22 @@ export function OwnerTableDetailClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           session_id: activeSession.session_id,
-          updates: [{
-            order_item_id: order_item_id,
-            cooked_qty: newCookedQty,
-          }],
+          updates: [
+            {
+              order_item_id: order_item_id,
+              cooked_qty: newCookedQty,
+            },
+          ],
         }),
       })
 
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ error: "Unknown error" }))
+        const errorData = await res
+          .json()
+          .catch(() => ({ error: "Unknown error" }))
         throw new Error(errorData.error || "Failed to update cooking status")
       }
-      
+
       await fetchTableData()
     } catch (err) {
       console.error(err)
@@ -348,20 +447,33 @@ export function OwnerTableDetailClient({
     <div className="p-4 sm:p-8">
       {/* Header Controls */}
       <div className="mx-auto mb-8 flex max-w-4xl items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link
-            href={`/${restaurantSlug}/owner/tables`}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:bg-accent"
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 rounded-xl md:hidden"
+            onClick={onToggleSidebar}
           >
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-          <div>
-            <h2 className="flex items-center gap-2 text-xl font-bold">
-              Table {tableId} Details
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Manage availability and view history
-            </p>
+            <Menu className="h-5 w-5" />
+          </Button>
+
+          <div className="h-6 w-px bg-border md:hidden" aria-hidden="true" />
+
+          <div className="flex items-center gap-4">
+            <Link
+              href={`/${restaurantSlug}/owner/tables`}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:bg-accent"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+            <div>
+              <h2 className="flex items-center gap-2 text-xl font-bold">
+                Table {tableId} Details
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Manage availability and view history
+              </p>
+            </div>
           </div>
         </div>
         <button
@@ -385,30 +497,37 @@ export function OwnerTableDetailClient({
           <>
             {/* Payment Success Card */}
             {completedSession && (
-              <section className="animate-in fade-in zoom-in duration-300 overflow-hidden rounded-3xl border-2 border-emerald-500/20 bg-emerald-500/5 p-8 text-center shadow-lg shadow-emerald-500/10">
+              <section className="animate-in overflow-hidden rounded-3xl border-2 border-emerald-500/20 bg-emerald-500/5 p-8 text-center shadow-lg shadow-emerald-500/10 duration-300 fade-in zoom-in">
                 <div className="mb-4 flex justify-center">
                   <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg shadow-emerald-500/30">
                     <CheckCircle2 className="h-10 w-10" />
                   </div>
                 </div>
-                <h3 className="mb-2 text-3xl font-black text-foreground">Payment Successful</h3>
-                <p className="mb-6 text-muted-foreground">Session for Table {tableId} has been closed.</p>
-                
+                <h3 className="mb-2 text-3xl font-black text-foreground">
+                  Payment Successful
+                </h3>
+                <p className="mb-6 text-muted-foreground">
+                  Session for Table {tableId} has been closed.
+                </p>
+
                 <div className="mx-auto mb-8 max-w-sm rounded-2xl border border-emerald-500/10 bg-card p-6 shadow-inner">
                   <div className="flex flex-col items-center">
-                    <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Amount Paid</span>
+                    <span className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                      Amount Paid
+                    </span>
                     <span className="text-4xl font-black text-emerald-600 dark:text-emerald-400">
                       {formatCurrency(completedSession.orders?.total || 0)}
                     </span>
                     <span className="mt-2 text-xs text-muted-foreground">
-                      {completedSession.orders?.items?.length || 0} items processed
+                      {completedSession.orders?.items?.length || 0} items
+                      processed
                     </span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setCompletedSession(null)}
-                  className="flex w-full max-w-sm mx-auto cursor-pointer items-center justify-center gap-2 rounded-xl bg-emerald-500 py-4 text-sm font-bold text-white shadow-lg transition-all hover:bg-emerald-600 active:scale-95"
+                  className="mx-auto flex w-full max-w-sm cursor-pointer items-center justify-center gap-2 rounded-xl bg-emerald-500 py-4 text-sm font-bold text-white shadow-lg transition-all hover:bg-emerald-600 active:scale-95"
                 >
                   <CheckCircle2 className="h-5 w-5" />
                   Done
@@ -457,7 +576,7 @@ export function OwnerTableDetailClient({
                       onClick={handleCompleteSession}
                       disabled={isCompleting || isClosing}
                       title="Mark as Paid & Completed"
-                      className="flex cursor-pointer items-center justify-center h-12 px-4 gap-2 rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:bg-primary/90 disabled:opacity-50"
+                      className="flex h-12 cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:bg-primary/90 disabled:opacity-50"
                     >
                       {isCompleting ? (
                         <RefreshCw className="h-5 w-5 animate-spin" />
@@ -472,7 +591,7 @@ export function OwnerTableDetailClient({
                       onClick={handleFlushSession}
                       disabled={isClosing || isCompleting}
                       title="Flush Session"
-                      className="flex cursor-pointer items-center justify-center h-12 w-12 rounded-xl bg-red-600 text-sm font-semibold text-white shadow-sm shadow-red-900/20 transition-all hover:bg-red-700 disabled:opacity-50"
+                      className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl bg-red-600 text-sm font-semibold text-white shadow-sm shadow-red-900/20 transition-all hover:bg-red-700 disabled:opacity-50"
                     >
                       {isClosing ? (
                         <RefreshCw className="h-5 w-5 animate-spin" />
@@ -485,7 +604,7 @@ export function OwnerTableDetailClient({
                   <button
                     onClick={handleCreateSession}
                     disabled={isLoading || isCreating}
-                    className="flex cursor-pointer items-center justify-center h-12 px-6 gap-2 rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:bg-primary/90 disabled:opacity-50"
+                    className="flex h-12 cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:bg-primary/90 disabled:opacity-50"
                   >
                     {isCreating ? (
                       <RefreshCw className="h-5 w-5 animate-spin" />
@@ -502,9 +621,11 @@ export function OwnerTableDetailClient({
 
             {/* Current Session Order Details */}
             {isPacked && (
-              <section className="overflow-hidden rounded-3xl border border-border bg-card mt-8">
-                <div className="border-b border-border bg-muted/20 p-6 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Current Order Details</h3>
+              <section className="mt-8 overflow-hidden rounded-3xl border border-border bg-card">
+                <div className="flex items-center justify-between border-b border-border bg-muted/20 p-6">
+                  <h3 className="text-lg font-semibold">
+                    Current Order Details
+                  </h3>
                   <button
                     onClick={() => setIsAddItemDialogOpen(true)}
                     className="flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:bg-primary/90"
@@ -514,7 +635,8 @@ export function OwnerTableDetailClient({
                   </button>
                 </div>
 
-                {!activeSession?.orders?.items || activeSession.orders.items.length === 0 ? (
+                {!activeSession?.orders?.items ||
+                activeSession.orders.items.length === 0 ? (
                   <div className="p-8 text-center text-muted-foreground">
                     No items recorded for this session.
                   </div>
@@ -525,149 +647,188 @@ export function OwnerTableDetailClient({
                         const itemDetails = flatItems.find(
                           (i) => i.id === item.item_id
                         )
-                      const name = itemDetails?.name || item.name || item.item_id
-                      const itemPrice = itemDetails
-                        ? parseFloat(String(itemDetails.price)) || 0
-                        : parseFloat(String(item.price)) || 0
+                        const name =
+                          itemDetails?.name || item.name || item.item_id
+                        const itemPrice = itemDetails
+                          ? parseFloat(String(itemDetails.price)) || 0
+                          : parseFloat(String(item.price)) || 0
 
-                      const qty = item.quantity || item.qty || 1
-                      const servedQty = item.served_qty || 0
-                      const isFullyServed = servedQty >= qty
-                      const cookedQty = item.cooked_qty || 0
-                      const isFullyCooked = cookedQty >= qty
-                      const uniqueKey = item.order_item_id
-                      const isUpdatingThis = isUpdatingOrder === uniqueKey
-                      const isUpdatingThisServe = isUpdatingServe === uniqueKey
-                      const isUpdatingThisCook = isUpdatingCook === uniqueKey
+                        const qty = item.quantity || item.qty || 1
+                        const servedQty = item.served_qty || 0
+                        const isFullyServed = servedQty >= qty
+                        const cookedQty = item.cooked_qty || 0
+                        const isFullyCooked = cookedQty >= qty
+                        const uniqueKey = item.order_item_id
+                        const isUpdatingThis = isUpdatingOrder === uniqueKey
+                        const isUpdatingThisServe =
+                          isUpdatingServe === uniqueKey
+                        const isUpdatingThisCook = isUpdatingCook === uniqueKey
 
-                      return (
-                        <div
-                          key={item.order_item_id || index}
-                          className={`flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between p-4 sm:p-6 transition-colors ${
-                            isFullyServed ? "bg-muted/30 opacity-70" : ""
-                          }`}
-                        >
-                          <div className="flex-1">
-                            <p className="font-semibold flex items-center gap-2">
-                              {name}
-                              <span className="text-xs font-normal text-muted-foreground">
-                                ({formatCurrency(itemPrice)})
-                              </span>
-                              {isFullyServed && (
-                                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                              )}
-                            </p>
-                            {item.notes && (
-                              <p className="mt-1 text-sm text-muted-foreground">
-                                Note: {item.notes}
+                        return (
+                          <div
+                            key={item.order_item_id || index}
+                            className={`flex flex-col gap-4 p-4 transition-colors sm:flex-row sm:items-start sm:justify-between sm:p-6 ${
+                              isFullyServed ? "bg-muted/30 opacity-70" : ""
+                            }`}
+                          >
+                            <div className="flex-1">
+                              <p className="flex items-center gap-2 font-semibold">
+                                {name}
+                                <span className="text-xs font-normal text-muted-foreground">
+                                  ({formatCurrency(itemPrice)})
+                                </span>
+                                {isFullyServed && (
+                                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                                )}
                               </p>
-                            )}
-
-                            {/* Cooking Tracker */}
-                            <div className="mt-2 flex items-center gap-2">
-                              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                Cooked:
-                              </span>
-                              {isUpdatingThisCook ? (
-                                <RefreshCw className="h-4 w-4 animate-spin text-muted-foreground" />
-                              ) : (
-                                <div className="flex items-center gap-1.5">
-                                  <button
-                                    onClick={() => updateCookedQty(item.order_item_id, cookedQty - 1)}
-                                    className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
-                                    disabled={cookedQty <= 0}
-                                  >
-                                    <Minus className="h-3 w-3" />
-                                  </button>
-                                  <span className={`text-xs font-medium ${isFullyCooked ? "text-emerald-500" : ""}`}>
-                                    {cookedQty} / {qty}
-                                  </span>
-                                  <button
-                                    onClick={() => updateCookedQty(item.order_item_id, cookedQty + 1)}
-                                    className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
-                                    disabled={cookedQty >= qty}
-                                  >
-                                    <Plus className="h-3 w-3" />
-                                  </button>
-                                </div>
+                              {item.notes && (
+                                <p className="mt-1 text-sm text-muted-foreground">
+                                  Note: {item.notes}
+                                </p>
                               )}
+
+                              {/* Cooking Tracker */}
+                              <div className="mt-2 flex items-center gap-2">
+                                <span className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
+                                  Cooked:
+                                </span>
+                                {isUpdatingThisCook ? (
+                                  <RefreshCw className="h-4 w-4 animate-spin text-muted-foreground" />
+                                ) : (
+                                  <div className="flex items-center gap-1.5">
+                                    <button
+                                      onClick={() =>
+                                        updateCookedQty(
+                                          item.order_item_id,
+                                          cookedQty - 1
+                                        )
+                                      }
+                                      className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
+                                      disabled={cookedQty <= 0}
+                                    >
+                                      <Minus className="h-3 w-3" />
+                                    </button>
+                                    <span
+                                      className={`text-xs font-medium ${isFullyCooked ? "text-emerald-500" : ""}`}
+                                    >
+                                      {cookedQty} / {qty}
+                                    </span>
+                                    <button
+                                      onClick={() =>
+                                        updateCookedQty(
+                                          item.order_item_id,
+                                          cookedQty + 1
+                                        )
+                                      }
+                                      className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
+                                      disabled={cookedQty >= qty}
+                                    >
+                                      <Plus className="h-3 w-3" />
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Serving Tracker */}
+                              <div className="mt-2 flex items-center gap-2">
+                                <span className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
+                                  Served:
+                                </span>
+                                {isUpdatingThisServe ? (
+                                  <RefreshCw className="h-4 w-4 animate-spin text-muted-foreground" />
+                                ) : (
+                                  <div className="flex items-center gap-1.5">
+                                    <button
+                                      onClick={() =>
+                                        updateServedQty(
+                                          item.order_item_id,
+                                          servedQty - 1
+                                        )
+                                      }
+                                      className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
+                                      disabled={servedQty <= 0}
+                                    >
+                                      <Minus className="h-3 w-3" />
+                                    </button>
+                                    <span
+                                      className={`text-xs font-medium ${isFullyServed ? "text-emerald-500" : ""}`}
+                                    >
+                                      {servedQty} / {qty}
+                                    </span>
+                                    <button
+                                      onClick={() =>
+                                        updateServedQty(
+                                          item.order_item_id,
+                                          servedQty + 1
+                                        )
+                                      }
+                                      className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
+                                      disabled={servedQty >= qty}
+                                    >
+                                      <Plus className="h-3 w-3" />
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
                             </div>
 
-                            {/* Serving Tracker */}
-                            <div className="mt-2 flex items-center gap-2">
-                              <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                                Served:
-                              </span>
-                              {isUpdatingThisServe ? (
-                                <RefreshCw className="h-4 w-4 animate-spin text-muted-foreground" />
-                              ) : (
-                                <div className="flex items-center gap-1.5">
-                                  <button
-                                    onClick={() => updateServedQty(item.order_item_id, servedQty - 1)}
-                                    className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
-                                    disabled={servedQty <= 0}
-                                  >
-                                    <Minus className="h-3 w-3" />
-                                  </button>
-                                  <span className={`text-xs font-medium ${isFullyServed ? "text-emerald-500" : ""}`}>
-                                    {servedQty} / {qty}
-                                  </span>
-                                  <button
-                                    onClick={() => updateServedQty(item.order_item_id, servedQty + 1)}
-                                    className="flex h-6 w-6 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
-                                    disabled={servedQty >= qty}
-                                  >
-                                    <Plus className="h-3 w-3" />
-                                  </button>
-                                </div>
-                              )}
+                            <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:flex-col sm:items-end sm:gap-2">
+                              <div className="text-left sm:text-right">
+                                <p className="text-lg font-bold">
+                                  {formatCurrency(itemPrice * qty)}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                {isUpdatingThis ? (
+                                  <RefreshCw className="h-5 w-5 animate-spin text-muted-foreground" />
+                                ) : (
+                                  <>
+                                    <span className="mr-1 hidden text-xs font-bold tracking-wider text-muted-foreground uppercase sm:inline">
+                                      Qty:
+                                    </span>
+                                    <button
+                                      onClick={() =>
+                                        updateOrderItem(
+                                          item.order_item_id,
+                                          qty - 1
+                                        )
+                                      }
+                                      className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
+                                      disabled={qty <= 0}
+                                    >
+                                      <Minus className="h-4 w-4" />
+                                    </button>
+                                    <span className="w-6 text-center text-sm font-medium">
+                                      {qty}
+                                    </span>
+                                    <button
+                                      onClick={() =>
+                                        updateOrderItem(
+                                          item.order_item_id,
+                                          qty + 1
+                                        )
+                                      }
+                                      className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent"
+                                    >
+                                      <Plus className="h-4 w-4" />
+                                    </button>
+                                    <button
+                                      onClick={() =>
+                                        updateOrderItem(item.order_item_id, 0)
+                                      }
+                                      className="ml-2 flex h-8 w-8 items-center justify-center rounded-md border border-red-500/20 bg-red-50 text-red-600 transition-colors hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20"
+                                      title="Remove Item"
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </button>
+                                  </>
+                                )}
+                              </div>
                             </div>
                           </div>
-                          
-                          <div className="flex items-center justify-between sm:flex-col sm:items-end gap-3 sm:gap-2 w-full sm:w-auto">
-                            <div className="text-left sm:text-right">
-                              <p className="font-bold text-lg">
-                                {formatCurrency(itemPrice * qty)}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {isUpdatingThis ? (
-                                <RefreshCw className="h-5 w-5 animate-spin text-muted-foreground" />
-                              ) : (
-                                <>
-                                  <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mr-1 hidden sm:inline">
-                                    Qty:
-                                  </span>
-                                  <button
-                                    onClick={() => updateOrderItem(item.order_item_id, qty - 1)}
-                                    className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent disabled:opacity-50"
-                                    disabled={qty <= 0}
-                                  >
-                                    <Minus className="h-4 w-4" />
-                                  </button>
-                                  <span className="w-6 text-center text-sm font-medium">
-                                    {qty}
-                                  </span>
-                                  <button
-                                    onClick={() => updateOrderItem(item.order_item_id, qty + 1)}
-                                    className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background transition-colors hover:bg-accent"
-                                  >
-                                    <Plus className="h-4 w-4" />
-                                  </button>
-                                  <button
-                                    onClick={() => updateOrderItem(item.order_item_id, 0)}
-                                    className="ml-2 flex h-8 w-8 items-center justify-center rounded-md border border-red-500/20 bg-red-50 text-red-600 transition-colors hover:bg-red-100 dark:bg-red-500/10 dark:hover:bg-red-500/20"
-                                    title="Remove Item"
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
+                        )
+                      }
+                    )}
                   </div>
                 )}
 
@@ -675,12 +836,16 @@ export function OwnerTableDetailClient({
                   <div className="space-y-2 border-t border-border bg-muted/10 p-6">
                     <div className="flex justify-between text-sm text-muted-foreground">
                       <span>Subtotal</span>
-                      <span>{formatCurrency(activeSession.orders.subtotal)}</span>
+                      <span>
+                        {formatCurrency(activeSession.orders.subtotal)}
+                      </span>
                     </div>
                     {activeSession.orders.service_charge > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
                         <span>Service Charge</span>
-                        <span>{formatCurrency(activeSession.orders.service_charge)}</span>
+                        <span>
+                          {formatCurrency(activeSession.orders.service_charge)}
+                        </span>
                       </div>
                     )}
                     {activeSession.orders.tax > 0 && (
@@ -698,7 +863,9 @@ export function OwnerTableDetailClient({
                     {activeSession.orders.discount > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
                         <span>Discount</span>
-                        <span className="text-green-500">-{formatCurrency(activeSession.orders.discount)}</span>
+                        <span className="text-green-500">
+                          -{formatCurrency(activeSession.orders.discount)}
+                        </span>
                       </div>
                     )}
                     <div className="mt-2 flex justify-between border-t border-border pt-2 text-lg font-bold">
@@ -773,149 +940,273 @@ export function OwnerTableDetailClient({
       </main>
 
       <Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
-        <DialogContent className="flex max-h-[85vh] max-w-2xl flex-col overflow-hidden p-0">
-          <DialogHeader className="p-6 pb-0">
+        <DialogContent className="flex max-h-[90vh] max-w-5xl flex-col overflow-hidden p-0">
+          <DialogHeader className="shrink-0 border-b border-border p-6 pb-2">
             <DialogTitle>Add Items to Order</DialogTitle>
             <DialogDescription>
-              Browse or search the menu to add items to the current session.
+              Select items from the menu and add them to the temporary cart
+              before confirming.
             </DialogDescription>
-            <div className="relative mt-4">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search menu items..."
-                className="pl-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
           </DialogHeader>
 
-          <div className="flex-1 overflow-y-auto p-6 pt-4">
-            {filteredCategories.length === 0 ? (
-              <div className="py-12 text-center text-muted-foreground">
-                No items found matching your search.
-              </div>
-            ) : (
-              <div className="space-y-8">
-                {filteredCategories.map((category) => (
-                  <div key={category.title}>
-                    <h4 className="mb-3 text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                      {category.title}
-                    </h4>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      {category.items.map((item) => {
-                        const noteKey = item.id
-                        const currentNote = activeNotes[noteKey] || ""
-                        const currentQty = activeQuantities[noteKey] || 1
-                        const showNoteInput = visibleNoteInputs[noteKey] || false
-                        const isUpdatingThis = isUpdatingOrder?.startsWith(item.id)
-
-                        return (
-                          <div
-                            key={item.id}
-                            className="flex flex-col rounded-xl border border-border bg-card overflow-hidden transition-all hover:border-primary/30"
-                          >
-                            <div className="flex items-center justify-between p-4">
-                              <div className="flex-1 min-w-0 mr-4">
-                                <p className="font-semibold leading-tight truncate">{item.name}</p>
-                                <p className="mt-1 text-xs font-medium text-primary">
-                                  {formatCurrency(parseFloat(String(item.price)))}
-                                </p>
-                              </div>
-                              
-                              <div className="flex items-center gap-2">
-                                {/* Qty Selector in Dialog */}
-                                <div className="flex items-center gap-1 bg-muted/30 rounded-lg p-1">
-                                  <button
-                                    onClick={() => setActiveQuantities(prev => ({ ...prev, [noteKey]: Math.max(1, currentQty - 1) }))}
-                                    className="flex h-6 w-6 items-center justify-center rounded-md hover:bg-background transition-colors"
-                                  >
-                                    <Minus className="h-3 w-3" />
-                                  </button>
-                                  <span className="w-5 text-center text-xs font-bold">{currentQty}</span>
-                                  <button
-                                    onClick={() => setActiveQuantities(prev => ({ ...prev, [noteKey]: currentQty + 1 }))}
-                                    className="flex h-6 w-6 items-center justify-center rounded-md hover:bg-background transition-colors"
-                                  >
-                                    <Plus className="h-3 w-3" />
-                                  </button>
-                                </div>
-
-                                <button
-                                  onClick={() => setVisibleNoteInputs(prev => ({ ...prev, [noteKey]: !showNoteInput }))}
-                                  className={`flex h-9 w-9 items-center justify-center rounded-xl border transition-all ${
-                                    showNoteInput || currentNote
-                                      ? "border-primary/20 bg-primary/5 text-primary"
-                                      : "border-border bg-background text-muted-foreground hover:bg-accent"
-                                  }`}
-                                  title="Add Note"
-                                >
-                                  <MessageSquare className="h-4 w-4" />
-                                </button>
-                                
-                                <button
-                                  onClick={async () => {
-                                    await addOrderItem(item.id, currentQty, currentNote)
-                                    // Reset local states for this item
-                                    setActiveNotes(prev => {
-                                      const next = { ...prev }
-                                      delete next[noteKey]
-                                      return next
-                                    })
-                                    setActiveQuantities(prev => {
-                                      const next = { ...prev }
-                                      delete next[noteKey]
-                                      return next
-                                    })
-                                    setVisibleNoteInputs(prev => {
-                                      const next = { ...prev }
-                                      delete next[noteKey]
-                                      return next
-                                    })
-                                  }}
-                                  disabled={isUpdatingOrder !== null}
-                                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-90 disabled:opacity-50"
-                                >
-                                  {isUpdatingThis ? (
-                                    <RefreshCw className="h-4 w-4 animate-spin" />
-                                  ) : (
-                                    <Plus className="h-5 w-5" />
-                                  )}
-                                </button>
-                              </div>
-                            </div>
-                            
-                            {(showNoteInput || currentNote) && (
-                              <div className="bg-muted/30 px-4 pb-4 pt-0">
-                                <Input
-                                  placeholder="Special instructions..."
-                                  className="h-8 text-xs bg-background"
-                                  value={currentNote}
-                                  autoFocus={showNoteInput}
-                                  onChange={(e) => setActiveNotes(prev => ({ ...prev, [noteKey]: e.target.value }))}
-                                />
-                              </div>
-                            )}
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+          {/* Mobile Tab Toggle */}
+          <div className="flex shrink-0 border-b border-border md:hidden">
+            <button
+              onClick={() => setActiveDialogTab("menu")}
+              className={`flex-1 border-b-2 py-3 text-center text-sm font-bold transition-all ${
+                activeDialogTab === "menu"
+                  ? "border-primary bg-primary/5 text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Browse Menu
+            </button>
+            <button
+              onClick={() => setActiveDialogTab("cart")}
+              className={`relative flex-1 border-b-2 py-3 text-center text-sm font-bold transition-all ${
+                activeDialogTab === "cart"
+                  ? "border-primary bg-primary/5 text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Cart
+              {localCart.length > 0 && (
+                <span className="ml-1.5 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                  {localCart.reduce((sum, item) => sum + item.qty, 0)}
+                </span>
+              )}
+            </button>
           </div>
 
-          <DialogFooter className="bg-muted/20 p-4 border-t border-border">
-            <Button variant="outline" onClick={() => setIsAddItemDialogOpen(false)}>
-              Done
-            </Button>
-          </DialogFooter>
+          <div className="flex flex-1 flex-col overflow-hidden md:flex-row">
+            {/* Left Column: Menu (Visible on mobile if tab is 'menu', always visible on desktop) */}
+            <div
+              className={`flex flex-1 flex-col overflow-hidden border-r border-border ${activeDialogTab === "menu" ? "flex" : "hidden md:flex"}`}
+            >
+              <div className="shrink-0 border-b border-border/60 p-4">
+                <div className="relative">
+                  <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    placeholder="Search menu items by name or description..."
+                    className="pl-9"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-6 pt-4">
+                {filteredCategories.length === 0 ? (
+                  <div className="py-12 text-center text-muted-foreground">
+                    No items found matching your search.
+                  </div>
+                ) : (
+                  <div className="space-y-8">
+                    {filteredCategories.map((category) => (
+                      <div key={category.title}>
+                        <h4 className="mb-3 text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                          {category.title}
+                        </h4>
+                        <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
+                          {category.items.map((item) => {
+                            return (
+                              <MenuItemCard
+                                key={item.id}
+                                item={item}
+                                currency={currency}
+                                tableMode={true}
+                                onUpdateQty={(qty, notes) =>
+                                  handleUpdateLocalCart(item.id, qty, notes)
+                                }
+                              />
+                            )
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Right Column: Cart (Visible on mobile if tab is 'cart', always visible on desktop) */}
+            <div
+              className={`flex w-full shrink-0 flex-col overflow-hidden bg-muted/5 md:w-[360px] ${activeDialogTab === "cart" ? "flex" : "hidden md:flex"}`}
+            >
+              <div className="flex shrink-0 items-center justify-between border-b border-border/60 bg-muted/20 p-4">
+                <h4 className="text-sm font-bold tracking-wider text-muted-foreground uppercase">
+                  Temporary Cart
+                </h4>
+                <span className="text-xs font-medium text-muted-foreground">
+                  {localCart.reduce((sum, item) => sum + item.qty, 0)} items
+                </span>
+              </div>
+
+              <div className="flex-1 space-y-4 overflow-y-auto p-4">
+                {localCart.length === 0 ? (
+                  <div className="flex h-full flex-col items-center justify-center py-12 text-center text-muted-foreground">
+                    <ShoppingBag className="mb-2 h-10 w-10 text-muted-foreground/30" />
+                    <p className="text-sm font-medium">Cart is empty</p>
+                    <p className="mt-1 max-w-[200px] text-xs text-muted-foreground/80">
+                      Add items from the menu grid on the left
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {localCart.map((cartItem) => {
+                      const itemDetails = flatItems.find(
+                        (i) => i.id === cartItem.item_id
+                      )
+                      const name = itemDetails?.name || cartItem.item_id
+                      const itemPrice = itemDetails
+                        ? parseFloat(String(itemDetails.price)) || 0
+                        : 0
+
+                      return (
+                        <div
+                          key={cartItem.cart_id}
+                          className="space-y-3 rounded-xl border border-border bg-card p-3 shadow-sm"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <h5 className="truncate text-sm font-semibold">
+                                {name}
+                              </h5>
+                              <p className="text-xs text-muted-foreground">
+                                {formatCurrency(itemPrice)} each
+                              </p>
+                            </div>
+                            <span className="shrink-0 text-sm font-bold">
+                              {formatCurrency(itemPrice * cartItem.qty)}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-4">
+                            {/* Quantity buttons */}
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() =>
+                                  handleUpdateLocalCart(
+                                    cartItem.item_id,
+                                    cartItem.qty - 1,
+                                    cartItem.notes,
+                                    cartItem.cart_id
+                                  )
+                                }
+                                className="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-xs font-bold text-foreground hover:bg-accent"
+                              >
+                                -
+                              </button>
+                              <span className="w-5 text-center text-xs font-semibold">
+                                {cartItem.qty}
+                              </span>
+                              <button
+                                onClick={() =>
+                                  handleUpdateLocalCart(
+                                    cartItem.item_id,
+                                    cartItem.qty + 1,
+                                    cartItem.notes,
+                                    cartItem.cart_id
+                                  )
+                                }
+                                className="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-xs font-bold text-foreground hover:bg-accent"
+                              >
+                                +
+                              </button>
+                            </div>
+
+                            {/* Remove button */}
+                            <button
+                              onClick={() =>
+                                handleUpdateLocalCart(
+                                  cartItem.item_id,
+                                  0,
+                                  cartItem.notes,
+                                  cartItem.cart_id
+                                )
+                              }
+                              className="rounded-md p-1.5 text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10"
+                              title="Remove"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+
+                          {/* Notes field */}
+                          <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-muted-foreground uppercase">
+                              Notes
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="E.g. No onion, extra spicy..."
+                              value={cartItem.notes}
+                              onChange={(e) =>
+                                handleUpdateLocalCart(
+                                  cartItem.item_id,
+                                  cartItem.qty,
+                                  e.target.value,
+                                  cartItem.cart_id
+                                )
+                              }
+                              className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs transition-all focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                            />
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Cart Footer */}
+              <div className="shrink-0 space-y-4 border-t border-border bg-muted/20 p-4">
+                <div className="flex items-center justify-between text-sm font-bold">
+                  <span>Subtotal</span>
+                  <span className="text-base text-primary">
+                    {formatCurrency(
+                      localCart.reduce((sum, item) => {
+                        const itemDetails = flatItems.find(
+                          (i) => i.id === item.item_id
+                        )
+                        const price = itemDetails
+                          ? parseFloat(String(itemDetails.price)) || 0
+                          : 0
+                        return sum + price * item.qty
+                      }, 0)
+                    )}
+                  </span>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex-1 rounded-xl"
+                    onClick={() => {
+                      setLocalCart([])
+                      setIsAddItemDialogOpen(false)
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    disabled={localCart.length === 0 || isSubmittingCart}
+                    className="flex-1 rounded-xl"
+                    onClick={handlePlaceLocalCartOrder}
+                  >
+                    {isSubmittingCart ? (
+                      <RefreshCw className="mr-1.5 h-4 w-4 animate-spin" />
+                    ) : null}
+                    Add to Table
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Create New Session</DialogTitle>
@@ -924,10 +1215,14 @@ export function OwnerTableDetailClient({
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col items-center justify-center py-6">
-            <p className="mb-4 text-sm font-medium text-muted-foreground">Number of Guests</p>
+            <p className="mb-4 text-sm font-medium text-muted-foreground">
+              Number of Guests
+            </p>
             <div className="flex items-center gap-6">
               <button
-                onClick={() => setNewSessionPersons(Math.max(1, newSessionPersons - 1))}
+                onClick={() =>
+                  setNewSessionPersons(Math.max(1, newSessionPersons - 1))
+                }
                 className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-card transition-all hover:bg-accent"
               >
                 <Minus className="h-6 w-6" />
@@ -942,7 +1237,11 @@ export function OwnerTableDetailClient({
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)} disabled={isCreating}>
+            <Button
+              variant="outline"
+              onClick={() => setIsCreateDialogOpen(false)}
+              disabled={isCreating}
+            >
               Cancel
             </Button>
             <Button onClick={confirmCreateSession} disabled={isCreating}>
@@ -957,21 +1256,33 @@ export function OwnerTableDetailClient({
           <DialogHeader>
             <DialogTitle>Flush Session</DialogTitle>
             <DialogDescription>
-              Are you sure you want to flush this session? This will mark the table as available.
+              Are you sure you want to flush this session? This will mark the
+              table as available.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsFlushDialogOpen(false)} disabled={isClosing}>
+            <Button
+              variant="outline"
+              onClick={() => setIsFlushDialogOpen(false)}
+              disabled={isClosing}
+            >
               Cancel
             </Button>
-            <Button variant="destructive" onClick={confirmFlushSession} disabled={isClosing}>
+            <Button
+              variant="destructive"
+              onClick={confirmFlushSession}
+              disabled={isClosing}
+            >
               {isClosing ? "Flushing..." : "Flush Session"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isCompleteDialogOpen} onOpenChange={setIsCompleteDialogOpen}>
+      <Dialog
+        open={isCompleteDialogOpen}
+        onOpenChange={setIsCompleteDialogOpen}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Complete Session</DialogTitle>
@@ -980,7 +1291,11 @@ export function OwnerTableDetailClient({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsCompleteDialogOpen(false)} disabled={isCompleting}>
+            <Button
+              variant="outline"
+              onClick={() => setIsCompleteDialogOpen(false)}
+              disabled={isCompleting}
+            >
               Cancel
             </Button>
             <Button onClick={confirmCompleteSession} disabled={isCompleting}>

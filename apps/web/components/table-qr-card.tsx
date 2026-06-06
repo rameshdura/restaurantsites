@@ -56,14 +56,18 @@ export function TableQRCode({
   }
 
   return (
-    <Card className="flex flex-col items-center justify-center p-6 border shadow-sm transition-all hover:shadow-md bg-card">
+    <Card className="flex flex-col items-center justify-center border bg-card p-6 shadow-sm transition-all hover:shadow-md">
       {/* The QR Code Container to be captured */}
       <div
         ref={qrRef}
-        className="flex w-full max-w-[280px] flex-col items-center justify-between p-6 border-2 rounded-xl"
-        style={{ backgroundColor: '#ffffff', color: '#000000', borderColor: '#f1f5f9' }}
+        className="flex w-full max-w-[280px] flex-col items-center justify-between rounded-xl border-2 p-6"
+        style={{
+          backgroundColor: "#ffffff",
+          color: "#000000",
+          borderColor: "#f1f5f9",
+        }}
       >
-        <div className="flex-1 flex items-center justify-center w-full mb-4">
+        <div className="mb-4 flex w-full flex-1 items-center justify-center">
           {mounted ? (
             <QRCode
               value={qrValue}
@@ -76,16 +80,16 @@ export function TableQRCode({
           )}
         </div>
 
-        <div className="flex flex-col items-center justify-end w-full">
-          <h3 
+        <div className="flex w-full flex-col items-center justify-end">
+          <h3
             className="w-full truncate text-center text-lg font-bold tracking-tight"
-            style={{ color: '#0f172a' }}
+            style={{ color: "#0f172a" }}
           >
             {restaurantName}
           </h3>
-          <p 
-            className="text-center text-2xl font-black uppercase tracking-widest"
-            style={{ color: '#0f172a' }}
+          <p
+            className="text-center text-2xl font-black tracking-widest uppercase"
+            style={{ color: "#0f172a" }}
           >
             {tableLabel}
           </p>
@@ -94,7 +98,7 @@ export function TableQRCode({
 
       <Button
         onClick={downloadQR}
-        className="mt-6 w-full flex items-center gap-2 font-semibold"
+        className="mt-6 flex w-full items-center gap-2 font-semibold"
         variant="default"
       >
         <Download className="h-4 w-4" />

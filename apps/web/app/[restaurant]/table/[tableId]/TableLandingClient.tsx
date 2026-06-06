@@ -1,7 +1,13 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
-import { Lock, Utensils, AlertTriangle, HandHelping, RotateCw } from "lucide-react"
+import {
+  Lock,
+  Utensils,
+  AlertTriangle,
+  HandHelping,
+  RotateCw,
+} from "lucide-react"
 import {
   getSessionCookie,
   setSessionCookie,
@@ -55,7 +61,7 @@ export function TableLandingClient({
     if (!session) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowPersonSelection(false)
-       
+
       setPersons("")
     }
   }, [session])
@@ -224,7 +230,7 @@ export function TableLandingClient({
           <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center p-6 text-center select-none">
             <div className="mb-8 flex flex-col items-center">
               {/* Animated warning icon */}
-              <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border-4 border-amber-500/30 bg-amber-500/10 shadow-xl shadow-amber-500/10 animate-pulse">
+              <div className="mb-6 flex h-24 w-24 animate-pulse items-center justify-center rounded-full border-4 border-amber-500/30 bg-amber-500/10 shadow-xl shadow-amber-500/10">
                 <AlertTriangle className="h-10 w-10 text-amber-500" />
               </div>
 
@@ -251,7 +257,9 @@ export function TableLandingClient({
               disabled={retryCountdown > 0}
               className="mb-6 flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-8 py-4 text-base font-bold text-primary-foreground shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-primary/30 transition-all hover:-translate-y-0.5 hover:shadow-primary/40 active:translate-y-0 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
             >
-              <RotateCw className={`h-5 w-5 ${retryCountdown > 0 ? "" : "animate-none"}`} />
+              <RotateCw
+                className={`h-5 w-5 ${retryCountdown > 0 ? "" : "animate-none"}`}
+              />
               {retryCountdown > 0
                 ? `Retry in ${formatCountdown(retryCountdown)}`
                 : "Retry Now"}
@@ -261,10 +269,14 @@ export function TableLandingClient({
             <div className="w-full rounded-2xl border border-border bg-muted/30 p-5">
               <div className="mb-2 flex items-center gap-2.5">
                 <HandHelping className="h-5 w-5 text-amber-500" />
-                <span className="text-sm font-bold text-foreground">Notify a Staff</span>
+                <span className="text-sm font-bold text-foreground">
+                  Notify a Staff
+                </span>
               </div>
               <p className="text-[13px] leading-relaxed text-muted-foreground">
-                Please raise your hand or approach the nearest staff member for assistance. They can clear the table session so you can start a new order.
+                Please raise your hand or approach the nearest staff member for
+                assistance. They can clear the table session so you can start a
+                new order.
               </p>
             </div>
 
@@ -421,4 +433,3 @@ export function TableLandingClient({
     </div>
   )
 }
-

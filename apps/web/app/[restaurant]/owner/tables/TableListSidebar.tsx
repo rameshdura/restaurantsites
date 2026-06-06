@@ -7,12 +7,14 @@ interface TableListSidebarProps {
   restaurantSlug: string
   tables: { id: string | number; label: string; persons?: number }[]
   sessions: { table_number: string; status: string; persons?: number }[]
+  onTableSelect?: () => void
 }
 
 export function TableListSidebar({
   restaurantSlug,
   tables,
   sessions,
+  onTableSelect,
 }: TableListSidebarProps) {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -20,10 +22,13 @@ export function TableListSidebar({
 
   return (
     <div className="flex h-full w-full flex-col border-r border-border bg-card">
-      <div className="p-4 border-b border-border">
+      <div className="border-b border-border p-4">
         <button
-          onClick={() => router.push(`/${restaurantSlug}/owner/tables`)}
-          className="flex items-center gap-2 text-lg font-bold hover:text-primary transition-colors"
+          onClick={() => {
+            router.push(`/${restaurantSlug}/owner/tables`)
+            onTableSelect?.()
+          }}
+          className="flex items-center gap-2 text-lg font-bold transition-colors hover:text-primary"
         >
           <LayoutGrid className="h-5 w-5" />
           Tables
@@ -40,7 +45,10 @@ export function TableListSidebar({
           return (
             <button
               key={table.id}
-              onClick={() => router.push(`?tableId=${table.id}`)}
+              onClick={() => {
+                router.push(`?tableId=${table.id}`)
+                onTableSelect?.()
+              }}
               className={`mb-2 flex w-full items-center gap-3 rounded-xl p-3 text-left transition-all ${
                 isSelected
                   ? "bg-primary text-primary-foreground"

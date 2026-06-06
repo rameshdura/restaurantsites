@@ -53,14 +53,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Session not found" }, { status: 404 })
     }
 
-    if (session.status === "closed" || (!isOwner && session.status === "payment_pending")) {
+    if (
+      session.status === "closed" ||
+      (!isOwner && session.status === "payment_pending")
+    ) {
       return NextResponse.json(
         { error: "Session is closed or awaiting payment" },
         { status: 400 }
       )
     }
 
-    if (new Date(session.expires_at).getTime() < Date.now()) {
+    if (!isOwner && new Date(session.expires_at).getTime() < Date.now()) {
       return NextResponse.json(
         { error: "Session has expired" },
         { status: 400 }
@@ -78,14 +81,21 @@ export async function POST(request: Request) {
 
     const currency = restaurant.data.app?.currency || "USD"
     const currentOrders = session.orders || { items: [] }
-    const items: Array<{ order_item_id: string; item_id: string; qty: number; notes?: string; served_qty?: number; cooked_qty?: number }> = [
-      ...(currentOrders.items || []),
-    ]
+    const items: Array<{
+      order_item_id: string
+      item_id: string
+      qty: number
+      notes?: string
+      served_qty?: number
+      cooked_qty?: number
+    }> = [...(currentOrders.items || [])]
 
     // 3. Update items list
     // 3a. Handle single item update
     if (order_item_id && qty !== undefined) {
-      const existingItemIndex = items.findIndex((i) => i.order_item_id === order_item_id)
+      const existingItemIndex = items.findIndex(
+        (i) => i.order_item_id === order_item_id
+      )
       if (existingItemIndex > -1) {
         if (qty <= 0) {
           items.splice(existingItemIndex, 1)
@@ -96,7 +106,8 @@ export async function POST(request: Request) {
     } else if (item_id !== undefined && qty !== undefined) {
       // Add new item
       items.push({
-        order_item_id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+        order_item_id:
+          Date.now().toString() + Math.random().toString(36).substr(2, 5),
         item_id: item_id,
         qty: qty,
         notes: notes || "",
@@ -111,7 +122,8 @@ export async function POST(request: Request) {
 
         // Add as a new entry with a unique ID
         items.push({
-          order_item_id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+          order_item_id:
+            Date.now().toString() + Math.random().toString(36).substr(2, 5),
           item_id: cartItem.item_id,
           qty: cartItem.qty,
           notes: cartItem.notes || "",
@@ -180,12 +192,25 @@ export async function POST(request: Request) {
     }
 
     // 5. Update Supabase
+    const updatePayload: {
+      orders: typeof updatedOrders
+      last_activity: string
+      expires_at?: string
+    } = {
+      orders: updatedOrders,
+      last_activity: new Date().toISOString(),
+    }
+
+    if (isOwner) {
+      // Extend the session by another 5 hours from now
+      updatePayload.expires_at = new Date(
+        Date.now() + 5 * 60 * 60 * 1000
+      ).toISOString()
+    }
+
     const { data: updatedSession, error: updateError } = await supabase
       .from("table_sessions")
-      .update({
-        orders: updatedOrders,
-        last_activity: new Date().toISOString(),
-      })
+      .update(updatePayload)
       .eq("session_id", session_id)
       .select()
       .single()

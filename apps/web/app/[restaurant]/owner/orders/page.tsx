@@ -1,14 +1,12 @@
 import { getRestaurant } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
-import { KitchenPageWrapper } from "../kitchen/KitchenPageWrapper"
+import { OrdersPageWrapper } from "./OrdersPageWrapper"
 
-interface KitchenByCategoryPageProps {
+interface OrdersPageProps {
   params: Promise<{ restaurant: string }>
 }
 
-export default async function KitchenByCategoryPage({
-  params,
-}: KitchenByCategoryPageProps) {
+export default async function OrdersPage({ params }: OrdersPageProps) {
   const { restaurant: slug } = await params
   const decodedSlug = decodeURIComponent(slug)
 
@@ -22,11 +20,10 @@ export default async function KitchenByCategoryPage({
   const menuItems = restaurantData.menu || []
 
   return (
-    <KitchenPageWrapper
+    <OrdersPageWrapper
       restaurantSlug={decodedSlug}
       menu={menuItems}
       menuCategories={menuCategories}
-      initialView="category"
     />
   )
 }
