@@ -17,6 +17,7 @@ import {
   Search,
   Menu,
   ShoppingBag,
+  X,
 } from "lucide-react"
 import Link from "next/link"
 import {
@@ -940,7 +941,7 @@ export function OwnerTableDetailClient({
       </main>
 
       <Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
-        <DialogContent className="flex max-h-[90vh] max-w-5xl flex-col p-0">
+        <DialogContent className="flex max-h-[90vh] max-w-5xl flex-col p-0 [&>button]:hidden md:[&>button]:flex">
           <div className="flex flex-1 flex-col overflow-hidden rounded-lg">
             <DialogHeader className="sr-only">
               <DialogTitle>Add Items to Order</DialogTitle>
@@ -976,6 +977,13 @@ export function OwnerTableDetailClient({
                     {localCart.reduce((sum, item) => sum + item.qty, 0)}
                   </span>
                 )}
+              </button>
+              <button
+                onClick={() => setIsAddItemDialogOpen(false)}
+                className="flex items-center justify-center border-b-2 border-transparent px-4 py-3 text-muted-foreground transition-all hover:text-foreground"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5" />
               </button>
             </div>
 

@@ -732,6 +732,7 @@ export function FoodMenu({
         categories={navItems}
         activeId={activeTab}
         onTabChange={setActiveTab}
+        isTableMode={tableMode}
       />
 
       <div

@@ -47,7 +47,7 @@ export default function RootLayout({
         signature.variable
       )}
     >
-      <body suppressHydrationWarning className="overflow-x-hidden">
+      <body suppressHydrationWarning className="overflow-x-clip">
         <ThemeProvider>
           {children}
           <Toaster />

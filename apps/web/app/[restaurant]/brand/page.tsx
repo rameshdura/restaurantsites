@@ -1,9 +1,11 @@
 import { Metadata } from "next"
-import { getRestaurant } from "@/lib/restaurant"
+import { getRestaurant, getImageSrc } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
 import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
 import { Footer } from "@/components/footer"
+import { CoverSection } from "@workspace/ui/components/cover-section"
+import { cn } from "@workspace/ui/lib/utils"
 import { Button } from "@workspace/ui/components/button"
 import { CreditCard } from "lucide-react"
 import { DownloadPdfButton } from "@/components/download-pdf-button"
@@ -39,6 +41,11 @@ export default async function BrandPage({ params }: BrandPageProps) {
 
   const { getLink } = await getServerRestaurantLink(slug)
 
+  const coverImage = getImageSrc(
+    slug,
+    data.pages?.brand?.coverImage || data.hero?.slides?.[0]?.image
+  )
+
   return (
     <div className="flex min-h-svh flex-col bg-slate-50/50">
       <JsonLd data={generateBrandSchema(data, slug)} />
@@ -48,23 +55,44 @@ export default async function BrandPage({ params }: BrandPageProps) {
         defaultLanguage={data.app?.language}
       />
 
-      <main className="flex-1 px-6 pt-32 pb-20">
+      {coverImage && (
+        <CoverSection
+          image={coverImage}
+          title={translations.brandPage?.title || "Marketing Materials"}
+          subtitle={translations.brandPage?.subtitle || "Brand Assets"}
+        />
+      )}
+
+      <main className={cn("flex-1 px-6 pb-20", !coverImage ? "pt-32" : "pt-8")}>
         <div className="mx-auto max-w-5xl">
-          <header className="mb-16 text-center">
-            <p className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
-              {translations.brandPage?.subtitle || "Brand Assets"}
-            </p>
-            <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl">
-              {translations.brandPage?.title || "Marketing Materials"}
-            </h1>
-            <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
-              {translations.brandPage?.description?.replace(
-                "{restaurantName}",
-                data.name
-              ) ||
-                `Download and print professional marketing assets for ${data.name}. All designs are pre-populated with your restaurant's information.`}
-            </p>
-          </header>
+          {!coverImage && (
+            <header className="mb-16 text-center">
+              <p className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
+                {translations.brandPage?.subtitle || "Brand Assets"}
+              </p>
+              <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl">
+                {translations.brandPage?.title || "Marketing Materials"}
+              </h1>
+              <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
+                {translations.brandPage?.description?.replace(
+                  "{restaurantName}",
+                  data.name
+                ) ||
+                  `Download and print professional marketing assets for ${data.name}. All designs are pre-populated with your restaurant's information.`}
+              </p>
+            </header>
+          )}
+          {coverImage && (
+            <div className="mb-12 text-center">
+              <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
+                {translations.brandPage?.description?.replace(
+                  "{restaurantName}",
+                  data.name
+                ) ||
+                  `Download and print professional marketing assets for ${data.name}. All designs are pre-populated with your restaurant's information.`}
+              </p>
+            </div>
+          )}
 
           <div className="space-y-24">
             {/* Visiting Card Section */}

@@ -7,6 +7,7 @@ interface CategoryNavProps {
   activeId: string
   onTabChange: (id: string) => void
   children?: React.ReactNode
+  isTableMode?: boolean
 }
 
 export function CategoryNav({
@@ -14,9 +15,15 @@ export function CategoryNav({
   activeId,
   onTabChange,
   children,
+  isTableMode = false,
 }: CategoryNavProps) {
   return (
-    <nav className="sticky top-[72px] z-30 mb-8 border-b border-border/40 bg-background/95 py-4 backdrop-blur-md">
+    <nav
+      className={cn(
+        "sticky z-30 mb-8 border-b border-border/40 bg-background/95 py-4 backdrop-blur-md transition-all",
+        isTableMode ? "top-0" : "top-[65px]"
+      )}
+    >
       <div className="mx-auto flex w-full max-w-7xl flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <div className="flex w-full flex-wrap items-center gap-2">
           {categories.map((category) => (

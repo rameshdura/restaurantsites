@@ -42,6 +42,7 @@ function getDeviceId(): string {
 export function TableLandingClient({
   restaurantName,
   restaurantSlug,
+  logoUrl,
   tableId,
   tableLabel,
   currency,
@@ -50,6 +51,7 @@ export function TableLandingClient({
   const [session, setSession] = useState<Record<string, unknown> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isStartingSession, setIsStartingSession] = useState(false)
+  const [isLeaving, setIsLeaving] = useState(false)
   const [showPersonSelection, setShowPersonSelection] = useState(false)
   const [persons, setPersons] = useState<string>("")
   const [occupied, setOccupied] = useState(false)
@@ -79,10 +81,16 @@ export function TableLandingClient({
           )
           const data = await res.json()
           if (data.valid && data.session) {
-            setSession(data.session)
-            setOccupied(false)
-            setIsLoading(false)
-            return
+            if (data.session.status === "closed") {
+              // Stale cookie from a closed session.
+              // Clear it so the user can start a new order.
+              clearSessionCookie(restaurantSlug)
+            } else {
+              setSession(data.session)
+              setOccupied(false)
+              setIsLoading(false)
+              return
+            }
           }
         }
 
@@ -202,6 +210,32 @@ export function TableLandingClient({
     }
   }
 
+  const handleLeaveTable = async () => {
+    if (!session) return
+    setIsLeaving(true)
+    try {
+      const res = await fetch("/api/table/session/close", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          session_id: (session as any).session_id,
+          status: "closed",
+        }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        clearSessionCookie(restaurantSlug)
+        setSession(null)
+      } else {
+        console.error("Failed to leave table:", data.error)
+      }
+    } catch (err) {
+      console.error("Error leaving table:", err)
+    } finally {
+      setIsLeaving(false)
+    }
+  }
+
   const formatCountdown = (secs: number) => {
     const m = Math.floor(secs / 60)
     const s = secs % 60
@@ -209,7 +243,7 @@ export function TableLandingClient({
   }
 
   return (
-    <div className="relative flex min-h-svh flex-col overflow-x-hidden bg-background text-foreground antialiased">
+    <div className="relative flex min-h-svh flex-col overflow-x-clip bg-background text-foreground antialiased">
       {/* Dynamic Background Glows */}
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[100px]" />
       <div className="pointer-events-none absolute top-1/3 left-1/3 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-600/5 blur-[80px]" />
@@ -289,8 +323,16 @@ export function TableLandingClient({
           !showPersonSelection ? (
             <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center p-6 text-center select-none">
               <div className="mb-10 flex flex-col items-center">
-                <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border-4 border-primary/20 bg-primary/10 shadow-xl">
-                  <Utensils className="h-10 w-10 text-primary" />
+                <div className="mb-6 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-primary/20 bg-primary/10 shadow-xl">
+                  {logoUrl ? (
+                    <img
+                      src={logoUrl}
+                      alt={restaurantName}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <Utensils className="h-10 w-10 text-primary" />
+                  )}
                 </div>
                 <h1 className="mb-2 text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
                   {restaurantName}
@@ -355,7 +397,7 @@ export function TableLandingClient({
                   <button
                     onClick={() =>
                       setPersons((prev) =>
-                        prev.length < 2 ? prev + "0" : prev
+                        prev === "" ? "" : prev.length < 2 ? prev + "0" : prev
                       )
                     }
                     className="rounded-xl border border-border bg-card py-4 text-2xl font-bold shadow-sm transition-all hover:bg-accent active:scale-90"
@@ -393,19 +435,48 @@ export function TableLandingClient({
             </div>
           )
         ) : (
-          <div className="mx-auto flex w-full max-w-7xl flex-col px-4 py-8 select-none sm:px-6 md:py-12">
+          <div className="relative mx-auto flex w-full max-w-7xl flex-col py-8 select-none md:py-12">
+            {/* Leave Table Button (Only if no orders) */}
+            {session && !((session as any)?.orders?.items?.length > 0) && (
+              <div className="absolute right-4 top-4 sm:right-6 sm:top-6 z-20">
+                <button
+                  onClick={handleLeaveTable}
+                  disabled={isLeaving}
+                  className="flex items-center gap-1.5 rounded-full bg-destructive/10 px-4 py-2 text-xs font-bold text-destructive transition-colors hover:bg-destructive/20 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
+                >
+                  {isLeaving ? "Leaving..." : "Leave Table"}
+                </button>
+              </div>
+            )}
+
             {/* Header / Table Identifier */}
-            <header className="mt-4 mb-8 flex flex-col items-center text-center">
-              <h1 className="text-3xl font-black tracking-tight text-foreground sm:text-4xl md:text-5xl">
-                {restaurantName} |{" "}
-                {tableLabel.toLowerCase().includes("table")
-                  ? tableLabel
-                  : `Table ${tableLabel}`}
-              </h1>
+            <header className="mb-4 flex flex-row items-center justify-center gap-3 px-4 sm:px-6 lg:flex-col lg:gap-0 text-left lg:text-center">
+              {logoUrl && (
+                <div className="shrink-0 overflow-hidden rounded-full border-2 border-primary/20 bg-primary/5 shadow-md lg:mb-3">
+                  <img
+                    src={logoUrl}
+                    alt={restaurantName}
+                    className="h-14 w-14 object-cover lg:h-16 lg:w-16"
+                  />
+                </div>
+              )}
+              <div className="flex flex-col justify-center lg:items-center">
+                <h1 className="text-2xl font-black tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+                  {restaurantName}
+                </h1>
+                <div className="mt-0.5 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase lg:mt-1 lg:justify-center lg:gap-2 lg:text-sm">
+                  <Utensils className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
+                  <span>
+                    {tableLabel.toLowerCase().includes("table")
+                      ? tableLabel
+                      : `Table ${tableLabel}`}
+                  </span>
+                </div>
+              </div>
             </header>
 
             {/* Main Content: Food Menu */}
-            <main className="my-6 flex flex-col">
+            <main className="flex flex-col">
               <FoodMenu
                 categories={categories}
                 hideHeader={true}
@@ -417,7 +488,7 @@ export function TableLandingClient({
             </main>
 
             {/* Footer */}
-            <footer className="mt-8 flex flex-col items-center gap-1.5 text-center text-muted-foreground">
+            <footer className="mt-8 flex flex-col items-center gap-1.5 text-center text-muted-foreground px-4 sm:px-6">
               <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium tracking-wide uppercase">
                 <Lock className="h-3 w-3 text-muted-foreground/80" />
                 <span>Secure Table Ordering</span>
