@@ -196,7 +196,8 @@ function PayContent({
             Scan Guest Receipt
           </h2>
           <p className="text-sm text-muted-foreground">
-            Point your camera at the customer&apos;s checkout QR code to view and finalize their bill.
+            Point your camera at the customer&apos;s checkout QR code to view
+            and finalize their bill.
           </p>
         </div>
       </div>
@@ -285,7 +286,9 @@ function PayContent({
                 ) : (
                   <QrCode className="mx-auto mb-2 h-10 w-10 text-primary" />
                 )}
-                <h2 className="text-2xl font-black">Table {session.table_number}</h2>
+                <h2 className="text-2xl font-black">
+                  Table {session.table_number}
+                </h2>
                 <span className="mt-1 inline-flex rounded-full bg-background px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
                   {session.status === "payment_pending"
                     ? "Awaiting Payment"
@@ -413,7 +416,9 @@ function PayContent({
                     ) : (
                       <CheckCircle className="h-5 w-5" />
                     )}
-                    {isFinalizing ? "Processing..." : "Accept Payment & Finalize"}
+                    {isFinalizing
+                      ? "Processing..."
+                      : "Accept Payment & Finalize"}
                   </button>
                 )}
               </div>

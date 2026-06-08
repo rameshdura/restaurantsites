@@ -1,7 +1,7 @@
 "use client"
 
 import Image, { type ImageProps } from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 interface SafeImageProps extends Omit<ImageProps, "onError"> {
   fallbackSrc?: string
@@ -14,11 +14,16 @@ export function SafeImage({
   ...props
 }: SafeImageProps) {
   const [imgSrc, setImgSrc] = useState(src)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <Image
       {...props}
-      src={imgSrc}
+      src={mounted ? imgSrc : src}
       alt={alt}
       onError={() => setImgSrc(fallbackSrc)}
     />

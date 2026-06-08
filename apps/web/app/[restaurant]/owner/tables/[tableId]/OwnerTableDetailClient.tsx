@@ -1042,176 +1042,176 @@ export function OwnerTableDetailClient({
               <div
                 className={`flex w-full flex-1 flex-col overflow-hidden bg-muted/5 md:w-[360px] md:flex-none md:shrink-0 ${activeDialogTab === "cart" ? "flex" : "hidden md:flex"}`}
               >
-              <div className="flex shrink-0 items-center justify-between border-b border-border/60 bg-muted/20 p-4">
-                <h4 className="text-sm font-bold tracking-wider text-muted-foreground uppercase">
-                  Temporary Cart
-                </h4>
-                <span className="text-xs font-medium text-muted-foreground">
-                  {localCart.reduce((sum, item) => sum + item.qty, 0)} items
-                </span>
-              </div>
-
-              <div className="flex-1 space-y-4 overflow-y-auto p-4">
-                {localCart.length === 0 ? (
-                  <div className="flex h-full flex-col items-center justify-center py-12 text-center text-muted-foreground">
-                    <ShoppingBag className="mb-2 h-10 w-10 text-muted-foreground/30" />
-                    <p className="text-sm font-medium">Cart is empty</p>
-                    <p className="mt-1 max-w-[200px] text-xs text-muted-foreground/80">
-                      Add items from the menu grid on the left
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {localCart.map((cartItem) => {
-                      const itemDetails = flatItems.find(
-                        (i) => i.id === cartItem.item_id
-                      )
-                      const name = itemDetails?.name || cartItem.item_id
-                      const itemPrice = itemDetails
-                        ? parseFloat(String(itemDetails.price)) || 0
-                        : 0
-
-                      return (
-                        <div
-                          key={cartItem.cart_id}
-                          className="space-y-3 rounded-xl border border-border bg-card p-3 shadow-sm"
-                        >
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="min-w-0">
-                              <h5 className="truncate text-sm font-semibold">
-                                {name}
-                              </h5>
-                              <p className="text-xs text-muted-foreground">
-                                {formatCurrency(itemPrice)} each
-                              </p>
-                            </div>
-                            <span className="shrink-0 text-sm font-bold">
-                              {formatCurrency(itemPrice * cartItem.qty)}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center justify-between gap-4">
-                            {/* Quantity buttons */}
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() =>
-                                  handleUpdateLocalCart(
-                                    cartItem.item_id,
-                                    cartItem.qty - 1,
-                                    cartItem.notes,
-                                    cartItem.cart_id
-                                  )
-                                }
-                                className="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-xs font-bold text-foreground hover:bg-accent"
-                              >
-                                -
-                              </button>
-                              <span className="w-5 text-center text-xs font-semibold">
-                                {cartItem.qty}
-                              </span>
-                              <button
-                                onClick={() =>
-                                  handleUpdateLocalCart(
-                                    cartItem.item_id,
-                                    cartItem.qty + 1,
-                                    cartItem.notes,
-                                    cartItem.cart_id
-                                  )
-                                }
-                                className="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-xs font-bold text-foreground hover:bg-accent"
-                              >
-                                +
-                              </button>
-                            </div>
-
-                            {/* Remove button */}
-                            <button
-                              onClick={() =>
-                                handleUpdateLocalCart(
-                                  cartItem.item_id,
-                                  0,
-                                  cartItem.notes,
-                                  cartItem.cart_id
-                                )
-                              }
-                              className="rounded-md p-1.5 text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10"
-                              title="Remove"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </div>
-
-                          {/* Notes field */}
-                          <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-muted-foreground uppercase">
-                              Notes
-                            </label>
-                            <input
-                              type="text"
-                              placeholder="E.g. No onion, extra spicy..."
-                              value={cartItem.notes}
-                              onChange={(e) =>
-                                handleUpdateLocalCart(
-                                  cartItem.item_id,
-                                  cartItem.qty,
-                                  e.target.value,
-                                  cartItem.cart_id
-                                )
-                              }
-                              className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-base md:text-xs transition-all focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
-                            />
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-
-              {/* Cart Footer */}
-              <div className="shrink-0 space-y-4 border-t border-border bg-muted/20 p-4">
-                <div className="flex items-center justify-between text-sm font-bold">
-                  <span>Subtotal</span>
-                  <span className="text-base text-primary">
-                    {formatCurrency(
-                      localCart.reduce((sum, item) => {
-                        const itemDetails = flatItems.find(
-                          (i) => i.id === item.item_id
-                        )
-                        const price = itemDetails
-                          ? parseFloat(String(itemDetails.price)) || 0
-                          : 0
-                        return sum + price * item.qty
-                      }, 0)
-                    )}
+                <div className="flex shrink-0 items-center justify-between border-b border-border/60 bg-muted/20 p-4">
+                  <h4 className="text-sm font-bold tracking-wider text-muted-foreground uppercase">
+                    Temporary Cart
+                  </h4>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    {localCart.reduce((sum, item) => sum + item.qty, 0)} items
                   </span>
                 </div>
 
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    className="flex-1 rounded-xl"
-                    onClick={() => {
-                      setLocalCart([])
-                      setIsAddItemDialogOpen(false)
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    disabled={localCart.length === 0 || isSubmittingCart}
-                    className="flex-1 rounded-xl"
-                    onClick={handlePlaceLocalCartOrder}
-                  >
-                    {isSubmittingCart ? (
-                      <RefreshCw className="mr-1.5 h-4 w-4 animate-spin" />
-                    ) : null}
-                    Add to Table
-                  </Button>
+                <div className="flex-1 space-y-4 overflow-y-auto p-4">
+                  {localCart.length === 0 ? (
+                    <div className="flex h-full flex-col items-center justify-center py-12 text-center text-muted-foreground">
+                      <ShoppingBag className="mb-2 h-10 w-10 text-muted-foreground/30" />
+                      <p className="text-sm font-medium">Cart is empty</p>
+                      <p className="mt-1 max-w-[200px] text-xs text-muted-foreground/80">
+                        Add items from the menu grid on the left
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {localCart.map((cartItem) => {
+                        const itemDetails = flatItems.find(
+                          (i) => i.id === cartItem.item_id
+                        )
+                        const name = itemDetails?.name || cartItem.item_id
+                        const itemPrice = itemDetails
+                          ? parseFloat(String(itemDetails.price)) || 0
+                          : 0
+
+                        return (
+                          <div
+                            key={cartItem.cart_id}
+                            className="space-y-3 rounded-xl border border-border bg-card p-3 shadow-sm"
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <h5 className="truncate text-sm font-semibold">
+                                  {name}
+                                </h5>
+                                <p className="text-xs text-muted-foreground">
+                                  {formatCurrency(itemPrice)} each
+                                </p>
+                              </div>
+                              <span className="shrink-0 text-sm font-bold">
+                                {formatCurrency(itemPrice * cartItem.qty)}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center justify-between gap-4">
+                              {/* Quantity buttons */}
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() =>
+                                    handleUpdateLocalCart(
+                                      cartItem.item_id,
+                                      cartItem.qty - 1,
+                                      cartItem.notes,
+                                      cartItem.cart_id
+                                    )
+                                  }
+                                  className="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-xs font-bold text-foreground hover:bg-accent"
+                                >
+                                  -
+                                </button>
+                                <span className="w-5 text-center text-xs font-semibold">
+                                  {cartItem.qty}
+                                </span>
+                                <button
+                                  onClick={() =>
+                                    handleUpdateLocalCart(
+                                      cartItem.item_id,
+                                      cartItem.qty + 1,
+                                      cartItem.notes,
+                                      cartItem.cart_id
+                                    )
+                                  }
+                                  className="flex h-7 w-7 items-center justify-center rounded-md border border-border bg-background text-xs font-bold text-foreground hover:bg-accent"
+                                >
+                                  +
+                                </button>
+                              </div>
+
+                              {/* Remove button */}
+                              <button
+                                onClick={() =>
+                                  handleUpdateLocalCart(
+                                    cartItem.item_id,
+                                    0,
+                                    cartItem.notes,
+                                    cartItem.cart_id
+                                  )
+                                }
+                                className="rounded-md p-1.5 text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10"
+                                title="Remove"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </div>
+
+                            {/* Notes field */}
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-bold text-muted-foreground uppercase">
+                                Notes
+                              </label>
+                              <input
+                                type="text"
+                                placeholder="E.g. No onion, extra spicy..."
+                                value={cartItem.notes}
+                                onChange={(e) =>
+                                  handleUpdateLocalCart(
+                                    cartItem.item_id,
+                                    cartItem.qty,
+                                    e.target.value,
+                                    cartItem.cart_id
+                                  )
+                                }
+                                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-base transition-all focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none md:text-xs"
+                              />
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* Cart Footer */}
+                <div className="shrink-0 space-y-4 border-t border-border bg-muted/20 p-4">
+                  <div className="flex items-center justify-between text-sm font-bold">
+                    <span>Subtotal</span>
+                    <span className="text-base text-primary">
+                      {formatCurrency(
+                        localCart.reduce((sum, item) => {
+                          const itemDetails = flatItems.find(
+                            (i) => i.id === item.item_id
+                          )
+                          const price = itemDetails
+                            ? parseFloat(String(itemDetails.price)) || 0
+                            : 0
+                          return sum + price * item.qty
+                        }, 0)
+                      )}
+                    </span>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      className="flex-1 rounded-xl"
+                      onClick={() => {
+                        setLocalCart([])
+                        setIsAddItemDialogOpen(false)
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      disabled={localCart.length === 0 || isSubmittingCart}
+                      className="flex-1 rounded-xl"
+                      onClick={handlePlaceLocalCartOrder}
+                    >
+                      {isSubmittingCart ? (
+                        <RefreshCw className="mr-1.5 h-4 w-4 animate-spin" />
+                      ) : null}
+                      Add to Table
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </DialogContent>
       </Dialog>

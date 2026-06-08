@@ -1546,7 +1546,7 @@
     },
     "about": {
       "id": "about",
-      "coverImage": null,
+      "coverImage": "/images/restaurants/ramen-taro/cover/cover-1.jpg",
       "sections": [
         {
           "id": "about-full",
@@ -1575,7 +1575,7 @@
     },
     "menu": {
       "id": "menu",
-      "coverImage": null,
+      "coverImage": "/images/restaurants/ramen-taro/cover/cover-1.jpg",
       "sections": [
         {
           "id": "full-menu",
@@ -1592,7 +1592,7 @@
     },
     "contact": {
       "id": "contact",
-      "coverImage": null,
+      "coverImage": "/images/restaurants/ramen-taro/cover/cover-1.jpg",
       "sections": [
         {
           "id": "contact-full",

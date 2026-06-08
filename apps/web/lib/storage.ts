@@ -61,6 +61,7 @@ export interface SiteBuilderData {
   sameAs: string[]
 
   // --- Local SEO & Schema ---
+  neighborhood: string
   city: string
   region: string
   country: string
@@ -213,6 +214,8 @@ export interface SiteBuilderData {
     foundedDate: string
     foundingLocation: string
     numberOfEmployees: number
+    knowsLanguage: string[]
+    cuisineType: string
     hasMap: string
     currenciesAccepted: string[]
     paymentAccepted: string[]

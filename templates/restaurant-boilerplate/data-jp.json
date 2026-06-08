@@ -1,0 +1,890 @@
+{
+  "uid": "ramen-taro",
+  "version": "1",
+  "name": "ラーメン太郎",
+  "description": "伝統的なカレー、手作りモモ、ヒマラヤの特産品を提供する本格的なインド・ネパール料理レストラン。",
+  "tagline": "ネパールとインドの真の精神を味わう",
+  "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
+  "phone": "+81 3-8765-4321",
+  "email": "info@ramentaro.jp",
+  "website": "",
+  "foundingDate": "1985-01-01",
+  "menuLink": "pdfmenu/ramen-taro-menu.pdf",
+  "app": {
+    "language": "JA",
+    "currency": "JPY"
+  },
+  "seo": {
+    "canonical": "",
+    "title": "ラーメン太郎 | 東京の本格インド＆ネパール料理",
+    "description": "東京・新橋のラーメン太郎で、本格的なインドカレー、手作りネパールモモ、伝統的なタンドリー料理をご堪能ください。真のヒマラヤ体験を。",
+    "keywords": [
+      "ネパール料理レストラン",
+      "インドカレー",
+      "モモ",
+      "ダルバート",
+      "タンドリーチキン",
+      "ヒマラヤ料理",
+      "インド料理 東京",
+      "ネパール ターリー"
+    ],
+    "noindex": false,
+    "menuTitle": "ラーメン太郎 メニュー | 本格カレー、モモ＆価格",
+    "menuDescription": "ラーメン太郎の全メニューをご覧ください。名物の蒸しモモやスパイシーなタンドリーチキンから、伝統的なネパールランチセットやカレーまで。",
+    "aboutTitle": "ラーメン太郎について | 伝統的な料理の遺産",
+    "aboutDescription": "ラーメン太郎で、ネパールとインドの活気ある料理の遺産を発見してください。本場の味、地元のスパイス、そして温かい雰囲気をお楽しみください。",
+    "contactTitle": "Contact Ramen Taro | Reservations & Location Details",
+    "contactDescription": "Plan your visit to Ramen Taro. Call for bookings and inquiries.",
+    "brandTitle": "Ramen Taro Brand Assets | Media Materials",
+    "brandDescription": "Access and download official marketing materials, printable menus, and professional branding assets for Ramen Taro.",
+    "companyTitle": "Ramen Taro | Operations & Corporate Details",
+    "companyDescription": "Official operational information and corporate overview for Ramen Taro, delivering authentic Asian culinary experiences in Tokyo."
+  },
+  "social": {
+    "ogImage": null,
+    "ogLocale": "ja_JP",
+    "twitterCard": "summary_large_image",
+    "sameAs": [
+      "https://www.instagram.com/ramentaro",
+      "https://www.facebook.com/ramentaro",
+      "https://tabelog.com/tokyo/ramentaro"
+    ]
+  },
+  "schema": {
+    "priceRange": "$$",
+    "servesCuisine": [
+      "Indian",
+      "Nepali",
+      "Himalayan"
+    ],
+    "acceptsReservations": true,
+    "isTakeout": true,
+    "isDelivery": false,
+    "priceCurrency": "JPY",
+    "aggregateRating": {
+      "ratingValue": 4.6,
+      "reviewCount": 328,
+      "bestRating": 5,
+      "worstRating": 1,
+      "source": "Google Reviews",
+      "sourceUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47"
+    }
+  },
+  "localSEO": {
+    "city": "Higashiyamato",
+    "region": "Tokyo",
+    "country": "Japan",
+    "countryCode": "JP",
+    "postalCode": "207-0011",
+    "placeId": "ChIJN1t_tDeuEmsRUsoyg83yJQk",
+    "googleMapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
+    "timezone": "Asia/Tokyo"
+  },
+  "images": {
+    "logo": {
+      "url": "/images/restaurants/ramen-taro/logo.png",
+      "alt": "Ramen Taro logo",
+      "width": 200,
+      "height": 200
+    },
+    "gallery": [
+      {
+        "url": "/images/restaurants/ramen-taro/ourgallery/gallery-1.png",
+        "alt": "Inside Ramen Taro restaurant — warm Japanese dining atmosphere"
+      },
+      {
+        "url": "/images/restaurants/ramen-taro/ourgallery/gallery-2.png",
+        "alt": "Authentic Ramen Bowl"
+      },
+      {
+        "url": "/images/restaurants/ramen-taro/ourgallery/gallery-3.png",
+        "alt": "Chef Masterfully Crafting Ramen"
+      },
+      {
+        "url": "/images/restaurants/ramen-taro/ourgallery/gallery-4.png",
+        "alt": "Cozy Japanese Dining Area"
+      },
+      {
+        "url": "/images/restaurants/ramen-taro/ourgallery/gallery-5.png",
+        "alt": "Fresh Ramen Ingredients"
+      },
+      {
+        "url": "/images/restaurants/ramen-taro/ourgallery/gallery-6.png",
+        "alt": "Ramen Taro Evening Exterior"
+      }
+    ],
+    "featured": [
+      {
+        "id": "f1",
+        "url": "/images/restaurants/ramen-taro/ourfood/food-1.png",
+        "alt": "Tonkotsu Ramen"
+      },
+      {
+        "id": "f2",
+        "url": "/images/restaurants/ramen-taro/ourfood/food-2.png",
+        "alt": "Spicy Miso Ramen"
+      },
+      {
+        "id": "f3",
+        "url": "/images/restaurants/ramen-taro/ourfood/food-3.png",
+        "alt": "Shoyu Ramen"
+      },
+      {
+        "id": "f4",
+        "url": "/images/restaurants/ramen-taro/ourfood/food-4.png",
+        "alt": "Gyoza"
+      }
+    ],
+    "drinks": [
+      {
+        "id": "d1",
+        "url": "/images/restaurants/ramen-taro/ourdrink/drink-1.png",
+        "alt": "Sapporo Premium Beer"
+      },
+      {
+        "id": "d2",
+        "url": "/images/restaurants/ramen-taro/ourdrink/drink-2.png",
+        "alt": "Hot Sake"
+      },
+      {
+        "id": "d3",
+        "url": "/images/restaurants/ramen-taro/ourdrink/drink-3.png",
+        "alt": "Matcha Latte"
+      },
+      {
+        "id": "d4",
+        "url": "/images/restaurants/ramen-taro/ourdrink/drink-4.png",
+        "alt": "Calpico"
+      }
+    ],
+    "about": [
+      {
+        "id": "a1",
+        "url": "/images/restaurants/ramen-taro/ourstory/story-1.png",
+        "alt": "Our Story 1"
+      },
+      {
+        "id": "a2",
+        "url": "/images/restaurants/ramen-taro/ourstory/story-2.png",
+        "alt": "Our Story 2"
+      },
+      {
+        "id": "a3",
+        "url": "/images/restaurants/ramen-taro/ourstory/story-3.png",
+        "alt": "Our Story 3"
+      },
+      {
+        "id": "a4",
+        "url": "/images/restaurants/ramen-taro/ourstory/story-4.png",
+        "alt": "Our Story 4"
+      }
+    ]
+  },
+  "companyInfo": {
+    "name": "Narayani Co., Ltd.",
+    "legalName": "Narayani Company Limited",
+    "registrationNumber": "6020001061694",
+    "representative": "Poudel Prakash",
+    "address": "35 Minezawacho, Hodogaya Ward, Yokohama, Kanagawa 221-0061, Japan",
+    "phone": "045-331-1303",
+    "establishedDate": "2009-05-21",
+    "capital": "5,000,000 JPY",
+    "fiscalYearEnd": "End of March",
+    "businessPurpose": "",
+    "annualReportUrl": "",
+    "url": "/ramen-taro/company-information"
+  },
+  "openingHours": [
+    {
+      "day": "Mon - Thu",
+      "lunch": "11:30 - 15:00",
+      "lunchLO": "14:30",
+      "dinner": "17:00 - 22:00",
+      "dinnerLO": "21:30",
+      "isClosed": false,
+      "notes": ""
+    },
+    {
+      "day": "Fri - Sat",
+      "lunch": "11:30 - 15:00",
+      "lunchLO": "14:30",
+      "dinner": "17:00 - 23:30",
+      "dinnerLO": "23:00",
+      "isClosed": false,
+      "notes": ""
+    },
+    {
+      "day": "Sun",
+      "lunch": "12:00 - 15:30",
+      "lunchLO": "15:00",
+      "dinner": "17:00 - 21:00",
+      "dinnerLO": "20:30",
+      "isClosed": false,
+      "notes": ""
+    }
+  ],
+  "holidayNotes": "",
+  "operations": {
+    "paymentMethods": [
+      "Visa",
+      "Mastercard",
+      "JCB",
+      "Cash",
+      "PayPay"
+    ],
+    "dietaryOptions": {
+      "vegetarian": false,
+      "vegan": false,
+      "glutenFree": false,
+      "halal": false,
+      "kosher": false,
+      "dairyFree": false,
+      "nutFree": false
+    },
+    "features": {
+      "privateDining": false,
+      "privateDiningCapacity": 0,
+      "privateDiningDescription": "",
+      "outdoorSeating": false,
+      "wifi": false,
+      "wifiPassword": "",
+      "parking": "none",
+      "parkingDetails": "",
+      "wheelchairAccessible": false,
+      "petFriendly": false,
+      "romantic": false,
+      "goodForGroups": false,
+      "goodForFamilies": false,
+      "goodForDateNight": false
+    },
+    "services": {
+      "takeout": true,
+      "delivery": false,
+      "deliveryPlatforms": [
+        "Uber Eats",
+        "Demae-can",
+        "Wolt"
+      ],
+      "deliveryRadius": "",
+      "catering": false,
+      "cateringRadius": "",
+      "cateringMinimum": "",
+      "reservations": true,
+      "reservationMethods": [],
+      "onlineBookingUrl": "",
+      "banquets": false,
+      "banquetCapacity": 0
+    }
+  },
+  "menuCategories": [
+    {
+      "name": "ランチ",
+      "items": [
+        {
+          "name": "エベレストチキンモモ",
+          "description": "スパイスの効いた鶏肉の蒸し餃子、トマトとゴマのチャツネ添え。",
+          "price": "1300",
+          "category": "Lunch",
+          "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
+          "id": "item_everest_chicken_momo"
+        },
+        {
+          "name": "シェルパカジャセット",
+          "description": "干し飯、スパイシーなひよこ豆、じゃがいもとタケノコのカレーの本格ネパールランチプレート。",
+          "price": "1500",
+          "category": "Lunch",
+          "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
+          "id": "item_sherpa_khaja_set"
+        },
+        {
+          "name": "野菜サモサチャート",
+          "description": "スパイシーなひよこ豆、ヨーグルト、甘酸っぱいチャツネをトッピングしたサクサクのサモサ。",
+          "price": "900",
+          "category": "Lunch",
+          "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
+          "id": "item_veg_samosa_chaat"
+        }
+      ]
+    },
+    {
+      "name": "ディナー",
+      "items": [
+        {
+          "name": "ヒマラヤン・マトンカレー (カシコマス)",
+          "description": "伝統的なスパイスの効いた濃厚なグレービーソースでじっくり煮込んだ柔らかなヤギ肉。",
+          "price": "2200",
+          "category": "Dinner",
+          "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
+          "id": "item_himalayan_goat_curry_khasi_ko_masu"
+        },
+        {
+          "name": "クラシック・チキンティッカマサラ",
+          "description": "バター風味のスパイシーなトマトソースで煮込んだタンドリーグリルチキン。",
+          "price": "1800",
+          "category": "Dinner",
+          "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
+          "id": "item_classic_chicken_tikka_masala"
+        },
+        {
+          "name": "パラクパニール",
+          "description": "スパイスの効いた滑らかなほうれん草のピューレで煮込んだフレッシュカッテージチーズ。",
+          "price": "1600",
+          "category": "Dinner",
+          "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
+          "id": "item_palak_paneer"
+        },
+        {
+          "name": "エベレスト・ダルバート・ターリー",
+          "description": "黄色いレンズ豆のスープ、ご飯、野菜カレーの伝統的なネパールのごちそう。",
+          "price": "2000",
+          "category": "Dinner",
+          "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
+          "id": "item_everest_dal_bhat_thali"
+        }
+      ]
+    },
+    {
+      "name": "ドリンク",
+      "items": [
+        {
+          "name": "マンゴーラッシー",
+          "description": "甘く熟したマンゴーとカルダモンをブレンドした、クリーミーで爽やかなヨーグルトドリンク。",
+          "price": "550",
+          "category": "Drinks",
+          "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png",
+          "id": "item_mango_lassi"
+        }
+      ]
+    },
+    {
+      "name": "デザート",
+      "items": [
+        {
+          "name": "温かいグラブジャムン",
+          "description": "カルダモン風味の温かいシロップに浸したミルクの団子。",
+          "price": "600",
+          "category": "Dessert",
+          "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
+          "id": "item_warm_gulab_jamun"
+        },
+        {
+          "name": "キール (ヒマラヤン・ライスプディング)",
+          "description": "ナッツ、カルダモン、サフランと一緒にじっくり煮込んだクリーミーなバスマティライスプディング。",
+          "price": "750",
+          "category": "Dessert",
+          "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png",
+          "id": "item_kheer_himalayan_rice_pudding"
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "name": "エベレストチキンモモ",
+      "description": "スパイスの効いた鶏肉の蒸し餃子、トマトとゴマのチャツネ添え。",
+      "price": "1300",
+      "category": "Lunch",
+      "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
+      "id": "item_everest_chicken_momo",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 1,
+      "allergens": []
+    },
+    {
+      "name": "シェルパカジャセット",
+      "description": "干し飯、スパイシーなひよこ豆、じゃがいもとタケノコのカレーの本格ネパールランチプレート。",
+      "price": "1500",
+      "category": "Lunch",
+      "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
+      "id": "item_sherpa_khaja_set",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "野菜サモサチャート",
+      "description": "スパイシーなひよこ豆、ヨーグルト、甘酸っぱいチャツネをトッピングしたサクサクのサモサ。",
+      "price": "900",
+      "category": "Lunch",
+      "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
+      "id": "item_veg_samosa_chaat",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "ヒマラヤン・マトンカレー (カシコマス)",
+      "description": "伝統的なスパイスの効いた濃厚なグレービーソースでじっくり煮込んだ柔らかなヤギ肉。",
+      "price": "2200",
+      "category": "Dinner",
+      "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
+      "id": "item_himalayan_goat_curry_khasi_ko_masu",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 1,
+      "allergens": []
+    },
+    {
+      "name": "クラシック・チキンティッカマサラ",
+      "description": "バター風味のスパイシーなトマトソースで煮込んだタンドリーグリルチキン。",
+      "price": "1800",
+      "category": "Dinner",
+      "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
+      "id": "item_classic_chicken_tikka_masala",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "パラクパニール",
+      "description": "スパイスの効いた滑らかなほうれん草のピューレで煮込んだフレッシュカッテージチーズ。",
+      "price": "1600",
+      "category": "Dinner",
+      "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
+      "id": "item_palak_paneer",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "エベレスト・ダルバート・ターリー",
+      "description": "黄色いレンズ豆のスープ、ご飯、野菜カレーの伝統的なネパールのごちそう。",
+      "price": "2000",
+      "category": "Dinner",
+      "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
+      "id": "item_everest_dal_bhat_thali",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "マンゴーラッシー",
+      "description": "甘く熟したマンゴーとカルダモンをブレンドした、クリーミーで爽やかなヨーグルトドリンク。",
+      "price": "550",
+      "category": "Drinks",
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png",
+      "id": "item_mango_lassi",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "温かいグラブジャムン",
+      "description": "カルダモン風味の温かいシロップに浸したミルクの団子。",
+      "price": "600",
+      "category": "Dessert",
+      "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
+      "id": "item_warm_gulab_jamun",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    },
+    {
+      "name": "キール (ヒマラヤン・ライスプディング)",
+      "description": "ナッツ、カルダモン、サフランと一緒にじっくり煮込んだクリーミーなバスマティライスプディング。",
+      "price": "750",
+      "category": "Dessert",
+      "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png",
+      "id": "item_kheer_himalayan_rice_pudding",
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "availableUntil": "",
+      "size": "Regular",
+      "limited": false,
+      "spiceLevel": 0,
+      "allergens": []
+    }
+  ],
+  "about": {
+    "representative": {
+      "name": "ポウデル・プラカシュ",
+      "role": "",
+      "bio": "",
+      "image": "/images/restaurants/ramen-taro/representative/representative.jpg",
+      "message": "私たちの本格的なヒマラヤンキッチンへようこそ。",
+      "story": "",
+      "position": ""
+    }
+  },
+  "pages": {
+    "home": {
+      "id": "home",
+      "sections": [
+        {
+          "id": "hero",
+          "type": "hero",
+          "ui": {
+            "order": 1,
+            "visible": true,
+            "fullBleed": true
+          },
+          "data": {
+            "slides": [
+              {
+                "id": "slide-1",
+                "image": "/images/restaurants/ramen-taro/homeslider/slide-1.jpg",
+                "alt": "Authentic Hakata tonkotsu ramen bowl with chashu pork and soft-boiled egg",
+                "subtitle": "",
+                "title": "",
+                "ctaText": "",
+                "ctaLink": "#menu"
+              },
+              {
+                "id": "slide-2",
+                "image": "/images/restaurants/ramen-taro/homeslider/slide-2.jpg",
+                "alt": "Ramen chef masterfully crafting a bowl",
+                "subtitle": "",
+                "title": "",
+                "ctaText": "",
+                "ctaLink": "#about"
+              }
+            ]
+          }
+        },
+        {
+          "id": "about",
+          "type": "about",
+          "ui": {
+            "order": 2,
+            "visible": true,
+            "layout": "image-right"
+          },
+          "data": {
+            "title": "",
+            "content": "2015年に設立されたラーメン太郎は、本格的なヒマラヤの味を東京に届けるという夢から始まりました。数十年にわたり、私たちは本格的なインドとネパールのダイニングの基礎として進化してきました。",
+            "additionalContent": [
+              "私たちの秘密は、ネパールとインドから直接調達した本格的なスパイスブレンドにあります。",
+              "料理だけでなく、ラーメン太郎はヒマラヤのおもてなしを深く祝福する場所です。ゲストのニーズに優雅に応える温かい雰囲気作りに努めています。"
+            ],
+            "representative": "Poudel Prakash"
+          }
+        },
+        {
+          "id": "menu-preview",
+          "type": "menu",
+          "ui": {
+            "order": 3,
+            "visible": true
+          },
+          "data": {
+            "ref": "menu"
+          }
+        },
+        {
+          "id": "gallery",
+          "type": "gallery",
+          "ui": {
+            "order": 4,
+            "visible": true
+          },
+          "data": {
+            "ref": "images.gallery"
+          }
+        },
+        {
+          "id": "reviews",
+          "type": "reviews",
+          "ui": {
+            "order": 5,
+            "visible": true
+          },
+          "data": {
+            "ref": "reviews"
+          }
+        },
+        {
+          "id": "contact",
+          "type": "contact",
+          "ui": {
+            "order": 6,
+            "visible": true
+          },
+          "data": {
+            "ref": "contact"
+          }
+        }
+      ]
+    },
+    "about": {
+      "id": "about",
+      "coverImage": "/images/restaurants/ramen-taro/cover/cover-1.jpg",
+      "sections": [
+        {
+          "id": "about-full",
+          "type": "about",
+          "ui": {
+            "order": 1,
+            "visible": true,
+            "layout": "image-right"
+          },
+          "data": {
+            "ref": "pages.home.sections.about.data"
+          }
+        },
+        {
+          "id": "team",
+          "type": "team",
+          "ui": {
+            "order": 2,
+            "visible": true
+          },
+          "data": {
+            "ref": "team"
+          }
+        }
+      ]
+    },
+    "menu": {
+      "id": "menu",
+      "coverImage": "/images/restaurants/ramen-taro/cover/cover-1.jpg",
+      "sections": [
+        {
+          "id": "full-menu",
+          "type": "menu",
+          "ui": {
+            "order": 1,
+            "visible": true
+          },
+          "data": {
+            "ref": "menu"
+          }
+        }
+      ]
+    },
+    "contact": {
+      "id": "contact",
+      "coverImage": "/images/restaurants/ramen-taro/cover/cover-1.jpg",
+      "sections": [
+        {
+          "id": "contact-full",
+          "type": "contact",
+          "ui": {
+            "order": 1,
+            "visible": true
+          },
+          "data": {
+            "ref": "contact"
+          }
+        }
+      ]
+    }
+  },
+  "contact": {
+    "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
+    "phone": "+81 3-8765-4321",
+    "email": "info@ramentaro.jp",
+    "location": {
+      "lat": 35.7394006,
+      "lng": 139.4449135,
+      "mapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
+      "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
+      "plusCode": ""
+    },
+    "openingHours": [
+      {
+        "day": "Mon - Thu",
+        "lunch": "11:30 - 15:00",
+        "lunchLO": "14:30",
+        "dinner": "17:00 - 22:00",
+        "dinnerLO": "21:30",
+        "isClosed": false,
+        "notes": ""
+      },
+      {
+        "day": "Fri - Sat",
+        "lunch": "11:30 - 15:00",
+        "lunchLO": "14:30",
+        "dinner": "17:00 - 23:30",
+        "dinnerLO": "23:00",
+        "isClosed": false,
+        "notes": ""
+      },
+      {
+        "day": "Sun",
+        "lunch": "12:00 - 15:30",
+        "lunchLO": "15:00",
+        "dinner": "17:00 - 21:00",
+        "dinnerLO": "20:30",
+        "isClosed": false,
+        "notes": ""
+      }
+    ],
+    "holidayNotes": ""
+  },
+  "team": [
+    {
+      "id": "team-takeshi",
+      "name": "山本 武",
+      "role": "料理長",
+      "image": "/images/restaurants/ramen-taro/team/team-1.jpg",
+      "bio": "30年以上の経験を持つ山本は、私たちのキッチンの中心です。"
+    },
+    {
+      "id": "team-hanako",
+      "name": "佐藤 花子",
+      "role": "ゼネラルマネージャー",
+      "image": "/images/restaurants/ramen-taro/team/team-2.jpg",
+      "bio": "花子は、その温かいおもてなしで、すべてのお客様にくつろいでいただけるようにしています。"
+    },
+    {
+      "id": "team-kenji",
+      "name": "田中 健二",
+      "role": "副料理長",
+      "image": "/images/restaurants/ramen-taro/team/team-3.jpg",
+      "bio": "新鮮な食材への健二の情熱は、私たちのメニューに革新をもたらします。"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "review-1",
+      "author": "Aarav Patel",
+      "rating": 5,
+      "date": "2026-04-15",
+      "comment": "The Everest Chicken Momos here are hands down the best in town! Reminds me of the local eateries in Kathmandu. Tastes absolutely fresh and flavorful.",
+      "source": "Google Reviews"
+    },
+    {
+      "id": "review-2",
+      "author": "Sarah Jenkins",
+      "rating": 5,
+      "date": "2026-04-10",
+      "comment": "First time trying Nepali food and I am in love! The Everest Dal Bhat Thali was an incredible variety of flavors. Highly recommend the Mango Lassi too.",
+      "source": "Google Reviews"
+    },
+    {
+      "id": "review-3",
+      "author": "Rajesh Sharma",
+      "rating": 4,
+      "date": "2026-04-05",
+      "comment": "Excellent Goat Curry and fresh Naan. The tandoor grill items are very authentic. Service was a bit busy but extremely polite.",
+      "source": "Google Reviews"
+    },
+    {
+      "id": "review-4",
+      "author": "Elena Rostova",
+      "rating": 5,
+      "date": "2026-03-28",
+      "comment": "A gem of a restaurant! The Palak Paneer was perfectly creamy, and the Gulab Jamun served warm at the end was outstanding. Warm and cozy atmosphere.",
+      "source": "Google Reviews"
+    }
+  ],
+  "videos": [],
+  "virtualTour": "",
+  "advancedSchema": {
+    "foundedDate": "",
+    "foundingLocation": "",
+    "numberOfEmployees": 0,
+    "hasMap": "",
+    "currenciesAccepted": [],
+    "paymentAccepted": [],
+    "servesCuisine": [],
+    "menuType": [],
+    "starRating": 0,
+    "priceRange": "$",
+    "eventType": [],
+    "seats": 0,
+    "smoking": "No Smoking",
+    "music": "None",
+    "attire": "casual"
+  },
+  "tables": [
+    {
+      "id": 1,
+      "label": "Table 1",
+      "persons": 4
+    },
+    {
+      "id": 2,
+      "label": "Table 2",
+      "persons": 4
+    }
+  ],
+  "hero": {
+    "slides": [
+      {
+        "id": "slide-1",
+        "image": "",
+        "title": "",
+        "subtitle": "",
+        "ctaText": "",
+        "ctaLink": "",
+        "alt": ""
+      }
+    ]
+  },
+  "location": {
+    "lat": 0,
+    "lng": 0,
+    "mapsUrl": "",
+    "embedUrl": "",
+    "address": "",
+    "plusCode": ""
+  },
+  "socialInstagram": "",
+  "socialFacebook": "",
+  "socialTwitter": "",
+  "socialTabelog": "",
+  "reservation": {
+    "acceptsReservations": false,
+    "reservationMethods": [],
+    "onlineBookingUrl": "",
+    "minimumPartySize": 1,
+    "maximumPartySize": 20,
+    "largeGroups": false,
+    "largeGroupCapacity": 0,
+    "privateDining": {
+      "available": false,
+      "capacity": 0,
+      "minimumSpend": "",
+      "description": ""
+    }
+  },
+  "numberOfEmployees": 0,
+  "knowsLanguage": [],
+  "cuisineType": ""
+}

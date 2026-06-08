@@ -438,7 +438,7 @@ export function TableLandingClient({
           <div className="relative mx-auto flex w-full max-w-7xl flex-col py-8 select-none md:py-12">
             {/* Leave Table Button (Only if no orders) */}
             {session && !((session as any)?.orders?.items?.length > 0) && (
-              <div className="absolute right-4 top-4 sm:right-6 sm:top-6 z-20">
+              <div className="absolute top-4 right-4 z-20 sm:top-6 sm:right-6">
                 <button
                   onClick={handleLeaveTable}
                   disabled={isLeaving}
@@ -450,7 +450,7 @@ export function TableLandingClient({
             )}
 
             {/* Header / Table Identifier */}
-            <header className="mb-4 flex flex-row items-center justify-center gap-3 px-4 sm:px-6 lg:flex-col lg:gap-0 text-left lg:text-center">
+            <header className="mb-4 flex flex-row items-center justify-center gap-3 px-4 text-left sm:px-6 lg:flex-col lg:gap-0 lg:text-center">
               {logoUrl && (
                 <div className="shrink-0 overflow-hidden rounded-full border-2 border-primary/20 bg-primary/5 shadow-md lg:mb-3">
                   <img
@@ -488,7 +488,7 @@ export function TableLandingClient({
             </main>
 
             {/* Footer */}
-            <footer className="mt-8 flex flex-col items-center gap-1.5 text-center text-muted-foreground px-4 sm:px-6">
+            <footer className="mt-8 flex flex-col items-center gap-1.5 px-4 text-center text-muted-foreground sm:px-6">
               <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium tracking-wide uppercase">
                 <Lock className="h-3 w-3 text-muted-foreground/80" />
                 <span>Secure Table Ordering</span>

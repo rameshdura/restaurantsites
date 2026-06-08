@@ -459,6 +459,14 @@ export function SiteBuilderForm({
           />
         </div>
         <div className="space-y-2">
+          <Label>Twitter Site</Label>
+          <Input
+            value={formData.twitterSite || ""}
+            onChange={(e) => updateFormData("twitterSite", e.target.value)}
+            placeholder="@restaurant"
+          />
+        </div>
+        <div className="space-y-2">
           <Label>Twitter Card Type</Label>
           <Select
             value={formData.twitterCard}
@@ -490,6 +498,14 @@ export function SiteBuilderForm({
         description="Tell search engines exactly where you are located."
       />
       <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-2">
+          <Label>Neighborhood</Label>
+          <Input
+            value={formData.neighborhood || ""}
+            onChange={(e) => updateFormData("neighborhood", e.target.value)}
+            placeholder="Shinjuku"
+          />
+        </div>
         <div className="space-y-2">
           <Label>City</Label>
           <Input
@@ -1262,6 +1278,47 @@ export function SiteBuilderForm({
           />
         </div>
       </div>
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="space-y-2">
+          <Label>Number of Employees</Label>
+          <Input
+            type="number"
+            value={formData.numberOfEmployees || 0}
+            onChange={(e) =>
+              updateFormData("numberOfEmployees", parseInt(e.target.value) || 0)
+            }
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>Languages Spoken (comma separated)</Label>
+          <Input
+            value={(formData.advancedSchema?.knowsLanguage || []).join(", ")}
+            onChange={(e) =>
+              updateFormData("advancedSchema", {
+                ...formData.advancedSchema,
+                knowsLanguage: e.target.value
+                  .split(",")
+                  .map((s) => s.trim())
+                  .filter(Boolean),
+              } as SiteBuilderData["advancedSchema"])
+            }
+            placeholder="English, Japanese"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>Cuisine Type</Label>
+          <Input
+            value={formData.advancedSchema?.cuisineType || ""}
+            onChange={(e) =>
+              updateFormData("advancedSchema", {
+                ...formData.advancedSchema,
+                cuisineType: e.target.value,
+              } as SiteBuilderData["advancedSchema"])
+            }
+            placeholder="Japanese"
+          />
+        </div>
+      </div>
     </div>
   )
 
@@ -1701,6 +1758,36 @@ export function SiteBuilderForm({
           onChange={(e) => updateFormData("holidayNotes", e.target.value)}
           placeholder="e.g. Closed on New Year's Day..."
         />
+      </div>
+
+      <div className="space-y-4 border-t pt-6">
+        <Label className="text-lg font-bold">Restaurant Tables</Label>
+        <div className="space-y-2">
+          <Label>Number of Tables</Label>
+          <Input
+            type="number"
+            min="0"
+            max="100"
+            value={formData.tables?.length || 0}
+            onChange={(e) => {
+              const count = parseInt(e.target.value) || 0
+              const currentTables = formData.tables || []
+              let newTables = [...currentTables]
+              if (count > currentTables.length) {
+                for (let i = currentTables.length + 1; i <= count; i++) {
+                  newTables.push({ id: i, label: `Table ${i}`, capacity: 4 })
+                }
+              } else {
+                newTables = newTables.slice(0, count)
+              }
+              updateFormData("tables", newTables)
+            }}
+          />
+          <p className="text-sm text-muted-foreground">
+            Automatically generates basic table configurations for the POS and
+            booking system.
+          </p>
+        </div>
       </div>
 
       <div className="space-y-4 border-t pt-6">

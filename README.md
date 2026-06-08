@@ -26,16 +26,22 @@ The platform includes automation scripts to manage restaurant sites within the m
 
 ### Create a Restaurant
 
-To scaffold a new restaurant site from the secure boilerplate:
+To scaffold a new restaurant site from the secure boilerplate (defaults to English):
 
 ```bash
 npm run create-restaurant <slug>
 ```
 
+To create a restaurant with a specific language template (e.g., Japanese), you must use the `--` separator to pass flags to the underlying script:
+
+```bash
+npm run create-restaurant <slug> -- -jp
+```
+
 **What this does:**
 
 1. **Scaffolding:** Creates a new directory in `apps/web/restaurants/<slug>`.
-2. **Configuration:** Copies and customizes the `data.json` template (updates UID, name, and image paths).
+2. **Configuration:** Copies and customizes the `data.json` template (updates UID, name, and image paths). If `-jp` is provided, it uses the Japanese template (`data-jp.json`).
 3. **Assets:** Clones the boilerplate image library into both the local restaurant folder and the Next.js `public` directory.
 4. **Registration:** Automatically adds the new slug to the `validSlugs` array in `apps/web/proxy.ts` to enable routing.
 

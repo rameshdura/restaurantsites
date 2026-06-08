@@ -24,7 +24,7 @@ const mapSeoData = (data: any): Partial<SiteBuilderData> => ({
     data.seo?.companyDescription || data.seo?.description || "",
   ogLocale: data.social?.ogLocale || "en_US",
   twitterCard: data.social?.twitterCard || "summary_large_image",
-  twitterSite: data.social?.twitterSite || "",
+  twitterSite: data.social?.twitterSite || data.socialTwitter || "",
   socialInstagram: data.socialInstagram || "",
   socialFacebook: data.socialFacebook || "",
   socialTwitter: data.socialTwitter || "",
@@ -41,9 +41,10 @@ const mapLocalSeoData = (data: any): Partial<SiteBuilderData> => ({
   placeId: data.localSEO?.placeId || "",
   googleMapsUrl: data.localSEO?.googleMapsUrl || "",
   embedUrl: data.localSEO?.embedUrl || "",
-  lat: data.contact?.location?.lat || 0,
-  lng: data.contact?.location?.lng || 0,
+  lat: data.location?.lat || data.contact?.location?.lat || 0,
+  lng: data.location?.lng || data.contact?.location?.lng || 0,
   timezone: data.localSEO?.timezone || "Asia/Tokyo",
+  neighborhood: data.localSEO?.neighborhood || data.neighborhood || "",
   priceRange: data.schema?.priceRange || "$$",
   cuisineTypes: data.schema?.servesCuisine || [],
   acceptsReservations: !!data.schema?.acceptsReservations,
@@ -165,7 +166,14 @@ export function mapDataJsonToBuilder(data: any): Partial<SiteBuilderData> {
     reviews: data.reviews || [],
     videos: data.videos || [],
     virtualTour: data.virtualTour || "",
-    advancedSchema: data.advancedSchema || {},
+    advancedSchema: {
+      ...(data.advancedSchema || {}),
+      numberOfEmployees:
+        data.numberOfEmployees || data.advancedSchema?.numberOfEmployees || 0,
+      knowsLanguage:
+        data.knowsLanguage || data.advancedSchema?.knowsLanguage || [],
+      cuisineType: data.cuisineType || data.advancedSchema?.cuisineType || "",
+    },
   }
 }
 
@@ -204,6 +212,7 @@ export function mapBuilderToDataJson(formData: SiteBuilderData): any {
       ogImage: formData.coverImage,
       ogLocale: formData.ogLocale,
       twitterCard: formData.twitterCard,
+      twitterSite: formData.twitterSite,
       sameAs: formData.sameAs,
     },
     schema: {
@@ -216,6 +225,7 @@ export function mapBuilderToDataJson(formData: SiteBuilderData): any {
       aggregateRating: formData.aggregateRating,
     },
     localSEO: {
+      neighborhood: formData.neighborhood,
       city: formData.city,
       region: formData.region,
       country: formData.country,
@@ -231,6 +241,14 @@ export function mapBuilderToDataJson(formData: SiteBuilderData): any {
         alt: `${formData.siteName} logo`,
         width: 200,
         height: 200,
+      },
+      heroImage: {
+        url: formData.heroImage,
+        alt: `${formData.siteName} hero`,
+      },
+      coverImage: {
+        url: formData.coverImage,
+        alt: `${formData.siteName} cover`,
       },
       gallery: formData.imagesGallery,
       featured: (formData.imagesFeatured ?? []).map((img, i) => ({
@@ -293,9 +311,57 @@ export function mapBuilderToDataJson(formData: SiteBuilderData): any {
         allergens: [],
       }))
     ),
-    about: {
-      representative: formData.aboutRepresentative,
+    hero: {
+      slides: formData.heroSlides,
     },
+    about: {
+      title: formData.aboutTitle,
+      content: formData.aboutContent,
+      shortDescription: formData.aboutShortDescription,
+      mission: formData.aboutMission,
+      philosophy: formData.aboutPhilosophy,
+      additionalContent: formData.aboutAdditionalContent,
+      foundedYear: formData.advancedSchema?.foundedDate
+        ? parseInt(formData.advancedSchema.foundedDate)
+        : undefined,
+      foundingLocation: formData.advancedSchema?.foundingLocation,
+      founder: formData.aboutRepresentative,
+      awards: formData.awards,
+      images: formData.aboutImages.map((img) => img.url),
+      image: formData.aboutImage,
+      team: formData.team,
+    },
+    location: {
+      lat: formData.lat,
+      lng: formData.lng,
+      mapsUrl: formData.googleMapsUrl,
+      embedUrl: formData.embedUrl,
+      address: formData.address,
+      plusCode: "",
+    },
+    reservation: {
+      acceptsReservations: formData.acceptsReservations,
+      reservationMethods: formData.services?.reservationMethods || [],
+      onlineBookingUrl: formData.services?.onlineBookingUrl || "",
+      minimumPartySize: 1,
+      maximumPartySize: 20,
+      largeGroups: formData.features?.goodForGroups || false,
+      largeGroupCapacity: 30,
+      privateDining: {
+        available: formData.features?.privateDining || false,
+        capacity: formData.features?.privateDiningCapacity || 0,
+        minimumSpend: "",
+        description: formData.features?.privateDiningDescription || "",
+      },
+    },
+    socialInstagram: formData.socialInstagram,
+    socialFacebook: formData.socialFacebook,
+    socialTwitter: formData.socialTwitter,
+    socialTabelog: formData.socialTabelog,
+    numberOfEmployees:
+      formData.advancedSchema?.numberOfEmployees || formData.numberOfEmployees,
+    knowsLanguage: formData.advancedSchema?.knowsLanguage || [],
+    cuisineType: formData.advancedSchema?.cuisineType || "",
     pages: {
       home: {
         id: "home",

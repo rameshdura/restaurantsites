@@ -14,13 +14,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const workspaceRoot = path.resolve(__dirname, '..');
 
-// Get slug from CLI args
-const slug = process.argv[2];
+// Get args from CLI
+const args = process.argv.slice(2);
+const slug = args.find(arg => !arg.startsWith('-'));
+const isJp = args.includes('-jp');
 
 if (!slug) {
   console.error('\x1b[31m%s\x1b[0m', 'Error: Please specify a restaurant slug.');
-  console.error('Usage: npm run create-restaurant <slug>');
-  console.error('Example: npm run create-restaurant mybakery');
+  console.error('Usage: npm run create-restaurant <slug> [-jp|-en]');
+  console.error('Example: npm run create-restaurant mybakery -jp');
   process.exit(1);
 }
 
@@ -34,7 +36,8 @@ if (!slugRegex.test(slug)) {
 
 // Define secure template source paths
 const boilerplateDir = path.join(workspaceRoot, 'templates', 'restaurant-boilerplate');
-const templateDataJson = path.join(boilerplateDir, 'data.json');
+const templateDataJsonName = isJp ? 'data-jp.json' : 'data.json';
+const templateDataJson = path.join(boilerplateDir, templateDataJsonName);
 const templateImagesDir = path.join(boilerplateDir, 'images');
 
 // Define targets
@@ -96,8 +99,9 @@ try {
       .replace(/"uid":\s*"ramen_taro"/g, `"uid": "${slug}"`)
       .replace(/\/images\/restaurants\/ramen-taro\//g, `/images/restaurants/${slug}/`);
 
-    // Replace occurrences of "Ramen Taro" with the formatted name
+    // Replace occurrences of "Ramen Taro" and "ラーメン太郎" with the formatted name
     dataContent = dataContent.replace(/Ramen Taro/g, formattedName);
+    dataContent = dataContent.replace(/ラーメン太郎/g, formattedName);
 
     fs.writeFileSync(dataJsonPath, dataContent, 'utf8');
     console.log('\x1b[32m%s\x1b[0m', `✔ Customized data.json successfully!`);

@@ -15,6 +15,7 @@
     "currency": "JPY"
   },
   "seo": {
+    "canonical": "",
     "title": "Ramen Taro | Authentic Indian & Nepali Food in Tokyo",
     "description": "Savor authentic Indian curries, hand-crafted Nepali momos, and traditional tandoori dishes at Ramen Taro in Shinbashi, Tokyo. A true Himalayan experience.",
     "keywords": [
@@ -651,7 +652,7 @@
     },
     "about": {
       "id": "about",
-      "coverImage": null,
+      "coverImage": "/images/restaurants/ramen-taro/cover/cover-1.jpg",
       "sections": [
         {
           "id": "about-full",
@@ -680,7 +681,7 @@
     },
     "menu": {
       "id": "menu",
-      "coverImage": null,
+      "coverImage": "/images/restaurants/ramen-taro/cover/cover-1.jpg",
       "sections": [
         {
           "id": "full-menu",
@@ -697,7 +698,7 @@
     },
     "contact": {
       "id": "contact",
-      "coverImage": null,
+      "coverImage": "/images/restaurants/ramen-taro/cover/cover-1.jpg",
       "sections": [
         {
           "id": "contact-full",
@@ -842,5 +843,48 @@
       "label": "Table 2",
       "persons": 4
     }
-  ]
+  ],
+  "hero": {
+    "slides": [
+      {
+        "id": "slide-1",
+        "image": "",
+        "title": "",
+        "subtitle": "",
+        "ctaText": "",
+        "ctaLink": "",
+        "alt": ""
+      }
+    ]
+  },
+  "location": {
+    "lat": 0,
+    "lng": 0,
+    "mapsUrl": "",
+    "embedUrl": "",
+    "address": "",
+    "plusCode": ""
+  },
+  "socialInstagram": "",
+  "socialFacebook": "",
+  "socialTwitter": "",
+  "socialTabelog": "",
+  "reservation": {
+    "acceptsReservations": false,
+    "reservationMethods": [],
+    "onlineBookingUrl": "",
+    "minimumPartySize": 1,
+    "maximumPartySize": 20,
+    "largeGroups": false,
+    "largeGroupCapacity": 0,
+    "privateDining": {
+      "available": false,
+      "capacity": 0,
+      "minimumSpend": "",
+      "description": ""
+    }
+  },
+  "numberOfEmployees": 0,
+  "knowsLanguage": [],
+  "cuisineType": ""
 }
