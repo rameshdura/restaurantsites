@@ -112,8 +112,9 @@ export function TableLandingClient({
 
         // If cookie matches current table, validate with backend
         if (existing && Number(existing.table) === Number(tableId)) {
+          const deviceId = getDeviceId()
           const res = await fetch(
-            `/api/table/session?session_id=${existing.session_id}`
+            `/api/table/session?session_id=${existing.session_id}&device_id=${deviceId}`
           )
           const data = await res.json()
           if (data.valid && data.session) {

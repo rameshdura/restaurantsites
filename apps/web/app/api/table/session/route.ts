@@ -7,6 +7,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const sessionId = searchParams.get("session_id")
+    const deviceId = searchParams.get("device_id")
 
     if (!sessionId) {
       return NextResponse.json(
@@ -44,10 +45,18 @@ export async function GET(request: Request) {
       return NextResponse.json({ valid: false, reason: "session_expired" })
     }
 
-    // Refresh last_activity timestamp (optional but good for tracking)
+    // Refresh last_activity timestamp and conditionally bind device_id
+    const updateData: any = { last_activity: new Date().toISOString() }
+    
+    // Bind device_id if session has none, allowing restored devices to "own" the session
+    if (!session.device_id && deviceId) {
+      updateData.device_id = deviceId
+      session.device_id = deviceId // update local object to return
+    }
+
     await supabase
       .from("table_sessions")
-      .update({ last_activity: new Date().toISOString() })
+      .update(updateData)
       .eq("session_id", sessionId)
 
     return NextResponse.json({ valid: true, session })
@@ -97,6 +106,20 @@ export async function POST(request: Request) {
         existingActiveSession.device_id &&
         device_id === existingActiveSession.device_id
       ) {
+        return NextResponse.json({
+          success: true,
+          session: existingActiveSession,
+        })
+      }
+
+      // If the session has NO device_id (e.g. created by owner), allow the first device to bind to it!
+      if (!existingActiveSession.device_id && device_id) {
+        await supabase
+          .from("table_sessions")
+          .update({ device_id })
+          .eq("session_id", existingActiveSession.session_id)
+
+        existingActiveSession.device_id = device_id
         return NextResponse.json({
           success: true,
           session: existingActiveSession,

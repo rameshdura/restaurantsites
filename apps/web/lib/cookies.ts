@@ -29,19 +29,23 @@ export function setCookie(name: string, value: string, seconds: number): void {
     date.setTime(date.getTime() + seconds * 1000)
     expires = "; expires=" + date.toUTCString()
   }
+  const isSecure = window.location.protocol === "https:"
   document.cookie =
     name +
     "=" +
     encodeURIComponent(value) +
     expires +
-    "; path=/; SameSite=Lax; Secure"
+    `; path=/; SameSite=Lax${isSecure ? "; Secure" : ""}`
 }
 
 export function deleteCookie(name: string): void {
   if (typeof document === "undefined") return
+  const isSecure = window.location.protocol === "https:"
   document.cookie =
     name +
-    "=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax; Secure"
+    `=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax${
+      isSecure ? "; Secure" : ""
+    }`
 }
 
 export function getSessionCookie(slug: string): RestaurantSession | null {
