@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { supabase } from "@/lib/supabase"
-import { ArrowLeft, Receipt, Clock, MapPin } from "lucide-react"
+import { ArrowLeft, Receipt, Clock, MapPin, QrCode, X } from "lucide-react"
 import { useRouter } from "next/navigation"
+import QRCode from "react-qr-code"
 
 import { MenuCategory } from "@/components/food-menu/types"
 
@@ -15,6 +16,7 @@ interface OwnerSessionDetailClientProps {
 
 interface TableSession {
   session_id: string
+  restaurant_slug?: string
   table_number: string
   status: string
   created_at: string
@@ -48,6 +50,15 @@ export function OwnerSessionDetailClient({
   const router = useRouter()
   const [session, setSession] = useState<TableSession | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [showQrModal, setShowQrModal] = useState(false)
+  const [domain, setDomain] = useState("")
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setDomain(window.location.origin)
+    }
+  }, [])
 
   const fetchSession = useCallback(async () => {
     setIsLoading(true)
@@ -100,13 +111,24 @@ export function OwnerSessionDetailClient({
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <div>
-          <h2 className="flex items-center gap-2 text-xl font-bold">
-            Transaction Details
-          </h2>
-          <p className="mt-1 max-w-[250px] overflow-hidden text-sm text-ellipsis whitespace-nowrap text-muted-foreground sm:max-w-none">
-            Session ID: <span className="font-mono text-xs">{sessionId}</span>
-          </p>
+        <div className="flex flex-1 items-center justify-between">
+          <div>
+            <h2 className="flex items-center gap-2 text-xl font-bold">
+              Transaction Details
+            </h2>
+            <p className="mt-1 max-w-[250px] overflow-hidden text-sm text-ellipsis whitespace-nowrap text-muted-foreground sm:max-w-none">
+              Session ID: <span className="font-mono text-xs">{sessionId}</span>
+            </p>
+          </div>
+          {session && (
+            <button
+              onClick={() => setShowQrModal(true)}
+              className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-all hover:bg-primary/90"
+            >
+              <QrCode className="h-4 w-4" />
+              <span className="hidden sm:inline">Restore Session</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -275,6 +297,33 @@ export function OwnerSessionDetailClient({
           </div>
         )}
       </main>
+
+      {/* Restore Session QR Modal */}
+      {showQrModal && session && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-xl relative">
+            <button
+              onClick={() => setShowQrModal(false)}
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-accent text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <div className="text-center">
+              <h3 className="mb-2 text-lg font-bold">Restore Session</h3>
+              <p className="mb-6 text-sm text-muted-foreground">
+                Have the customer scan this QR code to securely restore their session on their device.
+              </p>
+              <div className="mx-auto inline-block rounded-xl bg-white p-4">
+                <QRCode
+                  value={`${domain}/${session.restaurant_slug || "demo"}/table/${session.table_number}?restore_token=${session.session_id}`}
+                  size={200}
+                  level="M"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

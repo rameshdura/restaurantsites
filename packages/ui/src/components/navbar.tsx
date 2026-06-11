@@ -47,12 +47,14 @@ function setGoogleTranslateCookie(langCode: string) {
   date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
   document.cookie = `googtrans=/en/${langCode}; path=/; expires=${date.toUTCString()}`
   document.cookie = `googtrans=/en/${langCode}; path=/; domain=${window.location.hostname}; expires=${date.toUTCString()}`
+  document.cookie = `googtrans=/en/${langCode}; path=/; domain=.${window.location.hostname}; expires=${date.toUTCString()}`
 }
 
 function removeGoogleTranslateCookie() {
   document.cookie = "googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC"
   if (typeof window !== "undefined") {
     document.cookie = `googtrans=; path=/; domain=${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 UTC`
+    document.cookie = `googtrans=; path=/; domain=.${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 UTC`
   }
 }
 
@@ -63,10 +65,16 @@ function setSiteLangCookie(langCode: string) {
   const date = new Date()
   date.setTime(date.getTime() + 365 * 24 * 60 * 60 * 1000) // 1 year
   document.cookie = `site_lang=${langCode}; path=/; expires=${date.toUTCString()}`
+  document.cookie = `site_lang=${langCode}; path=/; domain=${window.location.hostname}; expires=${date.toUTCString()}`
+  document.cookie = `site_lang=${langCode}; path=/; domain=.${window.location.hostname}; expires=${date.toUTCString()}`
 }
 
 function removeSiteLangCookie() {
   document.cookie = "site_lang=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC"
+  if (typeof window !== "undefined") {
+    document.cookie = `site_lang=; path=/; domain=${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 UTC`
+    document.cookie = `site_lang=; path=/; domain=.${window.location.hostname}; expires=Thu, 01 Jan 1970 00:00:00 UTC`
+  }
 }
 
 function getInitialLang(defaultLanguage?: string): string {
@@ -139,17 +147,28 @@ export function Navbar({
 
   const [currentLang, setCurrentLang] = React.useState("default")
 
+  // useLayoutEffect fires synchronously after DOM mutations but BEFORE the
+  // browser paints. This lets us read sessionStorage and switch to "covering"
+  // state before the user ever sees a frame without the curtain — eliminating
+  // the flicker without causing a hydration mismatch (since the server and
+  // initial client state both start as "idle" / "").
+  React.useLayoutEffect(() => {
+    const savedLangName = sessionStorage.getItem("lang-transition-name")
+    if (savedLangName) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTargetLangName(savedLangName)
+      setLangTransitionState("covering")
+      sessionStorage.removeItem("lang-transition-name")
+    }
+  }, [])
+
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentLang(getInitialLang(defaultLanguage))
 
-    // Check for pending language transition from a reload
-    const savedLangName = sessionStorage.getItem("lang-transition-name")
-    if (savedLangName) {
-      setTargetLangName(savedLangName)
-      setLangTransitionState("covering")
-      sessionStorage.removeItem("lang-transition-name")
-
+    // If we're in "covering" state (set by layoutEffect above), schedule
+    // the curtain exit animation.
+    if (langTransitionState === "covering") {
       const timer1 = setTimeout(() => {
         setLangTransitionState("out")
       }, 2000)
@@ -163,7 +182,7 @@ export function Navbar({
         clearTimeout(timer2)
       }
     }
-  }, [defaultLanguage])
+  }, [defaultLanguage, langTransitionState])
   const pathname = usePathname()
   const langDropdownRef = React.useRef<HTMLDivElement>(null)
   const { getLink, slug } = useRestaurantLink()

@@ -18,8 +18,10 @@ import {
   Menu,
   ShoppingBag,
   X,
+  QrCode,
 } from "lucide-react"
 import Link from "next/link"
+import QRCode from "react-qr-code"
 import {
   Dialog,
   DialogContent,
@@ -106,6 +108,15 @@ export function OwnerTableDetailClient({
     "menu"
   )
   const [isSubmittingCart, setIsSubmittingCart] = useState(false)
+  const [showQrModal, setShowQrModal] = useState(false)
+  const [domain, setDomain] = useState("")
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setDomain(window.location.origin)
+    }
+  }, [])
 
   useEffect(() => {
     if (!isAddItemDialogOpen) {
@@ -476,7 +487,17 @@ export function OwnerTableDetailClient({
               </p>
             </div>
           </div>
-        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        {activeSession && (
+          <button
+            onClick={() => setShowQrModal(true)}
+            className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-1.5 text-xs font-semibold transition-all hover:bg-accent"
+          >
+            <QrCode className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Restore</span>
+          </button>
+        )}
         <button
           onClick={fetchTableData}
           disabled={isLoading}
@@ -488,6 +509,7 @@ export function OwnerTableDetailClient({
           Refresh
         </button>
       </div>
+    </div>
 
       <main className="mx-auto max-w-4xl space-y-8">
         {isLoading && sessions.length === 0 ? (
@@ -1314,6 +1336,33 @@ export function OwnerTableDetailClient({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Restore Session QR Modal */}
+      {showQrModal && activeSession && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-xl relative">
+            <button
+              onClick={() => setShowQrModal(false)}
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-accent text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <div className="text-center">
+              <h3 className="mb-2 text-lg font-bold">Restore Session</h3>
+              <p className="mb-6 text-sm text-muted-foreground">
+                Have the customer scan this QR code to securely restore their session on their device.
+              </p>
+              <div className="mx-auto inline-block rounded-xl bg-white p-4">
+                <QRCode
+                  value={`${domain}/${restaurantSlug}/table/${tableId}?restore_token=${activeSession.session_id}`}
+                  size={200}
+                  level="M"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

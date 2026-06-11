@@ -53,6 +53,7 @@ export default async function TablePage({ params }: TablePageProps) {
       tableLabel={tableLabel}
       currency={data.app?.currency || "USD"}
       categories={categories}
+      defaultLanguage={data.app?.language}
     />
   )
 }

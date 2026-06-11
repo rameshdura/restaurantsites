@@ -407,3 +407,59 @@ To ensure the menu remains functional even during unstable internet/database out
 2. **Optimistic UI:** When the user clicks "Add to Order", update the local state instantly without waiting for the API.
 3. **Queueing System:** If the network request fails, push the order update to a background queue. Once the connection is restored, the queue flushes the updates to the database sequentially.
 4. **Resilient Menu:** Wrap the entire `FoodMenu` and order logic in an **ErrorBoundary** and provide a "Syncing..." status indicator if the background connection is lost, rather than crashing or showing a 404.
+
+### Takeout and Delivery Architecture: The Virtual Tables Method
+To enable Takeout and Delivery across all restaurants in the monorepo without altering the existing backend API or the `table_sessions` database schema, we will use the **Virtual Tables** architecture. This perfectly reuses the existing `/[restaurantSlug]/table/[tableId]` dynamic routes, menu components, and cart functionality.
+
+#### 1. Configuration (`data.json`)
+Each restaurant's `data.json` will dictate whether these services are available. The UI will read:
+- `operations.services.takeout`: `true` / `false`
+- `operations.services.delivery`: `true` / `false`
+
+#### 2. The Landing / Menu Page UI
+- If enabled via the configuration, we will render distinct "Order Takeout" and "Order Delivery" buttons on the restaurant's home/menu page.
+- When a user clicks one of these buttons, the frontend does not ask for a physical table number. Instead, it securely generates a random **Virtual Table ID** within a specific range to identify the order type.
+
+#### 3. The Numbering Convention
+To ensure the backend naturally handles these without conflicts, we partition the integer `table_number` space:
+- **1 to 999:** Physical Dine-in Tables
+- **1000 to 4999:** Takeout Orders (e.g., `1042`)
+- **5000 to 9999:** Delivery Orders (e.g., `5108`)
+
+#### 4. Seamless Routing in the Monorepo
+- Upon generating the ID (e.g., `1042` for a takeout), the frontend pushes the user directly to `/[restaurantSlug]/table/1042`.
+- Because this relies on the standard Next.js dynamic routing structure, it automatically works for every restaurant deployed within the monorepo. The user lands on the item selection page and can immediately start adding items to their cart.
+
+#### 5. Instant Order ID & Session
+- The API creates a `table_session` for "Table 1042" without needing any code modifications.
+- Because this integer is unique to them, it acts as their **Customer Order ID** (e.g., "Your Order Number is #1042").
+- The database's UUID `session_id` handles the secure transaction internally, but the customer only ever interacts with the friendly virtual table number.
+
+#### 6. Kitchen & Owner Dashboard Adaptations
+- The Kitchen Display System (KDS) simply evaluates the `table_number` integer to deduce the order type and change the UI accordingly:
+  - **If `tableNumber < 1000`:** Display "Table 12"
+  - **If `tableNumber >= 1000 && tableNumber < 5000`:** Display "Takeout #1042" (and optionally tint the card color for visual separation)
+  - **If `tableNumber >= 5000`:** Display "Delivery #5108"
+- This allows staff to perfectly separate dine-in, takeout, and delivery with **zero backend or database changes**.
+
+---
+
+### Known Limitations & Edge Cases (Cookie-Based Sessions)
+
+The current architecture is highly optimized for frictionless, guest checkout ordering by relying on client-side cookies/local storage without requiring user accounts. However, this introduces several edge cases that should be addressed as the platform scales:
+
+#### 1. The "Single Device" Bottleneck (Shared Tables)
+- **The Flaw:** Sessions are tied to a specific `device_id`. If Person A starts a session at Table 12, Person B scanning the same QR code will get a "Table Occupied" error. Friends cannot add items to the same bill from their own phones simultaneously.
+- **Future Fix (Device Mimicking):** Provide an "Add Friend" or "Share Table" button on the customer's Food Menu. This generates a QR code containing `?restore_token=[sessionId]&friend_device=[deviceId]`. When a friend scans this, their phone copies both the session ID and the device ID, tricking the server into treating all friends as the same "device", allowing collaborative ordering on a single bill seamlessly.
+
+#### 2. Session Loss via Cleared Cache / In-App Browsers
+- **The Flaw:** If a user places an order via an in-app browser (e.g., Instagram) or clears their cache, they lose their session cookie. Because there are no user accounts, they lose access to their order status and digital receipt.
+- **Future Fix (Staff-Assisted Recovery):** Add a "Restore Session" / "Show QR" button on the owner dashboard's session detail view (`/owner/sessions/[sessionId]`). When clicked, it displays a QR code pointing to a public link (e.g., `/[restaurant]/table/[tableId]?restore_token=[sessionId]`). The user scans this from the staff's screen, and their device immediately saves the cookie and regains control of the session.
+
+#### 3. Device Switching
+- **The Flaw:** A user cannot start an order on their laptop and finish checkout on their phone, as the cart is trapped inside the local browser state of the originating device.
+- **Future Fix:** Reuse the exact same QR token logic from the Staff-Assisted Recovery. Provide a "Send Cart to Phone" button on the customer's UI that displays a session-restore QR code, allowing them to seamlessly transfer the session cookie from their laptop to their mobile device.
+
+#### 4. Malicious Hijacking
+- **The Flaw:** Currently, security relies on the impossibility of guessing a long UUID (`session_id`). However, if a user's session ID and device ID were somehow intercepted, their session could be manipulated.
+- **Future Fix:** Introduce OTP (One Time Password) verification via SMS for high-value orders or when joining an existing table session to provide a secondary layer of authentication.

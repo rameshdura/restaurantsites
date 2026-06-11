@@ -7,7 +7,9 @@ import {
   AlertTriangle,
   HandHelping,
   RotateCw,
+  X,
 } from "lucide-react"
+import QRCode from "react-qr-code"
 import {
   getSessionCookie,
   setSessionCookie,
@@ -15,6 +17,7 @@ import {
 } from "@/lib/cookies"
 import { MenuCategory } from "@/components/food-menu/types"
 import { FoodMenu } from "@/components/food-menu/food-menu"
+import { TableTopBar } from "./TableTopBar"
 
 interface TableLandingClientProps {
   restaurantName: string
@@ -24,6 +27,7 @@ interface TableLandingClientProps {
   tableLabel: string
   currency: string
   categories: MenuCategory[]
+  defaultLanguage?: string
 }
 
 /* ── Device fingerprint helpers ── */
@@ -47,6 +51,7 @@ export function TableLandingClient({
   tableLabel,
   currency,
   categories,
+  defaultLanguage,
 }: TableLandingClientProps) {
   const [session, setSession] = useState<Record<string, unknown> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -58,6 +63,15 @@ export function TableLandingClient({
   const [occupiedMessage, setOccupiedMessage] = useState("")
   const [retryCountdown, setRetryCountdown] = useState(0)
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const [showShareModal, setShowShareModal] = useState(false)
+  const [domain, setDomain] = useState("")
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setDomain(window.location.origin)
+    }
+  }, [])
 
   useEffect(() => {
     if (!session) {
@@ -72,6 +86,28 @@ export function TableLandingClient({
     async function initSession() {
       setIsLoading(true)
       try {
+        if (typeof window !== "undefined") {
+          const params = new URLSearchParams(window.location.search)
+          const restoreToken = params.get("restore_token")
+          const friendDevice = params.get("friend_device")
+
+          let modified = false
+          if (friendDevice) {
+            localStorage.setItem(DEVICE_ID_KEY, friendDevice)
+            modified = true
+          }
+          if (restoreToken) {
+            // Restore session valid for 4 hours
+            const expiresAt = Math.floor(Date.now() / 1000) + 4 * 60 * 60
+            setSessionCookie(restaurantSlug, restoreToken, Number(tableId), expiresAt)
+            modified = true
+          }
+
+          if (modified) {
+            window.history.replaceState({}, "", `/${restaurantSlug}/table/${tableId}`)
+          }
+        }
+
         const existing = getSessionCookie(restaurantSlug)
 
         // If cookie matches current table, validate with backend
@@ -218,6 +254,7 @@ export function TableLandingClient({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           session_id: (session as any).session_id,
           status: "closed",
         }),
@@ -244,12 +281,25 @@ export function TableLandingClient({
 
   return (
     <div className="relative flex min-h-svh flex-col overflow-x-clip bg-background text-foreground antialiased">
+      <TableTopBar
+        restaurantName={restaurantName}
+        logoUrl={logoUrl}
+        tableLabel={tableLabel}
+        defaultLanguage={defaultLanguage}
+        showLeaveTable={
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          !!session && !((session as any)?.orders?.items?.length > 0)
+        }
+        isLeaving={isLeaving}
+        onLeaveTable={handleLeaveTable}
+        onShareTable={session ? () => setShowShareModal(true) : undefined}
+      />
       {/* Dynamic Background Glows */}
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[100px]" />
       <div className="pointer-events-none absolute top-1/3 left-1/3 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-600/5 blur-[80px]" />
 
       {/* Main Container */}
-      <div className="relative z-10 flex flex-1 flex-col">
+      <div className="relative flex flex-1 flex-col">
         {isLoading ? (
           <div className="flex flex-1 flex-col items-center justify-center p-6 text-center select-none">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-muted/60 shadow-lg">
@@ -325,6 +375,7 @@ export function TableLandingClient({
               <div className="mb-10 flex flex-col items-center">
                 <div className="mb-6 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-primary/20 bg-primary/10 shadow-xl">
                   {logoUrl ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
                     <img
                       src={logoUrl}
                       alt={restaurantName}
@@ -436,45 +487,6 @@ export function TableLandingClient({
           )
         ) : (
           <div className="relative mx-auto flex w-full max-w-7xl flex-col py-8 select-none md:py-12">
-            {/* Leave Table Button (Only if no orders) */}
-            {session && !((session as any)?.orders?.items?.length > 0) && (
-              <div className="absolute top-4 right-4 z-20 sm:top-6 sm:right-6">
-                <button
-                  onClick={handleLeaveTable}
-                  disabled={isLeaving}
-                  className="flex items-center gap-1.5 rounded-full bg-destructive/10 px-4 py-2 text-xs font-bold text-destructive transition-colors hover:bg-destructive/20 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
-                >
-                  {isLeaving ? "Leaving..." : "Leave Table"}
-                </button>
-              </div>
-            )}
-
-            {/* Header / Table Identifier */}
-            <header className="mb-4 flex flex-row items-center justify-center gap-3 px-4 text-left sm:px-6 lg:flex-col lg:gap-0 lg:text-center">
-              {logoUrl && (
-                <div className="shrink-0 overflow-hidden rounded-full border-2 border-primary/20 bg-primary/5 shadow-md lg:mb-3">
-                  <img
-                    src={logoUrl}
-                    alt={restaurantName}
-                    className="h-14 w-14 object-cover lg:h-16 lg:w-16"
-                  />
-                </div>
-              )}
-              <div className="flex flex-col justify-center lg:items-center">
-                <h1 className="text-2xl font-black tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-                  {restaurantName}
-                </h1>
-                <div className="mt-0.5 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase lg:mt-1 lg:justify-center lg:gap-2 lg:text-sm">
-                  <Utensils className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
-                  <span>
-                    {tableLabel.toLowerCase().includes("table")
-                      ? tableLabel
-                      : `Table ${tableLabel}`}
-                  </span>
-                </div>
-              </div>
-            </header>
-
             {/* Main Content: Food Menu */}
             <main className="flex flex-col">
               <FoodMenu
@@ -501,6 +513,33 @@ export function TableLandingClient({
           </div>
         )}
       </div>
+
+      {/* Share Table / Add Friend Modal */}
+      {showShareModal && session && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-xl relative">
+            <button
+              onClick={() => setShowShareModal(false)}
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-accent text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <div className="text-center">
+              <h3 className="mb-2 text-lg font-bold">Share Table</h3>
+              <p className="mb-6 text-sm text-muted-foreground">
+                Have your friend scan this QR code. They will instantly join your table and can add items to your bill.
+              </p>
+              <div className="mx-auto inline-block rounded-xl bg-white p-4">
+                <QRCode
+                  value={`${domain}/${restaurantSlug}/table/${tableId}?restore_token=${session.session_id}&friend_device=${getDeviceId()}`}
+                  size={200}
+                  level="M"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
