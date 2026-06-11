@@ -86,6 +86,8 @@ export function TableLandingClient({
     async function initSession() {
       setIsLoading(true)
       try {
+        let sessionIdToFetch: string | null = null;
+        
         if (typeof window !== "undefined") {
           const params = new URLSearchParams(window.location.search)
           const restoreToken = params.get("restore_token")
@@ -100,6 +102,7 @@ export function TableLandingClient({
             // Restore session valid for 4 hours
             const expiresAt = Math.floor(Date.now() / 1000) + 4 * 60 * 60
             setSessionCookie(restaurantSlug, restoreToken, Number(tableId), expiresAt)
+            sessionIdToFetch = restoreToken
             modified = true
           }
 
@@ -111,10 +114,14 @@ export function TableLandingClient({
         const existing = getSessionCookie(restaurantSlug)
 
         // If cookie matches current table, validate with backend
-        if (existing && Number(existing.table) === Number(tableId)) {
+        if (!sessionIdToFetch && existing && Number(existing.table) === Number(tableId)) {
+          sessionIdToFetch = existing.session_id
+        }
+
+        if (sessionIdToFetch) {
           const deviceId = getDeviceId()
           const res = await fetch(
-            `/api/table/session?session_id=${existing.session_id}&device_id=${deviceId}`
+            `/api/table/session?session_id=${sessionIdToFetch}&device_id=${deviceId}`
           )
           const data = await res.json()
           if (data.valid && data.session) {
