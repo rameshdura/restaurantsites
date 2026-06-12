@@ -463,3 +463,37 @@ The current architecture is highly optimized for frictionless, guest checkout or
 #### 4. Malicious Hijacking
 - **The Flaw:** Currently, security relies on the impossibility of guessing a long UUID (`session_id`). However, if a user's session ID and device ID were somehow intercepted, their session could be manipulated.
 - **Future Fix:** Introduce OTP (One Time Password) verification via SMS for high-value orders or when joining an existing table session to provide a secondary layer of authentication.
+
+## Database Maintenance
+
+### Automated Session Cleanup (Supabase pg_cron)
+
+To keep your `table_sessions` table clean and optimized, you should periodically purge old, abandoned sessions that have no orders associated with them. 
+
+You can automate this directly in Supabase using the `pg_cron` extension. Run the following query once in your **Supabase Dashboard -> SQL Editor**:
+
+```sql
+-- Enable the pg_cron extension if it's not already enabled
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+
+-- Schedule a job to run every Sunday at midnight (0 0 * * 0)
+SELECT cron.schedule(
+  'cleanup_empty_abandoned_sessions',
+  '0 0 * * 0',
+  $$
+  DELETE FROM table_sessions
+  WHERE status IN ('closed', 'completed')
+    AND created_at < NOW() - INTERVAL '7 days'
+    AND (orders->>'items' = '[]' OR orders->>'items' IS NULL);
+  $$
+);
+```
+
+**What this does:**
+1. Runs automatically once a week.
+2. Checks for sessions that are closed/completed.
+3. Checks that they are at least 7 days old (provides a buffer for analytics or resolving disputes).
+4. Checks that the `orders` column is empty (`[]` or `NULL`).
+5. Permanently deletes matching rows to free up space.
+
+*(Note: You can view scheduled jobs with `SELECT * FROM cron.job;` and remove this job with `SELECT cron.unschedule('cleanup_empty_abandoned_sessions');`)*

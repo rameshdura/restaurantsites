@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { getRestaurant } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
-import { OwnerPayClient } from "./OwnerPayClient"
+import { PayPageWrapper } from "./PayPageWrapper"
 
 interface OwnerPayPageProps {
   params: Promise<{ restaurant: string }>
@@ -33,7 +33,7 @@ export default async function OwnerPayPage({ params }: OwnerPayPageProps) {
   const menuItems = restaurant.menu || []
 
   return (
-    <OwnerPayClient
+    <PayPageWrapper
       restaurantSlug={decodedSlug}
       currency={restaurant.data.app?.currency || "USD"}
       menu={menuItems}

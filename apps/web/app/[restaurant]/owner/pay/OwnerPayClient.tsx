@@ -12,7 +12,9 @@ import {
   AlertTriangle,
   ArrowLeft,
   Camera,
+  Menu,
 } from "lucide-react"
+import { Button } from "@workspace/ui/components/button"
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
   JPY: "¥",
@@ -32,6 +34,7 @@ interface OwnerPayClientProps {
     name: string
     items: MenuItem[]
   }[]
+  onToggleSidebar?: () => void
 }
 
 interface TableSession {
@@ -62,6 +65,7 @@ function PayContent({
   currency,
   menu,
   menuCategories,
+  onToggleSidebar,
 }: OwnerPayClientProps) {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -74,6 +78,14 @@ function PayContent({
   const [scannedId, setScannedId] = useState<string | null>(initialSessionId)
   const [manualCode, setManualCode] = useState("")
   const [isScanning, setIsScanning] = useState(false)
+
+  // Sync searchParams session_id with scannedId if it changes in URL
+  useEffect(() => {
+    if (initialSessionId && initialSessionId !== scannedId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setScannedId(initialSessionId)
+    }
+  }, [initialSessionId, scannedId])
 
   const symbol = CURRENCY_SYMBOLS[currency] || ""
 
@@ -190,15 +202,27 @@ function PayContent({
     <div className="p-4 sm:p-8">
       {/* Header Controls */}
       <div className="mx-auto mb-8 flex max-w-7xl items-center justify-between">
-        <div>
-          <h2 className="flex items-center gap-2 text-xl font-bold">
-            <QrCode className="h-5 w-5 text-primary" />
-            Scan Guest Receipt
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Point your camera at the customer&apos;s checkout QR code to view
-            and finalize their bill.
-          </p>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 rounded-xl md:hidden"
+            onClick={onToggleSidebar}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+
+          <div className="h-6 w-px bg-border md:hidden" aria-hidden="true" />
+
+          <div>
+            <h2 className="flex items-center gap-2 text-xl font-bold">
+              <QrCode className="h-5 w-5 text-primary" />
+              Scan Guest Receipt
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Scan a guest&apos;s QR code to finalize their bill.
+            </p>
+          </div>
         </div>
       </div>
 

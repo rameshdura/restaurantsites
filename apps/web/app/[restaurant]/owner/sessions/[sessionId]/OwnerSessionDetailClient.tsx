@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { supabase } from "@/lib/supabase"
-import { ArrowLeft, Receipt, Clock, MapPin, QrCode, X } from "lucide-react"
+import { ArrowLeft, Receipt, Clock, MapPin, QrCode, X, Trash2, RotateCcw } from "lucide-react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import QRCode from "react-qr-code"
 
 import { MenuCategory } from "@/components/food-menu/types"
@@ -78,6 +79,50 @@ export function OwnerSessionDetailClient({
     }
   }, [sessionId])
 
+  const handleDeleteSession = async () => {
+    if (!confirm("Are you sure you want to permanently delete this session? This action cannot be undone.")) return
+    
+    setIsLoading(true)
+    try {
+      const { error } = await supabase
+        .from("table_sessions")
+        .delete()
+        .eq("session_id", sessionId)
+
+      if (error) throw error
+
+      if (session?.restaurant_slug && session?.table_number) {
+        router.push(`/${session.restaurant_slug}/owner/tables/${session.table_number}`)
+      } else {
+        router.back()
+      }
+    } catch (err: unknown) {
+      console.error("Error deleting session:", err)
+      alert(err instanceof Error ? err.message : "Failed to delete session.")
+      setIsLoading(false)
+    }
+  }
+
+  const handleReopenSession = async () => {
+    if (!confirm("Are you sure you want to mark this session as unpaid and reopen it?")) return
+
+    setIsLoading(true)
+    try {
+      const { error } = await supabase
+        .from("table_sessions")
+        .update({ status: "active" })
+        .eq("session_id", sessionId)
+
+      if (error) throw error
+
+      await fetchSession()
+    } catch (err: unknown) {
+      console.error("Error reopening session:", err)
+      alert(err instanceof Error ? err.message : "Failed to reopen session.")
+      setIsLoading(false)
+    }
+  }
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchSession()
@@ -121,13 +166,31 @@ export function OwnerSessionDetailClient({
             </p>
           </div>
           {session && (
-            <button
-              onClick={() => setShowQrModal(true)}
-              className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-all hover:bg-primary/90"
-            >
-              <QrCode className="h-4 w-4" />
-              <span className="hidden sm:inline">Restore Session</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleDeleteSession}
+                className="flex items-center gap-2 rounded-full border border-destructive/50 bg-destructive/10 px-4 py-2 text-sm font-bold text-destructive transition-all hover:bg-destructive hover:text-destructive-foreground"
+              >
+                <Trash2 className="h-4 w-4" />
+                <span className="hidden sm:inline">Delete</span>
+              </button>
+              {(session.status === "completed" || session.status === "closed") && (
+                <button
+                  onClick={handleReopenSession}
+                  className="flex items-center gap-2 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-4 py-2 text-sm font-bold text-emerald-600 transition-all hover:bg-emerald-500 hover:text-white dark:text-emerald-400"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  <span className="hidden sm:inline">Mark as Unpaid</span>
+                </button>
+              )}
+              <button
+                onClick={() => setShowQrModal(true)}
+                className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-all hover:bg-primary/90"
+              >
+                <QrCode className="h-4 w-4" />
+                <span className="hidden sm:inline">Restore</span>
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -319,6 +382,15 @@ export function OwnerSessionDetailClient({
                   size={200}
                   level="M"
                 />
+              </div>
+              <div className="mt-6">
+                <Link
+                  href={`${domain}/${session.restaurant_slug || "demo"}/table/${session.table_number}?restore_token=${session.session_id}`}
+                  target="_blank"
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  Or click here to open on this device
+                </Link>
               </div>
             </div>
           </div>

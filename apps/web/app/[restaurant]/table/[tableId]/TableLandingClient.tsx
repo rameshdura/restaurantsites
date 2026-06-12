@@ -87,6 +87,7 @@ export function TableLandingClient({
       setIsLoading(true)
       try {
         let sessionIdToFetch: string | null = null;
+        let isExplicitRestore = false;
         
         if (typeof window !== "undefined") {
           const params = new URLSearchParams(window.location.search)
@@ -103,6 +104,7 @@ export function TableLandingClient({
             const expiresAt = Math.floor(Date.now() / 1000) + 4 * 60 * 60
             setSessionCookie(restaurantSlug, restoreToken, Number(tableId), expiresAt)
             sessionIdToFetch = restoreToken
+            isExplicitRestore = true
             modified = true
           }
 
@@ -121,11 +123,11 @@ export function TableLandingClient({
         if (sessionIdToFetch) {
           const deviceId = getDeviceId()
           const res = await fetch(
-            `/api/table/session?session_id=${sessionIdToFetch}&device_id=${deviceId}`
+            `/api/table/session?session_id=${sessionIdToFetch}&device_id=${deviceId}&is_explicit=${isExplicitRestore}`
           )
           const data = await res.json()
           if (data.valid && data.session) {
-            if (data.session.status === "closed") {
+            if (!isExplicitRestore && (data.session.status === "closed" || data.session.status === "completed")) {
               // Stale cookie from a closed session.
               // Clear it so the user can start a new order.
               clearSessionCookie(restaurantSlug)

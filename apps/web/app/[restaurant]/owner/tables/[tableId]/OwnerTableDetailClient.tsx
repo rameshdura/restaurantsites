@@ -95,6 +95,8 @@ export function OwnerTableDetailClient({
   const [isUpdatingOrder, setIsUpdatingOrder] = useState<string | null>(null)
   const [isUpdatingServe, setIsUpdatingServe] = useState<string | null>(null)
   const [isUpdatingCook, setIsUpdatingCook] = useState<string | null>(null)
+  const [limitCount, setLimitCount] = useState(6)
+  const [hasMoreHistory, setHasMoreHistory] = useState(false)
 
   const [localCart, setLocalCart] = useState<
     {
@@ -223,16 +225,17 @@ export function OwnerTableDetailClient({
         .eq("restaurant_slug", restaurantSlug)
         .eq("table_number", Number(tableId))
         .order("created_at", { ascending: false })
-        .limit(6) // Fetch 1 active + 5 history
+        .limit(limitCount)
 
       if (error) throw error
       setSessions(data || [])
+      setHasMoreHistory((data?.length || 0) >= limitCount)
     } catch (err) {
       console.error("Error loading table details:", err)
     } finally {
       setIsLoading(false)
     }
-  }, [restaurantSlug, tableId])
+  }, [restaurantSlug, tableId, limitCount])
 
   useEffect(() => {
     fetchTableData()
@@ -242,8 +245,8 @@ export function OwnerTableDetailClient({
     (s) => s.status === "active" || s.status === "payment_pending"
   )
   const historySessions = sessions
-    .filter((s) => s.status === "closed" || s.status === "completed")
-    .slice(0, 5)
+    .filter((s) => s.status === "closed" || s.status === "completed" || s.status === "abandoned" || s.status === "cancelled")
+    .slice(0, limitCount - (activeSession ? 1 : 0))
   const isPacked = !!activeSession
 
   const handleFlushSession = () => setIsFlushDialogOpen(true)
@@ -905,7 +908,7 @@ export function OwnerTableDetailClient({
               <div className="border-b border-border bg-muted/20 p-6">
                 <h3 className="flex items-center gap-2 text-lg font-semibold">
                   <Clock className="h-5 w-5 text-primary" />
-                  Recent Transactions (Last 5)
+                  Recent Transactions
                 </h3>
               </div>
 
@@ -936,8 +939,8 @@ export function OwnerTableDetailClient({
                             {formatDate(session.created_at)}
                           </p>
                           <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                            Completed
+                            <span className={`inline-block h-1.5 w-1.5 rounded-full ${session.status === 'completed' || session.status === 'closed' ? 'bg-emerald-500' : 'bg-muted-foreground'}`}></span>
+                            <span className="capitalize">{session.status}</span>
                           </p>
                         </div>
                       </div>
@@ -955,6 +958,18 @@ export function OwnerTableDetailClient({
                       </div>
                     </Link>
                   ))}
+                  
+                  {hasMoreHistory && (
+                    <div className="p-4 text-center">
+                      <Button
+                        variant="ghost"
+                        onClick={() => setLimitCount(prev => prev + 10)}
+                        className="w-full text-muted-foreground hover:text-foreground"
+                      >
+                        Load More
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
             </section>
@@ -1358,6 +1373,15 @@ export function OwnerTableDetailClient({
                   size={200}
                   level="M"
                 />
+              </div>
+              <div className="mt-6">
+                <Link
+                  href={`${domain}/${restaurantSlug}/table/${tableId}?restore_token=${activeSession.session_id}`}
+                  target="_blank"
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  Or click here to open on this device
+                </Link>
               </div>
             </div>
           </div>

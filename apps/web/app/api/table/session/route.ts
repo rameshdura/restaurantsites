@@ -8,6 +8,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const sessionId = searchParams.get("session_id")
     const deviceId = searchParams.get("device_id")
+    const isExplicit = searchParams.get("is_explicit") === "true"
 
     if (!sessionId) {
       return NextResponse.json(
@@ -41,12 +42,12 @@ export async function GET(request: Request) {
 
     const expiresAt = new Date(session.expires_at).getTime()
     const now = Date.now()
-    if (expiresAt < now) {
+    if (expiresAt < now && !isExplicit) {
       return NextResponse.json({ valid: false, reason: "session_expired" })
     }
 
     // Refresh last_activity timestamp and conditionally bind device_id
-    const updateData: any = { last_activity: new Date().toISOString() }
+    const updateData: Record<string, string> = { last_activity: new Date().toISOString() }
     
     // Bind device_id if session has none, allowing restored devices to "own" the session
     if (!session.device_id && deviceId) {

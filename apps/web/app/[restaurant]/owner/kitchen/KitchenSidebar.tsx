@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import Link from "next/link"
 import {
   ChefHat,
   ClipboardList,
@@ -22,21 +22,20 @@ export function KitchenSidebar({
   onViewChange,
   onHeaderClick,
 }: KitchenSidebarProps) {
-  const router = useRouter()
-
   return (
     <div className="flex h-full w-full flex-col border-r border-border bg-card">
       <div className="border-b border-border p-4">
-        <button
+        <Link
+          href={`/${restaurantSlug}/owner/kitchen`}
           onClick={() => {
-            router.push(`/${restaurantSlug}/owner/kitchen`)
+            onViewChange("orders")
             onHeaderClick?.()
           }}
           className="flex items-center gap-2 text-lg font-bold transition-colors hover:text-primary"
         >
           <ChefHat className="h-5 w-5" />
           Kitchen
-        </button>
+        </Link>
       </div>
 
       <div className="flex-1 overflow-y-auto p-2">
