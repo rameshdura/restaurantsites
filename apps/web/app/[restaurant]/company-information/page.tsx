@@ -41,33 +41,47 @@ export default async function CompanyInformationPage({
 
   const coverImage = getImageSrc(
     slug,
-    data.pages?.company?.coverImage || data.hero?.slides?.[0]?.image
+    data.pages?.company?.coverImage ||
+      data.pages?.about?.coverImage ||
+      data.hero?.slides?.[0]?.image
   )
 
   const details = [
     {
-      label: translations.companyInformation.table.companyName,
+      label:
+        translations.companyInformation?.table?.companyName || "Company Name",
       value: info?.name,
     },
     {
-      label: translations.companyInformation.table.corporateNumber,
+      label:
+        translations.companyInformation?.table?.corporateNumber ||
+        "Corporate Number",
       value: info?.registrationNumber,
     },
     {
-      label: translations.companyInformation.table.headquartersAddress,
+      label:
+        translations.companyInformation?.table?.headquartersAddress ||
+        "Headquarters Address",
       value: info?.address,
     },
-    { label: translations.companyInformation.table.phone, value: info?.phone },
     {
-      label: translations.companyInformation.table.establishedDate,
+      label: translations.companyInformation?.table?.phone || "Phone",
+      value: info?.phone,
+    },
+    {
+      label:
+        translations.companyInformation?.table?.establishedDate ||
+        "Established Date",
       value: info?.establishedDate,
     },
     {
-      label: translations.companyInformation.table.capital,
+      label: translations.companyInformation?.table?.capital || "Capital",
       value: info?.capital,
     },
     {
-      label: translations.companyInformation.table.fiscalYearEnd,
+      label:
+        translations.companyInformation?.table?.fiscalYearEnd ||
+        "Fiscal Year End",
       value: info?.fiscalYearEnd,
     },
   ]
@@ -84,12 +98,26 @@ export default async function CompanyInformationPage({
       {coverImage && (
         <CoverSection
           image={coverImage}
-          title={translations.companyInformation.title}
-          subtitle={translations.companyInformation.subtitle}
+          title={
+            translations.companyInformation?.title || "Company Information"
+          }
+          subtitle={
+            translations.companyInformation?.subtitle || "Corporate Details"
+          }
         />
       )}
 
-      <main className={cn("flex-1", !coverImage ? "pt-32" : "pt-16", "pb-20")}>
+      <main className={cn("flex-1", !coverImage ? "pt-32" : "pt-8", "pb-20")}>
+        {!coverImage && (
+          <div className="mx-auto mb-12 max-w-7xl px-6 text-center">
+            <p className="mb-4 text-xs font-bold tracking-widest text-primary uppercase">
+              {translations.companyInformation?.subtitle || "Corporate Details"}
+            </p>
+            <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-6xl">
+              {translations.companyInformation?.title || "Company Information"}
+            </h1>
+          </div>
+        )}
         <div className="mx-auto max-w-4xl px-6">
           <div className="overflow-hidden rounded-3xl border bg-card shadow-sm">
             <div className="divide-y">
@@ -114,10 +142,11 @@ export default async function CompanyInformationPage({
 
           <div className="mt-12 text-center text-sm text-muted-foreground">
             <p>
-              {translations.companyInformation.inquiry.replace(
+              {translations.companyInformation?.inquiry?.replace(
                 "{phone}",
                 info?.phone || ""
-              )}
+              ) ||
+                `For any inquiries regarding corporate information, please contact us at ${info?.phone || ""}.`}
             </p>
           </div>
         </div>

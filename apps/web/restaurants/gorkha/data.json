@@ -6,7 +6,7 @@
   "tagline": "Taste the True Spirit of Nepal & India",
   "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
   "phone": "+81 3-8765-4321",
-  "email": "info@ramentaro.jp",
+  "email": "kals.future@gmail.com",
   "website": "",
   "foundingDate": "1985-01-01",
   "menuLink": "pdfmenu/ramen-taro-menu.pdf",
@@ -399,7 +399,72 @@
       "size": "Regular",
       "limited": false,
       "spiceLevel": 1,
-      "allergens": []
+      "allergens": [],
+      "options": [
+        {
+          "id": "cooking-style",
+          "name": "Cooking Style",
+          "selections": [
+            {
+              "id": "steamed",
+              "name": "Steamed",
+              "price": 0
+            },
+            {
+              "id": "fried",
+              "name": "Pan Fried",
+              "price": 100
+            },
+            {
+              "id": "jhol",
+              "name": "Jhol (Soup)",
+              "price": 150
+            }
+          ]
+        },
+        {
+          "id": "dipping-sauce",
+          "name": "Dipping Sauce",
+          "selections": [
+            {
+              "id": "tomato",
+              "name": "Spicy Tomato Chutney",
+              "price": 0
+            },
+            {
+              "id": "sesame",
+              "name": "Mild Sesame Sauce",
+              "price": 0
+            },
+            {
+              "id": "mint",
+              "name": "Mint Coriander",
+              "price": 50
+            }
+          ]
+        },
+        {
+          "id": "extra-toppings",
+          "name": "Extra Toppings",
+          "selections": [
+            {
+              "id": "none",
+              "name": "None",
+              "price": 0
+            },
+            {
+              "id": "cilantro",
+              "name": "Extra Cilantro",
+              "price": 0
+            },
+            {
+              "id": "chili-oil",
+              "name": "Chili Oil",
+              "price": 30
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "Sherpa Khaja Set",
@@ -415,7 +480,62 @@
       "size": "Regular",
       "limited": false,
       "spiceLevel": 0,
-      "allergens": []
+      "allergens": [],
+      "options": [
+        {
+          "id": "meat-choice",
+          "name": "Meat Choice",
+          "selections": [
+            {
+              "id": "chicken",
+              "name": "Chicken",
+              "price": 0
+            },
+            {
+              "id": "goat",
+              "name": "Goat",
+              "price": 200
+            }
+          ]
+        },
+        {
+          "id": "rice-type",
+          "name": "Beaten Rice Type",
+          "selections": [
+            {
+              "id": "white",
+              "name": "White Beaten Rice",
+              "price": 0
+            },
+            {
+              "id": "brown",
+              "name": "Brown Beaten Rice",
+              "price": 50
+            }
+          ]
+        },
+        {
+          "id": "spice-level",
+          "name": "Curry Spice Level",
+          "selections": [
+            {
+              "id": "mild",
+              "name": "Mild",
+              "price": 0
+            },
+            {
+              "id": "medium",
+              "name": "Medium",
+              "price": 0
+            },
+            {
+              "id": "hot",
+              "name": "Spicy",
+              "price": 0
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "Veg Samosa Chaat",
@@ -431,7 +551,51 @@
       "size": "Regular",
       "limited": false,
       "spiceLevel": 0,
-      "allergens": []
+      "allergens": [],
+      "options": [
+        {
+          "id": "spice-level",
+          "name": "Chaat Spice Level",
+          "selections": [
+            {
+              "id": "mild",
+              "name": "Mild",
+              "price": 0
+            },
+            {
+              "id": "medium",
+              "name": "Medium",
+              "price": 0
+            },
+            {
+              "id": "hot",
+              "name": "Spicy",
+              "price": 0
+            }
+          ]
+        },
+        {
+          "id": "addon",
+          "name": "Add-ons",
+          "selections": [
+            {
+              "id": "none",
+              "name": "None",
+              "price": 0
+            },
+            {
+              "id": "yogurt",
+              "name": "Extra Yogurt",
+              "price": 50
+            },
+            {
+              "id": "tamarind",
+              "name": "Extra Tamarind Chutney",
+              "price": 50
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "Himalayan Goat Curry (Khasi ko Masu)",
@@ -447,7 +611,30 @@
       "size": "Regular",
       "limited": false,
       "spiceLevel": 1,
-      "allergens": []
+      "allergens": [],
+      "options": [
+        {
+          "id": "side-choice",
+          "name": "Side Choice",
+          "selections": [
+            {
+              "id": "naan",
+              "name": "Plain Naan",
+              "price": 0
+            },
+            {
+              "id": "rice",
+              "name": "Basmati Rice",
+              "price": 0
+            },
+            {
+              "id": "garlic-naan",
+              "name": "Garlic Naan",
+              "price": 150
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "Classic Chicken Tikka Masala",
@@ -463,7 +650,61 @@
       "size": "Regular",
       "limited": false,
       "spiceLevel": 0,
-      "allergens": []
+      "allergens": [],
+      "options": [
+        {
+          "id": "spice-level",
+          "name": "Spice Level",
+          "selections": [
+            {
+              "id": "mild",
+              "name": "Mild",
+              "price": 0
+            },
+            {
+              "id": "medium",
+              "name": "Medium",
+              "price": 0
+            },
+            {
+              "id": "hot",
+              "name": "Hot",
+              "price": 0
+            },
+            {
+              "id": "extra-hot",
+              "name": "Extra Hot",
+              "price": 50
+            }
+          ]
+        },
+        {
+          "id": "side-choice",
+          "name": "Side Choice",
+          "selections": [
+            {
+              "id": "naan",
+              "name": "Plain Naan",
+              "price": 0
+            },
+            {
+              "id": "rice",
+              "name": "Basmati Rice",
+              "price": 0
+            },
+            {
+              "id": "garlic-naan",
+              "name": "Garlic Naan",
+              "price": 150
+            },
+            {
+              "id": "cheese-naan",
+              "name": "Cheese Naan",
+              "price": 250
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "Palak Paneer",
@@ -479,7 +720,51 @@
       "size": "Regular",
       "limited": false,
       "spiceLevel": 0,
-      "allergens": []
+      "allergens": [],
+      "options": [
+        {
+          "id": "side-choice",
+          "name": "Side Choice",
+          "selections": [
+            {
+              "id": "naan",
+              "name": "Plain Naan",
+              "price": 0
+            },
+            {
+              "id": "garlic-naan",
+              "name": "Garlic Naan",
+              "price": 150
+            },
+            {
+              "id": "rice",
+              "name": "Basmati Rice",
+              "price": 0
+            }
+          ]
+        },
+        {
+          "id": "spice-level",
+          "name": "Spice Level",
+          "selections": [
+            {
+              "id": "mild",
+              "name": "Mild",
+              "price": 0
+            },
+            {
+              "id": "medium",
+              "name": "Medium",
+              "price": 0
+            },
+            {
+              "id": "hot",
+              "name": "Spicy",
+              "price": 0
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "Everest Dal Bhat Thali",
@@ -495,7 +780,57 @@
       "size": "Regular",
       "limited": false,
       "spiceLevel": 0,
-      "allergens": []
+      "allergens": [],
+      "options": [
+        {
+          "id": "rice-type",
+          "name": "Rice Type",
+          "selections": [
+            {
+              "id": "basmati",
+              "name": "Basmati Rice",
+              "price": 0
+            },
+            {
+              "id": "brown",
+              "name": "Brown Rice",
+              "price": 100
+            }
+          ]
+        },
+        {
+          "id": "ghee",
+          "name": "Ghee / Butter",
+          "selections": [
+            {
+              "id": "no",
+              "name": "No Extra Ghee",
+              "price": 0
+            },
+            {
+              "id": "yes",
+              "name": "Add Ghee",
+              "price": 50
+            }
+          ]
+        },
+        {
+          "id": "papadam",
+          "name": "Papadam",
+          "selections": [
+            {
+              "id": "1pc",
+              "name": "1 Piece",
+              "price": 0
+            },
+            {
+              "id": "2pc",
+              "name": "2 Pieces",
+              "price": 50
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "Mango Lassi",
@@ -511,7 +846,25 @@
       "size": "Regular",
       "limited": false,
       "spiceLevel": 0,
-      "allergens": []
+      "allergens": [],
+      "options": [
+        {
+          "id": "size",
+          "name": "Size",
+          "selections": [
+            {
+              "id": "regular",
+              "name": "Regular",
+              "price": 0
+            },
+            {
+              "id": "large",
+              "name": "Large",
+              "price": 200
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "Warm Gulab Jamun",
@@ -527,7 +880,41 @@
       "size": "Regular",
       "limited": false,
       "spiceLevel": 0,
-      "allergens": []
+      "allergens": [],
+      "options": [
+        {
+          "id": "nuts",
+          "name": "Nuts Topping",
+          "selections": [
+            {
+              "id": "with-nuts",
+              "name": "With Mixed Nuts",
+              "price": 0
+            },
+            {
+              "id": "no-nuts",
+              "name": "No Nuts (Allergy)",
+              "price": 0
+            }
+          ]
+        },
+        {
+          "id": "sweetness",
+          "name": "Sweetness",
+          "selections": [
+            {
+              "id": "normal",
+              "name": "Normal Sweetness",
+              "price": 0
+            },
+            {
+              "id": "less",
+              "name": "Less Sweet",
+              "price": 0
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "Kheer (Himalayan Rice Pudding)",
@@ -543,7 +930,41 @@
       "size": "Regular",
       "limited": false,
       "spiceLevel": 0,
-      "allergens": []
+      "allergens": [],
+      "options": [
+        {
+          "id": "nuts",
+          "name": "Nuts Topping",
+          "selections": [
+            {
+              "id": "with-nuts",
+              "name": "With Mixed Nuts",
+              "price": 0
+            },
+            {
+              "id": "no-nuts",
+              "name": "No Nuts (Allergy)",
+              "price": 0
+            }
+          ]
+        },
+        {
+          "id": "sweetness",
+          "name": "Sweetness",
+          "selections": [
+            {
+              "id": "normal",
+              "name": "Normal Sweetness",
+              "price": 0
+            },
+            {
+              "id": "less",
+              "name": "Less Sweet",
+              "price": 0
+            }
+          ]
+        }
+      ]
     }
   ],
   "about": {
@@ -723,7 +1144,7 @@
   "contact": {
     "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
     "phone": "+81 3-8765-4321",
-    "email": "info@ramentaro.jp",
+    "email": "kals.future@gmail.com",
     "location": {
       "lat": 35.7394006,
       "lng": 139.4449135,

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import { MenuItem } from "./types"
 import { Plus, Minus } from "lucide-react"
@@ -19,7 +19,12 @@ interface MenuItemCardProps {
   tableMode?: boolean
   currentQty?: number
   currentNotes?: string
-  onUpdateQty?: (qty: number, notes: string) => void
+  onUpdateQty?: (
+    qty: number,
+    notes: string,
+    selectedOptions?: Record<string, string>
+  ) => void
+  defaultLanguage?: string
 }
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
@@ -38,7 +43,10 @@ export function MenuItemCard({
   tableMode = false,
   currentQty = 0,
   onUpdateQty,
+  defaultLanguage,
 }: MenuItemCardProps) {
+  const isJA = defaultLanguage?.toUpperCase() === "JA"
+
   const {
     name,
     secondaryName,
@@ -48,6 +56,7 @@ export function MenuItemCard({
     isVegetarian,
     isSpicy,
     isPopular,
+    options,
   } = item
 
   const symbol = currency ? CURRENCY_SYMBOLS[currency] || "" : ""
@@ -56,9 +65,35 @@ export function MenuItemCard({
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [noteInput, setNoteInput] = useState("")
   const [localQty, setLocalQty] = useState(1)
+  const [selectedOptions, setSelectedOptions] = useState<
+    Record<string, string>
+  >({})
+
+  // Initialize selected options if not set
+  useEffect(() => {
+    if (options && isDialogOpen) {
+      const initialOptions: Record<string, string> = {}
+      options.forEach((opt) => {
+        if (opt.selections && opt.selections.length > 0 && opt.selections[0]) {
+          initialOptions[opt.id] = opt.selections[0].id // default to first option
+        }
+      })
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedOptions(initialOptions)
+    }
+  }, [options, isDialogOpen])
+
+  const itemBasePrice = Number(price) || 0
+  const optionsPrice =
+    options?.reduce((total, opt) => {
+      const selectedId = selectedOptions[opt.id]
+      const selection = opt.selections.find((s) => s.id === selectedId)
+      return total + (Number(selection?.price) || 0)
+    }, 0) || 0
+  const totalItemPrice = itemBasePrice + optionsPrice
 
   const handleAddToCart = () => {
-    onUpdateQty?.(currentQty + localQty, noteInput)
+    onUpdateQty?.(currentQty + localQty, noteInput, selectedOptions)
     setIsDialogOpen(false)
     setNoteInput("")
     setLocalQty(1)
@@ -128,17 +163,17 @@ export function MenuItemCard({
           <div className="mt-auto flex flex-wrap gap-1.5">
             {isPopular && (
               <span className="inline-flex items-center rounded-full bg-primary/10 px-1.5 py-0 text-[9px] font-bold tracking-tighter text-primary uppercase">
-                Popular
+                {isJA ? "人気" : "Popular"}
               </span>
             )}
             {isVegetarian && (
               <span className="inline-flex items-center rounded-full bg-green-500/10 px-1.5 py-0 text-[9px] font-bold tracking-tighter text-green-600 uppercase">
-                Veg
+                {isJA ? "ベジ" : "Veg"}
               </span>
             )}
             {isSpicy && (
               <span className="inline-flex items-center rounded-full bg-red-500/10 px-1.5 py-0 text-[9px] font-bold tracking-tighter text-red-600 uppercase">
-                Spicy
+                {isJA ? "辛い" : "Spicy"}
               </span>
             )}
           </div>
@@ -151,7 +186,9 @@ export function MenuItemCard({
         </DialogHeader>
         <div className="grid gap-6 py-4">
           <div className="flex flex-col gap-2">
-            <Label className="text-sm font-semibold">Quantity</Label>
+            <Label className="text-sm font-semibold">
+              {isJA ? "数量" : "Quantity"}
+            </Label>
             <div className="flex items-center gap-4">
               <Button
                 variant="outline"
@@ -180,13 +217,65 @@ export function MenuItemCard({
               </Button>
             </div>
           </div>
+
+          {options && options.length > 0 && (
+            <div className="flex flex-col gap-4">
+              {options.map((option) => (
+                <div key={option.id} className="flex flex-col gap-2">
+                  <Label className="text-sm font-semibold">{option.name}</Label>
+                  <div className="flex flex-col gap-2">
+                    {option.selections?.map((selection) => {
+                      const isSelected =
+                        selectedOptions[option.id] === selection.id
+                      return (
+                        <div
+                          key={selection.id}
+                          className={`flex cursor-pointer items-center space-x-3 rounded-md border p-3 transition-colors ${isSelected ? "border-primary bg-primary/5" : "border-border hover:bg-accent/50"}`}
+                          onClick={() =>
+                            setSelectedOptions((prev) => ({
+                              ...prev,
+                              [option.id]: selection.id,
+                            }))
+                          }
+                        >
+                          <div
+                            className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${isSelected ? "border-primary" : "border-input"}`}
+                          >
+                            {isSelected && (
+                              <div className="h-2 w-2 rounded-full bg-primary" />
+                            )}
+                          </div>
+                          <div className="flex flex-1 items-center justify-between">
+                            <span className="text-sm leading-none font-medium">
+                              {selection.name}
+                            </span>
+                            {selection.price ? (
+                              <span className="text-sm text-muted-foreground">
+                                +{symbol}
+                                {Number(selection.price).toLocaleString()}
+                              </span>
+                            ) : null}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div className="flex flex-col gap-2">
             <Label htmlFor="notes" className="text-sm font-semibold">
-              Special Notes
+              {isJA ? "ご要望" : "Special Notes"}
             </Label>
             <Textarea
               id="notes"
-              placeholder="E.g. No onions, extra spicy..."
+              placeholder={
+                isJA
+                  ? "例：ネギ抜き、辛めなど..."
+                  : "E.g. No onions, extra spicy..."
+              }
               value={noteInput}
               onChange={(e) => setNoteInput(e.target.value)}
               className="min-h-[100px] resize-none"
@@ -198,8 +287,10 @@ export function MenuItemCard({
             onClick={handleAddToCart}
             className="w-full rounded-full py-6 text-base font-bold"
           >
-            Add {localQty} to Cart • {symbol}
-            {(Number(price) * localQty).toLocaleString()}
+            {isJA
+              ? `カートに追加 (${localQty}点) • ${symbol}`
+              : `Add ${localQty} to Cart • ${symbol}`}
+            {(totalItemPrice * localQty).toLocaleString()}
           </Button>
         </DialogFooter>
       </DialogContent>

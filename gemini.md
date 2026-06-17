@@ -327,6 +327,16 @@ You MUST output **only** a valid JSON object with this exact structure. Do NOT w
           "isSpicy": true | false,
           "spiceLevel": 0 | 1 | 2 | 3,
           "allergens": ["wheat", "pork", "egg", "soy", "shellfish", "dairy"],
+          "options": [
+            {
+              "id": "spice-level",
+              "name": "Spice Level",
+              "selections": [
+                { "id": "mild", "name": "Mild", "price": 0 },
+                { "id": "hot", "name": "Hot", "price": 50 }
+              ]
+            }
+          ],
           "calories": 850,
           "ingredients": ["ramen noodles", "pork broth", "chashu"],
           "available": true | false,
@@ -354,6 +364,16 @@ You MUST output **only** a valid JSON object with this exact structure. Do NOT w
       "isSpicy": true | false,
       "spiceLevel": 0,
       "allergens": [],
+          "options": [
+            {
+              "id": "spice-level",
+              "name": "Spice Level",
+              "selections": [
+                { "id": "mild", "name": "Mild", "price": 0 },
+                { "id": "hot", "name": "Hot", "price": 50 }
+              ]
+            }
+          ],
       "calories": 0,
       "ingredients": [],
       "available": true,
@@ -552,6 +572,7 @@ When food menu images are provided:
 6. **Spice level** — if chili pepper icons are shown, map: 1 pepper = 1, 2 = 2, 3 = 3
 7. **Derive menu items array** (`menu[]`) from the categories, generating IDs from names
 8. **Generate menu prices** — extract numerals; keep as string in `menuCategories` items, as number in `menu` items
+9. **Extract Options** — if an item has variations (like size, spice level, add-ons), structure them in an `options` array with `selections`.
 
 ### Step 4: Extract Data from Other Website Links
 From social media and website URLs:
@@ -584,7 +605,9 @@ The following fields are **arrays of objects** (multi-child). You must ensure ea
 | Parent Field | Child Fields | Notes |
 |---|---|---|
 | `menuCategories[]` | `name`, `items[]` | Each `items[]` entry has 15+ sub-fields |
-| `menuCategories[].items[]` | `name`, `description`, `price`, `category`, etc. | `category` should match parent `name` |
+| `menuCategories[].items[]` | `name`, `description`, `price`, `options[]`, etc. | Include `options` array for customizations |
+| `options[]` | `id`, `name`, `selections[]` | Modifier groups like "Size" |
+| `selections[]` | `id`, `name`, `price` | Choices within options |
 | `openingHours[]` | `day`, `lunch`, `lunchLO`, `dinner`, `dinnerLO`, `isClosed`, `notes` | Always include default values |
 | `team[]` | `name`, `role`, `image`, `bio`, `social`, `since` | `image` can be URL or null |
 | `reviews[]` | `id`, `author`, `rating`, `date`, `comment`, `source` | Generate `id` from name+date |

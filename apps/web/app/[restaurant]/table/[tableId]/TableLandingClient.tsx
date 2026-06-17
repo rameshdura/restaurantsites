@@ -65,6 +65,17 @@ export function TableLandingClient({
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const [showShareModal, setShowShareModal] = useState(false)
   const [domain, setDomain] = useState("")
+  const [showCustomerForm, setShowCustomerForm] = useState(false)
+  const [customerInfo, setCustomerInfo] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  })
+
+  const isJA = defaultLanguage?.toUpperCase() === "JA"
+  const isVirtualTable = Number(tableId) >= 1000
+  const isDelivery = Number(tableId) >= 10000
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -232,18 +243,20 @@ export function TableLandingClient({
     }
   }
 
-  const handleStartSession = async () => {
+  const handleStartSession = async (overridePersons?: number) => {
     setIsStartingSession(true)
     try {
       const deviceId = getDeviceId()
+      const p = overridePersons || Number(persons) || 1
       const res = await fetch(`/api/table/session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tableNumber: Number(tableId),
           restaurantSlug,
-          persons: Number(persons),
+          persons: p,
           device_id: deviceId,
+          customer_info: isVirtualTable ? customerInfo : null,
         }),
       })
       const data = await res.json()
@@ -333,7 +346,7 @@ export function TableLandingClient({
               <Utensils className="h-8 w-8 animate-bounce text-primary" />
             </div>
             <p className="mt-4 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-              Loading Table...
+              {isJA ? "テーブルを読み込み中..." : "Loading Table..."}
             </p>
           </div>
         ) : occupied ? (
@@ -346,7 +359,7 @@ export function TableLandingClient({
               </div>
 
               <h1 className="mb-2 text-2xl font-black tracking-tight text-foreground sm:text-3xl">
-                Table Occupied
+                {isJA ? "テーブル使用中" : "Table Occupied"}
               </h1>
               <p className="mb-1 text-base font-medium text-muted-foreground">
                 {tableLabel.toLowerCase().includes("table")
@@ -372,8 +385,12 @@ export function TableLandingClient({
                 className={`h-5 w-5 ${retryCountdown > 0 ? "" : "animate-none"}`}
               />
               {retryCountdown > 0
-                ? `Retry in ${formatCountdown(retryCountdown)}`
-                : "Retry Now"}
+                ? isJA
+                  ? `${formatCountdown(retryCountdown)}後に再試行`
+                  : `Retry in ${formatCountdown(retryCountdown)}`
+                : isJA
+                  ? "再試行"
+                  : "Retry Now"}
             </button>
 
             {/* Notify Staff info box */}
@@ -381,23 +398,137 @@ export function TableLandingClient({
               <div className="mb-2 flex items-center gap-2.5">
                 <HandHelping className="h-5 w-5 text-amber-500" />
                 <span className="text-sm font-bold text-foreground">
-                  Notify a Staff
+                  {isJA ? "スタッフを呼ぶ" : "Notify a Staff"}
                 </span>
               </div>
               <p className="text-[13px] leading-relaxed text-muted-foreground">
-                Please raise your hand or approach the nearest staff member for
-                assistance. They can clear the table session so you can start a
-                new order.
+                {isJA
+                  ? "お手数ですが、お近くのスタッフにお声がけください。テーブルセッションをクリアし、新しい注文を開始できるようにいたします。"
+                  : "Please raise your hand or approach the nearest staff member for assistance. They can clear the table session so you can start a new order."}
               </p>
             </div>
 
             <div className="mt-6 flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground/60">
               <Lock className="h-3.5 w-3.5 opacity-70" />
-              <span>One device per table session</span>
+              <span>
+                {isJA
+                  ? "1テーブルにつき1端末まで"
+                  : "One device per table session"}
+              </span>
             </div>
           </div>
         ) : !session ? (
-          !showPersonSelection ? (
+          showCustomerForm ? (
+            <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center p-6 text-center select-none">
+              <div className="mb-8 flex flex-col items-center">
+                <h1 className="mb-2 text-2xl font-black tracking-tight text-foreground">
+                  {isJA ? "お客様情報" : "Customer Details"}
+                </h1>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {isJA
+                    ? "連絡先を入力してください"
+                    : "Please enter your contact details"}
+                </p>
+              </div>
+              <div className="w-full space-y-4 text-left">
+                <div>
+                  <label className="mb-1 block text-sm font-semibold">
+                    {isJA ? "お名前" : "Name"}
+                  </label>
+                  <input
+                    type="text"
+                    value={customerInfo.name}
+                    onChange={(e) =>
+                      setCustomerInfo({ ...customerInfo, name: e.target.value })
+                    }
+                    placeholder={isJA ? "山田 太郎" : "John Doe"}
+                    className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-primary focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-semibold">
+                    {isJA ? "メールアドレス" : "Email"}
+                  </label>
+                  <input
+                    type="email"
+                    value={customerInfo.email}
+                    onChange={(e) =>
+                      setCustomerInfo({
+                        ...customerInfo,
+                        email: e.target.value,
+                      })
+                    }
+                    placeholder={isJA ? "taro@example.com" : "john@example.com"}
+                    className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-primary focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-semibold">
+                    {isJA ? "電話番号" : "Phone Number"}
+                  </label>
+                  <input
+                    type="tel"
+                    value={customerInfo.phone}
+                    onChange={(e) =>
+                      setCustomerInfo({
+                        ...customerInfo,
+                        phone: e.target.value,
+                      })
+                    }
+                    placeholder={isJA ? "090-1234-5678" : "+1 234 567 8900"}
+                    className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-primary focus:outline-none"
+                  />
+                </div>
+                {isDelivery && (
+                  <div>
+                    <label className="mb-1 block text-sm font-semibold">
+                      {isJA ? "お届け先住所" : "Delivery Address"}
+                    </label>
+                    <textarea
+                      value={customerInfo.address}
+                      onChange={(e) =>
+                        setCustomerInfo({
+                          ...customerInfo,
+                          address: e.target.value,
+                        })
+                      }
+                      placeholder={
+                        isJA ? "東京都渋谷区..." : "123 Main St, Apt 4B"
+                      }
+                      className="min-h-[80px] w-full rounded-xl border border-border bg-card px-4 py-3 text-sm focus:border-primary focus:outline-none"
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="mt-8 flex w-full gap-3">
+                <button
+                  onClick={() => setShowCustomerForm(false)}
+                  className="flex flex-1 items-center justify-center rounded-2xl border border-border bg-card py-4 font-bold transition-all hover:bg-accent active:scale-95"
+                >
+                  {isJA ? "戻る" : "Back"}
+                </button>
+                <button
+                  onClick={() => handleStartSession(1)}
+                  disabled={
+                    !customerInfo.name ||
+                    !customerInfo.email ||
+                    !customerInfo.phone ||
+                    (isDelivery && !customerInfo.address) ||
+                    isStartingSession
+                  }
+                  className="flex flex-[2] items-center justify-center rounded-2xl bg-primary py-4 font-bold text-primary-foreground transition-all hover:opacity-90 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
+                >
+                  {isStartingSession
+                    ? isJA
+                      ? "処理中..."
+                      : "Processing..."
+                    : isJA
+                      ? "次へ"
+                      : "Continue"}
+                </button>
+              </div>
+            </div>
+          ) : !showPersonSelection ? (
             <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center p-6 text-center select-none">
               <div className="mb-10 flex flex-col items-center">
                 <div className="mb-6 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-primary/20 bg-primary/10 shadow-xl">
@@ -416,33 +547,63 @@ export function TableLandingClient({
                   {restaurantName}
                 </h1>
                 <p className="text-lg font-medium text-muted-foreground">
-                  {tableLabel.toLowerCase().includes("table")
-                    ? tableLabel
-                    : `Table ${tableLabel}`}
+                  {Number(tableId) >= 10000
+                    ? isJA
+                      ? `デリバリー注文 #${tableId}`
+                      : `Delivery Order #${tableId}`
+                    : Number(tableId) >= 1000
+                      ? isJA
+                        ? `テイクアウト注文 #${tableId}`
+                        : `Takeout Order #${tableId}`
+                      : tableLabel.toLowerCase().includes("table")
+                        ? tableLabel
+                        : `Table ${tableLabel}`}
                 </p>
               </div>
 
               <button
-                onClick={() => setShowPersonSelection(true)}
-                className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-8 py-5 text-lg font-black text-primary-foreground shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-primary/30 transition-all hover:-translate-y-1 hover:shadow-primary/40 active:translate-y-0 active:scale-95"
+                onClick={() => {
+                  if (isVirtualTable) {
+                    setShowCustomerForm(true)
+                  } else {
+                    setShowPersonSelection(true)
+                  }
+                }}
+                disabled={isStartingSession}
+                className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-8 py-5 text-lg font-black text-primary-foreground shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-primary/30 transition-all hover:-translate-y-1 hover:shadow-primary/40 active:translate-y-0 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
               >
-                <Utensils className="h-6 w-6" />
-                Start Order
+                {isStartingSession ? (
+                  <>
+                    <Utensils className="h-6 w-6 animate-bounce" />
+                    {isJA ? "開始しています..." : "Starting..."}
+                  </>
+                ) : (
+                  <>
+                    <Utensils className="h-6 w-6" />
+                    {isJA ? "注文を始める" : "Start Order"}
+                  </>
+                )}
               </button>
 
               <div className="mt-8 flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground">
                 <Lock className="h-3.5 w-3.5 opacity-70" />
-                <span>Secure Table Session</span>
+                <span>
+                  {isJA ? "安全なテーブルセッション" : "Secure Table Session"}
+                </span>
               </div>
             </div>
           ) : (
             <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center p-6 text-center select-none">
               <div className="mb-8 flex flex-col items-center">
                 <h1 className="mb-2 text-2xl font-black tracking-tight text-foreground">
-                  Welcome to {restaurantName}
+                  {isJA
+                    ? `${restaurantName} へようこそ`
+                    : `Welcome to ${restaurantName}`}
                 </h1>
                 <p className="text-sm font-medium text-muted-foreground">
-                  Please enter the number of guests
+                  {isJA
+                    ? "ご利用人数を入力してください"
+                    : "Please enter the number of guests"}
                 </p>
               </div>
 
@@ -470,7 +631,7 @@ export function TableLandingClient({
                     onClick={() => setShowPersonSelection(false)}
                     className="rounded-xl border border-border bg-card py-4 text-lg font-bold shadow-sm transition-all hover:bg-accent active:scale-90"
                   >
-                    BACK
+                    {isJA ? "戻る" : "BACK"}
                   </button>
                   <button
                     onClick={() =>
@@ -492,7 +653,7 @@ export function TableLandingClient({
               </div>
 
               <button
-                onClick={handleStartSession}
+                onClick={() => handleStartSession()}
                 disabled={
                   isStartingSession || !persons || Number(persons) === 0
                 }
@@ -501,12 +662,12 @@ export function TableLandingClient({
                 {isStartingSession ? (
                   <>
                     <Utensils className="h-6 w-6 animate-bounce" />
-                    Starting Order...
+                    {isJA ? "注文を開始しています..." : "Starting Order..."}
                   </>
                 ) : (
                   <>
                     <Utensils className="h-6 w-6" />
-                    Open Menu
+                    {isJA ? "メニューを開く" : "Open Menu"}
                   </>
                 )}
               </button>
@@ -523,6 +684,7 @@ export function TableLandingClient({
                 initialTableMode={true}
                 initialSession={session}
                 onSessionChange={setSession}
+                defaultLanguage={defaultLanguage}
               />
             </main>
 
@@ -530,11 +692,17 @@ export function TableLandingClient({
             <footer className="mt-8 flex flex-col items-center gap-1.5 px-4 text-center text-muted-foreground sm:px-6">
               <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium tracking-wide uppercase">
                 <Lock className="h-3 w-3 text-muted-foreground/80" />
-                <span>Secure Table Ordering</span>
+                <span>
+                  {isJA ? "安全なテーブル注文" : "Secure Table Ordering"}
+                </span>
               </div>
               <p className="font-mono text-[9px] text-muted-foreground/60 uppercase select-all">
-                Session:{" "}
-                {session?.session_id ? String(session.session_id) : "None"}
+                {isJA ? "セッション: " : "Session: "}
+                {session?.session_id
+                  ? String(session.session_id)
+                  : isJA
+                    ? "なし"
+                    : "None"}
               </p>
             </footer>
           </div>
@@ -552,10 +720,13 @@ export function TableLandingClient({
               <X className="h-4 w-4" />
             </button>
             <div className="text-center">
-              <h3 className="mb-2 text-lg font-bold">Share Table</h3>
+              <h3 className="mb-2 text-lg font-bold">
+                {isJA ? "テーブルを共有" : "Share Table"}
+              </h3>
               <p className="mb-6 text-sm text-muted-foreground">
-                Have your friend scan this QR code. They will instantly join
-                your table and can add items to your bill.
+                {isJA
+                  ? "お友達にこのQRコードをスキャンしてもらってください。すぐにあなたのテーブルに参加し、一緒に注文を追加できます。"
+                  : "Have your friend scan this QR code. They will instantly join your table and can add items to your bill."}
               </p>
               <div className="mx-auto inline-block rounded-xl bg-white p-4">
                 <QRCode

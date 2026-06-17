@@ -60,6 +60,38 @@ function ElapsedTime({ createdString }: { createdString: string }) {
   return <span>{elapsed}</span>
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function renderSelectedOptions(item: any, arg2?: any) {
+  if (!item || !item.selectedOptions || !arg2) return null
+  // Detect if arg2 is categories or menu
+  const menu =
+    Array.isArray(arg2) && arg2[0]?.items
+      ? arg2.flatMap((c: any) => c.items)
+      : arg2
+  const itemId = item.item_id || item.info?.item_id // Added fallback just in case
+  const menuItem = menu.find(
+    (m: any) => m.id === itemId || m.id === item.item_id
+  )
+  if (!menuItem || !menuItem.options) return null
+
+  const optionsText = menuItem.options
+    .map((opt: any) => {
+      const selId = item.selectedOptions[opt.id]
+      const sel = opt.selections.find((s: any) => s.id === selId)
+      return sel ? sel.name : null
+    })
+    .filter(Boolean)
+    .join(", ")
+
+  if (!optionsText) return null
+  return (
+    <div className="mt-0.5 inline-block rounded-md bg-secondary/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+      {optionsText}
+    </div>
+  )
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 export function OwnerActivityClient({
   restaurantSlug,
   currency,
@@ -464,6 +496,7 @@ export function OwnerActivityClient({
                                             &quot;{item.notes}&quot;
                                           </p>
                                         )}
+                                        {renderSelectedOptions(item, menu)}
                                         {servedQty > 0 && !isFullyServed && (
                                           <p className="mt-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
                                             {servedQty} served

@@ -23,6 +23,7 @@ export interface OrderItem {
   served_qty?: number
   notes?: string
   name?: string
+  selectedOptions?: Record<string, string>
 }
 
 export interface KitchenSession {
@@ -32,6 +33,11 @@ export interface KitchenSession {
   status: string
   orders?: {
     items?: OrderItem[]
+    customer_info?: {
+      name: string
+      phone: string
+      address: string
+    }
   }
   [key: string]: unknown
 }
@@ -84,6 +90,38 @@ function ElapsedTime({ createdString }: { createdString: string }) {
     </span>
   )
 }
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function renderSelectedOptions(item: any, arg2?: any) {
+  if (!item || !item.selectedOptions || !arg2) return null
+  // Detect if arg2 is categories or menu
+  const menu =
+    Array.isArray(arg2) && arg2[0]?.items
+      ? arg2.flatMap((c: any) => c.items)
+      : arg2
+  const itemId = item.item_id || item.info?.item_id // Added fallback just in case
+  const menuItem = menu.find(
+    (m: any) => m.id === itemId || m.id === item.item_id
+  )
+  if (!menuItem || !menuItem.options) return null
+
+  const optionsText = menuItem.options
+    .map((opt: any) => {
+      const selId = item.selectedOptions[opt.id]
+      const sel = opt.selections.find((s: any) => s.id === selId)
+      return sel ? sel.name : null
+    })
+    .filter(Boolean)
+    .join(", ")
+
+  if (!optionsText) return null
+  return (
+    <div className="mt-0.5 inline-block rounded-md bg-secondary/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+      {optionsText}
+    </div>
+  )
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export function OrdersClient({
   menu,
@@ -233,12 +271,31 @@ export function OrdersClient({
             >
               <div className="mb-2 flex items-start justify-between">
                 <h3 className="text-2xl font-black tracking-tight tabular-nums">
-                  T-{session.table_number}
+                  {Number(session.table_number) >= 10000
+                    ? `DEL-${session.table_number}`
+                    : Number(session.table_number) >= 1000
+                      ? `TO-${session.table_number}`
+                      : `T-${session.table_number}`}
                 </h3>
                 <div className="text-right">
                   <ElapsedTime createdString={session.created_at} />
                 </div>
               </div>
+              {session.orders?.customer_info && (
+                <div className="mb-2 rounded-md bg-background/50 p-2 text-xs">
+                  <p className="font-bold text-foreground">
+                    {session.orders.customer_info.name}{" "}
+                    <span className="ml-1 font-normal text-muted-foreground">
+                      {session.orders.customer_info.phone}
+                    </span>
+                  </p>
+                  {session.orders.customer_info.address && (
+                    <p className="mt-0.5 text-muted-foreground">
+                      {session.orders.customer_info.address}
+                    </p>
+                  )}
+                </div>
+              )}
               <div className="flex items-center justify-between text-xs font-bold tracking-wider text-muted-foreground uppercase">
                 <span>{totalItemsCount} Items</span>
                 <span
@@ -295,6 +352,7 @@ export function OrdersClient({
                             {item.notes}
                           </p>
                         )}
+                        {renderSelectedOptions(item, menu)}
                       </div>
 
                       {/* Served Tracker Controls */}
@@ -378,6 +436,7 @@ export function OrdersClient({
           served_qty: number
           order_item_id: string
           cooked_qty: number
+          selectedOptions?: Record<string, string>
         }[]
       }
     > = {}
@@ -405,6 +464,7 @@ export function OrdersClient({
           cooked_qty: item.cooked_qty || 0,
           notes: item.notes,
           order_item_id: item.order_item_id,
+          selectedOptions: item.selectedOptions,
         })
       })
     })
@@ -512,6 +572,17 @@ export function OrdersClient({
                               ({t.notes})
                             </span>
                           )}
+                          {renderSelectedOptions(
+                            {
+                              ...t,
+                              item_id:
+                                typeof info !== "undefined"
+                                  ? info.item_id
+                                  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                    (t as any).item_id,
+                            },
+                            menu
+                          )}
                         </span>
                       </div>
                       <div className="flex shrink-0 items-center gap-2 rounded-lg bg-muted p-1">
@@ -611,6 +682,7 @@ export function OrdersClient({
           served_qty: number
           cooked_qty: number
           order_item_id: string
+          selectedOptions?: Record<string, string>
         }[]
       }
     > = {}
@@ -640,6 +712,7 @@ export function OrdersClient({
           cooked_qty: item.cooked_qty || 0,
           notes: item.notes,
           order_item_id: item.order_item_id,
+          selectedOptions: item.selectedOptions,
         })
       })
     })
@@ -790,6 +863,17 @@ export function OrdersClient({
                                     <span className="ml-1 text-red-500 italic">
                                       ({t.notes})
                                     </span>
+                                  )}
+                                  {renderSelectedOptions(
+                                    {
+                                      ...t,
+                                      item_id:
+                                        typeof info !== "undefined"
+                                          ? info.item_id
+                                          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                            (t as any).item_id,
+                                    },
+                                    menu
                                   )}
                                 </span>
                               </div>
@@ -966,6 +1050,7 @@ export function OrdersClient({
                     {item.notes}
                   </p>
                 )}
+                {renderSelectedOptions(item, menu)}
 
                 <div className="flex items-center justify-between">
                   <div className="text-sm font-bold">

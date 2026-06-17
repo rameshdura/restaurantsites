@@ -6,8 +6,19 @@ interface MenuSectionProps {
   category: MenuCategory
   currency?: string
   tableMode?: boolean
-  activeOrderItems?: Array<{ item_id: string; qty: number; notes: string }>
-  onUpdateQty?: (item_id: string, qty: number, notes: string) => void
+  activeOrderItems?: Array<{
+    item_id: string
+    qty: number
+    notes: string
+    selectedOptions?: Record<string, string>
+  }>
+  onUpdateQty?: (
+    item_id: string,
+    qty: number,
+    notes: string,
+    selectedOptions?: Record<string, string>
+  ) => void
+  defaultLanguage?: string
 }
 
 export function MenuSection({
@@ -16,6 +27,7 @@ export function MenuSection({
   tableMode = false,
   activeOrderItems = [],
   onUpdateQty,
+  defaultLanguage,
 }: MenuSectionProps) {
   const { title, description, coverImage, items, id } = category
 
@@ -75,7 +87,10 @@ export function MenuSection({
               tableMode={tableMode}
               currentQty={currentQty}
               currentNotes={currentNotes}
-              onUpdateQty={(qty, notes) => onUpdateQty?.(item.id, qty, notes)}
+              onUpdateQty={(qty, notes, selectedOptions) =>
+                onUpdateQty?.(item.id, qty, notes, selectedOptions)
+              }
+              defaultLanguage={defaultLanguage}
             />
           )
         })}

@@ -8,6 +8,7 @@ import { notFound } from "next/navigation"
 import { getTranslations } from "@/lib/i18n"
 import { Navbar } from "@workspace/ui/components/navbar"
 import { FoodMenu } from "@/components/food-menu/food-menu"
+import { OrderModeButtons } from "@/components/food-menu/order-mode-buttons"
 import { Footer } from "@/components/footer"
 import { ContactSection } from "@workspace/ui/components/contact-section"
 import { Button } from "@workspace/ui/components/button"
@@ -84,6 +85,13 @@ export default async function MenuPage({ params }: MenuPageProps) {
           </div>
         )}
 
+        <OrderModeButtons
+          restaurantSlug={slug}
+          hasTakeout={data.operations?.services?.takeout}
+          hasDelivery={data.operations?.services?.delivery}
+          translations={translations}
+        />
+
         <section
           className={cn(
             "border-y border-border/40 bg-accent/5",
@@ -97,6 +105,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
               currency={data.app?.currency}
               translations={translations}
               disableTableMode={true}
+              defaultLanguage={data.app?.language}
             />
           ) : (
             <div className="mx-auto max-w-7xl px-6">

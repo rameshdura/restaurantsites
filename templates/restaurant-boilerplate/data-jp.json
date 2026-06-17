@@ -15,7 +15,6 @@
     "currency": "JPY"
   },
   "seo": {
-    "canonical": "",
     "title": "ラーメン太郎 | 東京の本格インド＆ネパール料理",
     "description": "東京・新橋のラーメン太郎で、本格的なインドカレー、手作りネパールモモ、伝統的なタンドリー料理をご堪能ください。真のヒマラヤ体験を。",
     "keywords": [
@@ -28,7 +27,6 @@
       "インド料理 東京",
       "ネパール ターリー"
     ],
-    "noindex": false,
     "menuTitle": "ラーメン太郎 メニュー | 本格カレー、モモ＆価格",
     "menuDescription": "ラーメン太郎の全メニューをご覧ください。名物の蒸しモモやスパイシーなタンドリーチキンから、伝統的なネパールランチセットやカレーまで。",
     "aboutTitle": "ラーメン太郎について | 伝統的な料理の遺産",
@@ -38,7 +36,9 @@
     "brandTitle": "Ramen Taro Brand Assets | Media Materials",
     "brandDescription": "Access and download official marketing materials, printable menus, and professional branding assets for Ramen Taro.",
     "companyTitle": "Ramen Taro | Operations & Corporate Details",
-    "companyDescription": "Official operational information and corporate overview for Ramen Taro, delivering authentic Asian culinary experiences in Tokyo."
+    "companyDescription": "Official operational information and corporate overview for Ramen Taro, delivering authentic Asian culinary experiences in Tokyo.",
+    "noindex": false,
+    "canonical": ""
   },
   "social": {
     "ogImage": null,
@@ -48,7 +48,8 @@
       "https://www.instagram.com/ramentaro",
       "https://www.facebook.com/ramentaro",
       "https://tabelog.com/tokyo/ramentaro"
-    ]
+    ],
+    "twitterSite": ""
   },
   "schema": {
     "priceRange": "$$",
@@ -78,7 +79,8 @@
     "postalCode": "207-0011",
     "placeId": "ChIJN1t_tDeuEmsRUsoyg83yJQk",
     "googleMapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
-    "timezone": "Asia/Tokyo"
+    "timezone": "Asia/Tokyo",
+    "neighborhood": ""
   },
   "images": {
     "logo": {
@@ -178,18 +180,29 @@
         "url": "/images/restaurants/ramen-taro/ourstory/story-4.png",
         "alt": "Our Story 4"
       }
-    ]
+    ],
+    "heroImage": {
+      "url": "",
+      "alt": "",
+      "credit": ""
+    },
+    "coverImage": {
+      "url": "",
+      "alt": "",
+      "credit": ""
+    },
+    "team": []
   },
   "companyInfo": {
     "name": "Narayani Co., Ltd.",
     "legalName": "Narayani Company Limited",
     "registrationNumber": "6020001061694",
-    "representative": "Poudel Prakash",
     "address": "35 Minezawacho, Hodogaya Ward, Yokohama, Kanagawa 221-0061, Japan",
     "phone": "045-331-1303",
     "establishedDate": "2009-05-21",
     "capital": "5,000,000 JPY",
     "fiscalYearEnd": "End of March",
+    "representative": "Poudel Prakash",
     "businessPurpose": "",
     "annualReportUrl": "",
     "url": "/ramen-taro/company-information"
@@ -281,28 +294,93 @@
       "name": "ランチ",
       "items": [
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [
+            {
+              "id": "size",
+              "name": "サイズ",
+              "selections": [
+                {
+                  "id": "reg",
+                  "name": "普通",
+                  "price": 0
+                },
+                {
+                  "id": "lrg",
+                  "name": "大盛り",
+                  "price": 150
+                }
+              ]
+            }
+          ],
           "name": "エベレストチキンモモ",
           "description": "スパイスの効いた鶏肉の蒸し餃子、トマトとゴマのチャツネ添え。",
           "price": "1300",
           "category": "Lunch",
           "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
-          "id": "item_everest_chicken_momo"
+          "id": "item_everest_chicken_momo",
+          "secondaryName": ""
         },
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "シェルパカジャセット",
           "description": "干し飯、スパイシーなひよこ豆、じゃがいもとタケノコのカレーの本格ネパールランチプレート。",
           "price": "1500",
           "category": "Lunch",
           "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
-          "id": "item_sherpa_khaja_set"
+          "id": "item_sherpa_khaja_set",
+          "secondaryName": ""
         },
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "野菜サモサチャート",
           "description": "スパイシーなひよこ豆、ヨーグルト、甘酸っぱいチャツネをトッピングしたサクサクのサモサ。",
           "price": "900",
           "category": "Lunch",
           "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
-          "id": "item_veg_samosa_chaat"
+          "id": "item_veg_samosa_chaat",
+          "secondaryName": ""
         }
       ]
     },
@@ -310,36 +388,100 @@
       "name": "ディナー",
       "items": [
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "ヒマラヤン・マトンカレー (カシコマス)",
           "description": "伝統的なスパイスの効いた濃厚なグレービーソースでじっくり煮込んだ柔らかなヤギ肉。",
           "price": "2200",
           "category": "Dinner",
           "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
-          "id": "item_himalayan_goat_curry_khasi_ko_masu"
+          "id": "item_himalayan_goat_curry_khasi_ko_masu",
+          "secondaryName": ""
         },
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "クラシック・チキンティッカマサラ",
           "description": "バター風味のスパイシーなトマトソースで煮込んだタンドリーグリルチキン。",
           "price": "1800",
           "category": "Dinner",
           "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
-          "id": "item_classic_chicken_tikka_masala"
+          "id": "item_classic_chicken_tikka_masala",
+          "secondaryName": ""
         },
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "パラクパニール",
           "description": "スパイスの効いた滑らかなほうれん草のピューレで煮込んだフレッシュカッテージチーズ。",
           "price": "1600",
           "category": "Dinner",
           "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
-          "id": "item_palak_paneer"
+          "id": "item_palak_paneer",
+          "secondaryName": ""
         },
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "エベレスト・ダルバート・ターリー",
           "description": "黄色いレンズ豆のスープ、ご飯、野菜カレーの伝統的なネパールのごちそう。",
           "price": "2000",
           "category": "Dinner",
           "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
-          "id": "item_everest_dal_bhat_thali"
+          "id": "item_everest_dal_bhat_thali",
+          "secondaryName": ""
         }
       ]
     },
@@ -347,12 +489,28 @@
       "name": "ドリンク",
       "items": [
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "マンゴーラッシー",
           "description": "甘く熟したマンゴーとカルダモンをブレンドした、クリーミーで爽やかなヨーグルトドリンク。",
           "price": "550",
           "category": "Drinks",
           "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png",
-          "id": "item_mango_lassi"
+          "id": "item_mango_lassi",
+          "secondaryName": ""
         }
       ]
     },
@@ -360,187 +518,343 @@
       "name": "デザート",
       "items": [
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "温かいグラブジャムン",
           "description": "カルダモン風味の温かいシロップに浸したミルクの団子。",
           "price": "600",
           "category": "Dessert",
           "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
-          "id": "item_warm_gulab_jamun"
+          "id": "item_warm_gulab_jamun",
+          "secondaryName": ""
         },
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "キール (ヒマラヤン・ライスプディング)",
           "description": "ナッツ、カルダモン、サフランと一緒にじっくり煮込んだクリーミーなバスマティライスプディング。",
           "price": "750",
           "category": "Dessert",
           "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png",
-          "id": "item_kheer_himalayan_rice_pudding"
+          "id": "item_kheer_himalayan_rice_pudding",
+          "secondaryName": ""
         }
       ]
     }
   ],
   "menu": [
     {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 1,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "size": "Regular",
+      "limited": false,
+      "availableUntil": "",
+      "options": [
+        {
+          "id": "size",
+          "name": "サイズ",
+          "selections": [
+            {
+              "id": "reg",
+              "name": "普通",
+              "price": 0
+            },
+            {
+              "id": "lrg",
+              "name": "大盛り",
+              "price": 150
+            }
+          ]
+        }
+      ],
       "name": "エベレストチキンモモ",
       "description": "スパイスの効いた鶏肉の蒸し餃子、トマトとゴマのチャツネ添え。",
       "price": "1300",
       "category": "Lunch",
       "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
       "id": "item_everest_chicken_momo",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 1,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "シェルパカジャセット",
       "description": "干し飯、スパイシーなひよこ豆、じゃがいもとタケノコのカレーの本格ネパールランチプレート。",
       "price": "1500",
       "category": "Lunch",
       "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
       "id": "item_sherpa_khaja_set",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "野菜サモサチャート",
       "description": "スパイシーなひよこ豆、ヨーグルト、甘酸っぱいチャツネをトッピングしたサクサクのサモサ。",
       "price": "900",
       "category": "Lunch",
       "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
       "id": "item_veg_samosa_chaat",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 1,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "ヒマラヤン・マトンカレー (カシコマス)",
       "description": "伝統的なスパイスの効いた濃厚なグレービーソースでじっくり煮込んだ柔らかなヤギ肉。",
       "price": "2200",
       "category": "Dinner",
       "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
       "id": "item_himalayan_goat_curry_khasi_ko_masu",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 1,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "クラシック・チキンティッカマサラ",
       "description": "バター風味のスパイシーなトマトソースで煮込んだタンドリーグリルチキン。",
       "price": "1800",
       "category": "Dinner",
       "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
       "id": "item_classic_chicken_tikka_masala",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "パラクパニール",
       "description": "スパイスの効いた滑らかなほうれん草のピューレで煮込んだフレッシュカッテージチーズ。",
       "price": "1600",
       "category": "Dinner",
       "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
       "id": "item_palak_paneer",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "エベレスト・ダルバート・ターリー",
       "description": "黄色いレンズ豆のスープ、ご飯、野菜カレーの伝統的なネパールのごちそう。",
       "price": "2000",
       "category": "Dinner",
       "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
       "id": "item_everest_dal_bhat_thali",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "マンゴーラッシー",
       "description": "甘く熟したマンゴーとカルダモンをブレンドした、クリーミーで爽やかなヨーグルトドリンク。",
       "price": "550",
       "category": "Drinks",
       "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png",
       "id": "item_mango_lassi",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "温かいグラブジャムン",
       "description": "カルダモン風味の温かいシロップに浸したミルクの団子。",
       "price": "600",
       "category": "Dessert",
       "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
       "id": "item_warm_gulab_jamun",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "キール (ヒマラヤン・ライスプディング)",
       "description": "ナッツ、カルダモン、サフランと一緒にじっくり煮込んだクリーミーなバスマティライスプディング。",
       "price": "750",
       "category": "Dessert",
       "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png",
       "id": "item_kheer_himalayan_rice_pudding",
-      "available": true,
-      "availableFrom": "",
-      "availableTo": "",
-      "availableUntil": "",
-      "size": "Regular",
-      "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
+      "secondaryName": ""
     }
   ],
   "about": {
+    "title": "",
+    "content": "",
+    "shortDescription": "",
+    "mission": "",
+    "philosophy": "",
+    "additionalContent": [],
+    "foundedYear": 0,
+    "foundingLocation": "",
+    "founder": {
+      "name": "",
+      "role": "",
+      "bio": "",
+      "image": "",
+      "qualifications": [],
+      "social": {},
+      "since": ""
+    },
+    "awards": [],
+    "keywordsByPage": {
+      "home": [],
+      "about": [],
+      "menu": [],
+      "contact": []
+    },
+    "images": [],
+    "image": "",
+    "team": [],
     "representative": {
       "name": "ポウデル・プラカシュ",
       "role": "",
@@ -723,7 +1037,8 @@
       "lng": 139.4449135,
       "mapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
       "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
-      "plusCode": ""
+      "plusCode": "",
+      "embedUrl": ""
     },
     "openingHours": [
       {

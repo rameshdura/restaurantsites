@@ -446,6 +446,18 @@ export interface RestaurantData extends BlockSchemaFields {
   }
 }
 
+export interface MenuOptionSelection {
+  id: string
+  name: string
+  price?: string | number
+}
+
+export interface MenuOption {
+  id: string
+  name: string
+  selections: MenuOptionSelection[]
+}
+
 export interface MenuItem {
   id?: string
   name: string
@@ -457,6 +469,7 @@ export interface MenuItem {
   isSpicy?: boolean
   isVegetarian?: boolean
   secondaryName?: string
+  options?: MenuOption[]
 }
 
 export interface Restaurant {
@@ -478,6 +491,7 @@ export interface MenuCategory {
     isSpicy?: boolean
     isVegetarian?: boolean
     secondaryName?: string
+    options?: MenuOption[]
   }>
 }
 
@@ -751,6 +765,7 @@ export function groupMenuByCategory(
       isSpicy: item.isSpicy,
       isVegetarian: item.isVegetarian,
       secondaryName: item.secondaryName,
+      options: item.options,
     }
 
     if (existingCategory) {

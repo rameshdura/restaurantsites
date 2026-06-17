@@ -31,6 +31,8 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
+  ChevronDown,
   Trash2,
   Globe,
   Search,
@@ -78,6 +80,9 @@ export function SiteBuilderForm({
   const [currentStep, setCurrentStep] = useState(0)
   const [sites, setSites] = useState<SiteBuilderData[]>([])
   const [validationErrors, setValidationErrors] = useState<string[]>([])
+  const [collapsedCategories, setCollapsedCategories] = useState<
+    Record<number, boolean>
+  >({})
 
   useEffect(() => {
     const loadSites = async () => {
@@ -1367,55 +1372,6 @@ export function SiteBuilderForm({
 
         <Card className="border-border">
           <CardHeader className="bg-muted/30 py-2">
-            <CardTitle className="text-sm">Rating & Reviews</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 pt-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Rating Value</Label>
-                <Input
-                  type="number"
-                  step="0.1"
-                  value={formData.aggregateRating?.ratingValue || 0}
-                  onChange={(e) =>
-                    updateFormData("aggregateRating", {
-                      ...(formData.aggregateRating || {
-                        ratingValue: 0,
-                        reviewCount: 0,
-                        source: "",
-                        sourceUrl: "",
-                      }),
-                      ratingValue: parseFloat(e.target.value),
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Review Count</Label>
-                <Input
-                  type="number"
-                  value={formData.aggregateRating?.reviewCount || 0}
-                  onChange={(e) =>
-                    updateFormData("aggregateRating", {
-                      ...(formData.aggregateRating || {
-                        ratingValue: 0,
-                        reviewCount: 0,
-                        source: "",
-                        sourceUrl: "",
-                      }),
-                      reviewCount: parseInt(e.target.value),
-                    })
-                  }
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="border-border">
-          <CardHeader className="bg-muted/30 py-2">
             <CardTitle className="text-sm">Services</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 pt-4">
@@ -1440,48 +1396,6 @@ export function SiteBuilderForm({
               <Switch
                 checked={formData.isDelivery}
                 onCheckedChange={(v) => updateFormData("isDelivery", v)}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-border">
-          <CardHeader className="bg-muted/30 py-2">
-            <CardTitle className="text-sm">Review Source</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 pt-4">
-            <div className="space-y-2">
-              <Label>Source Name</Label>
-              <Input
-                value={formData.aggregateRating?.source || ""}
-                onChange={(e) =>
-                  updateFormData("aggregateRating", {
-                    ...(formData.aggregateRating || {
-                      ratingValue: 0,
-                      reviewCount: 0,
-                      source: "",
-                      sourceUrl: "",
-                    }),
-                    source: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Source URL</Label>
-              <Input
-                value={formData.aggregateRating?.sourceUrl || ""}
-                onChange={(e) =>
-                  updateFormData("aggregateRating", {
-                    ...(formData.aggregateRating || {
-                      ratingValue: 0,
-                      reviewCount: 0,
-                      source: "",
-                      sourceUrl: "",
-                    }),
-                    sourceUrl: e.target.value,
-                  })
-                }
               />
             </div>
           </CardContent>
@@ -1859,273 +1773,538 @@ export function SiteBuilderForm({
         </Button>
       </div>
       <div className="space-y-8">
-        {formData.menuCategories.map((cat, ci) => (
-          <Card key={ci} className="overflow-hidden border-primary/20">
-            <CardHeader className="flex-row items-center justify-between space-y-0 bg-primary/5 py-3">
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                  onClick={() => {
-                    if (ci > 0) {
-                      const nmc = [
-                        ...formData.menuCategories,
-                      ] as SiteBuilderData["menuCategories"]
-                      const tmp = nmc[ci]
-                      const prev = nmc[ci - 1]
-                      if (tmp && prev) {
-                        nmc[ci] = prev
-                        nmc[ci - 1] = tmp
-                        updateFormData("menuCategories", nmc)
-                      }
-                    }
-                  }}
-                >
-                  ▲
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                  onClick={() => {
-                    if (ci < formData.menuCategories.length - 1) {
-                      const nmc = [
-                        ...formData.menuCategories,
-                      ] as SiteBuilderData["menuCategories"]
-                      const tmp = nmc[ci]
-                      const next = nmc[ci + 1]
-                      if (tmp && next) {
-                        nmc[ci] = next
-                        nmc[ci + 1] = tmp
-                        updateFormData("menuCategories", nmc)
-                      }
-                    }
-                  }}
-                >
-                  ▼
-                </Button>
-                <CardTitle className="text-md font-bold">{cat.name}</CardTitle>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 text-destructive"
-                onClick={() =>
-                  updateFormData(
-                    "menuCategories",
-                    formData.menuCategories.filter((_, i) => i !== ci)
-                  )
-                }
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </CardHeader>
-            <CardContent className="space-y-6 p-4">
-              <div className="space-y-4 rounded-xl border border-dashed border-primary/30 bg-muted/30 p-4">
-                <Label className="text-xs font-bold tracking-wider text-primary uppercase">
-                  Add New Item to {cat.name}
-                </Label>
-                <div className="grid gap-4 md:grid-cols-3">
-                  <Input id={`ni-${ci}`} placeholder="Item Name" />
-                  <Input id={`np-${ci}`} placeholder="Price (e.g. 15.00)" />
+        {formData.menuCategories.map((cat, ci) => {
+          const isCollapsed = collapsedCategories[ci] || false
+          return (
+            <Card key={ci} className="overflow-hidden border-primary/20">
+              <CardHeader className="flex-row items-center justify-between space-y-0 bg-primary/5 py-3">
+                <div className="flex items-center gap-2">
                   <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
                     onClick={() => {
-                      const name = (
-                        document.getElementById(`ni-${ci}`) as HTMLInputElement
-                      ).value
-                      const price = (
-                        document.getElementById(`np-${ci}`) as HTMLInputElement
-                      ).value
-                      if (name) {
-                        const nmc = [...(formData.menuCategories || [])]
-                        if (nmc[ci]) {
-                          nmc[ci].items = nmc[ci].items || []
-                          nmc[ci].items.push({
-                            name,
-                            price,
-                            description: "",
-                            category: cat.name,
-                            isPopular: false,
-                            isSpicy: false,
-                            spiceLevel: 0,
-                            allergens: [],
-                            image: null,
-                          })
+                      if (ci > 0) {
+                        const nmc = [
+                          ...formData.menuCategories,
+                        ] as SiteBuilderData["menuCategories"]
+                        const tmp = nmc[ci]
+                        const prev = nmc[ci - 1]
+                        if (tmp && prev) {
+                          nmc[ci] = prev
+                          nmc[ci - 1] = tmp
                           updateFormData("menuCategories", nmc)
                         }
-                        ;(
-                          document.getElementById(
-                            `ni-${ci}`
-                          ) as HTMLInputElement
-                        ).value = ""
-                        ;(
-                          document.getElementById(
-                            `np-${ci}`
-                          ) as HTMLInputElement
-                        ).value = ""
                       }
                     }}
                   >
-                    Add Item
+                    ▲
                   </Button>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                {cat.items.map((item, ii) => (
-                  <div
-                    key={ii}
-                    className="relative grid gap-4 rounded-xl border bg-muted/5 p-4 md:grid-cols-[100px_1fr]"
-                  >
-                    <div className="flex flex-col gap-2">
-                      <ImageUpload
-                        label=""
-                        image={item?.image || null}
-                        onImageSelect={(_, d) => {
-                          const nmc = [...(formData.menuCategories || [])]
-                          if (nmc[ci]?.items?.[ii]) {
-                            nmc[ci].items[ii].image = d
-                            updateFormData("menuCategories", nmc)
-                          }
-                        }}
-                        onImageRemove={() => {
-                          const nmc = [...(formData.menuCategories || [])]
-                          if (nmc[ci]?.items?.[ii]) {
-                            nmc[ci].items[ii].image = null
-                            updateFormData("menuCategories", nmc)
-                          }
-                        }}
-                        slugPrefix={formData.siteSlug || ""}
-                        canDownload={false}
-                      />
-                      <div className="flex gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-full p-0 text-[10px]"
-                          onClick={() => {
-                            if (ii > 0) {
-                              const nmc = [
-                                ...formData.menuCategories,
-                              ] as SiteBuilderData["menuCategories"]
-                              const category = nmc[ci]
-                              if (category) {
-                                const items = [...category.items]
-                                const tmp = items[ii]
-                                const prev = items[ii - 1]
-                                if (tmp !== undefined && prev !== undefined) {
-                                  items[ii] = prev
-                                  items[ii - 1] = tmp
-                                  category.items = items
-                                  updateFormData("menuCategories", nmc)
-                                }
-                              }
-                            }
-                          }}
-                        >
-                          ▲
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-full p-0 text-[10px]"
-                          onClick={() => {
-                            if (ii < cat.items.length - 1) {
-                              const nmc = [
-                                ...formData.menuCategories,
-                              ] as SiteBuilderData["menuCategories"]
-                              const category = nmc[ci]
-                              if (category) {
-                                const items = [...category.items]
-                                const tmp = items[ii]
-                                const next = items[ii + 1]
-                                if (tmp !== undefined && next !== undefined) {
-                                  items[ii] = next
-                                  items[ii + 1] = tmp
-                                  category.items = items
-                                  updateFormData("menuCategories", nmc)
-                                }
-                              }
-                            }
-                          }}
-                        >
-                          ▼
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Input
-                            className="h-8 font-bold"
-                            value={item?.name || ""}
-                            onChange={(e) => {
-                              const nmc = [...(formData.menuCategories || [])]
-                              if (nmc[ci]?.items?.[ii]) {
-                                nmc[ci].items[ii].name = e.target.value
-                                updateFormData("menuCategories", nmc)
-                              }
-                            }}
-                          />
-                          <Input
-                            className="h-8 w-20 text-primary"
-                            value={item?.price || ""}
-                            onChange={(e) => {
-                              const nmc = [...(formData.menuCategories || [])]
-                              if (nmc[ci]?.items?.[ii]) {
-                                nmc[ci].items[ii].price = e.target.value
-                                updateFormData("menuCategories", nmc)
-                              }
-                            }}
-                          />
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Label className="text-[10px]">Popular?</Label>
-                          <Switch
-                            checked={item?.isPopular || false}
-                            onCheckedChange={(v) => {
-                              const nmc = [...(formData.menuCategories || [])]
-                              if (nmc[ci]?.items?.[ii]) {
-                                nmc[ci].items[ii].isPopular = v
-                                updateFormData("menuCategories", nmc)
-                              }
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <Textarea
-                        placeholder="Item description..."
-                        className="h-16 text-xs"
-                        value={item?.description || ""}
-                        onChange={(e) => {
-                          const nmc = [...(formData.menuCategories || [])]
-                          if (nmc[ci]?.items?.[ii]) {
-                            nmc[ci].items[ii].description = e.target.value
-                            updateFormData("menuCategories", nmc)
-                          }
-                        }}
-                      />
-                    </div>
-                    <button
-                      onClick={() => {
-                        const nmc = [...(formData.menuCategories || [])]
-                        if (nmc[ci]) {
-                          nmc[ci].items =
-                            nmc[ci].items?.filter((_, idx) => idx !== ii) || []
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={() => {
+                      if (ci < formData.menuCategories.length - 1) {
+                        const nmc = [
+                          ...formData.menuCategories,
+                        ] as SiteBuilderData["menuCategories"]
+                        const tmp = nmc[ci]
+                        const next = nmc[ci + 1]
+                        if (tmp && next) {
+                          nmc[ci] = next
+                          nmc[ci + 1] = tmp
                           updateFormData("menuCategories", nmc)
                         }
-                      }}
-                      className="absolute -top-2 -right-2 rounded-full bg-destructive p-1 text-white shadow-lg"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
+                      }
+                    }}
+                  >
+                    ▼
+                  </Button>
+                  <CardTitle className="text-md font-bold">
+                    {cat.name}
+                  </CardTitle>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={() =>
+                      setCollapsedCategories((prev) => ({
+                        ...prev,
+                        [ci]: !isCollapsed,
+                      }))
+                    }
+                  >
+                    {isCollapsed ? (
+                      <ChevronDown className="h-4 w-4" />
+                    ) : (
+                      <ChevronUp className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-destructive"
+                    onClick={() =>
+                      updateFormData(
+                        "menuCategories",
+                        formData.menuCategories.filter((_, i) => i !== ci)
+                      )
+                    }
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardHeader>
+              {!isCollapsed && (
+                <CardContent className="space-y-6 p-4">
+                  <div className="space-y-4 rounded-xl border border-dashed border-primary/30 bg-muted/30 p-4">
+                    <Label className="text-xs font-bold tracking-wider text-primary uppercase">
+                      Add New Item to {cat.name}
+                    </Label>
+                    <div className="grid gap-4 md:grid-cols-3">
+                      <Input id={`ni-${ci}`} placeholder="Item Name" />
+                      <Input id={`np-${ci}`} placeholder="Price (e.g. 15.00)" />
+                      <Button
+                        onClick={() => {
+                          const name = (
+                            document.getElementById(
+                              `ni-${ci}`
+                            ) as HTMLInputElement
+                          ).value
+                          const price = (
+                            document.getElementById(
+                              `np-${ci}`
+                            ) as HTMLInputElement
+                          ).value
+                          if (name) {
+                            const nmc = [...(formData.menuCategories || [])]
+                            if (nmc[ci]) {
+                              nmc[ci].items = nmc[ci].items || []
+                              nmc[ci].items.push({
+                                name,
+                                price,
+                                description: "",
+                                category: cat.name,
+                                isPopular: false,
+                                isSpicy: false,
+                                spiceLevel: 0,
+                                allergens: [],
+                                isVegetarian: false,
+                                isVegan: false,
+                                calories: 0,
+                                ingredients: [],
+                                options: [],
+                                image: null,
+                              })
+                              updateFormData("menuCategories", nmc)
+                            }
+                            ;(
+                              document.getElementById(
+                                `ni-${ci}`
+                              ) as HTMLInputElement
+                            ).value = ""
+                            ;(
+                              document.getElementById(
+                                `np-${ci}`
+                              ) as HTMLInputElement
+                            ).value = ""
+                          }
+                        }}
+                      >
+                        Add Item
+                      </Button>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+
+                  <div className="space-y-4">
+                    {cat.items.map((item, ii) => (
+                      <div
+                        key={ii}
+                        className="relative grid gap-4 rounded-xl border bg-muted/5 p-4 md:grid-cols-[100px_1fr]"
+                      >
+                        <div className="flex flex-col gap-2">
+                          <ImageUpload
+                            label=""
+                            image={item?.image || null}
+                            onImageSelect={(_, d) => {
+                              const nmc = [...(formData.menuCategories || [])]
+                              if (nmc[ci]?.items?.[ii]) {
+                                nmc[ci].items[ii].image = d
+                                updateFormData("menuCategories", nmc)
+                              }
+                            }}
+                            onImageRemove={() => {
+                              const nmc = [...(formData.menuCategories || [])]
+                              if (nmc[ci]?.items?.[ii]) {
+                                nmc[ci].items[ii].image = null
+                                updateFormData("menuCategories", nmc)
+                              }
+                            }}
+                            slugPrefix={formData.siteSlug || ""}
+                            canDownload={false}
+                          />
+                          <div className="flex gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-full p-0 text-[10px]"
+                              onClick={() => {
+                                if (ii > 0) {
+                                  const nmc = [
+                                    ...formData.menuCategories,
+                                  ] as SiteBuilderData["menuCategories"]
+                                  const category = nmc[ci]
+                                  if (category) {
+                                    const items = [...category.items]
+                                    const tmp = items[ii]
+                                    const prev = items[ii - 1]
+                                    if (
+                                      tmp !== undefined &&
+                                      prev !== undefined
+                                    ) {
+                                      items[ii] = prev
+                                      items[ii - 1] = tmp
+                                      category.items = items
+                                      updateFormData("menuCategories", nmc)
+                                    }
+                                  }
+                                }
+                              }}
+                            >
+                              ▲
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-full p-0 text-[10px]"
+                              onClick={() => {
+                                if (ii < cat.items.length - 1) {
+                                  const nmc = [
+                                    ...formData.menuCategories,
+                                  ] as SiteBuilderData["menuCategories"]
+                                  const category = nmc[ci]
+                                  if (category) {
+                                    const items = [...category.items]
+                                    const tmp = items[ii]
+                                    const next = items[ii + 1]
+                                    if (
+                                      tmp !== undefined &&
+                                      next !== undefined
+                                    ) {
+                                      items[ii] = next
+                                      items[ii + 1] = tmp
+                                      category.items = items
+                                      updateFormData("menuCategories", nmc)
+                                    }
+                                  }
+                                }
+                              }}
+                            >
+                              ▼
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <Input
+                                className="h-8 font-bold"
+                                value={item?.name || ""}
+                                onChange={(e) => {
+                                  const nmc = [
+                                    ...(formData.menuCategories || []),
+                                  ]
+                                  if (nmc[ci]?.items?.[ii]) {
+                                    nmc[ci].items[ii].name = e.target.value
+                                    updateFormData("menuCategories", nmc)
+                                  }
+                                }}
+                              />
+                              <Input
+                                className="h-8 w-20 text-primary"
+                                value={item?.price || ""}
+                                onChange={(e) => {
+                                  const nmc = [
+                                    ...(formData.menuCategories || []),
+                                  ]
+                                  if (nmc[ci]?.items?.[ii]) {
+                                    nmc[ci].items[ii].price = e.target.value
+                                    updateFormData("menuCategories", nmc)
+                                  }
+                                }}
+                              />
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Label className="text-[10px]">Popular?</Label>
+                              <Switch
+                                checked={item?.isPopular || false}
+                                onCheckedChange={(v) => {
+                                  const nmc = [
+                                    ...(formData.menuCategories || []),
+                                  ]
+                                  if (nmc[ci]?.items?.[ii]) {
+                                    nmc[ci].items[ii].isPopular = v
+                                    updateFormData("menuCategories", nmc)
+                                  }
+                                }}
+                              />
+                            </div>
+                          </div>
+                          <Textarea
+                            placeholder="Item description..."
+                            className="h-16 text-xs"
+                            value={item?.description || ""}
+                            onChange={(e) => {
+                              const nmc = [...(formData.menuCategories || [])]
+                              if (nmc[ci]?.items?.[ii]) {
+                                nmc[ci].items[ii].description = e.target.value
+                                updateFormData("menuCategories", nmc)
+                              }
+                            }}
+                          />
+
+                          <div className="grid gap-2 md:grid-cols-2">
+                            <Input
+                              placeholder="Allergens (comma separated)"
+                              className="h-8 text-xs"
+                              value={(item?.allergens || []).join(", ")}
+                              onChange={(e) => {
+                                const nmc = [...(formData.menuCategories || [])]
+                                if (nmc[ci]?.items?.[ii]) {
+                                  nmc[ci].items[ii].allergens = e.target.value
+                                    .split(",")
+                                    .map((s) => s.trim())
+                                    .filter(Boolean)
+                                  updateFormData("menuCategories", nmc)
+                                }
+                              }}
+                            />
+                            <Input
+                              placeholder="Ingredients (comma separated)"
+                              className="h-8 text-xs"
+                              value={(item?.ingredients || []).join(", ")}
+                              onChange={(e) => {
+                                const nmc = [...(formData.menuCategories || [])]
+                                if (nmc[ci]?.items?.[ii]) {
+                                  nmc[ci].items[ii].ingredients = e.target.value
+                                    .split(",")
+                                    .map((s) => s.trim())
+                                    .filter(Boolean)
+                                  updateFormData("menuCategories", nmc)
+                                }
+                              }}
+                            />
+                          </div>
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                              <Label className="text-[10px] font-bold">
+                                Options
+                              </Label>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-6 text-[10px]"
+                                onClick={() => {
+                                  const nmc = [
+                                    ...(formData.menuCategories || []),
+                                  ]
+                                  if (nmc[ci]?.items?.[ii]) {
+                                    nmc[ci].items[ii].options =
+                                      nmc[ci].items[ii].options || []
+                                    nmc[ci].items[ii].options.push({
+                                      id: `opt-${Date.now()}`,
+                                      name: "New Option",
+                                      selections: [],
+                                    })
+                                    updateFormData("menuCategories", nmc)
+                                  }
+                                }}
+                              >
+                                <Plus className="mr-1 h-3 w-3" /> Add Option
+                              </Button>
+                            </div>
+                            {(item?.options || []).map((opt, oi) => (
+                              <div
+                                key={oi}
+                                className="space-y-2 rounded border bg-background p-2"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <Input
+                                    className="h-6 text-xs font-bold"
+                                    value={opt.name}
+                                    onChange={(e) => {
+                                      const nmc = [
+                                        ...(formData.menuCategories || []),
+                                      ]
+                                      if (nmc[ci]?.items?.[ii]?.options?.[oi]) {
+                                        nmc[ci].items[ii].options[oi].name =
+                                          e.target.value
+                                        updateFormData("menuCategories", nmc)
+                                      }
+                                    }}
+                                  />
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0 text-destructive"
+                                    onClick={() => {
+                                      const nmc = [
+                                        ...(formData.menuCategories || []),
+                                      ]
+                                      if (nmc[ci]?.items?.[ii]?.options) {
+                                        nmc[ci].items[ii].options = nmc[
+                                          ci
+                                        ].items[ii].options.filter(
+                                          (_, idx) => idx !== oi
+                                        )
+                                        updateFormData("menuCategories", nmc)
+                                      }
+                                    }}
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                                <div className="space-y-1 border-l-2 border-primary/20 pl-2">
+                                  {(opt.selections || []).map((sel, si) => (
+                                    <div
+                                      key={si}
+                                      className="flex items-center gap-2"
+                                    >
+                                      <Input
+                                        className="h-6 text-[10px]"
+                                        placeholder="Selection name"
+                                        value={sel.name}
+                                        onChange={(e) => {
+                                          const nmc = [
+                                            ...(formData.menuCategories || []),
+                                          ]
+                                          if (
+                                            nmc[ci]?.items?.[ii]?.options?.[oi]
+                                              ?.selections?.[si]
+                                          ) {
+                                            nmc[ci].items[ii].options[
+                                              oi
+                                            ].selections[si].name =
+                                              e.target.value
+                                            updateFormData(
+                                              "menuCategories",
+                                              nmc
+                                            )
+                                          }
+                                        }}
+                                      />
+                                      <Input
+                                        className="h-6 w-16 text-[10px]"
+                                        type="number"
+                                        placeholder="Price"
+                                        value={sel.price}
+                                        onChange={(e) => {
+                                          const nmc = [
+                                            ...(formData.menuCategories || []),
+                                          ]
+                                          if (
+                                            nmc[ci]?.items?.[ii]?.options?.[oi]
+                                              ?.selections?.[si]
+                                          ) {
+                                            nmc[ci].items[ii].options[
+                                              oi
+                                            ].selections[si].price =
+                                              parseFloat(e.target.value) || 0
+                                            updateFormData(
+                                              "menuCategories",
+                                              nmc
+                                            )
+                                          }
+                                        }}
+                                      />
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-5 w-5 p-0 text-muted-foreground"
+                                        onClick={() => {
+                                          const nmc = [
+                                            ...(formData.menuCategories || []),
+                                          ]
+                                          if (
+                                            nmc[ci]?.items?.[ii]?.options?.[oi]
+                                              ?.selections
+                                          ) {
+                                            nmc[ci].items[ii].options[
+                                              oi
+                                            ].selections = nmc[ci].items[
+                                              ii
+                                            ].options[oi].selections.filter(
+                                              (_, idx) => idx !== si
+                                            )
+                                            updateFormData(
+                                              "menuCategories",
+                                              nmc
+                                            )
+                                          }
+                                        }}
+                                      >
+                                        <X className="h-3 w-3" />
+                                      </Button>
+                                    </div>
+                                  ))}
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-5 text-[10px] text-muted-foreground"
+                                    onClick={() => {
+                                      const nmc = [
+                                        ...(formData.menuCategories || []),
+                                      ]
+                                      if (nmc[ci]?.items?.[ii]?.options?.[oi]) {
+                                        nmc[ci].items[ii].options[
+                                          oi
+                                        ].selections =
+                                          nmc[ci].items[ii].options[oi]
+                                            .selections || []
+                                        nmc[ci].items[ii].options[
+                                          oi
+                                        ].selections.push({
+                                          id: `sel-${Date.now()}`,
+                                          name: "New Selection",
+                                          price: 0,
+                                        })
+                                        updateFormData("menuCategories", nmc)
+                                      }
+                                    }}
+                                  >
+                                    <Plus className="mr-1 h-2 w-2" /> Add
+                                    Selection
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => {
+                            const nmc = [...(formData.menuCategories || [])]
+                            if (nmc[ci]) {
+                              nmc[ci].items =
+                                nmc[ci].items?.filter((_, idx) => idx !== ii) ||
+                                []
+                              updateFormData("menuCategories", nmc)
+                            }
+                          }}
+                          className="absolute -top-2 -right-2 rounded-full bg-destructive p-1 text-white shadow-lg"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          )
+        })}
       </div>
     </div>
   )
@@ -2134,82 +2313,178 @@ export function SiteBuilderForm({
     <div className="animate-in space-y-6 duration-500 fade-in slide-in-from-bottom-4">
       <SectionTitle
         icon={MessageSquare}
-        title="Reviews"
-        description="Add some sample reviews to boost SEO and trust."
+        title="Reviews & Ratings"
+        description="Add aggregate ratings and sample reviews to boost SEO and trust."
       />
-      <Button
-        variant="outline"
-        className="w-full"
-        onClick={() =>
-          updateFormData("reviews", [
-            ...(formData.reviews || []),
-            {
-              id: Math.random().toString(36).substr(2, 9),
-              author: "",
-              rating: 5,
-              date: new Date().toISOString().split("T")[0] || "",
-              comment: "",
-              source: "Google Reviews",
-            },
-          ])
-        }
-      >
-        <Plus className="mr-2 h-4 w-4" /> Add Review
-      </Button>
-      <div className="space-y-4">
-        {(formData.reviews || []).map((rev, i) => (
-          <div key={i} className="relative space-y-3 rounded-xl border p-4">
-            <button
-              onClick={() =>
-                updateFormData(
-                  "reviews",
-                  (formData.reviews || []).filter((_, idx) => idx !== i)
-                )
-              }
-              className="absolute top-2 right-2 text-destructive"
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
-            <div className="grid gap-4 md:grid-cols-2">
-              <Input
-                placeholder="Author"
-                value={rev?.author || ""}
-                onChange={(e) => {
-                  const nr = [...(formData.reviews || [])]
-                  if (nr[i]) {
-                    nr[i].author = e.target.value
-                    updateFormData("reviews", nr)
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card className="border-border">
+          <CardHeader className="bg-muted/30 py-2">
+            <CardTitle className="text-sm">Aggregate Rating</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Rating Value</Label>
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={formData.aggregateRating?.ratingValue || 0}
+                  onChange={(e) =>
+                    updateFormData("aggregateRating", {
+                      ...(formData.aggregateRating || {
+                        ratingValue: 0,
+                        reviewCount: 0,
+                        source: "",
+                        sourceUrl: "",
+                      }),
+                      ratingValue: parseFloat(e.target.value),
+                    })
                   }
-                }}
-              />
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Review Count</Label>
+                <Input
+                  type="number"
+                  value={formData.aggregateRating?.reviewCount || 0}
+                  onChange={(e) =>
+                    updateFormData("aggregateRating", {
+                      ...(formData.aggregateRating || {
+                        ratingValue: 0,
+                        reviewCount: 0,
+                        source: "",
+                        sourceUrl: "",
+                      }),
+                      reviewCount: parseInt(e.target.value),
+                    })
+                  }
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border">
+          <CardHeader className="bg-muted/30 py-2">
+            <CardTitle className="text-sm">Review Source</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 pt-4">
+            <div className="space-y-2">
+              <Label>Source Name</Label>
               <Input
-                type="number"
-                max="5"
-                min="1"
-                placeholder="Rating"
-                value={rev?.rating || ""}
+                value={formData.aggregateRating?.source || ""}
+                onChange={(e) =>
+                  updateFormData("aggregateRating", {
+                    ...(formData.aggregateRating || {
+                      ratingValue: 0,
+                      reviewCount: 0,
+                      source: "",
+                      sourceUrl: "",
+                    }),
+                    source: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Source URL</Label>
+              <Input
+                value={formData.aggregateRating?.sourceUrl || ""}
+                onChange={(e) =>
+                  updateFormData("aggregateRating", {
+                    ...(formData.aggregateRating || {
+                      ratingValue: 0,
+                      reviewCount: 0,
+                      source: "",
+                      sourceUrl: "",
+                    }),
+                    sourceUrl: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="space-y-4 border-t pt-6">
+        <div className="flex items-center justify-between">
+          <Label className="text-lg font-bold">Individual Reviews</Label>
+          <Button
+            variant="outline"
+            onClick={() =>
+              updateFormData("reviews", [
+                ...(formData.reviews || []),
+                {
+                  id: Math.random().toString(36).substr(2, 9),
+                  author: "",
+                  rating: 5,
+                  date: new Date().toISOString().split("T")[0] || "",
+                  comment: "",
+                  source: "Google Reviews",
+                },
+              ])
+            }
+          >
+            <Plus className="mr-2 h-4 w-4" /> Add Review
+          </Button>
+        </div>
+        <div className="space-y-4">
+          {(formData.reviews || []).map((rev, i) => (
+            <div key={i} className="relative space-y-3 rounded-xl border p-4">
+              <button
+                onClick={() =>
+                  updateFormData(
+                    "reviews",
+                    (formData.reviews || []).filter((_, idx) => idx !== i)
+                  )
+                }
+                className="absolute top-2 right-2 text-destructive"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+              <div className="grid gap-4 md:grid-cols-2">
+                <Input
+                  placeholder="Author"
+                  value={rev?.author || ""}
+                  onChange={(e) => {
+                    const nr = [...(formData.reviews || [])]
+                    if (nr[i]) {
+                      nr[i].author = e.target.value
+                      updateFormData("reviews", nr)
+                    }
+                  }}
+                />
+                <Input
+                  type="number"
+                  max="5"
+                  min="1"
+                  placeholder="Rating"
+                  value={rev?.rating || ""}
+                  onChange={(e) => {
+                    const nr = [...(formData.reviews || [])]
+                    if (nr[i]) {
+                      nr[i].rating = parseInt(e.target.value)
+                      updateFormData("reviews", nr)
+                    }
+                  }}
+                />
+              </div>
+              <Textarea
+                placeholder="Review comment..."
+                value={rev?.comment || ""}
                 onChange={(e) => {
                   const nr = [...(formData.reviews || [])]
                   if (nr[i]) {
-                    nr[i].rating = parseInt(e.target.value)
+                    nr[i].comment = e.target.value
                     updateFormData("reviews", nr)
                   }
                 }}
               />
             </div>
-            <Textarea
-              placeholder="Review comment..."
-              value={rev?.comment || ""}
-              onChange={(e) => {
-                const nr = [...(formData.reviews || [])]
-                if (nr[i]) {
-                  nr[i].comment = e.target.value
-                  updateFormData("reviews", nr)
-                }
-              }}
-            />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   )

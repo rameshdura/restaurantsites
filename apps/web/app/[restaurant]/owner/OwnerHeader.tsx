@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   HandPlatter,
+  ShoppingBag,
 } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 
@@ -31,6 +32,11 @@ export function OwnerHeader({ decodedSlug }: OwnerHeaderProps) {
       href: `/${decodedSlug}/owner/orders`,
       label: "Server",
       icon: HandPlatter,
+    },
+    {
+      href: `/${decodedSlug}/owner/takeout`,
+      label: "Takeout",
+      icon: ShoppingBag,
     },
     { href: `/${decodedSlug}/owner/pay`, label: "Pay", icon: CreditCard },
     {

@@ -380,6 +380,7 @@ function PayContent({
                                 &quot;{item.notes}&quot;
                               </p>
                             )}
+                            {renderSelectedOptions(item, menu)}
                           </div>
                           <span className="font-medium">
                             {symbol}
@@ -404,18 +405,25 @@ function PayContent({
                       {orders.subtotal || 0}
                     </span>
                   </div>
-                  {orders.show_service_tax !== false && (orders.service_charge ?? 0) > 0 && (
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>Service Charge ({orders.service_tax_percent ?? 0}%{orders.service_tax_included ? " Included" : ""})</span>
-                      <span>
-                        {symbol}
-                        {orders.service_charge || 0}
-                      </span>
-                    </div>
-                  )}
+                  {orders.show_service_tax !== false &&
+                    (orders.service_charge ?? 0) > 0 && (
+                      <div className="flex justify-between text-muted-foreground">
+                        <span>
+                          Service Charge ({orders.service_tax_percent ?? 0}%
+                          {orders.service_tax_included ? " Included" : ""})
+                        </span>
+                        <span>
+                          {symbol}
+                          {orders.service_charge || 0}
+                        </span>
+                      </div>
+                    )}
                   {orders.show_tax !== false && (orders.tax ?? 0) > 0 && (
                     <div className="flex justify-between text-muted-foreground">
-                      <span>Tax ({orders.tax_percent ?? 10}%{orders.tax_included ? " Included" : ""})</span>
+                      <span>
+                        Tax ({orders.tax_percent ?? 10}%
+                        {orders.tax_included ? " Included" : ""})
+                      </span>
                       <span>
                         {symbol}
                         {orders.tax || 0}
@@ -473,9 +481,29 @@ function PayContent({
                 {showCalculator && (
                   <div className="space-y-4 rounded-xl border border-border bg-background p-4">
                     <div className="space-y-2">
-                      <label className="text-xs font-medium text-muted-foreground">
-                        Additional Discount ({symbol})
-                      </label>
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-medium text-muted-foreground">
+                          Additional Discount ({symbol})
+                        </label>
+                        <div className="flex items-center gap-2 text-xs font-medium text-primary">
+                          {[5, 10, 15, 18, 22].map((percent) => (
+                            <button
+                              key={percent}
+                              onClick={() => {
+                                const subtotal = orders.subtotal || 0
+                                setManualDiscount(
+                                  Number(
+                                    (subtotal * (percent / 100)).toFixed(2)
+                                  )
+                                )
+                              }}
+                              className="hover:underline focus:outline-none"
+                            >
+                              {percent}%
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                       <input
                         type="number"
                         min="0"
@@ -554,6 +582,38 @@ function PayContent({
     </div>
   )
 }
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function renderSelectedOptions(item: any, arg2?: any) {
+  if (!item || !item.selectedOptions || !arg2) return null
+  // Detect if arg2 is categories or menu
+  const menu =
+    Array.isArray(arg2) && arg2[0]?.items
+      ? arg2.flatMap((c: any) => c.items)
+      : arg2
+  const itemId = item.item_id || item.info?.item_id // Added fallback just in case
+  const menuItem = menu.find(
+    (m: any) => m.id === itemId || m.id === item.item_id
+  )
+  if (!menuItem || !menuItem.options) return null
+
+  const optionsText = menuItem.options
+    .map((opt: any) => {
+      const selId = item.selectedOptions[opt.id]
+      const sel = opt.selections.find((s: any) => s.id === selId)
+      return sel ? sel.name : null
+    })
+    .filter(Boolean)
+    .join(", ")
+
+  if (!optionsText) return null
+  return (
+    <div className="mt-0.5 inline-block rounded-md bg-secondary/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+      {optionsText}
+    </div>
+  )
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export function OwnerPayClient(props: OwnerPayClientProps) {
   return (

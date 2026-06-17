@@ -74,7 +74,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const { tableNumber, restaurantSlug, persons, device_id } =
+    const { tableNumber, restaurantSlug, persons, device_id, customer_info } =
       await request.json()
 
     if (tableNumber === undefined || !restaurantSlug) {
@@ -142,10 +142,11 @@ export async function POST(request: Request) {
     }
 
     const expiresAt = new Date(Date.now() + 5 * 60 * 60 * 1000).toISOString() // 5 hours expiry
-    
+
     // Fetch restaurant data to get tax config
     const { getRestaurant } = await import("@/lib/restaurant")
     const restaurant = await getRestaurant(restaurantSlug)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ops = (restaurant?.data?.operations || {}) as any
 
     const defaultOrders = {
@@ -159,9 +160,13 @@ export async function POST(request: Request) {
       show_tax: ops.showTax !== undefined ? ops.showTax : true,
       tax_included: ops.taxIncluded !== undefined ? ops.taxIncluded : true,
       tax_percent: ops.taxPercent !== undefined ? Number(ops.taxPercent) : 10,
-      show_service_tax: ops.showServiceTax !== undefined ? ops.showServiceTax : false,
-      service_tax_included: ops.serviceTaxIncluded !== undefined ? ops.serviceTaxIncluded : false,
-      service_tax_percent: ops.serviceTaxPercent !== undefined ? Number(ops.serviceTaxPercent) : 0,
+      show_service_tax:
+        ops.showServiceTax !== undefined ? ops.showServiceTax : false,
+      service_tax_included:
+        ops.serviceTaxIncluded !== undefined ? ops.serviceTaxIncluded : false,
+      service_tax_percent:
+        ops.serviceTaxPercent !== undefined ? Number(ops.serviceTaxPercent) : 0,
+      customer_info: customer_info || null,
     }
 
     const { data: newSession, error } = await supabase

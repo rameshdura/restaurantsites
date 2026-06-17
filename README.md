@@ -421,10 +421,10 @@ Each restaurant's `data.json` will dictate whether these services are available.
 - When a user clicks one of these buttons, the frontend does not ask for a physical table number. Instead, it securely generates a random **Virtual Table ID** within a specific range to identify the order type.
 
 #### 3. The Numbering Convention
-To ensure the backend naturally handles these without conflicts, we partition the integer `table_number` space:
-- **1 to 999:** Physical Dine-in Tables
-- **1000 to 4999:** Takeout Orders (e.g., `1042`)
-- **5000 to 9999:** Delivery Orders (e.g., `5108`)
+To ensure the backend naturally handles these without conflicts and preserves the physical dine-in flow intact, we partition the integer `table_number` space:
+- **1 to 999:** Physical Dine-in Tables (Completely unaffected)
+- **1000 to 9999 (4-digits):** Takeout Orders (e.g., `1042`)
+- **10000 to 99999 (5-digits):** Delivery Orders (e.g., `51082`)
 
 #### 4. Seamless Routing in the Monorepo
 - Upon generating the ID (e.g., `1042` for a takeout), the frontend pushes the user directly to `/[restaurantSlug]/table/1042`.
@@ -438,9 +438,14 @@ To ensure the backend naturally handles these without conflicts, we partition th
 #### 6. Kitchen & Owner Dashboard Adaptations
 - The Kitchen Display System (KDS) simply evaluates the `table_number` integer to deduce the order type and change the UI accordingly:
   - **If `tableNumber < 1000`:** Display "Table 12"
-  - **If `tableNumber >= 1000 && tableNumber < 5000`:** Display "Takeout #1042" (and optionally tint the card color for visual separation)
-  - **If `tableNumber >= 5000`:** Display "Delivery #5108"
+  - **If `tableNumber >= 1000 && tableNumber < 10000`:** Display "Takeout #1042" (and optionally tint the card color for visual separation)
+  - **If `tableNumber >= 10000`:** Display "Delivery #51082"
 - This allows staff to perfectly separate dine-in, takeout, and delivery with **zero backend or database changes**.
+
+#### 7. Customer Checkout Details & Notifications (New Extension)
+- When a user checks out for a 4-digit or 5-digit virtual table, they will be prompted to enter their **Name, Phone, and Address (for delivery)**.
+- This data will be saved securely within the existing `orders` JSON column of the `table_sessions` table under a new `customer_info` key. No database schema changes are required!
+- Once the session is generated, an API route triggers an **Email or SMS notification** to the restaurant owner confirming the request and stores the `session_id` in the user's cookies so they can track their order status.
 
 ---
 

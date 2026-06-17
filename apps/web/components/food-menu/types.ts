@@ -1,3 +1,15 @@
+export interface MenuOptionSelection {
+  id: string
+  name: string
+  price?: string | number
+}
+
+export interface MenuOption {
+  id: string
+  name: string
+  selections: MenuOptionSelection[]
+}
+
 export interface MenuItem {
   id: string
   name: string
@@ -9,6 +21,7 @@ export interface MenuItem {
   isSpicy?: boolean
   isPopular?: boolean
   tags?: string[]
+  options?: MenuOption[]
 }
 
 export interface MenuCategory {

@@ -19,8 +19,10 @@ import {
   ShoppingBag,
   X,
   QrCode,
+  UtensilsCrossed,
 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import QRCode from "react-qr-code"
 import {
   Dialog,
@@ -77,6 +79,38 @@ interface TableSession {
   }
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function renderSelectedOptions(item: any, arg2?: any) {
+  if (!item || !item.selectedOptions || !arg2) return null
+  // Detect if arg2 is categories or menu
+  const menu =
+    Array.isArray(arg2) && arg2[0]?.items
+      ? arg2.flatMap((c: any) => c.items)
+      : arg2
+  const itemId = item.item_id || item.info?.item_id // Added fallback just in case
+  const menuItem = menu.find(
+    (m: any) => m.id === itemId || m.id === item.item_id
+  )
+  if (!menuItem || !menuItem.options) return null
+
+  const optionsText = menuItem.options
+    .map((opt: any) => {
+      const selId = item.selectedOptions[opt.id]
+      const sel = opt.selections.find((s: any) => s.id === selId)
+      return sel ? sel.name : null
+    })
+    .filter(Boolean)
+    .join(", ")
+
+  if (!optionsText) return null
+  return (
+    <div className="mt-0.5 inline-block rounded-md bg-secondary/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+      {optionsText}
+    </div>
+  )
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 export function OwnerTableDetailClient({
   restaurantSlug,
   tableId,
@@ -84,13 +118,12 @@ export function OwnerTableDetailClient({
   categories = [],
   onToggleSidebar,
 }: OwnerTableDetailClientProps) {
+  const router = useRouter()
   const [sessions, setSessions] = useState<TableSession[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isClosing, setIsClosing] = useState(false)
-  const [isCompleting, setIsCompleting] = useState(false)
   const [isCreating, setIsCreating] = useState(false)
   const [isFlushDialogOpen, setIsFlushDialogOpen] = useState(false)
-  const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
@@ -110,6 +143,7 @@ export function OwnerTableDetailClient({
       item_id: string
       qty: number
       notes: string
+      selectedOptions?: Record<string, string>
     }[]
   >([])
   const [activeDialogTab, setActiveDialogTab] = useState<"menu" | "cart">(
@@ -138,7 +172,8 @@ export function OwnerTableDetailClient({
     itemId: string,
     qty: number,
     notes: string,
-    cartId?: string
+    cartId?: string,
+    selectedOptions?: Record<string, string>
   ) => {
     setLocalCart((prev) => {
       if (cartId) {
@@ -159,7 +194,11 @@ export function OwnerTableDetailClient({
         }
       } else {
         const existingIndex = prev.findIndex(
-          (i) => i.item_id === itemId && i.notes === notes
+          (i) =>
+            i.item_id === itemId &&
+            i.notes === notes &&
+            JSON.stringify(i.selectedOptions) ===
+              JSON.stringify(selectedOptions)
         )
         if (existingIndex > -1) {
           const newCart = [...prev]
@@ -175,6 +214,7 @@ export function OwnerTableDetailClient({
               item_id: itemId,
               qty,
               notes,
+              selectedOptions,
             },
           ]
         }
@@ -199,6 +239,7 @@ export function OwnerTableDetailClient({
             item_id: item.item_id,
             qty: item.qty,
             notes: item.notes,
+            selectedOptions: item.selectedOptions,
           })),
           isOwner: true,
         }),
@@ -284,32 +325,11 @@ export function OwnerTableDetailClient({
     }
   }
 
-  const handleCompleteSession = () => setIsCompleteDialogOpen(true)
-
-  const confirmCompleteSession = async () => {
+  const handleCompleteSession = () => {
     if (!activeSession) return
-    setIsCompleting(true)
-    try {
-      const res = await fetch("/api/table/session/close", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          session_id: activeSession.session_id,
-          status: "closed",
-        }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error("Failed to complete session")
-
-      setCompletedSession(data.session)
-      setIsCompleteDialogOpen(false)
-      await fetchTableData()
-    } catch (err) {
-      console.error(err)
-      alert("Error completing session.")
-    } finally {
-      setIsCompleting(false)
-    }
+    router.push(
+      `/${restaurantSlug}/owner/pay?session_id=${activeSession.session_id}`
+    )
   }
 
   const handleCreateSession = () => setIsCreateDialogOpen(true)
@@ -612,22 +632,16 @@ export function OwnerTableDetailClient({
                   <div className="flex items-center gap-3">
                     <button
                       onClick={handleCompleteSession}
-                      disabled={isCompleting || isClosing}
+                      disabled={isClosing}
                       title="Mark as Paid & Closed"
                       className="flex h-12 cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:bg-primary/90 disabled:opacity-50"
                     >
-                      {isCompleting ? (
-                        <RefreshCw className="h-5 w-5 animate-spin" />
-                      ) : (
-                        <>
-                          <Banknote className="h-5 w-5" />
-                          <span className="hidden sm:inline">Pay & Close</span>
-                        </>
-                      )}
+                      <Banknote className="h-5 w-5" />
+                      <span className="hidden sm:inline">Pay & Close</span>
                     </button>
                     <button
                       onClick={handleFlushSession}
-                      disabled={isClosing || isCompleting}
+                      disabled={isClosing}
                       title="Flush Session"
                       className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl bg-red-600 text-sm font-semibold text-white shadow-sm shadow-red-900/20 transition-all hover:bg-red-700 disabled:opacity-50"
                     >
@@ -720,10 +734,12 @@ export function OwnerTableDetailClient({
                                 )}
                               </p>
                               {item.notes && (
-                                <p className="mt-1 text-sm text-muted-foreground">
+                                <p className="mt-1 flex items-center gap-1.5 text-xs font-medium text-amber-600 dark:text-amber-500">
+                                  <UtensilsCrossed className="h-3.5 w-3.5" />
                                   Note: {item.notes}
                                 </p>
                               )}
+                              {renderSelectedOptions(item, categories)}
 
                               {/* Cooking Tracker */}
                               <div className="mt-2 flex items-center gap-2">
@@ -878,20 +894,39 @@ export function OwnerTableDetailClient({
                         {formatCurrency(activeSession.orders.subtotal)}
                       </span>
                     </div>
-                    {activeSession.orders.show_service_tax !== false && activeSession.orders.service_charge > 0 && (
-                      <div className="flex justify-between text-sm text-muted-foreground">
-                        <span>Service Charge ({activeSession.orders.service_tax_percent ?? 0}%{activeSession.orders.service_tax_included ? " Included" : ""})</span>
-                        <span>
-                          {formatCurrency(activeSession.orders.service_charge)}
-                        </span>
-                      </div>
-                    )}
-                    {activeSession.orders.show_tax !== false && (activeSession.orders.tax ?? 0) > 0 && (
-                      <div className="flex justify-between text-sm text-muted-foreground">
-                        <span>Tax ({activeSession.orders.tax_percent ?? 10}%{activeSession.orders.tax_included ? " Included" : ""})</span>
-                        <span>{formatCurrency(activeSession.orders.tax)}</span>
-                      </div>
-                    )}
+                    {activeSession.orders.show_service_tax !== false &&
+                      activeSession.orders.service_charge > 0 && (
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>
+                            Service Charge (
+                            {activeSession.orders.service_tax_percent ?? 0}%
+                            {activeSession.orders.service_tax_included
+                              ? " Included"
+                              : ""}
+                            )
+                          </span>
+                          <span>
+                            {formatCurrency(
+                              activeSession.orders.service_charge
+                            )}
+                          </span>
+                        </div>
+                      )}
+                    {activeSession.orders.show_tax !== false &&
+                      (activeSession.orders.tax ?? 0) > 0 && (
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>
+                            Tax ({activeSession.orders.tax_percent ?? 10}%
+                            {activeSession.orders.tax_included
+                              ? " Included"
+                              : ""}
+                            )
+                          </span>
+                          <span>
+                            {formatCurrency(activeSession.orders.tax)}
+                          </span>
+                        </div>
+                      )}
                     {activeSession.orders.tips > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
                         <span>Tip</span>
@@ -1075,8 +1110,14 @@ export function OwnerTableDetailClient({
                                   item={item}
                                   currency={currency}
                                   tableMode={true}
-                                  onUpdateQty={(qty, notes) =>
-                                    handleUpdateLocalCart(item.id, qty, notes)
+                                  onUpdateQty={(qty, notes, selectedOptions) =>
+                                    handleUpdateLocalCart(
+                                      item.id,
+                                      qty,
+                                      notes,
+                                      undefined,
+                                      selectedOptions
+                                    )
                                   }
                                 />
                               )
@@ -1212,6 +1253,8 @@ export function OwnerTableDetailClient({
                                 className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-base transition-all focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none md:text-xs"
                               />
                             </div>
+
+                            {renderSelectedOptions(cartItem, categories)}
                           </div>
                         )
                       })}
@@ -1335,32 +1378,6 @@ export function OwnerTableDetailClient({
               disabled={isClosing}
             >
               {isClosing ? "Flushing..." : "Flush Session"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog
-        open={isCompleteDialogOpen}
-        onOpenChange={setIsCompleteDialogOpen}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Complete Session</DialogTitle>
-            <DialogDescription className="pt-2">
-              Are you sure you want to mark this session as paid and closed?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsCompleteDialogOpen(false)}
-              disabled={isCompleting}
-            >
-              Cancel
-            </Button>
-            <Button onClick={confirmCompleteSession} disabled={isCompleting}>
-              {isCompleting ? "Completing..." : "Pay & Close"}
             </Button>
           </DialogFooter>
         </DialogContent>

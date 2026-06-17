@@ -117,6 +117,8 @@ export function TableTopBar({
   const [currentLang, setCurrentLang] = React.useState("default")
   const langDropdownRef = React.useRef<HTMLDivElement>(null)
 
+  const isJA = defaultLanguage?.toUpperCase() === "JA"
+
   React.useLayoutEffect(() => {
     const savedLangName = sessionStorage.getItem("lang-transition-name")
     if (savedLangName) {
@@ -381,7 +383,9 @@ export function TableTopBar({
               className="flex items-center gap-1.5 rounded-full bg-primary/10 px-4 py-2 text-xs font-bold text-primary transition-colors hover:bg-primary/20 active:scale-95"
             >
               <UserPlus className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Add Friend</span>
+              <span className="hidden sm:inline">
+                {isJA ? "友達を追加" : "Add Friend"}
+              </span>
             </button>
           )}
           {showLeaveTable && (
@@ -390,7 +394,13 @@ export function TableTopBar({
               disabled={isLeaving}
               className="flex items-center gap-1.5 rounded-full bg-destructive/10 px-4 py-2 text-xs font-bold text-destructive transition-colors hover:bg-destructive/20 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
             >
-              {isLeaving ? "Leaving..." : "Leave"}
+              {isLeaving
+                ? isJA
+                  ? "退出中..."
+                  : "Leaving..."
+                : isJA
+                  ? "退出"
+                  : "Leave"}
             </button>
           )}
         </div>
@@ -419,7 +429,7 @@ export function TableTopBar({
             {targetLangName}
           </span>
           <span className="text-sm font-medium opacity-80 md:text-base">
-            Changing Language...
+            {isJA ? "言語を変更中..." : "Changing Language..."}
           </span>
         </div>
       </div>

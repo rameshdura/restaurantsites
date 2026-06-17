@@ -198,6 +198,21 @@ export interface SiteBuilderData {
       isSpicy: boolean
       spiceLevel: number
       allergens: string[]
+      isVegetarian?: boolean
+      isVegan?: boolean
+      calories?: number
+      ingredients?: string[]
+      options?: Array<{
+        id: string
+        name: string
+        selections: Array<{ id: string; name: string; price: number }>
+      }>
+      available?: boolean
+      availableFrom?: string
+      availableTo?: string
+      size?: string
+      limited?: boolean
+      availableUntil?: string
     }>
   }>
   reviews: Array<{

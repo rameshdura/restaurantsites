@@ -15,7 +15,6 @@
     "currency": "JPY"
   },
   "seo": {
-    "canonical": "",
     "title": "Ramen Taro | Authentic Indian & Nepali Food in Tokyo",
     "description": "Savor authentic Indian curries, hand-crafted Nepali momos, and traditional tandoori dishes at Ramen Taro in Shinbashi, Tokyo. A true Himalayan experience.",
     "keywords": [
@@ -28,7 +27,6 @@
       "indian restaurant tokyo",
       "nepali thali"
     ],
-    "noindex": false,
     "menuTitle": "Ramen Taro Menu | Authentic Curries, Momos & Prices",
     "menuDescription": "Explore the complete Ramen Taro menu. From signature steamed momos and spicy tandoori chicken to traditional Nepalese lunch sets and curries.",
     "aboutTitle": "About Ramen Taro | Traditional Culinary Heritage",
@@ -38,7 +36,9 @@
     "brandTitle": "Ramen Taro Brand Assets | Media Materials",
     "brandDescription": "Access and download official marketing materials, printable menus, and professional branding assets for Ramen Taro.",
     "companyTitle": "Ramen Taro | Operations & Corporate Details",
-    "companyDescription": "Official operational information and corporate overview for Ramen Taro, delivering authentic Asian culinary experiences in Tokyo."
+    "companyDescription": "Official operational information and corporate overview for Ramen Taro, delivering authentic Asian culinary experiences in Tokyo.",
+    "noindex": false,
+    "canonical": ""
   },
   "social": {
     "ogImage": null,
@@ -48,7 +48,8 @@
       "https://www.instagram.com/ramentaro",
       "https://www.facebook.com/ramentaro",
       "https://tabelog.com/tokyo/ramentaro"
-    ]
+    ],
+    "twitterSite": ""
   },
   "schema": {
     "priceRange": "$$",
@@ -78,7 +79,8 @@
     "postalCode": "207-0011",
     "placeId": "ChIJN1t_tDeuEmsRUsoyg83yJQk",
     "googleMapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
-    "timezone": "Asia/Tokyo"
+    "timezone": "Asia/Tokyo",
+    "neighborhood": ""
   },
   "images": {
     "logo": {
@@ -178,18 +180,29 @@
         "url": "/images/restaurants/ramen-taro/ourstory/story-4.png",
         "alt": "Our Story 4"
       }
-    ]
+    ],
+    "heroImage": {
+      "url": "",
+      "alt": "",
+      "credit": ""
+    },
+    "coverImage": {
+      "url": "",
+      "alt": "",
+      "credit": ""
+    },
+    "team": []
   },
   "companyInfo": {
     "name": "Narayani Co., Ltd.",
     "legalName": "Narayani Company Limited",
     "registrationNumber": "6020001061694",
-    "representative": "Poudel Prakash",
     "address": "35 Minezawacho, Hodogaya Ward, Yokohama, Kanagawa 221-0061, Japan",
     "phone": "045-331-1303",
     "establishedDate": "2009-05-21",
     "capital": "5,000,000 JPY",
     "fiscalYearEnd": "End of March",
+    "representative": "Poudel Prakash",
     "businessPurpose": "",
     "annualReportUrl": "",
     "url": "/ramen-taro/company-information"
@@ -287,28 +300,93 @@
       "name": "Lunch",
       "items": [
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [
+            {
+              "id": "size",
+              "name": "Size",
+              "selections": [
+                {
+                  "id": "reg",
+                  "name": "Regular",
+                  "price": 0
+                },
+                {
+                  "id": "lrg",
+                  "name": "Large",
+                  "price": 200
+                }
+              ]
+            }
+          ],
           "name": "Everest Chicken Momo",
           "description": "Steamed spiced chicken dumplings served with tomato-sesame chutney.",
           "price": "1300",
           "category": "Lunch",
           "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
-          "id": "item_everest_chicken_momo"
+          "id": "item_everest_chicken_momo",
+          "secondaryName": ""
         },
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "Sherpa Khaja Set",
           "description": "Authentic Nepali lunch platter with beaten rice, spiced chickpeas, and potato-bamboo shoot curry.",
           "price": "1500",
           "category": "Lunch",
           "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
-          "id": "item_sherpa_khaja_set"
+          "id": "item_sherpa_khaja_set",
+          "secondaryName": ""
         },
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "Veg Samosa Chaat",
           "description": "Crispy samosas topped with spicy chickpeas, yogurt, sweet and tangy chutneys.",
           "price": "900",
           "category": "Lunch",
           "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
-          "id": "item_veg_samosa_chaat"
+          "id": "item_veg_samosa_chaat",
+          "secondaryName": ""
         }
       ]
     },
@@ -316,36 +394,100 @@
       "name": "Dinner",
       "items": [
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "Himalayan Goat Curry (Khasi ko Masu)",
           "description": "Tender goat meat slow-cooked in a rich gravy of traditional spices.",
           "price": "2200",
           "category": "Dinner",
           "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
-          "id": "item_himalayan_goat_curry_khasi_ko_masu"
+          "id": "item_himalayan_goat_curry_khasi_ko_masu",
+          "secondaryName": ""
         },
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "Classic Chicken Tikka Masala",
           "description": "Tandoori-grilled chicken in a creamy, butter-infused spiced tomato sauce.",
           "price": "1800",
           "category": "Dinner",
           "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
-          "id": "item_classic_chicken_tikka_masala"
+          "id": "item_classic_chicken_tikka_masala",
+          "secondaryName": ""
         },
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "Palak Paneer",
           "description": "Fresh cottage cheese cubes simmered in a smooth, spiced spinach purée.",
           "price": "1600",
           "category": "Dinner",
           "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
-          "id": "item_palak_paneer"
+          "id": "item_palak_paneer",
+          "secondaryName": ""
         },
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "Everest Dal Bhat Thali",
           "description": "A traditional Nepali feast with yellow lentil soup, rice, and vegetable curry.",
           "price": "2000",
           "category": "Dinner",
           "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
-          "id": "item_everest_dal_bhat_thali"
+          "id": "item_everest_dal_bhat_thali",
+          "secondaryName": ""
         }
       ]
     },
@@ -353,12 +495,28 @@
       "name": "Drinks",
       "items": [
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "Mango Lassi",
           "description": "A creamy, refreshing yogurt drink blended with sweet ripe mangoes and cardamom.",
           "price": "550",
           "category": "Drinks",
           "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png",
-          "id": "item_mango_lassi"
+          "id": "item_mango_lassi",
+          "secondaryName": ""
         }
       ]
     },
@@ -366,187 +524,343 @@
       "name": "Dessert",
       "items": [
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "Warm Gulab Jamun",
           "description": "Milk-solid dumplings soaked in warm, cardamom-infused sugar syrup.",
           "price": "600",
           "category": "Dessert",
           "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
-          "id": "item_warm_gulab_jamun"
+          "id": "item_warm_gulab_jamun",
+          "secondaryName": ""
         },
         {
+          "isPopular": false,
+          "isVegetarian": false,
+          "isVegan": false,
+          "isSpicy": false,
+          "spiceLevel": 0,
+          "allergens": [],
+          "calories": 0,
+          "ingredients": [],
+          "available": true,
+          "availableFrom": "",
+          "availableTo": "",
+          "size": "",
+          "limited": false,
+          "availableUntil": "",
+          "options": [],
           "name": "Kheer (Himalayan Rice Pudding)",
           "description": "Creamy basmati rice pudding slow-simmered with nuts, cardamom, and saffron.",
           "price": "750",
           "category": "Dessert",
           "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png",
-          "id": "item_kheer_himalayan_rice_pudding"
+          "id": "item_kheer_himalayan_rice_pudding",
+          "secondaryName": ""
         }
       ]
     }
   ],
   "menu": [
     {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 1,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
+      "available": true,
+      "availableFrom": "",
+      "availableTo": "",
+      "size": "Regular",
+      "limited": false,
+      "availableUntil": "",
+      "options": [
+        {
+          "id": "size",
+          "name": "Size",
+          "selections": [
+            {
+              "id": "reg",
+              "name": "Regular",
+              "price": 0
+            },
+            {
+              "id": "lrg",
+              "name": "Large",
+              "price": 200
+            }
+          ]
+        }
+      ],
       "name": "Everest Chicken Momo",
       "description": "Steamed spiced chicken dumplings served with tomato-sesame chutney.",
       "price": "1300",
       "category": "Lunch",
       "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
       "id": "item_everest_chicken_momo",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 1,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "Sherpa Khaja Set",
       "description": "Authentic Nepali lunch platter with beaten rice, spiced chickpeas, and potato-bamboo shoot curry.",
       "price": "1500",
       "category": "Lunch",
       "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
       "id": "item_sherpa_khaja_set",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "Veg Samosa Chaat",
       "description": "Crispy samosas topped with spicy chickpeas, yogurt, sweet and tangy chutneys.",
       "price": "900",
       "category": "Lunch",
       "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
       "id": "item_veg_samosa_chaat",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 1,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "Himalayan Goat Curry (Khasi ko Masu)",
       "description": "Tender goat meat slow-cooked in a rich gravy of traditional spices.",
       "price": "2200",
       "category": "Dinner",
       "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
       "id": "item_himalayan_goat_curry_khasi_ko_masu",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 1,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "Classic Chicken Tikka Masala",
       "description": "Tandoori-grilled chicken in a creamy, butter-infused spiced tomato sauce.",
       "price": "1800",
       "category": "Dinner",
       "image": "/images/restaurants/ramen-taro/ourfood/food-1.png",
       "id": "item_classic_chicken_tikka_masala",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "Palak Paneer",
       "description": "Fresh cottage cheese cubes simmered in a smooth, spiced spinach purée.",
       "price": "1600",
       "category": "Dinner",
       "image": "/images/restaurants/ramen-taro/ourfood/food-2.png",
       "id": "item_palak_paneer",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "Everest Dal Bhat Thali",
       "description": "A traditional Nepali feast with yellow lentil soup, rice, and vegetable curry.",
       "price": "2000",
       "category": "Dinner",
       "image": "/images/restaurants/ramen-taro/ourfood/food-3.png",
       "id": "item_everest_dal_bhat_thali",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "Mango Lassi",
       "description": "A creamy, refreshing yogurt drink blended with sweet ripe mangoes and cardamom.",
       "price": "550",
       "category": "Drinks",
       "image": "/images/restaurants/ramen-taro/ourdrink/drink-1.png",
       "id": "item_mango_lassi",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "Warm Gulab Jamun",
       "description": "Milk-solid dumplings soaked in warm, cardamom-infused sugar syrup.",
       "price": "600",
       "category": "Dessert",
       "image": "/images/restaurants/ramen-taro/ourfood/food-4.png",
       "id": "item_warm_gulab_jamun",
+      "secondaryName": ""
+    },
+    {
+      "isPopular": false,
+      "isVegetarian": false,
+      "isVegan": false,
+      "isSpicy": false,
+      "spiceLevel": 0,
+      "allergens": [],
+      "calories": 0,
+      "ingredients": [],
       "available": true,
       "availableFrom": "",
       "availableTo": "",
-      "availableUntil": "",
       "size": "Regular",
       "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
-    },
-    {
+      "availableUntil": "",
+      "options": [],
       "name": "Kheer (Himalayan Rice Pudding)",
       "description": "Creamy basmati rice pudding slow-simmered with nuts, cardamom, and saffron.",
       "price": "750",
       "category": "Dessert",
       "image": "/images/restaurants/ramen-taro/ourdrink/drink-2.png",
       "id": "item_kheer_himalayan_rice_pudding",
-      "available": true,
-      "availableFrom": "",
-      "availableTo": "",
-      "availableUntil": "",
-      "size": "Regular",
-      "limited": false,
-      "spiceLevel": 0,
-      "allergens": []
+      "secondaryName": ""
     }
   ],
   "about": {
+    "title": "",
+    "content": "",
+    "shortDescription": "",
+    "mission": "",
+    "philosophy": "",
+    "additionalContent": [],
+    "foundedYear": 0,
+    "foundingLocation": "",
+    "founder": {
+      "name": "",
+      "role": "",
+      "bio": "",
+      "image": "",
+      "qualifications": [],
+      "social": {},
+      "since": ""
+    },
+    "awards": [],
+    "keywordsByPage": {
+      "home": [],
+      "about": [],
+      "menu": [],
+      "contact": []
+    },
+    "images": [],
+    "image": "",
+    "team": [],
     "representative": {
       "name": "Poudel Prakash",
       "role": "",
@@ -729,7 +1043,8 @@
       "lng": 139.4449135,
       "mapsUrl": "https://maps.app.goo.gl/jksfrYcpo8SmAjT47",
       "address": "4-chōme-10-10 Kiyohara, Higashiyamato, Tokyo 207-0011, Japan",
-      "plusCode": ""
+      "plusCode": "",
+      "embedUrl": ""
     },
     "openingHours": [
       {

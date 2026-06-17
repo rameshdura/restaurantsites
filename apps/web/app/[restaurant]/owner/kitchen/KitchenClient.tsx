@@ -21,6 +21,7 @@ export interface OrderItem {
   cooked_qty?: number
   notes?: string
   name?: string
+  selectedOptions?: Record<string, string>
 }
 
 export interface KitchenSession {
@@ -82,6 +83,38 @@ function ElapsedTime({ createdString }: { createdString: string }) {
     </span>
   )
 }
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function renderSelectedOptions(item: any, arg2?: any) {
+  if (!item || !item.selectedOptions || !arg2) return null
+  // Detect if arg2 is categories or menu
+  const menu =
+    Array.isArray(arg2) && arg2[0]?.items
+      ? arg2.flatMap((c: any) => c.items)
+      : arg2
+  const itemId = item.item_id || item.info?.item_id // Added fallback just in case
+  const menuItem = menu.find(
+    (m: any) => m.id === itemId || m.id === item.item_id
+  )
+  if (!menuItem || !menuItem.options) return null
+
+  const optionsText = menuItem.options
+    .map((opt: any) => {
+      const selId = item.selectedOptions[opt.id]
+      const sel = opt.selections.find((s: any) => s.id === selId)
+      return sel ? sel.name : null
+    })
+    .filter(Boolean)
+    .join(", ")
+
+  if (!optionsText) return null
+  return (
+    <div className="mt-0.5 inline-block rounded-md bg-secondary/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+      {optionsText}
+    </div>
+  )
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export function KitchenClient({
   menu,
@@ -293,6 +326,7 @@ export function KitchenClient({
                             {item.notes}
                           </p>
                         )}
+                        {renderSelectedOptions(item, menu)}
                       </div>
 
                       {/* Cooked Tracker Controls */}
@@ -375,6 +409,7 @@ export function KitchenClient({
           notes?: string
           cooked_qty: number
           order_item_id: string
+          selectedOptions?: Record<string, string>
         }[]
       }
     > = {}
@@ -401,6 +436,7 @@ export function KitchenClient({
           cooked_qty: item.cooked_qty || 0,
           notes: item.notes,
           order_item_id: item.order_item_id,
+          selectedOptions: item.selectedOptions,
         })
       })
     })
@@ -501,6 +537,17 @@ export function KitchenClient({
                               ({t.notes})
                             </span>
                           )}
+                          {renderSelectedOptions(
+                            {
+                              ...t,
+                              item_id:
+                                typeof info !== "undefined"
+                                  ? info.item_id
+                                  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                    (t as any).item_id,
+                            },
+                            menu
+                          )}
                         </span>
                       </div>
                       <div className="flex shrink-0 items-center gap-2 rounded-lg bg-muted p-1">
@@ -599,6 +646,7 @@ export function KitchenClient({
           notes?: string
           cooked_qty: number
           order_item_id: string
+          selectedOptions?: Record<string, string>
         }[]
       }
     > = {}
@@ -627,6 +675,7 @@ export function KitchenClient({
           cooked_qty: item.cooked_qty || 0,
           notes: item.notes,
           order_item_id: item.order_item_id,
+          selectedOptions: item.selectedOptions,
         })
       })
     })
@@ -769,6 +818,17 @@ export function KitchenClient({
                                     <span className="ml-1 text-red-500 italic">
                                       ({t.notes})
                                     </span>
+                                  )}
+                                  {renderSelectedOptions(
+                                    {
+                                      ...t,
+                                      item_id:
+                                        typeof info !== "undefined"
+                                          ? info.item_id
+                                          : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                            (t as any).item_id,
+                                    },
+                                    menu
                                   )}
                                 </span>
                               </div>
@@ -937,6 +997,7 @@ export function KitchenClient({
                     {item.notes}
                   </p>
                 )}
+                {renderSelectedOptions(item, menu)}
 
                 <div className="flex items-center justify-between">
                   <div className="text-sm font-bold">

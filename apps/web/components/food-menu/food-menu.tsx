@@ -17,7 +17,6 @@ import {
   ArrowLeft,
   ClipboardList,
   CheckCircle,
-  Receipt,
   RefreshCw,
 } from "lucide-react"
 import QRCode from "react-qr-code"
@@ -44,6 +43,7 @@ interface FoodMenuProps {
   /** Set true on public-facing menu pages where ordering is disabled.
    *  Prevents stale session cookies from activating the checkout UI. */
   disableTableMode?: boolean
+  defaultLanguage?: string
 }
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
@@ -66,7 +66,10 @@ export function FoodMenu({
   initialSession = null,
   onSessionChange,
   disableTableMode = false,
+  defaultLanguage,
 }: FoodMenuProps) {
+  const isJA = defaultLanguage?.toUpperCase() === "JA"
+
   const params = useParams()
   const restaurantSlug = (params?.restaurant as string) || ""
   const { toast } = useToast()
@@ -88,7 +91,13 @@ export function FoodMenu({
   const [showCustomTipInput, setShowCustomTipInput] = useState(false)
   const [sidebarTab, setSidebarTab] = useState<"cart" | "orders">("cart")
   const [cart, setCart] = useState<
-    { cart_id: string; item_id: string; qty: number; notes: string }[]
+    {
+      cart_id: string
+      item_id: string
+      qty: number
+      notes: string
+      selectedOptions?: Record<string, string>
+    }[]
   >([])
 
   const [prevInitialSession, setPrevInitialSession] = useState(initialSession)
@@ -207,6 +216,7 @@ export function FoodMenu({
     itemId: string,
     qty: number,
     notes: string,
+    selectedOptions?: Record<string, string>,
     cartId?: string
   ) => {
     if (qty > 0) {
@@ -229,6 +239,8 @@ export function FoodMenu({
             item_id: newCart[existingIndex]!.item_id,
             qty,
             notes,
+            selectedOptions:
+              selectedOptions || newCart[existingIndex]!.selectedOptions,
           }
           return newCart
         }
@@ -242,6 +254,7 @@ export function FoodMenu({
             item_id: itemId,
             qty,
             notes,
+            selectedOptions,
           },
         ]
       }
@@ -275,8 +288,10 @@ export function FoodMenu({
         data.error === "Session not found"
       ) {
         toast({
-          title: "Session Closed",
-          description: "This ordering session has been closed by the host.",
+          title: isJA ? "セッション終了" : "Session Closed",
+          description: isJA
+            ? "この注文セッションはホストによって閉じられました。"
+            : "This ordering session has been closed by the host.",
           variant: "destructive",
         })
         clearSessionCookie(restaurantSlug)
@@ -337,20 +352,24 @@ export function FoodMenu({
         onSessionChange?.(data.session)
         setReceiptSession(data.session)
         setShowReceipt(true)
+        setIsSidebarOpen(false) // Reset sidebar state to restore body scroll
         // We do NOT clear the session cookie here. It will be cleared when the user clicks "Done" on the receipt.
       } else {
         toast({
-          title: "Checkout Failed",
-          description: "Failed to checkout. Please ask a staff member.",
+          title: isJA ? "お会計失敗" : "Checkout Failed",
+          description: isJA
+            ? "お会計に失敗しました。スタッフにお声がけください。"
+            : "Failed to checkout. Please ask a staff member.",
           variant: "destructive",
         })
       }
     } catch (err) {
       console.error("Failed to checkout:", err)
       toast({
-        title: "Checkout Error",
-        description:
-          "An error occurred during checkout. Please ask a staff member.",
+        title: isJA ? "お会計エラー" : "Checkout Error",
+        description: isJA
+          ? "お会計中にエラーが発生しました。スタッフにお声がけください。"
+          : "An error occurred during checkout. Please ask a staff member.",
         variant: "destructive",
       })
     } finally {
@@ -371,8 +390,18 @@ export function FoodMenu({
   )
   const cartSubtotal = cart.reduce((sum: number, cartItem) => {
     const itemDetails = flatItems.find((i) => i.id === cartItem.item_id)
-    const price = itemDetails ? parseFloat(String(itemDetails.price)) || 0 : 0
-    return sum + price * cartItem.qty
+    const basePrice = itemDetails
+      ? parseFloat(String(itemDetails.price)) || 0
+      : 0
+    const optionsPrice =
+      cartItem.selectedOptions && itemDetails?.options
+        ? itemDetails.options.reduce((total, opt) => {
+            const selectedId = cartItem.selectedOptions![opt.id]
+            const selection = opt.selections.find((s) => s.id === selectedId)
+            return total + (Number(selection?.price) || 0)
+          }, 0)
+        : 0
+    return sum + (basePrice + optionsPrice) * cartItem.qty
   }, 0)
 
   const renderSidebarContent = () => {
@@ -388,7 +417,7 @@ export function FoodMenu({
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
-            Cart ({cartTotalItemCount})
+            {isJA ? "カート" : "Cart"} ({cartTotalItemCount})
           </button>
           <button
             onClick={() => setSidebarTab("orders")}
@@ -398,7 +427,7 @@ export function FoodMenu({
                 : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
-            Orders
+            {isJA ? "注文" : "Orders"}
           </button>
         </div>
 
@@ -409,7 +438,9 @@ export function FoodMenu({
             {cart.length === 0 ? (
               <div className="py-8 text-center text-muted-foreground">
                 <ShoppingBag className="mx-auto mb-3 h-8 w-8 opacity-40" />
-                <p className="text-sm">Your cart is empty</p>
+                <p className="text-sm">
+                  {isJA ? "カートは空です" : "Your cart is empty"}
+                </p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -419,9 +450,20 @@ export function FoodMenu({
                       (i) => i.id === cartItem.item_id
                     )
                     const name = itemDetails?.name || cartItem.item_id
-                    const itemPrice = itemDetails
+                    const basePrice = itemDetails
                       ? parseFloat(String(itemDetails.price)) || 0
                       : 0
+                    const optionsPrice =
+                      cartItem.selectedOptions && itemDetails?.options
+                        ? itemDetails.options.reduce((total, opt) => {
+                            const selectedId = cartItem.selectedOptions![opt.id]
+                            const selection = opt.selections.find(
+                              (s) => s.id === selectedId
+                            )
+                            return total + (Number(selection?.price) || 0)
+                          }, 0)
+                        : 0
+                    const itemPrice = basePrice + optionsPrice
                     return (
                       <div
                         key={cartItem.cart_id}
@@ -432,9 +474,25 @@ export function FoodMenu({
                             <p className="truncate text-sm font-semibold text-foreground">
                               {name}
                             </p>
-                            <p className="text-xs text-muted-foreground">
+                            {cartItem.selectedOptions &&
+                              itemDetails?.options && (
+                                <p className="mt-0.5 text-xs text-muted-foreground">
+                                  {itemDetails.options
+                                    .map((opt) => {
+                                      const selId =
+                                        cartItem.selectedOptions![opt.id]
+                                      const sel = opt.selections.find(
+                                        (s) => s.id === selId
+                                      )
+                                      return sel ? sel.name : null
+                                    })
+                                    .filter(Boolean)
+                                    .join(", ")}
+                                </p>
+                              )}
+                            <p className="mt-0.5 text-xs text-muted-foreground">
                               {symbol}
-                              {itemPrice} each
+                              {itemPrice} {isJA ? "各" : "each"}
                             </p>
                           </div>
                           <span className="shrink-0 text-sm font-semibold text-foreground">
@@ -453,6 +511,7 @@ export function FoodMenu({
                                   cartItem.item_id,
                                   cartItem.qty - 1,
                                   cartItem.notes || "",
+                                  cartItem.selectedOptions,
                                   cartItem.cart_id
                                 )
                               }
@@ -470,6 +529,7 @@ export function FoodMenu({
                                   cartItem.item_id,
                                   cartItem.qty + 1,
                                   cartItem.notes || "",
+                                  cartItem.selectedOptions,
                                   cartItem.cart_id
                                 )
                               }
@@ -481,7 +541,7 @@ export function FoodMenu({
 
                           <input
                             type="text"
-                            placeholder="Note..."
+                            placeholder={isJA ? "メモ..." : "Note..."}
                             defaultValue={cartItem.notes || ""}
                             onBlur={(e) => {
                               if (e.target.value !== (cartItem.notes || "")) {
@@ -489,6 +549,7 @@ export function FoodMenu({
                                   cartItem.item_id,
                                   cartItem.qty,
                                   e.target.value,
+                                  cartItem.selectedOptions,
                                   cartItem.cart_id
                                 )
                               }
@@ -509,7 +570,7 @@ export function FoodMenu({
                 {/* Cart Subtotal */}
                 <div className="border-t border-border/60 pt-4">
                   <div className="flex justify-between text-sm font-bold text-foreground">
-                    <span>Subtotal</span>
+                    <span>{isJA ? "小計" : "Subtotal"}</span>
                     <span className="text-primary">
                       {symbol}
                       {cartSubtotal}
@@ -520,7 +581,13 @@ export function FoodMenu({
                     onClick={handlePlaceOrder}
                     className="mt-4 w-full cursor-pointer rounded-xl bg-primary py-3 text-sm font-bold text-primary-foreground shadow-lg transition-all active:scale-95 disabled:opacity-50"
                   >
-                    {isUpdating ? "Placing Order..." : "Place Order"}
+                    {isUpdating
+                      ? isJA
+                        ? "注文しています..."
+                        : "Placing Order..."
+                      : isJA
+                        ? "注文する"
+                        : "Place Order"}
                   </button>
                 </div>
               </div>
@@ -532,7 +599,9 @@ export function FoodMenu({
             {orderItems.length === 0 ? (
               <div className="py-8 text-center text-muted-foreground">
                 <Utensils className="mx-auto mb-3 h-8 w-8 animate-pulse text-primary opacity-40" />
-                <p className="text-sm">No items ordered yet</p>
+                <p className="text-sm">
+                  {isJA ? "まだ注文がありません" : "No items ordered yet"}
+                </p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -542,9 +611,21 @@ export function FoodMenu({
                       (i) => i.id === orderItem.item_id
                     )
                     const name = itemDetails?.name || orderItem.item_id
-                    const itemPrice = itemDetails
+                    const basePrice = itemDetails
                       ? parseFloat(String(itemDetails.price)) || 0
                       : 0
+                    const optionsPrice =
+                      orderItem.selectedOptions && itemDetails?.options
+                        ? itemDetails.options.reduce((total, opt) => {
+                            const selectedId =
+                              orderItem.selectedOptions![opt.id]
+                            const selection = opt.selections.find(
+                              (s) => s.id === selectedId
+                            )
+                            return total + (Number(selection?.price) || 0)
+                          }, 0)
+                        : 0
+                    const itemPrice = basePrice + optionsPrice
                     return (
                       <div
                         key={orderItem.order_item_id}
@@ -562,6 +643,22 @@ export function FoodMenu({
                                 {orderItem.served_qty || 0})
                               </span>
                             </p>
+                            {orderItem.selectedOptions &&
+                              itemDetails?.options && (
+                                <p className="mt-0.5 text-[10px] text-muted-foreground">
+                                  {itemDetails.options
+                                    .map((opt) => {
+                                      const selId =
+                                        orderItem.selectedOptions![opt.id]
+                                      const sel = opt.selections.find(
+                                        (s) => s.id === selId
+                                      )
+                                      return sel ? sel.name : null
+                                    })
+                                    .filter(Boolean)
+                                    .join(", ")}
+                                </p>
+                              )}
                             {orderItem.notes && (
                               <p className="mt-0.5 text-[10px] text-muted-foreground italic">
                                 &ldquo;{orderItem.notes}&rdquo;
@@ -581,7 +678,7 @@ export function FoodMenu({
                 {/* Tips Section */}
                 <div className="border-t border-border/60 pt-4">
                   <h4 className="mb-2 text-xs font-bold tracking-wider text-muted-foreground uppercase">
-                    Add a Tip
+                    {isJA ? "チップを追加" : "Add a Tip"}
                   </h4>
                   <div className="flex flex-wrap gap-1.5">
                     {[0, 500, 1000, 1500].map((tipVal) => {
@@ -602,7 +699,11 @@ export function FoodMenu({
                               : "bg-accent/40 text-muted-foreground hover:bg-accent"
                           }`}
                         >
-                          {tipVal === 0 ? "No Tip" : `${symbol}${tipVal}`}
+                          {tipVal === 0
+                            ? isJA
+                              ? "チップなし"
+                              : "No Tip"
+                            : `${symbol}${tipVal}`}
                         </button>
                       )
                     })}
@@ -615,7 +716,7 @@ export function FoodMenu({
                           : "bg-accent/40 text-muted-foreground hover:bg-accent"
                       }`}
                     >
-                      Custom
+                      {isJA ? "カスタム" : "Custom"}
                     </button>
                   </div>
                   {showCustomTipInput && (
@@ -625,7 +726,7 @@ export function FoodMenu({
                       </span>
                       <input
                         type="number"
-                        placeholder="Tip"
+                        placeholder={isJA ? "チップ" : "Tip"}
                         value={customTip}
                         onChange={(e) => setCustomTip(e.target.value)}
                         className="w-full rounded-md border border-border/60 bg-background px-2 py-0.5 text-xs text-foreground focus:border-primary focus:outline-none"
@@ -646,33 +747,53 @@ export function FoodMenu({
                 {/* Bill Breakdown */}
                 <div className="space-y-2 border-t border-border/60 pt-4 text-xs">
                   <div className="flex justify-between text-muted-foreground">
-                    <span>Subtotal</span>
+                    <span>{isJA ? "小計" : "Subtotal"}</span>
                     <span>
                       {symbol}
                       {session?.orders?.subtotal}
                     </span>
                   </div>
-                  {session?.orders?.show_service_tax !== false && (session?.orders?.service_charge ?? 0) > 0 && (
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>Service Charge ({session?.orders?.service_tax_percent ?? 0}%{session?.orders?.service_tax_included ? " Included" : ""})</span>
-                      <span>
-                        {symbol}
-                        {session?.orders?.service_charge}
-                      </span>
-                    </div>
-                  )}
-                  {session?.orders?.show_tax !== false && (session?.orders?.tax ?? 0) > 0 && (
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>Tax ({session?.orders?.tax_percent ?? 10}%{session?.orders?.tax_included ? " Included" : ""})</span>
-                      <span>
-                        {symbol}
-                        {session?.orders?.tax}
-                      </span>
-                    </div>
-                  )}
+                  {session?.orders?.show_service_tax !== false &&
+                    (session?.orders?.service_charge ?? 0) > 0 && (
+                      <div className="flex justify-between text-muted-foreground">
+                        <span>
+                          {isJA ? "サービス料" : "Service Charge"} (
+                          {session?.orders?.service_tax_percent ?? 0}%
+                          {session?.orders?.service_tax_included
+                            ? isJA
+                              ? " 込"
+                              : " Included"
+                            : ""}
+                          )
+                        </span>
+                        <span>
+                          {symbol}
+                          {session?.orders?.service_charge}
+                        </span>
+                      </div>
+                    )}
+                  {session?.orders?.show_tax !== false &&
+                    (session?.orders?.tax ?? 0) > 0 && (
+                      <div className="flex justify-between text-muted-foreground">
+                        <span>
+                          {isJA ? "税金" : "Tax"} (
+                          {session?.orders?.tax_percent ?? 10}%
+                          {session?.orders?.tax_included
+                            ? isJA
+                              ? " 込"
+                              : " Included"
+                            : ""}
+                          )
+                        </span>
+                        <span>
+                          {symbol}
+                          {session?.orders?.tax}
+                        </span>
+                      </div>
+                    )}
                   {Number(session?.orders?.tips) > 0 && (
                     <div className="flex justify-between text-muted-foreground">
-                      <span>Tip</span>
+                      <span>{isJA ? "チップ" : "Tip"}</span>
                       <span className="font-semibold text-primary">
                         +{symbol}
                         {session?.orders?.tips}
@@ -681,7 +802,7 @@ export function FoodMenu({
                   )}
                   {Number(session?.orders?.discount) > 0 && (
                     <div className="flex justify-between text-muted-foreground">
-                      <span>Discount</span>
+                      <span>{isJA ? "割引" : "Discount"}</span>
                       <span className="font-semibold text-green-500">
                         -{symbol}
                         {session?.orders?.discount}
@@ -689,7 +810,7 @@ export function FoodMenu({
                     </div>
                   )}
                   <div className="flex justify-between border-t border-border/40 pt-2 text-sm font-bold text-foreground">
-                    <span>Grand Total</span>
+                    <span>{isJA ? "合計" : "Grand Total"}</span>
                     <span className="text-primary">
                       {symbol}
                       {session?.orders?.total}
@@ -706,12 +827,18 @@ export function FoodMenu({
                     className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-bold text-primary-foreground shadow-lg transition-all hover:bg-primary/90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {isCheckingOut
-                      ? "Closing Table..."
-                      : "Checkout & Close Table"}
+                      ? isJA
+                        ? "お会計中..."
+                        : "Closing Table..."
+                      : isJA
+                        ? "お会計"
+                        : "Checkout & Close Table"}
                   </button>
 
                   <p className="text-center text-[10px] tracking-wider text-muted-foreground uppercase">
-                    Please pay at the register when finished
+                    {isJA
+                      ? "お帰りの際にレジでお支払いください"
+                      : "Please pay at the register when finished"}
                   </p>
                 </div>
               </div>
@@ -750,6 +877,7 @@ export function FoodMenu({
             tableMode={tableMode}
             activeOrderItems={cart}
             onUpdateQty={handleUpdateCart}
+            defaultLanguage={defaultLanguage}
           />
         )}
       </div>
@@ -772,18 +900,27 @@ export function FoodMenu({
                 : "border-primary/20 bg-primary/10"
             }`}
           >
-            {isPaid ? (
-              <CheckCircle className="mx-auto mb-3 h-12 w-12 text-green-500 transition-colors duration-500" />
-            ) : (
-              <Receipt className="mx-auto mb-3 h-12 w-12 text-primary transition-colors duration-500" />
-            )}
             <h2 className="text-2xl font-black text-foreground">
-              {isPaid ? "Payment Accepted" : "Make Payment"}
+              {isPaid
+                ? isJA
+                  ? "お支払い完了"
+                  : "Payment Accepted"
+                : isJA
+                  ? "お支払い"
+                  : "Make Payment"}
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               {isPaid
-                ? "Thank you for dining with us!"
-                : "Please show this at the register"}
+                ? isJA
+                  ? "ご来店ありがとうございました！"
+                  : "Thank you for dining with us!"
+                : receiptSession.orders?.customer_info
+                  ? isJA
+                    ? "注文確認メールを送信しました"
+                    : `Order confirmation sent to ${receiptSession.orders.customer_info.email}`
+                  : isJA
+                    ? "レジでこちらをご提示ください"
+                    : "Please show this at the register"}
             </p>
           </div>
 
@@ -793,19 +930,27 @@ export function FoodMenu({
             <div className="flex flex-col items-center justify-center border-b border-border/40 bg-white p-10 text-black md:border-r md:border-b-0">
               <QRCode value={qrUrl} size={200} level="M" />
               <p className="mt-5 font-mono text-xs tracking-widest text-zinc-400 uppercase">
-                Table {receiptSession.table_number}
+                {isJA
+                  ? `テーブル ${receiptSession.table_number}`
+                  : `Table ${receiptSession.table_number}`}
               </p>
               <p className="mt-1 text-[10px] tracking-wider text-zinc-400 uppercase">
-                {isPaid ? "Session Closed" : "Scan to verify"}
+                {isPaid
+                  ? isJA
+                    ? "セッション終了"
+                    : "Session Closed"
+                  : isJA
+                    ? "スキャンして確認"
+                    : "Scan to verify"}
               </p>
             </div>
 
             {/* RIGHT — Amount + order summary + action */}
-            <div className="flex flex-col overflow-y-auto p-6 text-sm">
+            <div className="flex flex-col p-6 text-sm">
               {/* Amount due */}
               <div className="mb-6 rounded-2xl border border-border/40 bg-accent/20 p-4 text-center">
                 <span className="block text-xs font-bold tracking-widest text-muted-foreground uppercase">
-                  Amount Due
+                  {isJA ? "お支払い金額" : "Amount Due"}
                 </span>
                 <span className="text-4xl font-black text-primary">
                   {symbol}
@@ -815,10 +960,10 @@ export function FoodMenu({
 
               {/* Order summary */}
               <div className="mb-3 border-b border-border/60 pb-2 text-xs font-bold tracking-wider text-muted-foreground uppercase">
-                Order Summary
+                {isJA ? "注文内容" : "Order Summary"}
               </div>
 
-              <div className="max-h-52 flex-1 space-y-2.5 overflow-y-auto pr-1">
+              <div className="flex-1 space-y-2.5">
                 {receiptOrderItems.map((item: any) => {
                   const itemDetails = flatItems.find(
                     (i) => i.id === item.item_id
@@ -850,14 +995,14 @@ export function FoodMenu({
               {/* Bill breakdown */}
               <div className="mt-4 space-y-2 border-t border-border/60 pt-4 text-xs">
                 <div className="flex justify-between text-muted-foreground">
-                  <span>Subtotal</span>
+                  <span>{isJA ? "小計" : "Subtotal"}</span>
                   <span>
                     {symbol}
                     {receiptSession.orders?.subtotal}
                   </span>
                 </div>
                 <div className="flex justify-between text-muted-foreground">
-                  <span>Tax (10%)</span>
+                  <span>{isJA ? "税金 (10%)" : "Tax (10%)"}</span>
                   <span>
                     {symbol}
                     {receiptSession.orders?.tax}
@@ -865,7 +1010,7 @@ export function FoodMenu({
                 </div>
                 {Number(receiptSession.orders?.tips) > 0 && (
                   <div className="flex justify-between text-muted-foreground">
-                    <span>Tip</span>
+                    <span>{isJA ? "チップ" : "Tip"}</span>
                     <span className="font-semibold text-primary">
                       +{symbol}
                       {receiptSession.orders?.tips}
@@ -873,7 +1018,7 @@ export function FoodMenu({
                   </div>
                 )}
                 <div className="flex justify-between border-t border-border/40 pt-2 text-sm font-bold text-foreground">
-                  <span>Grand Total</span>
+                  <span>{isJA ? "合計" : "Grand Total"}</span>
                   <span className="text-primary">
                     {symbol}
                     {receiptSession.orders?.total}
@@ -886,7 +1031,7 @@ export function FoodMenu({
                 {receiptSession.status === "payment_pending" ? (
                   <div className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-amber-500/20 bg-amber-500/10 py-3.5 text-sm font-bold text-amber-600 transition-all">
                     <RefreshCw className="h-4 w-4 animate-spin" />
-                    Waiting for Confirmation...
+                    {isJA ? "確認待ち..." : "Waiting for Confirmation..."}
                   </div>
                 ) : (
                   <button
@@ -902,7 +1047,7 @@ export function FoodMenu({
                     className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-green-500 py-3.5 text-sm font-bold text-white shadow-lg transition-all hover:bg-green-600 active:scale-95"
                   >
                     <CheckCircle className="h-5 w-5" />
-                    Done
+                    {isJA ? "完了" : "Done"}
                   </button>
                 )}
               </div>
@@ -918,11 +1063,14 @@ export function FoodMenu({
       {!hideHeader && (
         <div className="mb-10 text-center">
           <SectionHeader
-            subtitle={t.subtitle || "Delicacies"}
-            title={t.title || "Our Menu"}
+            subtitle={t.subtitle || (isJA ? "こだわりの逸品" : "Delicacies")}
+            title={t.title || (isJA ? "メニュー" : "Our Menu")}
             description={
               <>
-                {t.description || "Artisanal dishes crafted with passion."}
+                {t.description ||
+                  (isJA
+                    ? "情熱を込めて作られた職人の料理。"
+                    : "Artisanal dishes crafted with passion.")}
                 {menuLink && (
                   <>
                     {" "}
@@ -932,13 +1080,16 @@ export function FoodMenu({
                       rel="noopener noreferrer"
                       className="ml-1 inline-flex items-center gap-1 font-medium text-primary hover:underline"
                     >
-                      {t.downloadButton || "Download Menu PDF"}
+                      {t.downloadButton ||
+                        (isJA
+                          ? "メニューPDFをダウンロード"
+                          : "Download Menu PDF")}
                     </a>
                   </>
                 )}
               </>
             }
-            backgroundTitle={t.backgroundTitle || "Flavors"}
+            backgroundTitle={t.backgroundTitle || (isJA ? "味わい" : "Flavors")}
             align="center"
           />
         </div>
@@ -948,7 +1099,9 @@ export function FoodMenu({
         <div className="mb-6 flex items-center justify-center gap-2 rounded-2xl border border-primary/20 bg-primary/5 p-3 text-center">
           <Sparkles className="h-4 w-4 animate-pulse text-primary" />
           <span className="text-xs font-semibold tracking-widest text-primary uppercase">
-            Ordering from Table {session.table_number} • Order is live
+            {isJA
+              ? `テーブル ${session.table_number} から注文中 • ライブ注文`
+              : `Ordering from Table ${session.table_number} • Order is live`}
           </span>
         </div>
       )}
@@ -989,7 +1142,7 @@ export function FoodMenu({
                   </span>
                 )}
               </div>
-              <span className="ml-1">Cart</span>
+              <span className="ml-1">{isJA ? "カート" : "Cart"}</span>
             </button>
 
             {/* Orders Button */}
@@ -1005,7 +1158,7 @@ export function FoodMenu({
               }`}
             >
               <ClipboardList className="h-4 w-4" />
-              <span>Orders</span>
+              <span>{isJA ? "注文" : "Orders"}</span>
             </button>
           </div>
         </div>
@@ -1036,10 +1189,12 @@ export function FoodMenu({
                   <Utensils className="h-5 w-5 text-primary" />
                   <div>
                     <h3 className="text-lg font-bold text-foreground">
-                      Table {session.table_number}
+                      {isJA
+                        ? `テーブル ${session.table_number}`
+                        : `Table ${session.table_number}`}
                     </h3>
                     <p className="text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
-                      Live Ordering Session
+                      {isJA ? "ライブ注文セッション" : "Live Ordering Session"}
                     </p>
                   </div>
                 </div>
