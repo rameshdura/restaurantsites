@@ -1,12 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import {
-  QrCode,
-  CheckCircle,
-  XCircle,
-  Banknote,
-} from "lucide-react"
+import { QrCode, CheckCircle, XCircle, Banknote } from "lucide-react"
 
 export type PayViewType = "scanner" | "success" | "failed"
 

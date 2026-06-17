@@ -86,9 +86,9 @@ export function TableLandingClient({
     async function initSession() {
       setIsLoading(true)
       try {
-        let sessionIdToFetch: string | null = null;
-        let isExplicitRestore = false;
-        
+        let sessionIdToFetch: string | null = null
+        let isExplicitRestore = false
+
         if (typeof window !== "undefined") {
           const params = new URLSearchParams(window.location.search)
           const restoreToken = params.get("restore_token")
@@ -102,21 +102,34 @@ export function TableLandingClient({
           if (restoreToken) {
             // Restore session valid for 4 hours
             const expiresAt = Math.floor(Date.now() / 1000) + 4 * 60 * 60
-            setSessionCookie(restaurantSlug, restoreToken, Number(tableId), expiresAt)
+            setSessionCookie(
+              restaurantSlug,
+              restoreToken,
+              Number(tableId),
+              expiresAt
+            )
             sessionIdToFetch = restoreToken
             isExplicitRestore = true
             modified = true
           }
 
           if (modified) {
-            window.history.replaceState({}, "", `/${restaurantSlug}/table/${tableId}`)
+            window.history.replaceState(
+              {},
+              "",
+              `/${restaurantSlug}/table/${tableId}`
+            )
           }
         }
 
         const existing = getSessionCookie(restaurantSlug)
 
         // If cookie matches current table, validate with backend
-        if (!sessionIdToFetch && existing && Number(existing.table) === Number(tableId)) {
+        if (
+          !sessionIdToFetch &&
+          existing &&
+          Number(existing.table) === Number(tableId)
+        ) {
           sessionIdToFetch = existing.session_id
         }
 
@@ -127,7 +140,11 @@ export function TableLandingClient({
           )
           const data = await res.json()
           if (data.valid && data.session) {
-            if (!isExplicitRestore && (data.session.status === "closed" || data.session.status === "completed")) {
+            if (
+              !isExplicitRestore &&
+              (data.session.status === "closed" ||
+                data.session.status === "completed")
+            ) {
               // Stale cookie from a closed session.
               // Clear it so the user can start a new order.
               clearSessionCookie(restaurantSlug)
@@ -527,17 +544,18 @@ export function TableLandingClient({
       {/* Share Table / Add Friend Modal */}
       {showShareModal && session && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-xl relative">
+          <div className="relative w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-xl">
             <button
               onClick={() => setShowShareModal(false)}
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-accent text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-accent text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               <X className="h-4 w-4" />
             </button>
             <div className="text-center">
               <h3 className="mb-2 text-lg font-bold">Share Table</h3>
               <p className="mb-6 text-sm text-muted-foreground">
-                Have your friend scan this QR code. They will instantly join your table and can add items to your bill.
+                Have your friend scan this QR code. They will instantly join
+                your table and can add items to your bill.
               </p>
               <div className="mx-auto inline-block rounded-xl bg-white p-4">
                 <QRCode

@@ -160,14 +160,40 @@ export async function POST(request: Request) {
       subtotal += price * item.qty
     }
 
-    const serviceChargeRate = 0.1 // 10%
-    const taxRate = 0.1 // 10%
+    const ops = (restaurant.data.operations || {}) as any
 
-    const serviceCharge = roundToCurrency(
-      subtotal * serviceChargeRate,
-      currency
-    )
-    const tax = roundToCurrency(subtotal * taxRate, currency)
+    // 1. Tax Logic
+    // Defaults: showTax=true, taxIncluded=true, taxPercent=10
+    const showTax = ops.showTax !== undefined ? ops.showTax : true
+    const taxIncluded = ops.taxIncluded !== undefined ? ops.taxIncluded : true
+    const taxPercent = ops.taxPercent !== undefined ? Number(ops.taxPercent) : 10
+    
+    let tax = 0
+    if (showTax) {
+      if (taxIncluded) {
+        // Calculate the tax portion of the subtotal (subtotal already includes tax)
+        // E.g. subtotal = 110, taxPercent = 10 -> tax = 110 - (110 / 1.1) = 10
+        tax = roundToCurrency(subtotal - (subtotal / (1 + taxPercent / 100)), currency)
+      } else {
+        // Tax is additional
+        tax = roundToCurrency(subtotal * (taxPercent / 100), currency)
+      }
+    }
+
+    // 2. Service Charge Logic
+    // Defaults: showServiceTax=false, serviceTaxIncluded=false, serviceTaxPercent=0
+    const showServiceTax = ops.showServiceTax !== undefined ? ops.showServiceTax : false
+    const serviceTaxIncluded = ops.serviceTaxIncluded !== undefined ? ops.serviceTaxIncluded : false
+    const serviceTaxPercent = ops.serviceTaxPercent !== undefined ? Number(ops.serviceTaxPercent) : 0
+
+    let serviceCharge = 0
+    if (showServiceTax) {
+      if (serviceTaxIncluded) {
+        serviceCharge = roundToCurrency(subtotal - (subtotal / (1 + serviceTaxPercent / 100)), currency)
+      } else {
+        serviceCharge = roundToCurrency(subtotal * (serviceTaxPercent / 100), currency)
+      }
+    }
 
     // Preserve or update tips and discounts
     const currentTips =
@@ -177,8 +203,11 @@ export async function POST(request: Request) {
         ? Number(discount)
         : Number(currentOrders.discount || 0)
 
+    const taxToAdd = (!taxIncluded && showTax) ? tax : 0
+    const serviceToAdd = (!serviceTaxIncluded && showServiceTax) ? serviceCharge : 0
+
     const rawTotal =
-      subtotal + serviceCharge + tax + currentTips - currentDiscount
+      subtotal + serviceToAdd + taxToAdd + currentTips - currentDiscount
     const total = Math.max(0, roundToCurrency(rawTotal, currency))
 
     const updatedOrders = {
@@ -189,6 +218,12 @@ export async function POST(request: Request) {
       discount: roundToCurrency(currentDiscount, currency),
       tips: roundToCurrency(currentTips, currency),
       total: total,
+      show_tax: showTax,
+      tax_included: taxIncluded,
+      tax_percent: taxPercent,
+      show_service_tax: showServiceTax,
+      service_tax_included: serviceTaxIncluded,
+      service_tax_percent: serviceTaxPercent,
     }
 
     // 5. Update Supabase

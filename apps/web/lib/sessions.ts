@@ -33,7 +33,11 @@ export async function fetchFilteredSessions({
   view = "all",
   limit = 20,
   cursor,
-}: FetchSessionsOptions): Promise<{ data: TableSession[]; nextCursor: string | null; hasMore: boolean }> {
+}: FetchSessionsOptions): Promise<{
+  data: TableSession[]
+  nextCursor: string | null
+  hasMore: boolean
+}> {
   const results: TableSession[] = []
   let hasMoreData = true
   let currentCursor = cursor
@@ -66,7 +70,7 @@ export async function fetchFilteredSessions({
 
     for (const s of data as TableSession[]) {
       const hasItems = s.orders?.items && s.orders.items.length > 0
-      const isClosed = s.status === "closed"
+      const isClosed = s.status === "closed" || s.status === "completed"
       const total = s.orders?.total || 0
 
       let matches = false
@@ -74,7 +78,8 @@ export async function fetchFilteredSessions({
         matches = Boolean(isClosed && hasItems && total > 0)
       } else if (view === "failed") {
         if (isClosed && (!hasItems || total === 0)) matches = true
-        else if (s.status === "cancelled" || s.status === "abandoned") matches = true
+        else if (s.status === "cancelled" || s.status === "abandoned")
+          matches = true
         else matches = Boolean(isClosed && (!hasItems || total === 0))
       } else if (view === "active") {
         matches = s.status === "active" || s.status === "payment_pending"
@@ -91,9 +96,9 @@ export async function fetchFilteredSessions({
         break
       }
     }
-    
+
     currentCursor = chunkCursor
-    
+
     if (data.length < 50) {
       // Reached the end of the table
       hasMoreData = false
@@ -103,7 +108,7 @@ export async function fetchFilteredSessions({
   const reachedLimit = results.length >= limit
   return {
     data: results,
-    nextCursor: (hasMoreData || reachedLimit) ? (currentCursor ?? null) : null,
-    hasMore: hasMoreData || reachedLimit
+    nextCursor: hasMoreData || reachedLimit ? (currentCursor ?? null) : null,
+    hasMore: hasMoreData || reachedLimit,
   }
 }

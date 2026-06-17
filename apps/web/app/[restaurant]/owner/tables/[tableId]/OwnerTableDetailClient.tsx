@@ -66,8 +66,14 @@ interface TableSession {
     service_charge: number
     tax: number
     tips: number
-    discount: number
     total: number
+    show_tax?: boolean
+    tax_included?: boolean
+    tax_percent?: number
+    show_service_tax?: boolean
+    service_tax_included?: boolean
+    service_tax_percent?: number
+    discount?: number
   }
 }
 
@@ -245,7 +251,13 @@ export function OwnerTableDetailClient({
     (s) => s.status === "active" || s.status === "payment_pending"
   )
   const historySessions = sessions
-    .filter((s) => s.status === "closed" || s.status === "completed" || s.status === "abandoned" || s.status === "cancelled")
+    .filter(
+      (s) =>
+        s.status === "closed" ||
+        s.status === "completed" ||
+        s.status === "abandoned" ||
+        s.status === "cancelled"
+    )
     .slice(0, limitCount - (activeSession ? 1 : 0))
   const isPacked = !!activeSession
 
@@ -283,7 +295,7 @@ export function OwnerTableDetailClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           session_id: activeSession.session_id,
-          status: "completed",
+          status: "closed",
         }),
       })
       const data = await res.json()
@@ -490,29 +502,29 @@ export function OwnerTableDetailClient({
               </p>
             </div>
           </div>
-      </div>
-      <div className="flex items-center gap-2">
-        {activeSession && (
+        </div>
+        <div className="flex items-center gap-2">
+          {activeSession && (
+            <button
+              onClick={() => setShowQrModal(true)}
+              className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-1.5 text-xs font-semibold transition-all hover:bg-accent"
+            >
+              <QrCode className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Restore</span>
+            </button>
+          )}
           <button
-            onClick={() => setShowQrModal(true)}
-            className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-1.5 text-xs font-semibold transition-all hover:bg-accent"
+            onClick={fetchTableData}
+            disabled={isLoading}
+            className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-1.5 text-xs font-semibold transition-all hover:bg-accent disabled:opacity-50"
           >
-            <QrCode className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Restore</span>
+            <RefreshCw
+              className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`}
+            />
+            Refresh
           </button>
-        )}
-        <button
-          onClick={fetchTableData}
-          disabled={isLoading}
-          className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-1.5 text-xs font-semibold transition-all hover:bg-accent disabled:opacity-50"
-        >
-          <RefreshCw
-            className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`}
-          />
-          Refresh
-        </button>
+        </div>
       </div>
-    </div>
 
       <main className="mx-auto max-w-4xl space-y-8">
         {isLoading && sessions.length === 0 ? (
@@ -601,7 +613,7 @@ export function OwnerTableDetailClient({
                     <button
                       onClick={handleCompleteSession}
                       disabled={isCompleting || isClosing}
-                      title="Mark as Paid & Completed"
+                      title="Mark as Paid & Closed"
                       className="flex h-12 cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:bg-primary/90 disabled:opacity-50"
                     >
                       {isCompleting ? (
@@ -866,17 +878,17 @@ export function OwnerTableDetailClient({
                         {formatCurrency(activeSession.orders.subtotal)}
                       </span>
                     </div>
-                    {activeSession.orders.service_charge > 0 && (
+                    {activeSession.orders.show_service_tax !== false && activeSession.orders.service_charge > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
-                        <span>Service Charge</span>
+                        <span>Service Charge ({activeSession.orders.service_tax_percent ?? 0}%{activeSession.orders.service_tax_included ? " Included" : ""})</span>
                         <span>
                           {formatCurrency(activeSession.orders.service_charge)}
                         </span>
                       </div>
                     )}
-                    {activeSession.orders.tax > 0 && (
+                    {activeSession.orders.show_tax !== false && (activeSession.orders.tax ?? 0) > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
-                        <span>Tax</span>
+                        <span>Tax ({activeSession.orders.tax_percent ?? 10}%{activeSession.orders.tax_included ? " Included" : ""})</span>
                         <span>{formatCurrency(activeSession.orders.tax)}</span>
                       </div>
                     )}
@@ -886,11 +898,11 @@ export function OwnerTableDetailClient({
                         <span>{formatCurrency(activeSession.orders.tips)}</span>
                       </div>
                     )}
-                    {activeSession.orders.discount > 0 && (
+                    {(activeSession.orders.discount ?? 0) > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
                         <span>Discount</span>
                         <span className="text-green-500">
-                          -{formatCurrency(activeSession.orders.discount)}
+                          -{formatCurrency(activeSession.orders.discount || 0)}
                         </span>
                       </div>
                     )}
@@ -939,7 +951,9 @@ export function OwnerTableDetailClient({
                             {formatDate(session.created_at)}
                           </p>
                           <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <span className={`inline-block h-1.5 w-1.5 rounded-full ${session.status === 'completed' || session.status === 'closed' ? 'bg-emerald-500' : 'bg-muted-foreground'}`}></span>
+                            <span
+                              className={`inline-block h-1.5 w-1.5 rounded-full ${session.status === "completed" || session.status === "closed" ? "bg-emerald-500" : "bg-muted-foreground"}`}
+                            ></span>
                             <span className="capitalize">{session.status}</span>
                           </p>
                         </div>
@@ -958,12 +972,12 @@ export function OwnerTableDetailClient({
                       </div>
                     </Link>
                   ))}
-                  
+
                   {hasMoreHistory && (
                     <div className="p-4 text-center">
                       <Button
                         variant="ghost"
-                        onClick={() => setLimitCount(prev => prev + 10)}
+                        onClick={() => setLimitCount((prev) => prev + 10)}
                         className="w-full text-muted-foreground hover:text-foreground"
                       >
                         Load More
@@ -1333,8 +1347,8 @@ export function OwnerTableDetailClient({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Complete Session</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to mark this session as paid and completed?
+            <DialogDescription className="pt-2">
+              Are you sure you want to mark this session as paid and closed?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -1355,17 +1369,18 @@ export function OwnerTableDetailClient({
       {/* Restore Session QR Modal */}
       {showQrModal && activeSession && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-xl relative">
+          <div className="relative w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-xl">
             <button
               onClick={() => setShowQrModal(false)}
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-accent text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-accent text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               <X className="h-4 w-4" />
             </button>
             <div className="text-center">
               <h3 className="mb-2 text-lg font-bold">Restore Session</h3>
               <p className="mb-6 text-sm text-muted-foreground">
-                Have the customer scan this QR code to securely restore their session on their device.
+                Have the customer scan this QR code to securely restore their
+                session on their device.
               </p>
               <div className="mx-auto inline-block rounded-xl bg-white p-4">
                 <QRCode

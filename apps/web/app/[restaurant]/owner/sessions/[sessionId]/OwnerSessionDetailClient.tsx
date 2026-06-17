@@ -2,7 +2,16 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { supabase } from "@/lib/supabase"
-import { ArrowLeft, Receipt, Clock, MapPin, QrCode, X, Trash2, RotateCcw } from "lucide-react"
+import {
+  ArrowLeft,
+  Receipt,
+  Clock,
+  MapPin,
+  QrCode,
+  X,
+  Trash2,
+  RotateCcw,
+} from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import QRCode from "react-qr-code"
@@ -29,6 +38,12 @@ interface TableSession {
     tax?: number
     tips?: number
     discount?: number
+    show_tax?: boolean
+    tax_included?: boolean
+    tax_percent?: number
+    show_service_tax?: boolean
+    service_tax_included?: boolean
+    service_tax_percent?: number
     items?: {
       item_id: string
       qty?: number
@@ -80,8 +95,13 @@ export function OwnerSessionDetailClient({
   }, [sessionId])
 
   const handleDeleteSession = async () => {
-    if (!confirm("Are you sure you want to permanently delete this session? This action cannot be undone.")) return
-    
+    if (
+      !confirm(
+        "Are you sure you want to permanently delete this session? This action cannot be undone."
+      )
+    )
+      return
+
     setIsLoading(true)
     try {
       const { error } = await supabase
@@ -92,7 +112,9 @@ export function OwnerSessionDetailClient({
       if (error) throw error
 
       if (session?.restaurant_slug && session?.table_number) {
-        router.push(`/${session.restaurant_slug}/owner/tables/${session.table_number}`)
+        router.push(
+          `/${session.restaurant_slug}/owner/tables/${session.table_number}`
+        )
       } else {
         router.back()
       }
@@ -104,7 +126,12 @@ export function OwnerSessionDetailClient({
   }
 
   const handleReopenSession = async () => {
-    if (!confirm("Are you sure you want to mark this session as unpaid and reopen it?")) return
+    if (
+      !confirm(
+        "Are you sure you want to mark this session as unpaid and reopen it?"
+      )
+    )
+      return
 
     setIsLoading(true)
     try {
@@ -169,12 +196,13 @@ export function OwnerSessionDetailClient({
             <div className="flex items-center gap-2">
               <button
                 onClick={handleDeleteSession}
-                className="flex items-center gap-2 rounded-full border border-destructive/50 bg-destructive/10 px-4 py-2 text-sm font-bold text-destructive transition-all hover:bg-destructive hover:text-destructive-foreground"
+                className="hover:text-destructive-foreground flex items-center gap-2 rounded-full border border-destructive/50 bg-destructive/10 px-4 py-2 text-sm font-bold text-destructive transition-all hover:bg-destructive"
               >
                 <Trash2 className="h-4 w-4" />
                 <span className="hidden sm:inline">Delete</span>
               </button>
-              {(session.status === "completed" || session.status === "closed") && (
+              {(session.status === "completed" ||
+                session.status === "closed") && (
                 <button
                   onClick={handleReopenSession}
                   className="flex items-center gap-2 rounded-full border border-emerald-500/50 bg-emerald-500/10 px-4 py-2 text-sm font-bold text-emerald-600 transition-all hover:bg-emerald-500 hover:text-white dark:text-emerald-400"
@@ -321,17 +349,17 @@ export function OwnerSessionDetailClient({
                       <span>Subtotal</span>
                       <span>{formatCurrency(session.orders.subtotal)}</span>
                     </div>
-                    {(session.orders.service_charge ?? 0) > 0 && (
+                    {session.orders.show_service_tax !== false && (session.orders.service_charge ?? 0) > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
-                        <span>Service Charge</span>
+                        <span>Service Charge ({session.orders.service_tax_percent ?? 0}%{session.orders.service_tax_included ? " Included" : ""})</span>
                         <span>
                           {formatCurrency(session.orders.service_charge || 0)}
                         </span>
                       </div>
                     )}
-                    {(session.orders.tax ?? 0) > 0 && (
+                    {session.orders.show_tax !== false && (session.orders.tax ?? 0) > 0 && (
                       <div className="flex justify-between text-sm text-muted-foreground">
-                        <span>Tax</span>
+                        <span>Tax ({session.orders.tax_percent ?? 10}%{session.orders.tax_included ? " Included" : ""})</span>
                         <span>{formatCurrency(session.orders.tax || 0)}</span>
                       </div>
                     )}
@@ -364,17 +392,18 @@ export function OwnerSessionDetailClient({
       {/* Restore Session QR Modal */}
       {showQrModal && session && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-xl relative">
+          <div className="relative w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-xl">
             <button
               onClick={() => setShowQrModal(false)}
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-accent text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-accent text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               <X className="h-4 w-4" />
             </button>
             <div className="text-center">
               <h3 className="mb-2 text-lg font-bold">Restore Session</h3>
               <p className="mb-6 text-sm text-muted-foreground">
-                Have the customer scan this QR code to securely restore their session on their device.
+                Have the customer scan this QR code to securely restore their
+                session on their device.
               </p>
               <div className="mx-auto inline-block rounded-xl bg-white p-4">
                 <QRCode

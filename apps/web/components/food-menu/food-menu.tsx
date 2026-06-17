@@ -652,20 +652,24 @@ export function FoodMenu({
                       {session?.orders?.subtotal}
                     </span>
                   </div>
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Service Charge (10%)</span>
-                    <span>
-                      {symbol}
-                      {session?.orders?.service_charge}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Tax (10%)</span>
-                    <span>
-                      {symbol}
-                      {session?.orders?.tax}
-                    </span>
-                  </div>
+                  {session?.orders?.show_service_tax !== false && (session?.orders?.service_charge ?? 0) > 0 && (
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Service Charge ({session?.orders?.service_tax_percent ?? 0}%{session?.orders?.service_tax_included ? " Included" : ""})</span>
+                      <span>
+                        {symbol}
+                        {session?.orders?.service_charge}
+                      </span>
+                    </div>
+                  )}
+                  {session?.orders?.show_tax !== false && (session?.orders?.tax ?? 0) > 0 && (
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Tax ({session?.orders?.tax_percent ?? 10}%{session?.orders?.tax_included ? " Included" : ""})</span>
+                      <span>
+                        {symbol}
+                        {session?.orders?.tax}
+                      </span>
+                    </div>
+                  )}
                   {Number(session?.orders?.tips) > 0 && (
                     <div className="flex justify-between text-muted-foreground">
                       <span>Tip</span>

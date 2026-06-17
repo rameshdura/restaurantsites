@@ -37,38 +37,41 @@ export function PayListClient({
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [nextCursor, setNextCursor] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(false)
-  
+
   const symbol = CURRENCY_SYMBOLS[currency] || ""
 
-  const fetchSessions = useCallback(async (reset = false) => {
-    if (reset) {
-      setIsLoading(true)
-    } else {
-      setIsLoadingMore(true)
-    }
-
-    try {
-      const result = await fetchFilteredSessions({
-        restaurantSlug,
-        view: view as import("@/lib/sessions").SessionViewType,
-        limit: 10,
-        cursor: reset ? null : nextCursor,
-      })
-
+  const fetchSessions = useCallback(
+    async (reset = false) => {
       if (reset) {
-        setSessions(result.data)
+        setIsLoading(true)
       } else {
-        setSessions((prev) => [...prev, ...result.data])
+        setIsLoadingMore(true)
       }
-      setNextCursor(result.nextCursor)
-      setHasMore(result.hasMore)
-    } catch (err) {
-      console.error("Error loading sessions:", err)
-    } finally {
-      setIsLoading(false)
-      setIsLoadingMore(false)
-    }
-  }, [restaurantSlug, view, nextCursor])
+
+      try {
+        const result = await fetchFilteredSessions({
+          restaurantSlug,
+          view: view as import("@/lib/sessions").SessionViewType,
+          limit: 10,
+          cursor: reset ? null : nextCursor,
+        })
+
+        if (reset) {
+          setSessions(result.data)
+        } else {
+          setSessions((prev) => [...prev, ...result.data])
+        }
+        setNextCursor(result.nextCursor)
+        setHasMore(result.hasMore)
+      } catch (err) {
+        console.error("Error loading sessions:", err)
+      } finally {
+        setIsLoading(false)
+        setIsLoadingMore(false)
+      }
+    },
+    [restaurantSlug, view, nextCursor]
+  )
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -98,7 +101,9 @@ export function PayListClient({
               ) : (
                 <XCircle className="h-5 w-5 text-destructive" />
               )}
-              {view === "success" ? "Successful Payments" : "Failed / Inactive Sessions"}
+              {view === "success"
+                ? "Successful Payments"
+                : "Failed / Inactive Sessions"}
             </h2>
             <p className="text-sm text-muted-foreground">
               {view === "success"
@@ -146,10 +151,12 @@ export function PayListClient({
                   onClick={() => onSessionSelect(session.session_id)}
                   className="flex flex-col rounded-xl border border-border bg-card p-5 text-left transition-all hover:border-primary/50 hover:shadow-md"
                 >
-                  <div className="mb-4 flex items-start justify-between w-full">
+                  <div className="mb-4 flex w-full items-start justify-between">
                     <div>
-                      <h3 className="font-bold text-lg">Table {session.table_number}</h3>
-                      <p className="text-xs text-muted-foreground font-mono mt-1">
+                      <h3 className="text-lg font-bold">
+                        Table {session.table_number}
+                      </h3>
+                      <p className="mt-1 font-mono text-xs text-muted-foreground">
                         {session.session_id.split("-")[0]}...
                       </p>
                     </div>
@@ -173,10 +180,10 @@ export function PayListClient({
                       })}
                     </div>
                     <div className="text-right">
-                      <span className="text-xs text-muted-foreground mr-2">
+                      <span className="mr-2 text-xs text-muted-foreground">
                         {session.orders?.items?.length || 0} items
                       </span>
-                      <span className="font-black text-lg">
+                      <span className="text-lg font-black">
                         {symbol}
                         {session.orders?.total || 0}
                       </span>
@@ -193,7 +200,7 @@ export function PayListClient({
                   size="lg"
                   onClick={() => fetchSessions(false)}
                   disabled={isLoadingMore}
-                  className="rounded-xl min-w-[200px]"
+                  className="min-w-[200px] rounded-xl"
                 >
                   {isLoadingMore ? (
                     <>

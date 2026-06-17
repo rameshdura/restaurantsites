@@ -13,6 +13,8 @@ import {
   ArrowLeft,
   Camera,
   Menu,
+  Calculator,
+  Printer,
 } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 
@@ -50,6 +52,12 @@ interface TableSession {
     tax?: number
     tips?: number
     discount?: number
+    show_tax?: boolean
+    tax_included?: boolean
+    tax_percent?: number
+    show_service_tax?: boolean
+    service_tax_included?: boolean
+    service_tax_percent?: number
     items?: {
       item_id: string
       qty: number
@@ -78,6 +86,9 @@ function PayContent({
   const [scannedId, setScannedId] = useState<string | null>(initialSessionId)
   const [manualCode, setManualCode] = useState("")
   const [isScanning, setIsScanning] = useState(false)
+  const [showCalculator, setShowCalculator] = useState(false)
+  const [manualDiscount, setManualDiscount] = useState<number | "">("")
+  const [receivedAmount, setReceivedAmount] = useState<number | "">("")
 
   // Sync searchParams session_id with scannedId if it changes in URL
   useEffect(() => {
@@ -151,6 +162,20 @@ function PayContent({
     if (!session) return
     setIsFinalizing(true)
     try {
+      // If a manual discount was entered, save it to the session orders first
+      if (manualDiscount !== "" && Number(manualDiscount) > 0) {
+        await fetch("/api/table/order/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            session_id: session.session_id,
+            restaurantSlug,
+            discount: Number(manualDiscount),
+            isOwner: true,
+          }),
+        })
+      }
+
       // In a real app, this might process a stripe payment.
       // Here we just mark it as closed.
       const res = await fetch("/api/table/session/close", {
@@ -379,20 +404,24 @@ function PayContent({
                       {orders.subtotal || 0}
                     </span>
                   </div>
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Service Charge</span>
-                    <span>
-                      {symbol}
-                      {orders.service_charge || 0}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Tax</span>
-                    <span>
-                      {symbol}
-                      {orders.tax || 0}
-                    </span>
-                  </div>
+                  {orders.show_service_tax !== false && (orders.service_charge ?? 0) > 0 && (
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Service Charge ({orders.service_tax_percent ?? 0}%{orders.service_tax_included ? " Included" : ""})</span>
+                      <span>
+                        {symbol}
+                        {orders.service_charge || 0}
+                      </span>
+                    </div>
+                  )}
+                  {orders.show_tax !== false && (orders.tax ?? 0) > 0 && (
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Tax ({orders.tax_percent ?? 10}%{orders.tax_included ? " Included" : ""})</span>
+                      <span>
+                        {symbol}
+                        {orders.tax || 0}
+                      </span>
+                    </div>
+                  )}
                   {Number(orders.tips) > 0 && (
                     <div className="flex justify-between text-muted-foreground">
                       <span>Tip</span>
@@ -423,7 +452,79 @@ function PayContent({
               </div>
 
               {/* Action */}
-              <div className="bg-muted/30 p-6 pt-0">
+              <div className="space-y-4 bg-muted/30 p-6 pt-0">
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={() => window.print()}
+                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    <Printer className="h-4 w-4" />
+                    Print Receipt
+                  </button>
+                  <button
+                    onClick={() => setShowCalculator(!showCalculator)}
+                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    <Calculator className="h-4 w-4" />
+                    {showCalculator ? "Hide Calculator" : "Calculator"}
+                  </button>
+                </div>
+
+                {showCalculator && (
+                  <div className="space-y-4 rounded-xl border border-border bg-background p-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Additional Discount ({symbol})
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={manualDiscount}
+                        onChange={(e) =>
+                          setManualDiscount(
+                            e.target.value === "" ? "" : Number(e.target.value)
+                          )
+                        }
+                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                        placeholder="0.00"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Amount Received ({symbol})
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={receivedAmount}
+                        onChange={(e) =>
+                          setReceivedAmount(
+                            e.target.value === "" ? "" : Number(e.target.value)
+                          )
+                        }
+                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:outline-none"
+                        placeholder="0.00"
+                      />
+                    </div>
+                    {receivedAmount !== "" && (
+                      <div className="flex justify-between border-t border-border pt-2 text-sm font-bold">
+                        <span>Change to Return</span>
+                        <span className="text-base text-primary">
+                          {symbol}
+                          {Math.max(
+                            0,
+                            Number(receivedAmount) -
+                              ((Number(orders.total) || 0) -
+                                Number(manualDiscount || 0))
+                          ).toFixed(2)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {session.status === "closed" ? (
                   <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-green-500/20 bg-green-500/10 py-3.5 text-sm font-bold text-green-600">
                     <CheckCircle className="h-5 w-5" />

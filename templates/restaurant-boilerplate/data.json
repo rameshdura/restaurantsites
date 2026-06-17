@@ -225,6 +225,12 @@
   ],
   "holidayNotes": "",
   "operations": {
+    "showTax": true,
+    "taxIncluded": true,
+    "taxPercent": 10,
+    "showServiceTax": false,
+    "serviceTaxIncluded": false,
+    "serviceTaxPercent": 0,
     "paymentMethods": [
       "Visa",
       "Mastercard",
