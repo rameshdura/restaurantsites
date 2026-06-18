@@ -11,8 +11,6 @@ import { FoodMenu } from "@/components/food-menu/food-menu"
 import { OrderModeButtons } from "@/components/food-menu/order-mode-buttons"
 import { Footer } from "@/components/footer"
 import { ContactSection } from "@workspace/ui/components/contact-section"
-import { Button } from "@workspace/ui/components/button"
-import { Download } from "lucide-react"
 import { JsonLd } from "@/components/json-ld"
 import { generateMenuMetadata, generateMenuSchema } from "@/lib/seo"
 import { CoverSection } from "@workspace/ui/components/cover-section"
@@ -90,6 +88,11 @@ export default async function MenuPage({ params }: MenuPageProps) {
           hasTakeout={data.operations?.services?.takeout}
           hasDelivery={data.operations?.services?.delivery}
           translations={translations}
+          menuLinkUrl={
+            data.menuLink && data.menuLink.trim() !== ""
+              ? getImageSrc(slug, data.menuLink)
+              : null
+          }
         />
 
         <section
@@ -119,20 +122,6 @@ export default async function MenuPage({ params }: MenuPageProps) {
           )}
         </section>
 
-        {data.menuLink && data.menuLink.trim() !== "" && (
-          <div className="mt-12 flex justify-center pb-8">
-            <Button size="lg" asChild className="rounded-full px-8">
-              <a
-                href={getImageSrc(slug, data.menuLink)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Download className="mr-2 h-5 w-5" />
-                {translations.menuPage?.downloadButton || "Download Menu PDF"}
-              </a>
-            </Button>
-          </div>
-        )}
       </main>
 
       <ContactSection
