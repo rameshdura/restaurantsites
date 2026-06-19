@@ -573,6 +573,146 @@ export function SiteBuilderForm({
           placeholder="https://maps.app.goo.gl/..."
         />
       </div>
+
+      <div className="border-t pt-6">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="space-y-0.5">
+            <Label className="text-lg font-bold">Multiple Locations / Stores</Label>
+            <p className="text-xs text-muted-foreground">Enable to list multiple store locations on your site.</p>
+          </div>
+          <Switch
+            checked={formData.showStores || false}
+            onCheckedChange={(v) => updateFormData("showStores", v)}
+          />
+        </div>
+
+        {formData.showStores && (
+          <div className="space-y-4">
+            <div className="flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  updateFormData("stores", [
+                    ...(formData.stores || []),
+                    {
+                      id: `store-${Date.now()}`,
+                      name: "",
+                      shortLocation: "",
+                      address: "",
+                      phone: "",
+                      image: "",
+                      website: "",
+                    },
+                  ])
+                }
+              >
+                <Plus className="mr-2 h-4 w-4" /> Add Store Location
+              </Button>
+            </div>
+
+            {(formData.stores || []).map((store, i) => (
+              <div
+                key={store.id || i}
+                className="relative grid gap-4 rounded-xl border bg-muted/10 p-4 md:grid-cols-[150px_1fr]"
+              >
+                <ImageUpload
+                  label="Store Image"
+                  image={store.image || null}
+                  onImageSelect={(_, d) => {
+                    const ns = [...(formData.stores || [])]
+                    if (ns[i]) {
+                      ns[i].image = d
+                      updateFormData("stores", ns)
+                    }
+                  }}
+                  onImageRemove={() => {
+                    const ns = [...(formData.stores || [])]
+                    if (ns[i]) {
+                      ns[i].image = ""
+                      updateFormData("stores", ns)
+                    }
+                  }}
+                  slugPrefix={formData.siteSlug || ""}
+                  canDownload={false}
+                />
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Input
+                      placeholder="Store Name (e.g. Ramen Taro Shinjuku)"
+                      value={store.name || ""}
+                      onChange={(e) => {
+                        const ns = [...(formData.stores || [])]
+                        if (ns[i]) {
+                          ns[i].name = e.target.value
+                          updateFormData("stores", ns)
+                        }
+                      }}
+                    />
+                    <Input
+                      placeholder="Short Location (e.g. Shinjuku Branch)"
+                      value={store.shortLocation || ""}
+                      onChange={(e) => {
+                        const ns = [...(formData.stores || [])]
+                        if (ns[i]) {
+                          ns[i].shortLocation = e.target.value
+                          updateFormData("stores", ns)
+                        }
+                      }}
+                    />
+                  </div>
+                  <Input
+                    placeholder="Full Address"
+                    value={store.address || ""}
+                    onChange={(e) => {
+                      const ns = [...(formData.stores || [])]
+                      if (ns[i]) {
+                        ns[i].address = e.target.value
+                        updateFormData("stores", ns)
+                      }
+                    }}
+                  />
+                  <div className="grid grid-cols-2 gap-2">
+                    <Input
+                      placeholder="Phone"
+                      value={store.phone || ""}
+                      onChange={(e) => {
+                        const ns = [...(formData.stores || [])]
+                        if (ns[i]) {
+                          ns[i].phone = e.target.value
+                          updateFormData("stores", ns)
+                        }
+                      }}
+                    />
+                    <Input
+                      placeholder="Website (Optional)"
+                      value={store.website || ""}
+                      onChange={(e) => {
+                        const ns = [...(formData.stores || [])]
+                        if (ns[i]) {
+                          ns[i].website = e.target.value
+                          updateFormData("stores", ns)
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+                <button
+                  onClick={() =>
+                    updateFormData(
+                      "stores",
+                      (formData.stores || []).filter((_, idx) => idx !== i)
+                    )
+                  }
+                  className="absolute top-2 right-2 text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 

@@ -244,6 +244,18 @@ export interface SiteBuilderData {
     music: "Background jazz" | "None" | "Live music"
     attire: "casual" | "smart casual" | "formal"
   }
+
+  // --- Multiple Locations ---
+  showStores?: boolean
+  stores?: Array<{
+    id: string
+    name: string
+    shortLocation: string
+    address: string
+    phone: string
+    image: string
+    website?: string
+  }>
 }
 
 /**

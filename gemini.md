@@ -436,6 +436,19 @@ You MUST output **only** a valid JSON object with this exact structure. Do NOT w
   "knowsLanguage": ["Japanese", "English", "Nepali"],
   "cuisineType": "Japanese",
 
+  "showStores": false,
+  "stores": [
+    {
+      "id": "store-1",
+      "name": "Branch Name",
+      "shortLocation": "Short Location Name",
+      "address": "Full Address",
+      "phone": "+81 ...",
+      "image": "URL to branch image",
+      "website": "URL to branch specific page if any"
+    }
+  ],
+
   "advancedSchema": {
     "foundedDate": "1985-04-15",
     "foundingLocation": "Fukuoka, Japan",

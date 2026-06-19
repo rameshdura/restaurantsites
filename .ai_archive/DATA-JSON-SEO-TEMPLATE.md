@@ -462,6 +462,7 @@ Copy this structure and populate all fields for each restaurant.
   },
 
   /* ─── MULTI-LOCATION SUPPORT ─────────────────────────────────────────────── */
+  "showStores": false,
   "locations": [
     {
       "name": "Main Branch",
@@ -471,10 +472,21 @@ Copy this structure and populate all fields for each restaurant.
       "lat": 35.7394006,
       "lng": 139.4449135,
       "isPrimary": true,
-      "openingHours": [...],
+      "openingHours": [],
       "parking": "Street only"
     }
     // Add more locations for chain restaurants
+  ],
+  "stores": [
+    {
+      "id": "store-1",
+      "name": "Ramen Taro Shinjuku",
+      "shortLocation": "Shinjuku Branch",
+      "address": "1-chōme-1-1 Nishi-Shinjuku, Shinjuku City, Tokyo",
+      "phone": "+81 3-1234-5678",
+      "image": "/images/restaurants/ramen-taro/store1.jpg",
+      "website": "https://ramentaro.jp/shinjuku"
+    }
   ]
 }
 ```

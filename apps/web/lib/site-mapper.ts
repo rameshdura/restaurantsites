@@ -174,6 +174,8 @@ export function mapDataJsonToBuilder(data: any): Partial<SiteBuilderData> {
         data.knowsLanguage || data.advancedSchema?.knowsLanguage || [],
       cuisineType: data.cuisineType || data.advancedSchema?.cuisineType || "",
     },
+    showStores: data.showStores || false,
+    stores: data.stores || [],
   }
 }
 
@@ -476,5 +478,7 @@ export function mapBuilderToDataJson(formData: SiteBuilderData): any {
     videos: formData.videos,
     virtualTour: formData.virtualTour,
     advancedSchema: formData.advancedSchema,
+    showStores: formData.showStores,
+    stores: formData.stores,
   }
 }

@@ -1207,5 +1207,26 @@
   },
   "numberOfEmployees": 0,
   "knowsLanguage": [],
-  "cuisineType": ""
+  "cuisineType": "",
+  "showStores": false,
+  "stores": [
+    {
+      "id": "store-1",
+      "name": "Ramen Taro Shinjuku",
+      "shortLocation": "Shinjuku Branch",
+      "address": "1-chōme-1-1 Nishi-Shinjuku, Shinjuku City, Tokyo 160-0023, Japan",
+      "phone": "+81 3-1234-5678",
+      "image": "/images/restaurants/ramen-taro/store1.jpg",
+      "website": "https://ramentaro.jp/shinjuku"
+    },
+    {
+      "id": "store-2",
+      "name": "Ramen Taro Shibuya",
+      "shortLocation": "Shibuya Branch",
+      "address": "2-chōme-2-1 Dōgenzaka, Shibuya City, Tokyo 150-0043, Japan",
+      "phone": "+81 3-8765-4321",
+      "image": "/images/restaurants/ramen-taro/store2.jpg",
+      "website": "https://ramentaro.jp/shibuya"
+    }
+  ]
 }
