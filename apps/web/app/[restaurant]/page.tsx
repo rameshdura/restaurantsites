@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import React from "react"
 import { getRestaurant } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
 import { getTranslations } from "@/lib/i18n"
@@ -9,6 +10,7 @@ import { generateHomeMetadata, generateRestaurantSchema } from "@/lib/seo"
 import { BlockRenderer } from "@/components/BlockRenderer"
 import { FloatingActions } from "@/components/floating-actions"
 import { getServerRestaurantLink } from "@/lib/link"
+import { StoresSection } from "@workspace/ui/components/stores-section"
 
 export const revalidate = 60
 
@@ -63,15 +65,36 @@ export default async function RestaurantPage({ params }: RestaurantPageProps) {
       />
       <main className="flex-1">
         {visibleSections.map((section) => (
-          <BlockRenderer
-            key={section.id}
-            section={section}
-            data={data}
-            translations={translations}
-            restaurantSlug={slug}
-            getLink={getLink}
-          />
+          <React.Fragment key={section.id}>
+            <BlockRenderer
+              section={section}
+              data={data}
+              translations={translations}
+              restaurantSlug={slug}
+              getLink={getLink}
+            />
+            {section.id === "about" &&
+              data.showStores &&
+              data.stores &&
+              data.stores.length > 0 && (
+                <StoresSection
+                  stores={data.stores}
+                  translations={translations}
+                  getLink={getLink}
+                />
+              )}
+          </React.Fragment>
         ))}
+        {data.showStores &&
+          data.stores &&
+          data.stores.length > 0 &&
+          !visibleSections.some((s) => s.id === "about") && (
+            <StoresSection
+              stores={data.stores}
+              translations={translations}
+              getLink={getLink}
+            />
+          )}
       </main>
       <FloatingActions
         onlineBookingUrl={onlineBookingUrl}

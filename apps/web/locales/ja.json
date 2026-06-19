@@ -1,8 +1,8 @@
 {
-   "contact": {
-     "title": "お問い合わせ",
-     "sectionTitle": "お問い合わせ",
-     "subtitle": "お問い合わせ先",
+  "contact": {
+    "title": "お問い合わせ",
+    "sectionTitle": "お問い合わせ",
+    "subtitle": "お問い合わせ先",
     "description": "ご質問やプライベートイベントのご予約はありますか？ご連絡をお待ちしています。フォームまたは直接の連絡先からお問い合わせください。",
     "pageSubtitle": "ご連絡お待ちしております。お気軽にご相談ください。",
     "location": "所在地",
@@ -49,7 +49,8 @@
     "gallery": "ギャラリー",
     "contact": "お問い合わせ",
     "callUs": "今すぐ電話",
-    "followUs": "ソーシャルメディアで更新情報をフォローしてください！"
+    "followUs": "ソーシャルメディアで更新情報をフォローしてください！",
+    "stores": "店舗一覧"
   },
   "footer": {
     "companyInformation": "会社情報"
@@ -163,6 +164,10 @@
       "popular": "人気",
       "vegetarian": "ベジタリアン",
       "spicy": "スパイシー"
+    },
+    "stores": {
+      "title": "店舗一覧",
+      "subtitle": "お近くの店舗"
     }
   }
 }

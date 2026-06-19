@@ -48,7 +48,9 @@ export default async function PrivacyPolicyPage({ params }: PrivacyPageProps) {
 
   const coverImage = getImageSrc(
     slug,
-    data.pages?.privacy?.coverImage || data.hero?.slides?.[0]?.image
+    data.pages?.privacy?.coverImage ||
+      data.pages?.about?.coverImage ||
+      data.hero?.slides?.[0]?.image
   )
 
   const isJa = data.app?.language === "JA"

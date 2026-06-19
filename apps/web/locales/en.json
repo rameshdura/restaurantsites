@@ -10,11 +10,11 @@
     "email": "Email",
     "hours": "Hours",
     "googleMaps": "Google Maps",
-    "getDirections": "Get Directions \u2192",
+    "getDirections": "Get Directions →",
     "availableHours": "Available 11 AM - 10 PM daily",
     "generalReservations": "General & Reservations",
     "findUs": "Find us on Google Maps",
-    "openGoogleMap": "Open Google Map \u2192",
+    "openGoogleMap": "Open Google Map →",
     "followUs": "Follow Us",
     "backgroundTitle": "Contact",
     "serviceHours": "Service Hours",
@@ -49,7 +49,8 @@
     "gallery": "Gallery",
     "contact": "Contact",
     "callUs": "Call Us Now",
-    "followUs": "Follow us on social media for updates!"
+    "followUs": "Follow us on social media for updates!",
+    "stores": "Our Stores"
   },
   "footer": {
     "companyInformation": "Company Information"
@@ -163,6 +164,10 @@
       "popular": "Popular",
       "vegetarian": "Vegetarian",
       "spicy": "Spicy"
+    },
+    "stores": {
+      "title": "Our Stores",
+      "subtitle": "Find us near you"
     }
   }
 }

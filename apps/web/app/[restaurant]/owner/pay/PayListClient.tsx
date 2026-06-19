@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { RefreshCw, CheckCircle, XCircle, Clock, Menu } from "lucide-react"
+import { RefreshCw, CheckCircle, XCircle, Clock, Menu, Activity } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 import { PayViewType } from "./PaySidebar"
 
@@ -98,17 +98,23 @@ export function PayListClient({
             <h2 className="flex items-center gap-2 text-xl font-bold">
               {view === "success" ? (
                 <CheckCircle className="h-5 w-5 text-green-500" />
-              ) : (
+              ) : view === "failed" ? (
                 <XCircle className="h-5 w-5 text-destructive" />
+              ) : (
+                <Activity className="h-5 w-5 text-blue-500" />
               )}
               {view === "success"
                 ? "Successful Payments"
-                : "Failed / Inactive Sessions"}
+                : view === "failed"
+                ? "Failed / Inactive Sessions"
+                : "Active Sessions"}
             </h2>
             <p className="text-sm text-muted-foreground">
               {view === "success"
                 ? "List of completed and paid orders."
-                : "List of sessions with 0 items, unpaid, or closed without payment."}
+                : view === "failed"
+                ? "List of sessions with 0 items, unpaid, or closed without payment."
+                : "List of currently active table sessions."}
             </p>
           </div>
         </div>
@@ -133,8 +139,10 @@ export function PayListClient({
             <div className="mb-4 rounded-full bg-muted p-4">
               {view === "success" ? (
                 <CheckCircle className="h-8 w-8 text-muted-foreground" />
-              ) : (
+              ) : view === "failed" ? (
                 <XCircle className="h-8 w-8 text-muted-foreground" />
+              ) : (
+                <Activity className="h-8 w-8 text-muted-foreground" />
               )}
             </div>
             <h3 className="mb-2 text-lg font-bold">No sessions found</h3>

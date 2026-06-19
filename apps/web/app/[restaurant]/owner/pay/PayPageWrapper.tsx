@@ -40,7 +40,7 @@ export function PayPageWrapper({
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/* Desktop Sidebar */}
-      <div className="hidden w-48 flex-shrink-0 md:block">
+      <div className="hidden w-48 flex-shrink-0 md:block print:hidden">
         <PaySidebar
           restaurantSlug={restaurantSlug}
           view={view}
@@ -63,7 +63,7 @@ export function PayPageWrapper({
         </SheetContent>
       </Sheet>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto print:overflow-visible print:bg-white text-black">
         {view === "scanner" ? (
           <OwnerPayClient
             restaurantSlug={restaurantSlug}

@@ -10,6 +10,26 @@
   "website": "",
   "foundingDate": "1985-01-01",
   "menuLink": "pdfmenu/ramen-taro-menu.pdf",
+  "showStores": true,
+  "stores": [
+    {
+      "id": "shinbashi",
+      "name": "Gorkha Shinbashi",
+      "shortLocation": "Shinbashi, Tokyo",
+      "address": "1-chōme-2-3 Shinbashi, Minato City, Tokyo 105-0004, Japan",
+      "phone": "+81 3-1234-5678",
+      "image": "/images/restaurants/gorkha/stores/store-1.png",
+      "website": "https://gorkha.satikmedia.com"
+    },
+    {
+      "id": "shinjuku",
+      "name": "Gorkha Shinjuku",
+      "shortLocation": "Shinjuku, Tokyo",
+      "address": "3-chōme-4-5 Shinjuku, Shinjuku City, Tokyo 160-0022, Japan",
+      "phone": "+81 3-8765-4321",
+      "image": "/images/restaurants/gorkha/stores/store-2.png"
+    }
+  ],
   "app": {
     "language": "EN",
     "currency": "JPY"

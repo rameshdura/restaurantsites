@@ -1,9 +1,9 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { QrCode, CheckCircle, XCircle, Banknote } from "lucide-react"
+import { QrCode, CheckCircle, XCircle, Banknote, Activity } from "lucide-react"
 
-export type PayViewType = "scanner" | "success" | "failed"
+export type PayViewType = "scanner" | "success" | "failed" | "active"
 
 interface PaySidebarProps {
   restaurantSlug: string
@@ -59,6 +59,18 @@ export function PaySidebar({
         >
           <CheckCircle className="h-5 w-5" />
           <span className="font-semibold">Success</span>
+        </button>
+
+        <button
+          onClick={() => onViewChange("active")}
+          className={`mb-2 flex w-full items-center gap-3 rounded-xl p-3 text-left transition-all ${
+            view === "active"
+              ? "bg-primary text-primary-foreground"
+              : "hover:bg-accent"
+          }`}
+        >
+          <Activity className="h-5 w-5" />
+          <span className="font-semibold">Active</span>
         </button>
 
         <button

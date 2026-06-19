@@ -224,7 +224,8 @@ function PayContent({
   const items = orders?.items || []
 
   return (
-    <div className="p-4 sm:p-8">
+    <>
+      <div className="p-4 sm:p-8 print:hidden">
       {/* Header Controls */}
       <div className="mx-auto mb-8 flex max-w-7xl items-center justify-between">
         <div className="flex items-center gap-2 sm:gap-4">
@@ -580,6 +581,91 @@ function PayContent({
         )}
       </main>
     </div>
+
+    {/* Print-only Receipt Template (POS style) */}
+    {session && (
+      <div className="hidden print:block w-[80mm] font-mono text-black p-4 text-xs mx-auto">
+        <div className="text-center mb-6">
+          <h1 className="text-xl font-bold uppercase">{restaurantSlug}</h1>
+          <p className="mt-1">Table {session.table_number}</p>
+          <p>{new Date().toLocaleString()}</p>
+          <p className="mt-2 text-[10px] text-muted-foreground">
+            ****-****-****-{session.session_id.slice(-4)}
+          </p>
+        </div>
+
+        <div className="border-b border-black border-dashed mb-3 pb-2">
+          <div className="flex justify-between font-bold mb-2">
+            <span>Qty Item</span>
+            <span>Amount</span>
+          </div>
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          {items.map((item: any) => {
+            const details = getMenuItemDetails(item.item_id)
+            const name = details?.name || item.item_id
+            const itemPrice = details ? parseFloat(String(details.price)) || 0 : 0
+            return (
+              <div key={item.item_id + (item.notes || "")} className="flex justify-between mb-1.5 items-start">
+                <div className="flex-1 pr-2">
+                  <span>{item.qty}x {name}</span>
+                  {item.notes && <div className="text-[10px] italic">&quot;{item.notes}&quot;</div>}
+                  {renderSelectedOptions(item, menu)}
+                </div>
+                <span>{symbol}{(itemPrice * item.qty).toFixed(2)}</span>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className="space-y-1.5 mb-4">
+          <div className="flex justify-between">
+            <span>Subtotal</span>
+            <span>{symbol}{(orders.subtotal || 0).toFixed(2)}</span>
+          </div>
+          {orders.show_service_tax !== false && (orders.service_charge ?? 0) > 0 && (
+            <div className="flex justify-between">
+              <span>Service Charge</span>
+              <span>{symbol}{(orders.service_charge || 0).toFixed(2)}</span>
+            </div>
+          )}
+          {orders.show_tax !== false && (orders.tax ?? 0) > 0 && (
+            <div className="flex justify-between">
+              <span>Tax</span>
+              <span>{symbol}{(orders.tax || 0).toFixed(2)}</span>
+            </div>
+          )}
+          {Number(orders.tips) > 0 && (
+            <div className="flex justify-between">
+              <span>Tip</span>
+              <span>{symbol}{Number(orders.tips).toFixed(2)}</span>
+            </div>
+          )}
+          {Number(orders.discount) > 0 && (
+            <div className="flex justify-between">
+              <span>Discount</span>
+              <span>-{symbol}{Number(orders.discount).toFixed(2)}</span>
+            </div>
+          )}
+        </div>
+
+        <div className="border-t border-black border-dashed pt-3 flex justify-between font-black text-sm">
+          <span>TOTAL DUE</span>
+          <span>{symbol}{(orders.total || 0).toFixed(2)}</span>
+        </div>
+        
+        {session.status === "closed" && (
+          <div className="mt-4 text-center font-bold">
+            PAID IN FULL
+          </div>
+        )}
+
+        <div className="text-center mt-8 text-[10px]">
+          <p>Thank you for dining with us!</p>
+          <p>Please come again.</p>
+        </div>
+      </div>
+    )}
+  </>
   )
 }
 

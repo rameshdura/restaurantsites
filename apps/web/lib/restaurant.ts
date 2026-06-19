@@ -280,6 +280,17 @@ export interface RestaurantData extends BlockSchemaFields {
     attire?: string
   }
 
+  showStores?: boolean
+  stores?: Array<{
+    id: string
+    name: string
+    shortLocation: string
+    address: string
+    phone: string
+    image: string
+    website?: string
+  }>
+
   // Multi-location support
   locations?: Array<{
     name: string

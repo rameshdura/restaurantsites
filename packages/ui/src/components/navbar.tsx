@@ -102,6 +102,7 @@ interface NavbarProps {
       content?: string
       image?: string
     }
+    showStores?: boolean
   }
   translations?: NavbarTranslations
   defaultLanguage?: string // e.g., "EN", "JA"
@@ -114,6 +115,7 @@ interface NavbarTranslations {
     about?: string
     gallery?: string
     contact?: string
+    stores?: string
     callUs?: string
     followUs?: string
   }
@@ -337,6 +339,11 @@ export function Navbar({
       name: translations?.navbar?.about || "About",
       href: getLink("/about"),
       show: !!restaurant.about,
+    },
+    {
+      name: translations?.navbar?.stores || "Our Stores",
+      href: getLink("/stores"),
+      show: !!restaurant.showStores,
     },
     {
       name: translations?.navbar?.gallery || "Gallery",
