@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getRestaurant } from "../../../lib/restaurant"
+import { getRestaurant } from "@/lib/restaurant"
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
