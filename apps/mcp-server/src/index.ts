@@ -14,7 +14,6 @@ const port = process.env.PORT || 3001;
 
 // Middlewares
 app.use(cors());
-app.use(express.json());
 
 // Store transports for active sessions
 // Map<sessionId, SSEServerTransport>
@@ -27,7 +26,6 @@ app.get('/sse', authMiddleware, async (req: McpRequest, res) => {
 
   // Create SSE transport
   const transport = new SSEServerTransport('/message', res);
-  await transport.start();
 
   // Create an MCP Server instance scoped to this slug
   const mcpServer = setupMcpServer(slug);

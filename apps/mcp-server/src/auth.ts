@@ -3,6 +3,7 @@ import { McpRequest } from './types';
 
 export const authMiddleware = (req: McpRequest, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
+  const apiKeyQuery = req.query.apiKey as string;
   const expectedKey = process.env.MCP_API_KEY;
 
   if (!expectedKey) {
@@ -11,7 +12,9 @@ export const authMiddleware = (req: McpRequest, res: Response, next: NextFunctio
     return;
   }
 
-  if (authHeader !== `Bearer ${expectedKey}`) {
+  const isAuthorized = authHeader === `Bearer ${expectedKey}` || apiKeyQuery === expectedKey;
+
+  if (!isAuthorized) {
     res.status(401).json({ error: 'Unauthorized: Invalid API Key' });
     return;
   }
