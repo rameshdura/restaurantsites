@@ -12,12 +12,21 @@ if (!fs.existsSync(DATA_DIR)) {
 export const getRestaurantData = async (slug: string): Promise<RestaurantData> => {
   const localDir = path.join(DATA_DIR, slug);
   const localFile = path.join(localDir, 'data.json');
+  const rootApiUrl = process.env.ROOT_API_URL || 'https://restaurantsites.vercel.app';
+  const cleanBaseUrl = rootApiUrl.replace(/\/$/, "");
+
+  // Helper to dynamically rewrite all "/images/..." paths to absolute URLs
+  const makeAbsolute = (obj: any): any => {
+    return JSON.parse(
+      JSON.stringify(obj).replace(/"\/images\/([^"]+)"/g, `"${cleanBaseUrl}/images/$1"`)
+    );
+  };
 
   // Cache hit: Read from local storage
   if (fs.existsSync(localFile)) {
     const raw = fs.readFileSync(localFile, 'utf-8');
     try {
-      return JSON.parse(raw);
+      return makeAbsolute(JSON.parse(raw));
     } catch (e) {
       console.error(`Error parsing local JSON for slug ${slug}, falling back to fetch.`, e);
       // Fall through to fetch
@@ -25,7 +34,6 @@ export const getRestaurantData = async (slug: string): Promise<RestaurantData> =
   }
 
   // Cache miss: Fetch from root Vercel API
-  const rootApiUrl = process.env.ROOT_API_URL || 'https://api.restaurantsite.io';
   const internalSecret = process.env.INTERNAL_SYNC_SECRET;
 
   if (!internalSecret) {
@@ -45,11 +53,11 @@ export const getRestaurantData = async (slug: string): Promise<RestaurantData> =
 
   const data = await response.json();
 
-  // Save to local cache
+  // Save the raw relative version to the local cache file
   if (!fs.existsSync(localDir)) {
     fs.mkdirSync(localDir, { recursive: true });
   }
   fs.writeFileSync(localFile, JSON.stringify(data, null, 2), 'utf-8');
 
-  return data;
+  return makeAbsolute(data);
 };
