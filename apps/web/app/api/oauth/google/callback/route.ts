@@ -118,7 +118,17 @@ export async function GET(request: Request) {
       Date.now() + tokens.expires_in * 1000
     ).toISOString()
 
-    // 4. Upsert OAuth connection
+    // 4. Resolve refresh token (preserve existing if google didn't return a new one on reconnect)
+    const { data: existingConn } = await supabaseServer
+      .from("oauth_connections")
+      .select("refresh_token")
+      .eq("restaurant_id", restaurant.id)
+      .eq("provider", "google")
+      .maybeSingle()
+
+    const finalRefreshToken = tokens.refresh_token || existingConn?.refresh_token || null
+
+    // 5. Upsert OAuth connection
     const { error: upsertError } = await supabaseServer
       .from("oauth_connections")
       .upsert(
@@ -128,7 +138,7 @@ export async function GET(request: Request) {
           provider: "google",
           account_email: accountEmail,
           access_token: tokens.access_token,
-          refresh_token: tokens.refresh_token ?? null,
+          refresh_token: finalRefreshToken,
           expires_at: expiresAt,
           scopes: tokens.scope ?? null,
         } as never,
