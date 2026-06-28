@@ -4,13 +4,61 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "env": ["RESEND_API_KEY", "GEMINI_API_KEY", "INTERNAL_SYNC_SECRET"],
+      "env": [
+        "RESEND_API_KEY",
+        "GEMINI_API_KEY",
+        "INTERNAL_SYNC_SECRET",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "GOOGLE_REDIRECT_URI",
+        "BEDROCK_MODEL_ID",
+        "BEDROCK_API_KEY",
+        "BEDROCK_BASE_URL",
+        "CHAT_PROVIDER",
+        "MCP_SERVER_URL",
+        "MCP_API_KEY",
+        "NVIDIA_API_KEY",
+        "NVIDIA_MODEL_ID",
+        "OLLAMA_HOST",
+        "OLLAMA_MODEL_ID",
+        "NEXT_PUBLIC_FORCE_MAIN_SITE",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+        "NEXT_PUBLIC_DASHBOARD_URL",
+        "DATABASE_URL"
+      ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {
       "dependsOn": ["^lint"],
-      "env": ["RESEND_API_KEY", "GEMINI_API_KEY", "INTERNAL_SYNC_SECRET"]
+      "env": [
+        "RESEND_API_KEY",
+        "GEMINI_API_KEY",
+        "INTERNAL_SYNC_SECRET",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "GOOGLE_REDIRECT_URI",
+        "BEDROCK_MODEL_ID",
+        "BEDROCK_API_KEY",
+        "BEDROCK_BASE_URL",
+        "CHAT_PROVIDER",
+        "MCP_SERVER_URL",
+        "MCP_API_KEY",
+        "NVIDIA_API_KEY",
+        "NVIDIA_MODEL_ID",
+        "OLLAMA_HOST",
+        "OLLAMA_MODEL_ID",
+        "NEXT_PUBLIC_FORCE_MAIN_SITE",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+        "NEXT_PUBLIC_DASHBOARD_URL",
+        "DATABASE_URL"
+      ]
     },
     "lint:fix": {
       "dependsOn": ["^lint:fix"]

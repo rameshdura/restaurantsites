@@ -26,8 +26,6 @@ async function getRestaurantId(slug: string): Promise<string | null> {
 
 // Tool definitions are imported from @workspace/ai-chat
 
-
-
 // ─── Tool Call Router / Executor ──────────────────────────────
 async function executeTool(
   name: string,
