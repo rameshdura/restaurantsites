@@ -126,7 +126,8 @@ export async function GET(request: Request) {
       .eq("provider", "google")
       .maybeSingle()
 
-    const finalRefreshToken = tokens.refresh_token || existingConn?.refresh_token || null
+    const finalRefreshToken =
+      tokens.refresh_token || existingConn?.refresh_token || null
 
     // 5. Upsert OAuth connection
     const { error: upsertError } = await supabaseServer

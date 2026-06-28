@@ -34,7 +34,13 @@ export default async function OwnerPayPage({ params }: OwnerPayPageProps) {
   const menuItems = restaurant.menu || []
 
   return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center text-zinc-500">Loading payment screen...</div>}>
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center text-zinc-500">
+          Loading payment screen...
+        </div>
+      }
+    >
       <PayPageWrapper
         restaurantSlug={decodedSlug}
         currency={restaurant.data.app?.currency || "USD"}

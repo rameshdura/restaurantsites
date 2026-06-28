@@ -90,6 +90,7 @@ export function Hero({ slides, phone, name, tagline }: HeroProps) {
                 alt={slide.title}
                 fill
                 priority={index === 0}
+                fetchPriority={index === 0 ? "high" : undefined}
                 className={cn(
                   "object-cover transition-transform duration-[6000ms] ease-in-out",
                   index === currentSlide && "scale-110"

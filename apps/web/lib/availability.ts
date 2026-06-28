@@ -106,7 +106,12 @@ export async function checkAvailability(
 
   // 4. Validate date
   const dateObj = new Date(dateStr)
-  console.log("[checkAvailability] Inputs:", { slug, dateStr, timeStr, partySize })
+  console.log("[checkAvailability] Inputs:", {
+    slug,
+    dateStr,
+    timeStr,
+    partySize,
+  })
   console.log("[checkAvailability] dateObj parsing:", {
     iso: dateObj.toISOString(),
     dayIndex: dateObj.getDay(),
@@ -122,7 +127,12 @@ export async function checkAvailability(
   const daySchedule = openingHours.find(
     (h) => h.day && dayMatchesRange(dayName, h.day)
   )
-  console.log("[checkAvailability] dayName:", dayName, "daySchedule:", daySchedule)
+  console.log(
+    "[checkAvailability] dayName:",
+    dayName,
+    "daySchedule:",
+    daySchedule
+  )
 
   if (!daySchedule || daySchedule.isClosed) {
     return {

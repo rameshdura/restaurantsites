@@ -38,7 +38,13 @@ export default async function OwnerTablesPage({
   const categories = groupMenuByCategory(menu, decodedSlug)
 
   return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center text-zinc-500">Loading tables...</div>}>
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center text-zinc-500">
+          Loading tables...
+        </div>
+      }
+    >
       <OwnerTablesManagementPage
         restaurantSlug={decodedSlug}
         tables={tables}

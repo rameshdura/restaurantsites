@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react"
 import type { Reservation, ReservationStatus } from "@/lib/supabase-types"
 import { Button } from "@workspace/ui/components/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@workspace/ui/components/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card"
 import { Input } from "@workspace/ui/components/input"
 import { Badge } from "@workspace/ui/components/badge"
 import { Label } from "@workspace/ui/components/label"
@@ -87,7 +93,10 @@ export function OwnerBookingsClient({
     fetchBookings()
   }, [restaurantSlug])
 
-  const updateBookingStatus = async (id: string, newStatus: ReservationStatus) => {
+  const updateBookingStatus = async (
+    id: string,
+    newStatus: ReservationStatus
+  ) => {
     try {
       setUpdatingId(id)
       const res = await fetch(`/api/bookings/${id}`, {
@@ -172,7 +181,8 @@ export function OwnerBookingsClient({
         method: "POST",
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || "Failed to sync to Google Calendar")
+      if (!res.ok)
+        throw new Error(data.error || "Failed to sync to Google Calendar")
 
       toast({
         title: "Synced successfully",
@@ -182,7 +192,11 @@ export function OwnerBookingsClient({
       setBookings((prev) =>
         prev.map((b) =>
           b.id === id
-            ? { ...b, calendar_provider: "google", calendar_event_id: data.google_event_id }
+            ? {
+                ...b,
+                calendar_provider: "google",
+                calendar_event_id: data.google_event_id,
+              }
             : b
         )
       )
@@ -234,13 +248,17 @@ export function OwnerBookingsClient({
   const filteredBookings = bookings.filter((booking) => {
     const matchesSearch =
       booking.customer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (booking.customer_email || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (booking.customer_email || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
       (booking.customer_phone || "").includes(searchQuery)
 
     const matchesStatus =
       statusFilter === "all" ? true : booking.status === statusFilter
 
-    const matchesDate = dateFilter ? booking.reservation_date === dateFilter : true
+    const matchesDate = dateFilter
+      ? booking.reservation_date === dateFilter
+      : true
 
     return matchesSearch && matchesStatus && matchesDate
   })
@@ -248,15 +266,50 @@ export function OwnerBookingsClient({
   const getStatusBadge = (status: ReservationStatus) => {
     switch (status) {
       case "pending":
-        return <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 gap-1"><AlertCircle className="h-3.5 w-3.5" /> Pending</Badge>
+        return (
+          <Badge
+            variant="outline"
+            className="gap-1 border-yellow-500/20 bg-yellow-500/10 text-yellow-500"
+          >
+            <AlertCircle className="h-3.5 w-3.5" /> Pending
+          </Badge>
+        )
       case "confirmed":
-        return <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20 gap-1"><CheckCircle2 className="h-3.5 w-3.5" /> Confirmed</Badge>
+        return (
+          <Badge
+            variant="outline"
+            className="gap-1 border-blue-500/20 bg-blue-500/10 text-blue-500"
+          >
+            <CheckCircle2 className="h-3.5 w-3.5" /> Confirmed
+          </Badge>
+        )
       case "completed":
-        return <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 gap-1"><CheckCircle2 className="h-3.5 w-3.5" /> Completed</Badge>
+        return (
+          <Badge
+            variant="outline"
+            className="gap-1 border-green-500/20 bg-green-500/10 text-green-500"
+          >
+            <CheckCircle2 className="h-3.5 w-3.5" /> Completed
+          </Badge>
+        )
       case "cancelled":
-        return <Badge variant="outline" className="bg-red-500/10 text-red-500 border-red-500/20 gap-1"><XCircle className="h-3.5 w-3.5" /> Cancelled</Badge>
+        return (
+          <Badge
+            variant="outline"
+            className="gap-1 border-red-500/20 bg-red-500/10 text-red-500"
+          >
+            <XCircle className="h-3.5 w-3.5" /> Cancelled
+          </Badge>
+        )
       case "no_show":
-        return <Badge variant="outline" className="bg-zinc-500/10 text-zinc-500 border-zinc-500/20 gap-1"><XCircle className="h-3.5 w-3.5" /> No Show</Badge>
+        return (
+          <Badge
+            variant="outline"
+            className="gap-1 border-zinc-500/20 bg-zinc-500/10 text-zinc-500"
+          >
+            <XCircle className="h-3.5 w-3.5" /> No Show
+          </Badge>
+        )
       default:
         return <Badge variant="outline">{status}</Badge>
     }
@@ -272,7 +325,8 @@ export function OwnerBookingsClient({
             Bookings Dashboard
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Manage table reservations for {restaurantName} generated from the online assistant.
+            Manage table reservations for {restaurantName} generated from the
+            online assistant.
           </p>
         </div>
         <div className="flex gap-2 self-start">
@@ -337,7 +391,7 @@ export function OwnerBookingsClient({
                         onChange={(e) => setNewPartySize(e.target.value)}
                       />
                     </div>
-                    <div className="grid gap-2 col-span-2">
+                    <div className="col-span-2 grid gap-2">
                       <Label htmlFor="date">Date</Label>
                       <Input
                         id="date"
@@ -369,7 +423,11 @@ export function OwnerBookingsClient({
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="button" variant="outline" onClick={() => setIsAddOpen(false)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsAddOpen(false)}
+                  >
                     Cancel
                   </Button>
                   <Button type="submit" disabled={isAdding}>
@@ -397,35 +455,51 @@ export function OwnerBookingsClient({
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <Card>
             <CardHeader className="p-4 pb-2">
-              <CardDescription className="text-xs font-medium uppercase">Total Bookings</CardDescription>
-              <CardTitle className="text-2xl font-bold">{loading ? "..." : totalCount}</CardTitle>
+              <CardDescription className="text-xs font-medium uppercase">
+                Total Bookings
+              </CardDescription>
+              <CardTitle className="text-2xl font-bold">
+                {loading ? "..." : totalCount}
+              </CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader className="p-4 pb-2">
-              <CardDescription className="text-xs font-medium uppercase text-yellow-500">Pending</CardDescription>
-              <CardTitle className="text-2xl font-bold text-yellow-500">{loading ? "..." : pendingCount}</CardTitle>
+              <CardDescription className="text-xs font-medium text-yellow-500 uppercase">
+                Pending
+              </CardDescription>
+              <CardTitle className="text-2xl font-bold text-yellow-500">
+                {loading ? "..." : pendingCount}
+              </CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader className="p-4 pb-2">
-              <CardDescription className="text-xs font-medium uppercase text-blue-500">Confirmed</CardDescription>
-              <CardTitle className="text-2xl font-bold text-blue-500">{loading ? "..." : confirmedCount}</CardTitle>
+              <CardDescription className="text-xs font-medium text-blue-500 uppercase">
+                Confirmed
+              </CardDescription>
+              <CardTitle className="text-2xl font-bold text-blue-500">
+                {loading ? "..." : confirmedCount}
+              </CardTitle>
             </CardHeader>
           </Card>
           <Card>
             <CardHeader className="p-4 pb-2">
-              <CardDescription className="text-xs font-medium uppercase text-green-500">Completed</CardDescription>
-              <CardTitle className="text-2xl font-bold text-green-500">{loading ? "..." : completedCount}</CardTitle>
+              <CardDescription className="text-xs font-medium text-green-500 uppercase">
+                Completed
+              </CardDescription>
+              <CardTitle className="text-2xl font-bold text-green-500">
+                {loading ? "..." : completedCount}
+              </CardTitle>
             </CardHeader>
           </Card>
         </div>
 
         {/* Filters */}
         <Card className="border-border/60">
-          <CardContent className="p-4 flex flex-col md:flex-row gap-4">
+          <CardContent className="flex flex-col gap-4 p-4 md:flex-row">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Search guest name, email or phone..."
                 value={searchQuery}
@@ -436,22 +510,26 @@ export function OwnerBookingsClient({
             <div className="flex flex-wrap gap-3">
               <div className="flex items-center gap-2">
                 <Filter className="h-4 w-4 text-muted-foreground" />
-                <span className="text-xs font-medium text-muted-foreground">Status:</span>
+                <span className="text-xs font-medium text-muted-foreground">
+                  Status:
+                </span>
               </div>
-              <div className="flex gap-1.5 bg-muted p-1 rounded-lg">
-                {["all", "pending", "confirmed", "completed", "cancelled"].map((status) => (
-                  <button
-                    key={status}
-                    onClick={() => setStatusFilter(status)}
-                    className={`px-3 py-1 text-xs font-medium capitalize rounded-md transition-colors ${
-                      statusFilter === status
-                        ? "bg-background text-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {status}
-                  </button>
-                ))}
+              <div className="flex gap-1.5 rounded-lg bg-muted p-1">
+                {["all", "pending", "confirmed", "completed", "cancelled"].map(
+                  (status) => (
+                    <button
+                      key={status}
+                      onClick={() => setStatusFilter(status)}
+                      className={`rounded-md px-3 py-1 text-xs font-medium capitalize transition-colors ${
+                        statusFilter === status
+                          ? "bg-background text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {status}
+                    </button>
+                  )
+                )}
               </div>
               <div className="relative min-w-[150px]">
                 <Input
@@ -463,7 +541,7 @@ export function OwnerBookingsClient({
                 {dateFilter && (
                   <button
                     onClick={() => setDateFilter("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
+                    className="absolute top-1/2 right-3 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
                   >
                     Clear
                   </button>
@@ -478,56 +556,73 @@ export function OwnerBookingsClient({
           <div className="flex h-48 items-center justify-center rounded-xl border border-dashed">
             <div className="flex flex-col items-center gap-2">
               <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Loading reservations...</p>
+              <p className="text-sm text-muted-foreground">
+                Loading reservations...
+              </p>
             </div>
           </div>
         ) : filteredBookings.length === 0 ? (
           <div className="flex h-48 flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center">
-            <Calendar className="h-10 w-10 text-muted-foreground mb-3" />
-            <p className="text-lg font-medium text-foreground">No bookings found</p>
-            <p className="text-sm text-muted-foreground max-w-sm mt-1">
-              Try adjusting your search query, status filters, or date filter to see other reservations.
+            <Calendar className="mb-3 h-10 w-10 text-muted-foreground" />
+            <p className="text-lg font-medium text-foreground">
+              No bookings found
+            </p>
+            <p className="mt-1 max-w-sm text-sm text-muted-foreground">
+              Try adjusting your search query, status filters, or date filter to
+              see other reservations.
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredBookings.map((booking) => (
-              <Card key={booking.id} className="overflow-hidden border-border/80 transition-shadow hover:shadow-md">
-                <CardHeader className="bg-muted/40 p-4 border-b border-border/40 flex flex-row items-start justify-between gap-4">
+              <Card
+                key={booking.id}
+                className="overflow-hidden border-border/80 transition-shadow hover:shadow-md"
+              >
+                <CardHeader className="flex flex-row items-start justify-between gap-4 border-b border-border/40 bg-muted/40 p-4">
                   <div className="space-y-1">
-                    <h3 className="font-semibold text-base leading-none text-foreground">
+                    <h3 className="text-base leading-none font-semibold text-foreground">
                       {booking.customer_name}
                     </h3>
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
+                    <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Users className="h-3.5 w-3.5" />
-                      <span>{booking.party_size} {booking.party_size === 1 ? "guest" : "guests"}</span>
+                      <span>
+                        {booking.party_size}{" "}
+                        {booking.party_size === 1 ? "guest" : "guests"}
+                      </span>
                     </div>
                   </div>
                   <div>{getStatusBadge(booking.status)}</div>
                 </CardHeader>
-                <CardContent className="p-4 space-y-4">
+                <CardContent className="space-y-4 p-4">
                   {/* Reservation Details */}
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center gap-2 text-foreground">
-                      <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
+                      <Calendar className="h-4 w-4 shrink-0 text-muted-foreground" />
                       <span>{booking.reservation_date}</span>
                     </div>
                     <div className="flex items-center gap-2 text-foreground">
-                      <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
+                      <Clock className="h-4 w-4 shrink-0 text-muted-foreground" />
                       <span>{booking.reservation_time.slice(0, 5)}</span>
                     </div>
                     {booking.customer_email && (
                       <div className="flex items-center gap-2 text-muted-foreground">
-                        <Mail className="h-4 w-4 text-muted-foreground shrink-0 animate-pulse-none" />
-                        <a href={`mailto:${booking.customer_email}`} className="hover:underline hover:text-foreground truncate">
+                        <Mail className="animate-pulse-none h-4 w-4 shrink-0 text-muted-foreground" />
+                        <a
+                          href={`mailto:${booking.customer_email}`}
+                          className="truncate hover:text-foreground hover:underline"
+                        >
                           {booking.customer_email}
                         </a>
                       </div>
                     )}
                     {booking.customer_phone && (
                       <div className="flex items-center gap-2 text-muted-foreground">
-                        <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
-                        <a href={`tel:${booking.customer_phone}`} className="hover:underline hover:text-foreground">
+                        <Phone className="h-4 w-4 shrink-0 text-muted-foreground" />
+                        <a
+                          href={`tel:${booking.customer_phone}`}
+                          className="hover:text-foreground hover:underline"
+                        >
                           {booking.customer_phone}
                         </a>
                       </div>
@@ -536,27 +631,33 @@ export function OwnerBookingsClient({
 
                   {/* Customer Notes */}
                   {booking.notes && (
-                    <div className="bg-accent/50 p-3 rounded-lg flex gap-2 items-start text-xs border border-border/30">
-                      <MessageSquare className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-                      <p className="text-muted-foreground leading-normal italic">
+                    <div className="flex items-start gap-2 rounded-lg border border-border/30 bg-accent/50 p-3 text-xs">
+                      <MessageSquare className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                      <p className="leading-normal text-muted-foreground italic">
                         &ldquo;{booking.notes}&rdquo;
                       </p>
                     </div>
                   )}
 
                   {/* Google Calendar Sync Status */}
-                  <div className="flex items-center justify-between text-xs border-t border-border/20 pt-2 mt-2">
+                  <div className="mt-2 flex items-center justify-between border-t border-border/20 pt-2 text-xs">
                     <div className="flex items-center gap-1.5 text-muted-foreground">
                       <CalendarCheck className="h-3.5 w-3.5" />
                       <span>Google Calendar:</span>
                     </div>
                     {booking.calendar_event_id ? (
-                      <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px] font-normal py-0.5 px-1.5">
+                      <Badge
+                        variant="outline"
+                        className="border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-normal text-emerald-500"
+                      >
                         Synced
                       </Badge>
                     ) : (
                       <div className="flex items-center gap-1.5">
-                        <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20 text-[10px] font-normal py-0.5 px-1.5">
+                        <Badge
+                          variant="outline"
+                          className="border-amber-500/20 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-normal text-amber-500"
+                        >
                           Not Synced
                         </Badge>
                         <Button
@@ -564,7 +665,7 @@ export function OwnerBookingsClient({
                           disabled={syncingId === booking.id}
                           size="sm"
                           variant="ghost"
-                          className="h-6 px-1.5 text-[10px] text-primary hover:text-primary-foreground hover:bg-primary"
+                          className="h-6 px-1.5 text-[10px] text-primary hover:bg-primary hover:text-primary-foreground"
                         >
                           {syncingId === booking.id ? (
                             <RefreshCw className="h-3 w-3 animate-spin" />
@@ -577,11 +678,13 @@ export function OwnerBookingsClient({
                   </div>
 
                   {/* Actions */}
-                  <div className="flex flex-col gap-2 pt-2 border-t border-border/40">
+                  <div className="flex flex-col gap-2 border-t border-border/40 pt-2">
                     <div className="flex flex-wrap gap-2">
                       {booking.status === "pending" && (
                         <Button
-                          onClick={() => updateBookingStatus(booking.id, "confirmed")}
+                          onClick={() =>
+                            updateBookingStatus(booking.id, "confirmed")
+                          }
                           disabled={updatingId === booking.id}
                           size="sm"
                           className="flex-1 text-xs"
@@ -591,33 +694,40 @@ export function OwnerBookingsClient({
                       )}
                       {booking.status === "confirmed" && (
                         <Button
-                          onClick={() => updateBookingStatus(booking.id, "completed")}
+                          onClick={() =>
+                            updateBookingStatus(booking.id, "completed")
+                          }
                           disabled={updatingId === booking.id}
                           size="sm"
                           variant="outline"
-                          className="flex-1 text-xs text-green-600 hover:text-green-700 hover:bg-green-50 border-green-200"
+                          className="flex-1 border-green-200 text-xs text-green-600 hover:bg-green-50 hover:text-green-700"
                         >
                           Complete
                         </Button>
                       )}
-                      {booking.status !== "cancelled" && booking.status !== "completed" && (
-                        <Button
-                          onClick={() => updateBookingStatus(booking.id, "cancelled")}
-                          disabled={updatingId === booking.id}
-                          size="sm"
-                          variant="ghost"
-                          className="text-xs text-red-500 hover:text-red-600 hover:bg-red-50"
-                        >
-                          Cancel
-                        </Button>
-                      )}
+                      {booking.status !== "cancelled" &&
+                        booking.status !== "completed" && (
+                          <Button
+                            onClick={() =>
+                              updateBookingStatus(booking.id, "cancelled")
+                            }
+                            disabled={updatingId === booking.id}
+                            size="sm"
+                            variant="ghost"
+                            className="text-xs text-red-500 hover:bg-red-50 hover:text-red-600"
+                          >
+                            Cancel
+                          </Button>
+                        )}
                       {booking.status === "confirmed" && (
                         <Button
-                          onClick={() => updateBookingStatus(booking.id, "no_show")}
+                          onClick={() =>
+                            updateBookingStatus(booking.id, "no_show")
+                          }
                           disabled={updatingId === booking.id}
                           size="sm"
                           variant="ghost"
-                          className="text-xs text-zinc-500 hover:text-zinc-600 hover:bg-zinc-50"
+                          className="text-xs text-zinc-500 hover:bg-zinc-50 hover:text-zinc-600"
                         >
                           No Show
                         </Button>
@@ -627,7 +737,7 @@ export function OwnerBookingsClient({
                         disabled={updatingId === booking.id}
                         size="sm"
                         variant="ghost"
-                        className="text-xs text-muted-foreground hover:text-red-600 hover:bg-red-50 ml-auto"
+                        className="ml-auto text-xs text-muted-foreground hover:bg-red-50 hover:text-red-600"
                         title="Delete Reservation"
                       >
                         <Trash2 className="h-4 w-4" />
