@@ -32,3 +32,43 @@ export const supabaseServer: SupabaseClient<any> = createClient(
     },
   }
 )
+
+let cachedUseStores: boolean | null = null
+
+export async function getDbSchema(): Promise<boolean> {
+  if (cachedUseStores !== null) {
+    return cachedUseStores
+  }
+  try {
+    const { error } = await supabaseServer.from("stores").select("id").limit(1)
+    if (
+      error &&
+      (error.message.includes("Could not find the table") ||
+        error.code === "42P01")
+    ) {
+      cachedUseStores = false
+    } else {
+      cachedUseStores = true
+    }
+  } catch {
+    cachedUseStores = false
+  }
+  return cachedUseStores
+}
+
+export async function getDbTables() {
+  const useStores = await getDbSchema()
+  return {
+    useStores,
+    stores: useStores ? "stores" : "restaurants",
+    store_users: useStores ? "store_users" : "restaurant_users",
+    oauth_connections: "oauth_connections",
+    booking_settings: "booking_settings",
+    reservations: "reservations",
+    conversation_sessions: "conversation_sessions",
+
+    // Column aliases
+    storeIdCol: useStores ? "store_id" : "restaurant_id",
+    storeSlugCol: useStores ? "store_slug" : "restaurant_slug",
+  }
+}

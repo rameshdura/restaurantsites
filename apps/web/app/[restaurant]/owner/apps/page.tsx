@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { getRestaurant } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
-import { supabaseServer } from "@/lib/supabase"
+import { supabaseServer, getDbTables } from "@/lib/supabase"
 import type { OAuthConnection, Restaurant } from "@/lib/supabase-types"
 import { OwnerAppsClient } from "./OwnerAppsClient"
 
@@ -29,9 +29,11 @@ export default async function OwnerAppsPage({ params }: OwnerAppsPageProps) {
 
   if (!restaurant) notFound()
 
+  const db = await getDbTables()
+
   // Look up the restaurant row in Supabase to get the ID
   const { data: restaurantRow } = (await supabaseServer
-    .from("restaurants")
+    .from(db.stores)
     .select("id, slug, name")
     .eq("slug", decodedSlug)
     .single()) as {
@@ -43,9 +45,9 @@ export default async function OwnerAppsPage({ params }: OwnerAppsPageProps) {
   const connections: OAuthConnection[] = []
   if (restaurantRow) {
     const { data } = (await supabaseServer
-      .from("oauth_connections")
+      .from(db.oauth_connections)
       .select("*")
-      .eq("restaurant_id", restaurantRow.id)) as {
+      .eq(db.storeIdCol, restaurantRow.id)) as {
       data: OAuthConnection[] | null
       error: unknown
     }

@@ -10,7 +10,7 @@ import {
   getOAuthConnection,
   updateOAuthToken,
   getReservation,
-  getRestaurantById,
+  getStoreById,
   setCalendarEventId,
 } from './supabase';
 import {
@@ -19,7 +19,7 @@ import {
   updateCalendarEvent,
   deleteCalendarEvent,
   listCalendarEvents,
-} from './calendar';
+} from '@workspace/integrations';
 
 // ─── Token refresh helper ────────────────────────────────────
 // Ensures the access token is fresh before making API calls.
@@ -324,50 +324,53 @@ export const setupMcpServer = (slug: string) => {
       // ── Calendar tools ────────────────────────────────────
 
       if (name === 'calendar.create') {
-        const { restaurant_id, reservation_id } = args as { restaurant_id: string; reservation_id: string };
-        if (!restaurant_id || !reservation_id) throw new Error('Missing restaurant_id or reservation_id');
+        const store_id = (args as any).store_id || (args as any).restaurant_id;
+        const { reservation_id } = args as { reservation_id: string };
+        if (!store_id || !reservation_id) throw new Error('Missing store_id or reservation_id');
 
-        const [oauth, reservation, restaurant] = await Promise.all([
-          getOAuthConnection(restaurant_id, 'google'),
+        const [oauth, reservation, store] = await Promise.all([
+          getOAuthConnection(store_id, 'google'),
           getReservation(reservation_id),
-          getRestaurantById(restaurant_id),
+          getStoreById(store_id),
         ]);
 
-        if (!oauth) return { isError: true, content: [{ type: 'text', text: 'Google Calendar is not connected for this restaurant.' }] };
+        if (!oauth) return { isError: true, content: [{ type: 'text', text: 'Google Calendar is not connected for this store.' }] };
         if (!reservation) return { isError: true, content: [{ type: 'text', text: 'Reservation not found.' }] };
-        if (!restaurant) return { isError: true, content: [{ type: 'text', text: 'Restaurant not found.' }] };
+        if (!store) return { isError: true, content: [{ type: 'text', text: 'Store not found.' }] };
 
         const accessToken = await ensureFreshToken(oauth.id, oauth.access_token, oauth.refresh_token, oauth.expires_at);
-        const eventId = await createCalendarEvent(accessToken, reservation, restaurant);
+        const eventId = await createCalendarEvent(accessToken, reservation, store);
         await setCalendarEventId(reservation_id, 'google', eventId);
 
         return { content: [{ type: 'text', text: JSON.stringify({ success: true, google_event_id: eventId }, null, 2) }] };
       }
 
       if (name === 'calendar.update') {
-        const { restaurant_id, reservation_id, calendar_event_id } = args as { restaurant_id: string; reservation_id: string; calendar_event_id: string };
-        if (!restaurant_id || !reservation_id || !calendar_event_id) throw new Error('Missing required arguments');
+        const store_id = (args as any).store_id || (args as any).restaurant_id;
+        const { reservation_id, calendar_event_id } = args as { reservation_id: string; calendar_event_id: string };
+        if (!store_id || !reservation_id || !calendar_event_id) throw new Error('Missing required arguments');
 
-        const [oauth, reservation, restaurant] = await Promise.all([
-          getOAuthConnection(restaurant_id, 'google'),
+        const [oauth, reservation, store] = await Promise.all([
+          getOAuthConnection(store_id, 'google'),
           getReservation(reservation_id),
-          getRestaurantById(restaurant_id),
+          getStoreById(store_id),
         ]);
 
         if (!oauth) return { isError: true, content: [{ type: 'text', text: 'Google Calendar is not connected.' }] };
-        if (!reservation || !restaurant) return { isError: true, content: [{ type: 'text', text: 'Reservation or restaurant not found.' }] };
+        if (!reservation || !store) return { isError: true, content: [{ type: 'text', text: 'Reservation or store not found.' }] };
 
         const accessToken = await ensureFreshToken(oauth.id, oauth.access_token, oauth.refresh_token, oauth.expires_at);
-        await updateCalendarEvent(accessToken, calendar_event_id, reservation, restaurant);
+        await updateCalendarEvent(accessToken, calendar_event_id, reservation, store);
 
         return { content: [{ type: 'text', text: JSON.stringify({ success: true, updated_event_id: calendar_event_id }, null, 2) }] };
       }
 
       if (name === 'calendar.delete') {
-        const { restaurant_id, calendar_event_id } = args as { restaurant_id: string; calendar_event_id: string };
-        if (!restaurant_id || !calendar_event_id) throw new Error('Missing restaurant_id or calendar_event_id');
+        const store_id = (args as any).store_id || (args as any).restaurant_id;
+        const { calendar_event_id } = args as { calendar_event_id: string };
+        if (!store_id || !calendar_event_id) throw new Error('Missing store_id or calendar_event_id');
 
-        const oauth = await getOAuthConnection(restaurant_id, 'google');
+        const oauth = await getOAuthConnection(store_id, 'google');
         if (!oauth) return { isError: true, content: [{ type: 'text', text: 'Google Calendar is not connected.' }] };
 
         const accessToken = await ensureFreshToken(oauth.id, oauth.access_token, oauth.refresh_token, oauth.expires_at);
@@ -377,10 +380,11 @@ export const setupMcpServer = (slug: string) => {
       }
 
       if (name === 'calendar.list') {
-        const { restaurant_id, max_results } = args as { restaurant_id: string; max_results?: number };
-        if (!restaurant_id) throw new Error('Missing restaurant_id');
+        const store_id = (args as any).store_id || (args as any).restaurant_id;
+        const { max_results } = args as { max_results?: number };
+        if (!store_id) throw new Error('Missing store_id');
 
-        const oauth = await getOAuthConnection(restaurant_id, 'google');
+        const oauth = await getOAuthConnection(store_id, 'google');
         if (!oauth) return { isError: true, content: [{ type: 'text', text: 'Google Calendar is not connected.' }] };
 
         const accessToken = await ensureFreshToken(oauth.id, oauth.access_token, oauth.refresh_token, oauth.expires_at);

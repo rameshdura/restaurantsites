@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { supabaseServer } from "@/lib/supabase"
+import { supabaseServer, getDbTables } from "@/lib/supabase"
 import type { Restaurant } from "@/lib/supabase-types"
 
 interface GoogleTokenResponse {
@@ -99,9 +99,11 @@ export async function GET(request: Request) {
       /* non-fatal */
     }
 
+    const db = await getDbTables()
+
     // 3. Resolve restaurant_id
     const { data: restaurant } = (await supabaseServer
-      .from("restaurants")
+      .from(db.stores)
       .select("id")
       .eq("slug", restaurantSlug)
       .single()) as { data: Pick<Restaurant, "id"> | null; error: unknown }
@@ -120,9 +122,9 @@ export async function GET(request: Request) {
 
     // 4. Resolve refresh token (preserve existing if google didn't return a new one on reconnect)
     const { data: existingConn } = await supabaseServer
-      .from("oauth_connections")
+      .from(db.oauth_connections)
       .select("refresh_token")
-      .eq("restaurant_id", restaurant.id)
+      .eq(db.storeIdCol, restaurant.id)
       .eq("provider", "google")
       .maybeSingle()
 
@@ -131,10 +133,10 @@ export async function GET(request: Request) {
 
     // 5. Upsert OAuth connection
     const { error: upsertError } = await supabaseServer
-      .from("oauth_connections")
+      .from(db.oauth_connections)
       .upsert(
         {
-          restaurant_id: restaurant.id,
+          [db.storeIdCol]: restaurant.id,
           user_id: PLACEHOLDER_USER_ID,
           provider: "google",
           account_email: accountEmail,
@@ -143,7 +145,7 @@ export async function GET(request: Request) {
           expires_at: expiresAt,
           scopes: tokens.scope ?? null,
         } as never,
-        { onConflict: "restaurant_id,provider" }
+        { onConflict: `${db.storeIdCol},provider` }
       )
 
     if (upsertError) {

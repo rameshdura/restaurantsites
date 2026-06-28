@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
@@ -13,12 +13,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.1075.0",
     "@google/generative-ai": "^0.24.1",
     "@hugeicons/core-free-icons": "^4.1.1",
     "@hugeicons/react": "^1.1.6",
-    "@prisma/client": "^6.4.0",
     "@supabase/supabase-js": "^2.106.2",
+    "@workspace/ai-chat": "*",
+    "@workspace/booking-engine": "*",
+    "@workspace/integrations": "*",
     "@workspace/ui": "*",
     "@yudiel/react-qr-scanner": "^2.6.0",
     "google-maps-embed-scraper": "^1.0.2",
@@ -27,7 +28,7 @@
     "lucide-react": "^1.11.0",
     "next": "16.1.6",
     "next-themes": "^0.4.6",
-    "prisma": "^6.4.0",
+    "openai": "^6.45.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-qr-code": "^2.0.21",

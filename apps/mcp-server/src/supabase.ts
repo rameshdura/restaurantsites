@@ -18,11 +18,45 @@ const supabase = createClient(
   { auth: { persistSession: false, autoRefreshToken: false } }
 );
 
+// ─── Schema Compatibility Helpers ─────────────────────────────
+let cachedUseStores: boolean | null = null;
+
+export async function getDbSchema(): Promise<boolean> {
+  if (cachedUseStores !== null) {
+    return cachedUseStores;
+  }
+  try {
+    const { error } = await supabase.from('stores').select('id').limit(1);
+    if (error && (error.message.includes("Could not find the table") || error.code === '42P01')) {
+      cachedUseStores = false;
+    } else {
+      cachedUseStores = true;
+    }
+  } catch {
+    cachedUseStores = false;
+  }
+  return cachedUseStores;
+}
+
+export async function getDbTables() {
+  const useStores = await getDbSchema();
+  return {
+    useStores,
+    stores: useStores ? 'stores' : 'restaurants',
+    oauth_connections: 'oauth_connections',
+    reservations: 'reservations',
+    
+    // Column aliases
+    storeIdCol: useStores ? 'store_id' : 'restaurant_id',
+    storeSlugCol: useStores ? 'store_slug' : 'restaurant_slug',
+  };
+}
+
 // ─── Types ────────────────────────────────────────────────────
 
 export interface OAuthConnection {
   id: string;
-  restaurant_id: string;
+  store_id: string;
   provider: string;
   account_email: string | null;
   refresh_token: string | null;
@@ -33,20 +67,20 @@ export interface OAuthConnection {
 
 export interface ReservationRow {
   id: string;
-  restaurant_id: string;
-  restaurant_slug: string;
+  store_id: string;
+  store_slug: string;
   customer_name: string;
   customer_email: string | null;
   customer_phone: string | null;
   party_size: number;
   reservation_date: string;  // YYYY-MM-DD
-  reservation_time: string;  // HH:MM:SS
+  reservation_time: string;  // HH:MM:SS or HH:MM
   status: string;
   notes: string | null;
   calendar_event_id: string | null;
 }
 
-export interface RestaurantRow {
+export interface StoreRow {
   id: string;
   slug: string;
   name: string;
@@ -56,22 +90,28 @@ export interface RestaurantRow {
 // ─── Queries ──────────────────────────────────────────────────
 
 /**
- * Fetch the OAuth connection for a restaurant+provider.
+ * Fetch the OAuth connection for a store+provider.
  * Returns null if not connected.
  */
 export async function getOAuthConnection(
-  restaurantId: string,
+  storeId: string,
   provider: string
 ): Promise<OAuthConnection | null> {
+  const db = await getDbTables();
   const { data, error } = await supabase
-    .from('oauth_connections')
+    .from(db.oauth_connections)
     .select('*')
-    .eq('restaurant_id', restaurantId)
+    .eq(db.storeIdCol, storeId)
     .eq('provider', provider)
     .single();
 
   if (error || !data) return null;
-  return data as OAuthConnection;
+  
+  const row = data as any;
+  return {
+    ...row,
+    store_id: row.store_id || row.restaurant_id,
+  } as OAuthConnection;
 }
 
 /**
@@ -82,8 +122,9 @@ export async function updateOAuthToken(
   accessToken: string,
   expiresAt: string
 ): Promise<void> {
+  const db = await getDbTables();
   await supabase
-    .from('oauth_connections')
+    .from(db.oauth_connections)
     .update({ access_token: accessToken, expires_at: expiresAt })
     .eq('id', id);
 }
@@ -94,30 +135,38 @@ export async function updateOAuthToken(
 export async function getReservation(
   reservationId: string
 ): Promise<ReservationRow | null> {
+  const db = await getDbTables();
   const { data, error } = await supabase
-    .from('reservations')
+    .from(db.reservations)
     .select('*')
     .eq('id', reservationId)
     .single();
 
   if (error || !data) return null;
-  return data as ReservationRow;
+  
+  const row = data as any;
+  return {
+    ...row,
+    store_id: row.store_id || row.restaurant_id,
+    store_slug: row.store_slug || row.restaurant_slug,
+  } as ReservationRow;
 }
 
 /**
- * Fetch restaurant details (name, timezone) by ID.
+ * Fetch store details (name, timezone) by ID.
  */
-export async function getRestaurantById(
-  restaurantId: string
-): Promise<RestaurantRow | null> {
+export async function getStoreById(
+  storeId: string
+): Promise<StoreRow | null> {
+  const db = await getDbTables();
   const { data, error } = await supabase
-    .from('restaurants')
+    .from(db.stores)
     .select('id, slug, name, timezone')
-    .eq('id', restaurantId)
+    .eq('id', storeId)
     .single();
 
   if (error || !data) return null;
-  return data as RestaurantRow;
+  return data as StoreRow;
 }
 
 /**
@@ -128,8 +177,9 @@ export async function setCalendarEventId(
   provider: string,
   eventId: string
 ): Promise<void> {
+  const db = await getDbTables();
   await supabase
-    .from('reservations')
+    .from(db.reservations)
     .update({ calendar_provider: provider, calendar_event_id: eventId })
     .eq('id', reservationId);
 }

@@ -1,6 +1,6 @@
 // =============================================================
 // Supabase Database Types — RestaurantSite
-// Auto-maintained to match supabase/migrations/001_booking_schema.sql
+// Auto-maintained to match supabase/migrations/002_rename_to_stores.sql
 // =============================================================
 
 // ─── Enums ────────────────────────────────────────────────────
@@ -12,7 +12,8 @@ export type ReservationStatus =
   | "completed"
   | "no_show"
 
-export type RestaurantUserRole = "owner" | "manager" | "staff"
+export type StoreUserRole = "owner" | "manager" | "staff"
+export type RestaurantUserRole = StoreUserRole
 
 export type OAuthProvider = "google" | "outlook" | "apple" | "todoist" | "slack"
 
@@ -22,7 +23,7 @@ export type SessionStatus = "active" | "completed" | "abandoned"
 
 // ─── Table Types ──────────────────────────────────────────────
 
-export interface Restaurant {
+export interface Store {
   id: string
   slug: string
   name: string
@@ -36,16 +37,22 @@ export interface Restaurant {
   updated_at: string
 }
 
-export interface RestaurantUser {
+export type Restaurant = Store
+
+export interface StoreUser {
   id: string
-  restaurant_id: string
+  store_id: string
+  restaurant_id?: string // alias
   user_id: string
-  role: RestaurantUserRole
+  role: StoreUserRole
   created_at: string
 }
 
+export type RestaurantUser = StoreUser
+
 export interface BookingSettings {
-  restaurant_id: string
+  store_id: string
+  restaurant_id?: string // alias
   booking_enabled: boolean
   slot_duration_minutes: number
   max_party_size: number
@@ -60,8 +67,10 @@ export interface BookingSettings {
 
 export interface Reservation {
   id: string
-  restaurant_id: string
-  restaurant_slug: string
+  store_id?: string
+  restaurant_id?: string // alias
+  store_slug?: string
+  restaurant_slug?: string // alias
   customer_name: string
   customer_email: string | null
   customer_phone: string | null
@@ -79,7 +88,8 @@ export interface Reservation {
 
 export interface OAuthConnection {
   id: string
-  restaurant_id: string
+  store_id: string
+  restaurant_id?: string // alias
   user_id: string
   provider: OAuthProvider
   account_email: string | null
@@ -92,7 +102,8 @@ export interface OAuthConnection {
 }
 
 export interface ChatbotSettings {
-  restaurant_id: string
+  store_id: string
+  restaurant_id?: string // alias
   assistant_name: string
   welcome_message: string | null
   system_prompt: string | null
@@ -103,7 +114,8 @@ export interface ChatbotSettings {
 
 export interface KnowledgeBaseEntry {
   id: string
-  restaurant_id: string
+  store_id: string
+  restaurant_id?: string // alias
   category: string | null // 'menu' | 'faq' | 'about' | 'policy' | 'hours'
   title: string | null
   content: string
@@ -113,12 +125,23 @@ export interface KnowledgeBaseEntry {
 
 export interface ConversationSession {
   id: string
-  restaurant_id: string
-  restaurant_slug: string
+  store_id: string
+  restaurant_id?: string // alias
+  store_slug: string
+  restaurant_slug?: string // alias
   session_id: string
   customer_name: string | null
   last_message_at: string
   status: SessionStatus
+  created_at: string
+  updated_at: string
+}
+
+export interface Profile {
+  id: string
+  full_name: string | null
+  avatar_url: string | null
+  email: string | null
   created_at: string
   updated_at: string
 }
@@ -142,6 +165,8 @@ export type InsertReservation = Omit<
       | "notes"
       | "status"
       | "created_by"
+      | "restaurant_id"
+      | "restaurant_slug"
     >
   >
 
@@ -163,18 +188,17 @@ export type UpdateReservation = Partial<
 
 export type UpsertBookingSettings = Omit<BookingSettings, "updated_at">
 
-export type InsertRestaurant = Omit<
-  Restaurant,
-  "id" | "created_at" | "updated_at"
-> &
-  Partial<Pick<Restaurant, "id">>
+export type InsertStore = Omit<Store, "id" | "created_at" | "updated_at"> &
+  Partial<Pick<Store, "id">>
+
+export type InsertRestaurant = InsertStore
 
 // ─── Default Booking Settings Fallback ───────────────────────
-// Used when no booking_settings row exists for a restaurant.
+// Used when no booking_settings row exists for a store.
 
 export const DEFAULT_BOOKING_SETTINGS: Omit<
   BookingSettings,
-  "restaurant_id" | "updated_at"
+  "store_id" | "updated_at"
 > = {
   booking_enabled: true,
   slot_duration_minutes: 30,
@@ -192,20 +216,30 @@ export const DEFAULT_BOOKING_SETTINGS: Omit<
 export interface Database {
   public: {
     Tables: {
+      stores: {
+        Row: Store
+        Insert: InsertStore
+        Update: Partial<InsertStore>
+      }
       restaurants: {
-        Row: Restaurant
-        Insert: InsertRestaurant
-        Update: Partial<InsertRestaurant>
+        Row: Store
+        Insert: InsertStore
+        Update: Partial<InsertStore>
+      }
+      store_users: {
+        Row: StoreUser
+        Insert: Omit<StoreUser, "id" | "created_at">
+        Update: Partial<Pick<StoreUser, "role">>
       }
       restaurant_users: {
-        Row: RestaurantUser
-        Insert: Omit<RestaurantUser, "id" | "created_at">
-        Update: Partial<Pick<RestaurantUser, "role">>
+        Row: StoreUser
+        Insert: Omit<StoreUser, "id" | "created_at">
+        Update: Partial<Pick<StoreUser, "role">>
       }
       booking_settings: {
         Row: BookingSettings
-        Insert: UpsertBookingSettings
-        Update: Partial<UpsertBookingSettings>
+        Insert: Omit<BookingSettings, "updated_at">
+        Update: Partial<Omit<BookingSettings, "store_id" | "updated_at">>
       }
       reservations: {
         Row: Reservation
@@ -229,7 +263,7 @@ export interface Database {
       chatbot_settings: {
         Row: ChatbotSettings
         Insert: Omit<ChatbotSettings, "updated_at">
-        Update: Partial<Omit<ChatbotSettings, "restaurant_id" | "updated_at">>
+        Update: Partial<Omit<ChatbotSettings, "store_id" | "updated_at">>
       }
       knowledge_base: {
         Row: KnowledgeBaseEntry
@@ -247,6 +281,11 @@ export interface Database {
             "customer_name" | "last_message_at" | "status"
           >
         >
+      }
+      profiles: {
+        Row: Profile
+        Insert: Omit<Profile, "created_at" | "updated_at">
+        Update: Partial<Omit<Profile, "id" | "created_at" | "updated_at">>
       }
     }
   }

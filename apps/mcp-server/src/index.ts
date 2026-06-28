@@ -32,7 +32,7 @@ import {
   getOAuthConnection,
   updateOAuthToken,
   getReservation,
-  getRestaurantById,
+  getStoreById,
   setCalendarEventId,
 } from './supabase';
 import {
@@ -41,7 +41,7 @@ import {
   updateCalendarEvent,
   deleteCalendarEvent,
   listCalendarEvents,
-} from './calendar';
+} from '@workspace/integrations';
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -109,7 +109,7 @@ async function ensureFreshToken(
     const expiryMs = new Date(expiresAt).getTime();
     if (Date.now() < expiryMs - 60_000) return accessToken;
   }
-  if (!refreshToken) throw new Error('No refresh token — restaurant must reconnect Google Calendar.');
+  if (!refreshToken) throw new Error('No refresh token — store must reconnect Google Calendar.');
   const { access_token, expires_in } = await refreshGoogleToken(refreshToken);
   const newExpiresAt = new Date(Date.now() + expires_in * 1000).toISOString();
   await updateOAuthToken(connectionId, access_token, newExpiresAt);
@@ -117,30 +117,31 @@ async function ensureFreshToken(
 }
 
 // ─── REST: POST /calendar/create ─────────────────────────────
-// Body: { restaurant_id, reservation_id }
+// Body: { store_id, restaurant_id, reservation_id }
 // Called by Next.js after creating a reservation.
 
 app.post('/calendar/create', async (req, res) => {
   if (!requireApiKey(req, res)) return;
   try {
-    const { restaurant_id, reservation_id } = req.body;
-    if (!restaurant_id || !reservation_id) {
-      res.status(400).json({ error: 'Missing restaurant_id or reservation_id' });
+    const store_id = req.body.store_id || req.body.restaurant_id;
+    const { reservation_id } = req.body;
+    if (!store_id || !reservation_id) {
+      res.status(400).json({ error: 'Missing store_id or reservation_id' });
       return;
     }
 
-    const [oauth, reservation, restaurant] = await Promise.all([
-      getOAuthConnection(restaurant_id, 'google'),
+    const [oauth, reservation, store] = await Promise.all([
+      getOAuthConnection(store_id, 'google'),
       getReservation(reservation_id),
-      getRestaurantById(restaurant_id),
+      getStoreById(store_id),
     ]);
 
-    if (!oauth) { res.status(404).json({ error: 'Google Calendar not connected for this restaurant.' }); return; }
+    if (!oauth) { res.status(404).json({ error: 'Google Calendar not connected for this store.' }); return; }
     if (!reservation) { res.status(404).json({ error: 'Reservation not found.' }); return; }
-    if (!restaurant) { res.status(404).json({ error: 'Restaurant not found.' }); return; }
+    if (!store) { res.status(404).json({ error: 'Store not found.' }); return; }
 
     const accessToken = await ensureFreshToken(oauth.id, oauth.access_token, oauth.refresh_token, oauth.expires_at);
-    const eventId = await createCalendarEvent(accessToken, reservation, restaurant);
+    const eventId = await createCalendarEvent(accessToken, reservation, store);
     await setCalendarEventId(reservation_id, 'google', eventId);
 
     res.json({ success: true, google_event_id: eventId });
@@ -151,30 +152,31 @@ app.post('/calendar/create', async (req, res) => {
 });
 
 // ─── REST: POST /calendar/update ──────────────────────────────
-// Body: { restaurant_id, reservation_id, calendar_event_id }
+// Body: { store_id, restaurant_id, reservation_id, calendar_event_id }
 
 app.post('/calendar/update', async (req, res) => {
   if (!requireApiKey(req, res)) return;
   try {
-    const { restaurant_id, reservation_id, calendar_event_id } = req.body;
-    if (!restaurant_id || !reservation_id || !calendar_event_id) {
+    const store_id = req.body.store_id || req.body.restaurant_id;
+    const { reservation_id, calendar_event_id } = req.body;
+    if (!store_id || !reservation_id || !calendar_event_id) {
       res.status(400).json({ error: 'Missing required fields' });
       return;
     }
 
-    const [oauth, reservation, restaurant] = await Promise.all([
-      getOAuthConnection(restaurant_id, 'google'),
+    const [oauth, reservation, store] = await Promise.all([
+      getOAuthConnection(store_id, 'google'),
       getReservation(reservation_id),
-      getRestaurantById(restaurant_id),
+      getStoreById(store_id),
     ]);
 
-    if (!oauth || !reservation || !restaurant) {
-      res.status(404).json({ error: 'OAuth, reservation, or restaurant not found.' });
+    if (!oauth || !reservation || !store) {
+      res.status(404).json({ error: 'OAuth, reservation, or store not found.' });
       return;
     }
 
     const accessToken = await ensureFreshToken(oauth.id, oauth.access_token, oauth.refresh_token, oauth.expires_at);
-    await updateCalendarEvent(accessToken, calendar_event_id, reservation, restaurant);
+    await updateCalendarEvent(accessToken, calendar_event_id, reservation, store);
 
     res.json({ success: true, updated_event_id: calendar_event_id });
   } catch (err: any) {
@@ -184,18 +186,19 @@ app.post('/calendar/update', async (req, res) => {
 });
 
 // ─── REST: POST /calendar/delete ──────────────────────────────
-// Body: { restaurant_id, calendar_event_id }
+// Body: { store_id, restaurant_id, calendar_event_id }
 
 app.post('/calendar/delete', async (req, res) => {
   if (!requireApiKey(req, res)) return;
   try {
-    const { restaurant_id, calendar_event_id } = req.body;
-    if (!restaurant_id || !calendar_event_id) {
-      res.status(400).json({ error: 'Missing restaurant_id or calendar_event_id' });
+    const store_id = req.body.store_id || req.body.restaurant_id;
+    const { calendar_event_id } = req.body;
+    if (!store_id || !calendar_event_id) {
+      res.status(400).json({ error: 'Missing store_id or calendar_event_id' });
       return;
     }
 
-    const oauth = await getOAuthConnection(restaurant_id, 'google');
+    const oauth = await getOAuthConnection(store_id, 'google');
     if (!oauth) { res.status(404).json({ error: 'Google Calendar not connected.' }); return; }
 
     const accessToken = await ensureFreshToken(oauth.id, oauth.access_token, oauth.refresh_token, oauth.expires_at);
@@ -209,18 +212,19 @@ app.post('/calendar/delete', async (req, res) => {
 });
 
 // ─── REST: POST /calendar/list ────────────────────────────────
-// Body: { restaurant_id, max_results? }
+// Body: { store_id, restaurant_id, max_results? }
 
 app.post('/calendar/list', async (req, res) => {
   if (!requireApiKey(req, res)) return;
   try {
-    const { restaurant_id, max_results = 20 } = req.body;
-    if (!restaurant_id) {
-      res.status(400).json({ error: 'Missing restaurant_id' });
+    const store_id = req.body.store_id || req.body.restaurant_id;
+    const { max_results = 20 } = req.body;
+    if (!store_id) {
+      res.status(400).json({ error: 'Missing store_id' });
       return;
     }
 
-    const oauth = await getOAuthConnection(restaurant_id, 'google');
+    const oauth = await getOAuthConnection(store_id, 'google');
     if (!oauth) { res.status(404).json({ error: 'Google Calendar not connected.' }); return; }
 
     const accessToken = await ensureFreshToken(oauth.id, oauth.access_token, oauth.refresh_token, oauth.expires_at);
@@ -240,7 +244,7 @@ app.get('/', (req, res) => {
     service: 'RestaurantSite MCP Server',
     version: '1.0.0',
     endpoints: [
-      'GET  /sse                  — MCP SSE (per-restaurant)',
+      'GET  /sse                  — MCP SSE (per-store)',
       'POST /message              — MCP message handler',
       'POST /calendar/create      — Create Google Calendar event',
       'POST /calendar/update      — Update Google Calendar event',

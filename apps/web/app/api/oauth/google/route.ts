@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { supabaseServer } from "@/lib/supabase"
+import { supabaseServer, getDbTables } from "@/lib/supabase"
 import type { Restaurant } from "@/lib/supabase-types"
 
 // ─── GET /api/oauth/google ────────────────────────────────────
@@ -75,8 +75,10 @@ export async function DELETE(request: Request) {
       )
     }
 
+    const db = await getDbTables()
+
     const { data: restaurant } = (await supabaseServer
-      .from("restaurants")
+      .from(db.stores)
       .select("id")
       .eq("slug", restaurantSlug)
       .single()) as { data: Pick<Restaurant, "id"> | null; error: unknown }
@@ -89,9 +91,9 @@ export async function DELETE(request: Request) {
     }
 
     const { error } = await supabaseServer
-      .from("oauth_connections")
+      .from(db.oauth_connections)
       .delete()
-      .eq("restaurant_id", restaurant.id)
+      .eq(db.storeIdCol, restaurant.id)
       .eq("provider", "google")
 
     if (error) {

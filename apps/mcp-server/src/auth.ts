@@ -21,10 +21,10 @@ export const authMiddleware = (req: McpRequest, res: Response, next: NextFunctio
 
   // Accept either ?slug= or ?restaurant_id= (UUID for calendar tool calls)
   const slug = req.query.slug as string | undefined;
-  const restaurantId = req.query.restaurant_id as string | undefined;
+  const storeId = (req.query.store_id as string | undefined) || (req.query.restaurant_id as string | undefined);
 
-  if (!slug && !restaurantId) {
-    res.status(400).json({ error: 'Bad Request: slug or restaurant_id query parameter is required' });
+  if (!slug && !storeId) {
+    res.status(400).json({ error: 'Bad Request: slug, store_id, or restaurant_id query parameter is required' });
     return;
   }
 
@@ -34,14 +34,15 @@ export const authMiddleware = (req: McpRequest, res: Response, next: NextFunctio
     return;
   }
 
-  // Validate restaurant_id is a valid UUID
-  if (restaurantId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(restaurantId)) {
-    res.status(400).json({ error: 'Bad Request: Invalid restaurant_id format (expected UUID)' });
+  // Validate storeId is a valid UUID
+  if (storeId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(storeId)) {
+    res.status(400).json({ error: 'Bad Request: Invalid store_id/restaurant_id format (expected UUID)' });
     return;
   }
 
   req.slug = slug ?? '';
-  req.restaurantId = restaurantId;
+  req.storeId = storeId;
+  req.restaurantId = storeId;
   next();
 };
 

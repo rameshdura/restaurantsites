@@ -1,17 +1,10 @@
 import { NextResponse } from "next/server"
-import {
-  GoogleGenerativeAI,
-  SchemaType,
-  Content,
-  Part,
-} from "@google/generative-ai"
-import {
-  BedrockRuntimeClient,
-  ConverseCommand,
-} from "@aws-sdk/client-bedrock-runtime"
-import { supabaseServer } from "@/lib/supabase"
+import { GoogleGenerativeAI, Content, Part } from "@google/generative-ai"
+import OpenAI from "openai"
+import { supabaseServer, getDbTables } from "@/lib/supabase"
 import { getRestaurant } from "@/lib/restaurant"
 import { checkAvailability } from "@/lib/availability"
+import { geminiTools, openAiTools, buildSystemPrompt } from "@workspace/ai-chat"
 
 // Initialize Gemini SDK safely
 const getGeminiClient = () => {
@@ -22,336 +15,18 @@ const getGeminiClient = () => {
 
 // Helper to resolve restaurant_id from slug
 async function getRestaurantId(slug: string): Promise<string | null> {
+  const db = await getDbTables()
   const { data } = await supabaseServer
-    .from("restaurants")
+    .from(db.stores)
     .select("id")
     .eq("slug", slug)
     .single()
   return data?.id ?? null
 }
 
-// ─── Tool Definitions (Gemini format) ────────────────────────
-const getRestaurantInfoDeclaration = {
-  name: "get_restaurant_info",
-  description:
-    "Get general restaurant info such as name, address, contact details, description, and opening hours.",
-  parameters: {
-    type: SchemaType.OBJECT,
-    properties: {
-      slug: {
-        type: SchemaType.STRING,
-        description: "The restaurant slug (e.g. gorkha)",
-      },
-    },
-    required: ["slug"],
-  },
-}
+// Tool definitions are imported from @workspace/ai-chat
 
-const getMenuDeclaration = {
-  name: "get_menu",
-  description:
-    "Get the restaurant's complete menu categories and items (including names, descriptions, prices, popular items, vegetarian/vegan tags, and spicy levels).",
-  parameters: {
-    type: SchemaType.OBJECT,
-    properties: {
-      slug: {
-        type: SchemaType.STRING,
-        description: "The restaurant slug (e.g. gorkha)",
-      },
-    },
-    required: ["slug"],
-  },
-}
 
-const checkBookingAvailabilityDeclaration = {
-  name: "check_booking_availability",
-  description:
-    "Checks table availability for a specific date, time, and party size.",
-  parameters: {
-    type: SchemaType.OBJECT,
-    properties: {
-      slug: {
-        type: SchemaType.STRING,
-        description: "The restaurant slug (e.g. gorkha)",
-      },
-      date: {
-        type: SchemaType.STRING,
-        description: "Date in YYYY-MM-DD format (e.g. 2026-06-29)",
-      },
-      time: {
-        type: SchemaType.STRING,
-        description: "Time in HH:MM format (e.g. 19:00)",
-      },
-      partySize: {
-        type: SchemaType.NUMBER,
-        description: "Number of guests in the party",
-      },
-    },
-    required: ["slug", "date", "time", "partySize"],
-  },
-}
-
-const createBookingDeclaration = {
-  name: "create_booking",
-  description:
-    "Creates and confirms a table booking. IMPORTANT: Always run check_booking_availability first. You must ask the user for their name, email, and phone number before calling this.",
-  parameters: {
-    type: SchemaType.OBJECT,
-    properties: {
-      slug: {
-        type: SchemaType.STRING,
-        description: "The restaurant slug (e.g. gorkha)",
-      },
-      date: {
-        type: SchemaType.STRING,
-        description: "Date in YYYY-MM-DD format (e.g. 2026-06-29)",
-      },
-      time: {
-        type: SchemaType.STRING,
-        description: "Time in HH:MM format (e.g. 19:00)",
-      },
-      partySize: { type: SchemaType.NUMBER, description: "Number of guests" },
-      customerName: {
-        type: SchemaType.STRING,
-        description: "Full name of the customer",
-      },
-      customerEmail: {
-        type: SchemaType.STRING,
-        description: "Email address of the customer",
-      },
-      customerPhone: {
-        type: SchemaType.STRING,
-        description: "Phone number of the customer",
-      },
-      notes: {
-        type: SchemaType.STRING,
-        description:
-          "Optional notes or special requests (e.g. high chair, allergy)",
-      },
-    },
-    required: [
-      "slug",
-      "date",
-      "time",
-      "partySize",
-      "customerName",
-      "customerEmail",
-      "customerPhone",
-    ],
-  },
-}
-
-const geminiTools: any = [
-  {
-    functionDeclarations: [
-      getRestaurantInfoDeclaration,
-      getMenuDeclaration,
-      checkBookingAvailabilityDeclaration,
-      createBookingDeclaration,
-    ],
-  },
-]
-
-// ─── OpenAI Tool Definitions (for NVIDIA NIM and Ollama) ────────
-const openAiTools = [
-  {
-    type: "function",
-    function: {
-      name: "get_restaurant_info",
-      description:
-        "Get general restaurant info such as name, address, contact details, description, and opening hours.",
-      parameters: {
-        type: "object",
-        properties: {
-          slug: {
-            type: "string",
-            description: "The restaurant slug (e.g. gorkha)",
-          },
-        },
-        required: ["slug"],
-      },
-    },
-  },
-  {
-    type: "function",
-    function: {
-      name: "get_menu",
-      description: "Get the restaurant's complete menu categories and items.",
-      parameters: {
-        type: "object",
-        properties: {
-          slug: {
-            type: "string",
-            description: "The restaurant slug (e.g. gorkha)",
-          },
-        },
-        required: ["slug"],
-      },
-    },
-  },
-  {
-    type: "function",
-    function: {
-      name: "check_booking_availability",
-      description:
-        "Checks table availability for a specific date, time, and party size.",
-      parameters: {
-        type: "object",
-        properties: {
-          slug: {
-            type: "string",
-            description: "The restaurant slug (e.g. gorkha)",
-          },
-          date: {
-            type: "string",
-            description: "Date in YYYY-MM-DD format (e.g. 2026-06-29)",
-          },
-          time: {
-            type: "string",
-            description: "Time in HH:MM format (e.g. 19:00)",
-          },
-          partySize: {
-            type: "number",
-            description: "Number of guests in the party",
-          },
-        },
-        required: ["slug", "date", "time", "partySize"],
-      },
-    },
-  },
-  {
-    type: "function",
-    function: {
-      name: "create_booking",
-      description:
-        "Creates and confirms a table booking. Always run check_booking_availability first.",
-      parameters: {
-        type: "object",
-        properties: {
-          slug: {
-            type: "string",
-            description: "The restaurant slug (e.g. gorkha)",
-          },
-          date: { type: "string", description: "Date in YYYY-MM-DD" },
-          time: { type: "string", description: "Time in HH:MM" },
-          partySize: { type: "number" },
-          customerName: { type: "string" },
-          customerEmail: { type: "string" },
-          customerPhone: { type: "string" },
-          notes: { type: "string" },
-        },
-        required: [
-          "slug",
-          "date",
-          "time",
-          "partySize",
-          "customerName",
-          "customerEmail",
-          "customerPhone",
-        ],
-      },
-    },
-  },
-]
-
-// ─── Bedrock Tool Definitions ─────────────────────────────────
-const bedrockTools = {
-  tools: [
-    {
-      toolSpec: {
-        name: "get_restaurant_info",
-        description:
-          "Get general restaurant info such as name, address, contact details, description, and opening hours.",
-        inputSchema: {
-          json: {
-            type: "object",
-            properties: {
-              slug: {
-                type: "string",
-                description: "The restaurant slug (e.g. gorkha)",
-              },
-            },
-            required: ["slug"],
-          },
-        },
-      },
-    },
-    {
-      toolSpec: {
-        name: "get_menu",
-        description: "Get the restaurant's complete menu categories and items.",
-        inputSchema: {
-          json: {
-            type: "object",
-            properties: {
-              slug: {
-                type: "string",
-                description: "The restaurant slug (e.g. gorkha)",
-              },
-            },
-            required: ["slug"],
-          },
-        },
-      },
-    },
-    {
-      toolSpec: {
-        name: "check_booking_availability",
-        description:
-          "Checks table availability for a specific date, time, and party size.",
-        inputSchema: {
-          json: {
-            type: "object",
-            properties: {
-              slug: {
-                type: "string",
-                description: "The restaurant slug (e.g. gorkha)",
-              },
-              date: { type: "string", description: "Date in YYYY-MM-DD" },
-              time: { type: "string", description: "Time in HH:MM" },
-              partySize: { type: "number" },
-            },
-            required: ["slug", "date", "time", "partySize"],
-          },
-        },
-      },
-    },
-    {
-      toolSpec: {
-        name: "create_booking",
-        description:
-          "Creates and confirms a table booking. Always run check_booking_availability first.",
-        inputSchema: {
-          json: {
-            type: "object",
-            properties: {
-              slug: {
-                type: "string",
-                description: "The restaurant slug (e.g. gorkha)",
-              },
-              date: { type: "string", description: "Date in YYYY-MM-DD" },
-              time: { type: "string", description: "Time in HH:MM" },
-              partySize: { type: "number" },
-              customerName: { type: "string" },
-              customerEmail: { type: "string" },
-              customerPhone: { type: "string" },
-              notes: { type: "string" },
-            },
-            required: [
-              "slug",
-              "date",
-              "time",
-              "partySize",
-              "customerName",
-              "customerEmail",
-              "customerPhone",
-            ],
-          },
-        },
-      },
-    },
-  ],
-}
 
 // ─── Tool Call Router / Executor ──────────────────────────────
 async function executeTool(
@@ -428,41 +103,36 @@ export async function POST(request: Request) {
     const { data: restaurantData } = restaurant
 
     const today = new Date()
-    const todayStr = today.toISOString().split("T")[0]
+    const todayStr = today.toISOString().split("T")[0] ?? ""
     const tomorrow = new Date(today)
     tomorrow.setDate(tomorrow.getDate() + 1)
-    const tomorrowStr = tomorrow.toISOString().split("T")[0]
+    const tomorrowStr = tomorrow.toISOString().split("T")[0] ?? ""
     const maxDate = new Date(today)
     maxDate.setDate(maxDate.getDate() + 90)
-    const maxDateStr = maxDate.toISOString().split("T")[0]
+    const maxDateStr = maxDate.toISOString().split("T")[0] ?? ""
 
     // ─────────────────────────────────────────────────────────────────────────
     // 💡 CUSTOMIZABLE CHATBOT PRETEXT / SYSTEM PROMPT
     // Edit the text below to change the personality, instructions, or behavior
     // of your AI chatbot.
     // ─────────────────────────────────────────────────────────────────────────
-    let systemPrompt = `You are a helpful AI assistant for "${restaurantData.name || restaurantSlug}".
-Current Date (Today): ${todayStr} (Sunday)
-Allowed Booking Range: From tomorrow (${tomorrowStr}) to 90 days from now (${maxDateStr}) only.
-
-Rules & Guidelines:
-1. DATE VALIDATION: Do not book any past dates or years. If the customer does not mention a year, assume it is the current year or the coming year (matching the allowed booking range).
-2. BOOKING RANGE: Bookings are strictly allowed from next day (${tomorrowStr}) up to 90 days in the future (${maxDateStr}) only. Reject bookings outside this window.
-3. CONCISE RESPONSES: Only give information explicitly asked by the customer. Never output details, menus, or answers that were not requested.
-4. BOOKING FLOW: If they want a booking:
-   a. Check availability using check_booking_availability first.
-   b. Ask for name, email, and phone number if not already provided.
-   c. Confirm details, then use create_booking to complete the reservation.`
-    // ─────────────────────────────────────────────────────────────────────────
-
+    let customPrompt: string | null = null
     if (restaurantId) {
       const { data: settings } = await supabaseServer
         .from("chatbot_settings")
         .select("system_prompt")
         .eq("restaurant_id", restaurantId)
         .single()
-      if (settings?.system_prompt) systemPrompt = settings.system_prompt
+      if (settings?.system_prompt) customPrompt = settings.system_prompt
     }
+
+    const systemPrompt = buildSystemPrompt({
+      restaurantName: restaurantData.name || restaurantSlug,
+      todayStr,
+      tomorrowStr,
+      maxDateStr,
+      customPrompt,
+    })
 
     const origin = new URL(request.url).origin
 
@@ -637,19 +307,30 @@ Rules & Guidelines:
 
     // ─── AWS Bedrock Provider ─────────────────────────────────
     if (provider === "bedrock") {
-      const client = new BedrockRuntimeClient({
-        region: process.env.AWS_REGION || "us-east-1",
-        credentials: {
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
-          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
-        },
+      const apiKey = process.env.BEDROCK_API_KEY
+      const baseURL = process.env.BEDROCK_BASE_URL
+      const modelId = process.env.BEDROCK_MODEL_ID || "google.gemma-4-e2b"
+
+      if (!apiKey) {
+        return NextResponse.json(
+          { error: "Bedrock API key not configured." },
+          { status: 503 }
+        )
+      }
+
+      const client = new OpenAI({
+        apiKey: apiKey,
+        baseURL: baseURL,
       })
 
-      // Convert messages to Bedrock Converse format
-      const bedrockMessages: any[] = messages.map((m: any) => ({
-        role: m.role === "bot" ? "assistant" : "user",
-        content: [{ text: m.content }],
-      }))
+      // Convert messages to OpenAI chat format
+      const openAiMessages: any[] = [
+        { role: "system", content: systemPrompt },
+        ...messages.map((m: any) => ({
+          role: m.role === "bot" ? "assistant" : "user",
+          content: m.content,
+        })),
+      ]
 
       let loops = 0
       let active = true
@@ -657,52 +338,44 @@ Rules & Guidelines:
 
       while (active && loops < 6) {
         loops++
-        const command = new ConverseCommand({
-          modelId:
-            process.env.BEDROCK_MODEL_ID ||
-            "anthropic.claude-3-5-sonnet-20241022-v2:0",
-          messages: bedrockMessages,
-          system: [{ text: systemPrompt }],
-          toolConfig: bedrockTools as any,
+        const completion = await client.chat.completions.create({
+          model: modelId,
+          messages: openAiMessages,
+          tools: openAiTools as any,
+          tool_choice: "auto",
         })
 
-        const response = await client.send(command)
-        const outputMessage = response.output?.message
-        if (!outputMessage) break
+        const choice = completion.choices?.[0]
+        const message = choice?.message
 
-        bedrockMessages.push(outputMessage)
+        if (!message) break
 
-        const toolRequests = outputMessage.content?.filter((c) => c.toolUse)
+        openAiMessages.push(message)
 
-        if (toolRequests && toolRequests.length > 0) {
-          const toolResponseParts: any[] = []
-
-          for (const request of toolRequests) {
-            const { name, input, toolUseId } = request.toolUse!
-            if (!name) continue
+        if (message.tool_calls && message.tool_calls.length > 0) {
+          for (const call of message.tool_calls) {
+            const { name, arguments: argsString } = (call as any).function
+            const args =
+              typeof argsString === "string"
+                ? JSON.parse(argsString)
+                : argsString
             const result = await executeTool(
               name,
-              input,
+              args,
               restaurantData,
               restaurantSlug,
               origin
             )
 
-            toolResponseParts.push({
-              toolResult: {
-                toolUseId,
-                content: [{ json: result }],
-                status: "success",
-              },
+            openAiMessages.push({
+              role: "tool",
+              tool_call_id: call.id,
+              name: name,
+              content: JSON.stringify(result),
             })
           }
-
-          bedrockMessages.push({
-            role: "user",
-            content: toolResponseParts,
-          })
         } else {
-          finalReply = outputMessage.content?.[0]?.text || ""
+          finalReply = message.content || ""
           active = false
         }
       }

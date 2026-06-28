@@ -1,26 +1,63 @@
 import { google } from 'googleapis';
-import type { ReservationRow, RestaurantRow } from './supabase';
 import type { calendar_v3 } from 'googleapis';
 
-// ─── Token Refresh ────────────────────────────────────────────
+// ─── Shared Interface Types ────────────────────────────────────
+
+export interface IntegrationStore {
+  name: string;
+  timezone: string;
+}
+
+export type IntegrationRestaurant = IntegrationStore;
+
+export interface IntegrationReservation {
+  id: string;
+  store_id: string;
+  store_slug: string;
+  customer_name: string;
+  customer_email: string | null;
+  customer_phone: string | null;
+  party_size: number;
+  reservation_date: string; // "YYYY-MM-DD"
+  reservation_time: string; // "HH:MM:SS" or "HH:MM"
+  notes: string | null;
+}
+
+// Backwards compatibility alias for the old shape
+export interface LegacyIntegrationReservation {
+  id: string;
+  restaurant_id: string;
+  restaurant_slug: string;
+  customer_name: string;
+  customer_email: string | null;
+  customer_phone: string | null;
+  party_size: number;
+  reservation_date: string;
+  reservation_time: string;
+  notes: string | null;
+}
 
 export interface RefreshedToken {
   access_token: string;
   expires_in: number;
 }
 
+// ─── Token Refresh ────────────────────────────────────────────
+
 /**
  * Refreshes a Google OAuth access token using the stored refresh_token.
  */
 export async function refreshGoogleToken(
-  refreshToken: string
+  refreshToken: string,
+  clientId?: string,
+  clientSecret?: string
 ): Promise<RefreshedToken> {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const finalClientId = clientId || process.env.GOOGLE_CLIENT_ID;
+  const finalClientSecret = clientSecret || process.env.GOOGLE_CLIENT_SECRET;
 
-  if (!clientId || !clientSecret) {
+  if (!finalClientId || !finalClientSecret) {
     throw new Error(
-      'GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set in MCP server env'
+      'GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be set or passed as arguments'
     );
   }
 
@@ -28,8 +65,8 @@ export async function refreshGoogleToken(
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
-      client_id: clientId,
-      client_secret: clientSecret,
+      client_id: finalClientId,
+      client_secret: finalClientSecret,
       refresh_token: refreshToken,
       grant_type: 'refresh_token',
     }).toString(),
@@ -40,7 +77,7 @@ export async function refreshGoogleToken(
     throw new Error(`Google token refresh failed: ${err}`);
   }
 
-  const data = await res.json();
+  const data = await res.json() as { access_token: string; expires_in: number };
   return {
     access_token: data.access_token,
     expires_in: data.expires_in,
@@ -58,8 +95,8 @@ function getCalendarClient(accessToken: string): calendar_v3.Calendar {
 // ─── Format reservation as Google Calendar event ─────────────
 
 function buildEventBody(
-  reservation: ReservationRow,
-  restaurant: RestaurantRow
+  reservation: IntegrationReservation,
+  store: IntegrationStore
 ): calendar_v3.Schema$Event {
   const {
     reservation_date,
@@ -71,7 +108,7 @@ function buildEventBody(
     notes,
   } = reservation;
 
-  // reservation_time from Supabase is "HH:MM:SS"
+  // reservation_time is "HH:MM:SS" or "HH:MM"
   const timeParts = reservation_time.split(':');
   const hh = timeParts[0] ?? '00';
   const mm = timeParts[1] ?? '00';
@@ -96,14 +133,14 @@ function buildEventBody(
   const event: calendar_v3.Schema$Event = {
     summary: `Reservation — ${customer_name} (${party_size} guests)`,
     description: descriptionLines.join('\n'),
-    location: restaurant.name,
+    location: store.name,
     start: {
       dateTime: startDateTime,
-      timeZone: restaurant.timezone,
+      timeZone: store.timezone,
     },
     end: {
       dateTime: endDateTime,
-      timeZone: restaurant.timezone,
+      timeZone: store.timezone,
     },
     reminders: {
       useDefault: false,
@@ -115,7 +152,8 @@ function buildEventBody(
     extendedProperties: {
       private: {
         reservation_id: reservation.id,
-        restaurant_id: reservation.restaurant_id,
+        restaurant_id: reservation.store_id, // keep key as restaurant_id inside google event meta for backwards compatibility
+        store_id: reservation.store_id,
         source: 'restaurantsite',
       },
     },
@@ -136,20 +174,16 @@ function buildEventBody(
  */
 export async function createCalendarEvent(
   accessToken: string,
-  reservation: ReservationRow,
-  restaurant: RestaurantRow,
+  reservation: IntegrationReservation,
+  store: IntegrationStore,
   calendarId = 'primary'
 ): Promise<string> {
   const calendar = getCalendarClient(accessToken);
 
-  const response = await calendar.events.insert({
+  return (await calendar.events.insert({
     calendarId,
-    requestBody: buildEventBody(reservation, restaurant),
-  });
-
-  const eventId = response.data.id;
-  if (!eventId) throw new Error('Google Calendar returned no event ID');
-  return eventId;
+    requestBody: buildEventBody(reservation, store),
+  })).data.id ?? (() => { throw new Error('Google Calendar returned no event ID'); })();
 }
 
 // ─── calendar.update ──────────────────────────────────────────
@@ -160,8 +194,8 @@ export async function createCalendarEvent(
 export async function updateCalendarEvent(
   accessToken: string,
   eventId: string,
-  reservation: ReservationRow,
-  restaurant: RestaurantRow,
+  reservation: IntegrationReservation,
+  store: IntegrationStore,
   calendarId = 'primary'
 ): Promise<void> {
   const calendar = getCalendarClient(accessToken);
@@ -169,7 +203,7 @@ export async function updateCalendarEvent(
   await calendar.events.patch({
     calendarId,
     eventId,
-    requestBody: buildEventBody(reservation, restaurant),
+    requestBody: buildEventBody(reservation, store),
   });
 }
 

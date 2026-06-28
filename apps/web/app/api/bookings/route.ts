@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { supabaseServer } from "@/lib/supabase"
+import { supabaseServer, getDbTables } from "@/lib/supabase"
 import { checkAvailability } from "@/lib/availability"
 import type {
   InsertReservation,
@@ -9,8 +9,9 @@ import type {
 
 // ─── Helper: resolve restaurant_id from slug ──────────────────
 async function getRestaurantId(slug: string): Promise<string | null> {
+  const db = await getDbTables()
   const { data } = (await supabaseServer
-    .from("restaurants")
+    .from(db.stores)
     .select("id")
     .eq("slug", slug)
     .single()) as { data: Pick<Restaurant, "id"> | null; error: unknown }
@@ -50,10 +51,11 @@ export async function GET(request: Request) {
       return NextResponse.json(result)
     }
 
+    const db = await getDbTables()
     let query = supabaseServer
-      .from("reservations")
+      .from(db.reservations)
       .select("*")
-      .eq("restaurant_slug", restaurantSlug)
+      .eq(db.storeSlugCol, restaurantSlug)
       .order("reservation_date", { ascending: true })
       .order("reservation_time", { ascending: true })
 
@@ -132,9 +134,10 @@ export async function POST(request: Request) {
       )
     }
 
-    const insert: InsertReservation = {
-      restaurant_id: restaurantId,
-      restaurant_slug: restaurantSlug,
+    const db = await getDbTables()
+    const insert: any = {
+      [db.storeIdCol]: restaurantId,
+      [db.storeSlugCol]: restaurantSlug,
       customer_name: customerName,
       customer_email: customerEmail ?? null,
       customer_phone: customerPhone ?? null,
@@ -144,10 +147,17 @@ export async function POST(request: Request) {
       status: "confirmed",
       notes: notes ?? null,
     }
+    if (db.useStores) {
+      insert.store_id = restaurantId
+      insert.store_slug = restaurantSlug
+    } else {
+      insert.restaurant_id = restaurantId
+      insert.restaurant_slug = restaurantSlug
+    }
 
     const { data: reservation, error } = (await supabaseServer
-      .from("reservations")
-      .insert(insert as never)
+      .from(db.reservations)
+      .insert(insert)
       .select()
       .single()) as {
       data: Reservation | null
@@ -188,10 +198,11 @@ async function triggerCalendarSync(
   restaurantId: string,
   reservationId: string
 ): Promise<void> {
+  const db = await getDbTables()
   const { data: oauth } = await supabaseServer
-    .from("oauth_connections")
+    .from(db.oauth_connections)
     .select("id")
-    .eq("restaurant_id", restaurantId)
+    .eq(db.storeIdCol, restaurantId)
     .eq("provider", "google")
     .single()
 
@@ -209,6 +220,7 @@ async function triggerCalendarSync(
         Authorization: `Bearer ${mcpApiKey}`,
       },
       body: JSON.stringify({
+        store_id: restaurantId,
         restaurant_id: restaurantId,
         reservation_id: reservationId,
       }),
@@ -217,7 +229,7 @@ async function triggerCalendarSync(
     const result = await response.json()
     if (result?.google_event_id) {
       await supabaseServer
-        .from("reservations")
+        .from(db.reservations)
         .update({
           calendar_provider: "google",
           calendar_event_id: result.google_event_id,

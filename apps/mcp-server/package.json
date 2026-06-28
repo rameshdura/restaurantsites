@@ -14,7 +14,9 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "googleapis": "^173.0.0"
+    "googleapis": "^173.0.0",
+    "@workspace/booking-engine": "*",
+    "@workspace/integrations": "*"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

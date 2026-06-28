@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { supabaseServer } from "@/lib/supabase"
+import { supabaseServer, getDbTables } from "@/lib/supabase"
 import type { Restaurant, ConversationSession } from "@/lib/supabase-types"
 
 // ─── POST /api/chat-sessions ──────────────────────────────────
@@ -15,8 +15,10 @@ export async function POST(request: Request) {
       )
     }
 
+    const db = await getDbTables()
+
     const { data: restaurant } = (await supabaseServer
-      .from("restaurants")
+      .from(db.stores)
       .select("id")
       .eq("slug", restaurantSlug)
       .single()) as { data: Pick<Restaurant, "id"> | null; error: unknown }
@@ -29,17 +31,17 @@ export async function POST(request: Request) {
     }
 
     const { data: session, error } = (await supabaseServer
-      .from("conversation_sessions")
+      .from(db.conversation_sessions)
       .upsert(
         {
-          restaurant_id: restaurant.id,
-          restaurant_slug: restaurantSlug,
+          [db.storeIdCol]: restaurant.id,
+          [db.storeSlugCol]: restaurantSlug,
           session_id: sessionId,
           customer_name: customerName ?? null,
           last_message_at: new Date().toISOString(),
           status: "active",
         } as never,
-        { onConflict: "restaurant_slug,session_id" }
+        { onConflict: `${db.storeSlugCol},session_id` }
       )
       .select()
       .single()) as {
