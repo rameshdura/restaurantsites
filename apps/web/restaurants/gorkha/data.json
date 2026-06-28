@@ -1357,9 +1357,9 @@
   "socialTwitter": "",
   "socialTabelog": "",
   "reservation": {
-    "acceptsReservations": false,
-    "reservationMethods": [],
-    "onlineBookingUrl": "",
+    "acceptsReservations": true,
+    "reservationMethods": ["phone", "online"],
+    "onlineBookingUrl": "/booking",
     "minimumPartySize": 1,
     "maximumPartySize": 20,
     "largeGroups": false,

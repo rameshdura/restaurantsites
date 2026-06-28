@@ -155,6 +155,34 @@ export const setupMcpServer = (slug: string) => {
           type: 'object',
           properties: {},
         },
+      },
+      {
+        name: 'cancel_booking',
+        description: 'Cancel a booking by its ID.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'The booking ID'
+            }
+          },
+          required: ['id']
+        },
+      },
+      {
+        name: 'get_booking',
+        description: 'Get details of a booking by its ID.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'The booking ID'
+            }
+          },
+          required: ['id']
+        },
       }
     ],
   }));
@@ -194,6 +222,11 @@ export const setupMcpServer = (slug: string) => {
         };
       }
 
+      const getApiUrl = (path: string) => {
+        const root = process.env.ROOT_API_URL || 'http://localhost:3000';
+        return `${root.replace(/\/$/, '')}${path}`;
+      };
+
       if (request.params.name === 'get_booking_settings') {
         const settings = {
           reservation: data.reservation || {
@@ -216,42 +249,12 @@ export const setupMcpServer = (slug: string) => {
           throw new Error('Missing required arguments: date, time, partySize');
         }
 
-        // Validate date format YYYY-MM-DD
-        const dateMatch = args.date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-        if (!dateMatch || !dateMatch[3]) {
-          return {
-            content: [{ type: 'text', text: JSON.stringify({ available: false, message: 'Invalid date format. Use YYYY-MM-DD.' }, null, 2) }]
-          };
-        }
-
-        const day = parseInt(dateMatch[3], 10);
-        const acceptsReservations = data.reservation?.acceptsReservations !== false;
-        const maxPartySize = data.reservation?.maximumPartySize || 20;
-        const minPartySize = data.reservation?.minimumPartySize || 1;
-
-        if (!acceptsReservations) {
-          return {
-            content: [{ type: 'text', text: JSON.stringify({ available: false, message: 'This restaurant does not accept reservations.' }, null, 2) }]
-          };
-        }
-
-        if (args.partySize < minPartySize || args.partySize > maxPartySize) {
-          return {
-            content: [{ type: 'text', text: JSON.stringify({ available: false, message: `Party size must be between ${minPartySize} and ${maxPartySize}.` }, null, 2) }]
-          };
-        }
-
-        // Even date requirement: true if day is even, false otherwise
-        const isEven = day % 2 === 0;
-        if (isEven) {
-          return {
-            content: [{ type: 'text', text: JSON.stringify({ available: true, message: `Date ${args.date} is available for reservation.` }, null, 2) }]
-          };
-        } else {
-          return {
-            content: [{ type: 'text', text: JSON.stringify({ available: false, message: `No availability on odd date ${args.date}.` }, null, 2) }]
-          };
-        }
+        const url = getApiUrl(`/api/bookings?restaurantSlug=${slug}&checkAvailability=true&date=${args.date}&time=${args.time}&partySize=${args.partySize}`);
+        const res = await fetch(url);
+        const json = await res.json();
+        return {
+          content: [{ type: 'text', text: JSON.stringify(json, null, 2) }]
+        };
       }
 
       if (request.params.name === 'create_demo_booking') {
@@ -268,73 +271,62 @@ export const setupMcpServer = (slug: string) => {
           throw new Error('Missing required arguments for booking creation.');
         }
 
-        // First check availability
-        const dateMatch = args.date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-        if (!dateMatch || !dateMatch[3]) {
-          throw new Error('Invalid date format. Use YYYY-MM-DD.');
+        const url = getApiUrl('/api/bookings');
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ restaurantSlug: slug, ...args })
+        });
+        const json = await res.json();
+        if (!res.ok) {
+          return {
+            isError: true,
+            content: [{ type: 'text', text: json.error || 'Failed to create booking.' }]
+          };
         }
-
-        const day = parseInt(dateMatch[3], 10);
-        const acceptsReservations = data.reservation?.acceptsReservations !== false;
-        const maxPartySize = data.reservation?.maximumPartySize || 20;
-        const minPartySize = data.reservation?.minimumPartySize || 1;
-
-        if (!acceptsReservations) {
-          throw new Error('This restaurant does not accept reservations.');
-        }
-
-        if (args.partySize < minPartySize || args.partySize > maxPartySize) {
-          throw new Error(`Party size must be between ${minPartySize} and ${maxPartySize}.`);
-        }
-
-        if (day % 2 !== 0) {
-          throw new Error(`No availability on odd date ${args.date}.`);
-        }
-
-        // Save demo booking
-        const bookingsDir = path.join(DATA_DIR, slug);
-        if (!fs.existsSync(bookingsDir)) {
-          fs.mkdirSync(bookingsDir, { recursive: true });
-        }
-        const bookingsFile = path.join(bookingsDir, 'bookings.json');
-
-        let bookings: any[] = [];
-        if (fs.existsSync(bookingsFile)) {
-          try {
-            bookings = JSON.parse(fs.readFileSync(bookingsFile, 'utf-8'));
-          } catch (e) {
-            bookings = [];
-          }
-        }
-
-        const newBooking = {
-          id: `bk-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          restaurantSlug: slug,
-          ...args,
-          createdAt: new Date().toISOString(),
-          status: 'confirmed'
-        };
-
-        bookings.push(newBooking);
-        fs.writeFileSync(bookingsFile, JSON.stringify(bookings, null, 2), 'utf-8');
-
         return {
-          content: [{ type: 'text', text: JSON.stringify({ success: true, message: 'Demo booking created successfully.', booking: newBooking }, null, 2) }]
+          content: [{ type: 'text', text: JSON.stringify(json, null, 2) }]
         };
       }
 
       if (request.params.name === 'list_demo_bookings') {
-        const bookingsFile = path.join(DATA_DIR, slug, 'bookings.json');
-        let bookings: any[] = [];
-        if (fs.existsSync(bookingsFile)) {
-          try {
-            bookings = JSON.parse(fs.readFileSync(bookingsFile, 'utf-8'));
-          } catch (e) {
-            bookings = [];
-          }
-        }
+        const url = getApiUrl(`/api/bookings?restaurantSlug=${slug}`);
+        const res = await fetch(url);
+        const json = await res.json();
         return {
-          content: [{ type: 'text', text: JSON.stringify({ bookings }, null, 2) }]
+          content: [{ type: 'text', text: JSON.stringify(json, null, 2) }]
+        };
+      }
+
+      if (request.params.name === 'cancel_booking') {
+        const args = request.params.arguments as { id: string } | undefined;
+        if (!args || !args.id) {
+          throw new Error('Missing required argument: id');
+        }
+
+        const url = getApiUrl(`/api/bookings/${args.id}`);
+        const res = await fetch(url, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'cancelled' })
+        });
+        const json = await res.json();
+        return {
+          content: [{ type: 'text', text: JSON.stringify(json, null, 2) }]
+        };
+      }
+
+      if (request.params.name === 'get_booking') {
+        const args = request.params.arguments as { id: string } | undefined;
+        if (!args || !args.id) {
+          throw new Error('Missing required argument: id');
+        }
+
+        const url = getApiUrl(`/api/bookings/${args.id}`);
+        const res = await fetch(url);
+        const json = await res.json();
+        return {
+          content: [{ type: 'text', text: JSON.stringify(json, null, 2) }]
         };
       }
 

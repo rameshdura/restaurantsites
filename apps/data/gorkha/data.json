@@ -1358,8 +1358,8 @@
   "socialTabelog": "",
   "reservation": {
     "acceptsReservations": true,
-    "reservationMethods": [],
-    "onlineBookingUrl": "",
+    "reservationMethods": ["phone", "online"],
+    "onlineBookingUrl": "/booking",
     "minimumPartySize": 1,
     "maximumPartySize": 20,
     "largeGroups": false,
