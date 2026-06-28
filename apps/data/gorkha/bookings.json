@@ -1,0 +1,14 @@
+[
+  {
+    "id": "bk-1782638201235-phcicm0hp",
+    "restaurantSlug": "gorkha",
+    "date": "2026-06-28",
+    "time": "19:00",
+    "partySize": 4,
+    "customerName": "Alice Smith",
+    "customerEmail": "alice@example.com",
+    "customerPhone": "+1234567890",
+    "createdAt": "2026-06-28T09:16:41.235Z",
+    "status": "confirmed"
+  }
+]
