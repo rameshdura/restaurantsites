@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import { getRestaurant } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
 import { PayPageWrapper } from "./PayPageWrapper"
+import { Suspense } from "react"
 
 interface OwnerPayPageProps {
   params: Promise<{ restaurant: string }>
@@ -33,11 +34,13 @@ export default async function OwnerPayPage({ params }: OwnerPayPageProps) {
   const menuItems = restaurant.menu || []
 
   return (
-    <PayPageWrapper
-      restaurantSlug={decodedSlug}
-      currency={restaurant.data.app?.currency || "USD"}
-      menu={menuItems}
-      menuCategories={restaurant.data.menuCategories || []}
-    />
+    <Suspense fallback={<div className="flex h-screen items-center justify-center text-zinc-500">Loading payment screen...</div>}>
+      <PayPageWrapper
+        restaurantSlug={decodedSlug}
+        currency={restaurant.data.app?.currency || "USD"}
+        menu={menuItems}
+        menuCategories={restaurant.data.menuCategories || []}
+      />
+    </Suspense>
   )
 }

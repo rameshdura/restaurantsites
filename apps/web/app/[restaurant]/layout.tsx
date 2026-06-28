@@ -1,7 +1,14 @@
-import { getRestaurant } from "@/lib/restaurant"
+import { getRestaurant, getAllRestaurantSlugs } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
 import * as React from "react"
 import { FloatingChat } from "@/components/FloatingChat"
+
+export async function generateStaticParams() {
+  const slugs = await getAllRestaurantSlugs()
+  return slugs.map((slug) => ({
+    restaurant: slug,
+  }))
+}
 
 interface RestaurantLayoutProps {
   children: React.ReactNode

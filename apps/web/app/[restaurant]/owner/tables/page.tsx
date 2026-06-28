@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import { getRestaurant, groupMenuByCategory } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
 import { OwnerTablesManagementPage } from "./OwnerTablesManagementPage"
+import { Suspense } from "react"
 
 interface OwnerTablesPageProps {
   params: Promise<{ restaurant: string }>
@@ -37,11 +38,13 @@ export default async function OwnerTablesPage({
   const categories = groupMenuByCategory(menu, decodedSlug)
 
   return (
-    <OwnerTablesManagementPage
-      restaurantSlug={decodedSlug}
-      tables={tables}
-      categories={categories}
-      currency={data.app?.currency || "USD"}
-    />
+    <Suspense fallback={<div className="flex h-screen items-center justify-center text-zinc-500">Loading tables...</div>}>
+      <OwnerTablesManagementPage
+        restaurantSlug={decodedSlug}
+        tables={tables}
+        categories={categories}
+        currency={data.app?.currency || "USD"}
+      />
+    </Suspense>
   )
 }
