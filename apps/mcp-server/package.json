@@ -20,7 +20,9 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^20.17.11",
+    "@workspace/eslint-config": "*",
     "@workspace/typescript-config": "*",
+    "eslint": "^9.39.2",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "typescript": "5.9.3"

@@ -15,6 +15,7 @@ import {
   HandPlatter,
   ShoppingBag,
   Puzzle,
+  Calendar,
 } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 
@@ -39,7 +40,13 @@ export function OwnerHeader({ decodedSlug }: OwnerHeaderProps) {
       label: "Takeout",
       icon: ShoppingBag,
     },
+    {
+      href: `/${decodedSlug}/owner/bookings`,
+      label: "Bookings",
+      icon: Calendar,
+    },
     { href: `/${decodedSlug}/owner/pay`, label: "Pay", icon: CreditCard },
+
     {
       href: `/${decodedSlug}/owner/activity`,
       label: "Activity",

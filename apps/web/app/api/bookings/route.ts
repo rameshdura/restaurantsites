@@ -85,6 +85,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
+    console.log("[POST /api/bookings] incoming request body:", body)
     const {
       restaurantSlug,
       date,

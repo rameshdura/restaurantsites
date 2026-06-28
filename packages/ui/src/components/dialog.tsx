@@ -25,9 +25,17 @@ const Dialog = ({
 const DialogTrigger = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { asChild?: boolean }
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("cursor-pointer", className)} {...props} />
-))
+>(({ className, asChild, ...props }, ref) => {
+  const { onOpenChange } = React.useContext(DialogContext)
+  return (
+    <div
+      ref={ref}
+      className={cn("cursor-pointer", className)}
+      onClick={() => onOpenChange?.(true)}
+      {...props}
+    />
+  )
+})
 DialogTrigger.displayName = "DialogTrigger"
 
 const DialogPortal = React.forwardRef<
