@@ -1,7 +1,14 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { RefreshCw, CheckCircle, XCircle, Clock, Menu, Activity } from "lucide-react"
+import {
+  RefreshCw,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Menu,
+  Activity,
+} from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 import { PayViewType } from "./PaySidebar"
 
@@ -106,15 +113,15 @@ export function PayListClient({
               {view === "success"
                 ? "Successful Payments"
                 : view === "failed"
-                ? "Failed / Inactive Sessions"
-                : "Active Sessions"}
+                  ? "Failed / Inactive Sessions"
+                  : "Active Sessions"}
             </h2>
             <p className="text-sm text-muted-foreground">
               {view === "success"
                 ? "List of completed and paid orders."
                 : view === "failed"
-                ? "List of sessions with 0 items, unpaid, or closed without payment."
-                : "List of currently active table sessions."}
+                  ? "List of sessions with 0 items, unpaid, or closed without payment."
+                  : "List of currently active table sessions."}
             </p>
           </div>
         </div>

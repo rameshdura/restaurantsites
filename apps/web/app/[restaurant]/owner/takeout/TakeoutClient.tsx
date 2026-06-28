@@ -215,7 +215,8 @@ export function TakeoutClient({
     } catch (err: unknown) {
       toast({
         title: "Error Completing Order",
-        description: err instanceof Error ? err.message : "Something went wrong.",
+        description:
+          err instanceof Error ? err.message : "Something went wrong.",
         variant: "destructive",
       })
     } finally {
@@ -346,7 +347,9 @@ export function TakeoutClient({
     const info = session.orders?.customer_info
     const nameMatch =
       info?.name?.toLowerCase().includes(searchQuery.toLowerCase()) || false
-    const phoneMatch = info?.phone ? String(info.phone).includes(searchQuery) : false
+    const phoneMatch = info?.phone
+      ? String(info.phone).includes(searchQuery)
+      : false
     const idMatch = String(session.table_number).includes(searchQuery)
     const matchesSearch =
       nameMatch || phoneMatch || idMatch || searchQuery === ""
@@ -500,7 +503,16 @@ export function TakeoutClient({
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as "all" | "pending" | "preparing" | "ready" | "completed")}
+              onClick={() =>
+                setActiveTab(
+                  tab.id as
+                    | "all"
+                    | "pending"
+                    | "preparing"
+                    | "ready"
+                    | "completed"
+                )
+              }
               className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
                 activeTab === tab.id
                   ? "bg-primary text-primary-foreground shadow-md"
@@ -569,12 +581,12 @@ export function TakeoutClient({
                       </span>
                       <Link
                         href={`/${restaurantSlug}/owner/sessions/${session.session_id}`}
-                        className="mt-1 flex items-center gap-0.5 group/title"
+                        className="group/title mt-1 flex items-center gap-0.5"
                       >
-                        <h3 className="text-xl font-black tracking-tight hover:text-primary transition-colors group-hover/title:underline">
+                        <h3 className="text-xl font-black tracking-tight transition-colors group-hover/title:underline hover:text-primary">
                           #{session.table_number}
                         </h3>
-                        <ChevronRight className="h-4 w-4 opacity-0 transition-all -translate-x-1 group-hover/title:opacity-100 group-hover/title:translate-x-0 text-primary shrink-0" />
+                        <ChevronRight className="h-4 w-4 shrink-0 -translate-x-1 text-primary opacity-0 transition-all group-hover/title:translate-x-0 group-hover/title:opacity-100" />
                       </Link>
                     </div>
                     <div className="flex flex-col items-end gap-1">

@@ -23,7 +23,7 @@ export interface StoresSectionProps {
 export function StoresSection({
   stores,
   translations,
-  getLink
+  getLink,
 }: StoresSectionProps) {
   if (!stores || stores.length === 0) return null
 
@@ -40,16 +40,20 @@ export function StoresSection({
           : "grid-cols-1 max-w-md mx-auto"
 
   return (
-    <section className="py-24 bg-muted/30">
+    <section className="bg-muted/30 py-24">
       <div className="container mx-auto px-4 md:px-8">
-        <SectionHeader title={title} subtitle={t.subtitle || "Find us near you"} align="center" />
-        
+        <SectionHeader
+          title={title}
+          subtitle={t.subtitle || "Find us near you"}
+          align="center"
+        />
+
         <div className={cn("mt-12 grid gap-6", gridClass)}>
           {stores.map((store) => (
-            <Link 
-              key={store.id} 
-              href={getLink(`/stores`)} 
-              className="group flex flex-col overflow-hidden rounded-2xl bg-background border shadow-sm transition-all hover:shadow-md"
+            <Link
+              key={store.id}
+              href={getLink(`/stores`)}
+              className="group flex flex-col overflow-hidden rounded-2xl border bg-background shadow-sm transition-all hover:shadow-md"
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                 <Image
@@ -60,12 +64,17 @@ export function StoresSection({
                 />
               </div>
               <div className="flex flex-1 flex-col p-6">
-                <h3 className="text-xl font-semibold tracking-tight mb-2 group-hover:text-primary transition-colors">
+                <h3 className="mb-2 text-xl font-semibold tracking-tight transition-colors group-hover:text-primary">
                   {store.name}
                 </h3>
-                <div className="flex items-center text-muted-foreground mt-auto">
-                  <HugeiconsIcon icon={Location01Icon} className="mr-2 h-4 w-4" />
-                  <span className="text-sm font-medium">{store.shortLocation}</span>
+                <div className="mt-auto flex items-center text-muted-foreground">
+                  <HugeiconsIcon
+                    icon={Location01Icon}
+                    className="mr-2 h-4 w-4"
+                  />
+                  <span className="text-sm font-medium">
+                    {store.shortLocation}
+                  </span>
                 </div>
               </div>
             </Link>

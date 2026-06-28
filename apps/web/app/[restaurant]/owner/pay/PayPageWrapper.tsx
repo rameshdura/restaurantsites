@@ -63,7 +63,7 @@ export function PayPageWrapper({
         </SheetContent>
       </Sheet>
 
-      <div className="flex-1 overflow-y-auto print:overflow-visible print:bg-white text-black">
+      <div className="flex-1 overflow-y-auto text-black print:overflow-visible print:bg-white">
         {view === "scanner" ? (
           <OwnerPayClient
             restaurantSlug={restaurantSlug}

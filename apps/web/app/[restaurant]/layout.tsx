@@ -1,6 +1,7 @@
 import { getRestaurant } from "@/lib/restaurant"
 import { notFound } from "next/navigation"
 import * as React from "react"
+import { FloatingChat } from "@/components/FloatingChat"
 
 interface RestaurantLayoutProps {
   children: React.ReactNode
@@ -43,6 +44,7 @@ export default async function RestaurantLayout({
   return (
     <div style={customStyles} className="contents">
       {children}
+      <FloatingChat restaurantSlug={decodedSlug} />
     </div>
   )
 }

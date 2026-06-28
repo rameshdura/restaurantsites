@@ -19,18 +19,29 @@ export const authMiddleware = (req: McpRequest, res: Response, next: NextFunctio
     return;
   }
 
-  const slug = req.query.slug as string;
-  if (!slug) {
-    res.status(400).json({ error: 'Bad Request: slug query parameter is required' });
+  // Accept either ?slug= or ?restaurant_id= (UUID for calendar tool calls)
+  const slug = req.query.slug as string | undefined;
+  const restaurantId = req.query.restaurant_id as string | undefined;
+
+  if (!slug && !restaurantId) {
+    res.status(400).json({ error: 'Bad Request: slug or restaurant_id query parameter is required' });
     return;
   }
 
-  // Prevent directory traversal attacks
-  if (!/^[a-zA-Z0-9-_]+$/.test(slug)) {
+  // Validate slug format to prevent directory traversal
+  if (slug && !/^[a-zA-Z0-9-_]+$/.test(slug)) {
     res.status(400).json({ error: 'Bad Request: Invalid slug format' });
     return;
   }
 
-  req.slug = slug;
+  // Validate restaurant_id is a valid UUID
+  if (restaurantId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(restaurantId)) {
+    res.status(400).json({ error: 'Bad Request: Invalid restaurant_id format (expected UUID)' });
+    return;
+  }
+
+  req.slug = slug ?? '';
+  req.restaurantId = restaurantId;
   next();
 };
+

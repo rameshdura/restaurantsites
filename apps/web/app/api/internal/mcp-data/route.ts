@@ -6,7 +6,10 @@ export async function GET(request: Request) {
   const slug = searchParams.get("slug")
 
   if (!slug) {
-    return NextResponse.json({ error: "Missing slug parameter" }, { status: 400 })
+    return NextResponse.json(
+      { error: "Missing slug parameter" },
+      { status: 400 }
+    )
   }
 
   // Validate authorization
@@ -15,7 +18,10 @@ export async function GET(request: Request) {
 
   if (!expectedSecret) {
     console.error("INTERNAL_SYNC_SECRET is not configured on the server.")
-    return NextResponse.json({ error: "Server configuration error" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Server configuration error" },
+      { status: 500 }
+    )
   }
 
   if (authHeader !== `Bearer ${expectedSecret}`) {
@@ -26,13 +32,19 @@ export async function GET(request: Request) {
     const restaurant = await getRestaurant(slug)
 
     if (!restaurant) {
-      return NextResponse.json({ error: "Restaurant not found" }, { status: 404 })
+      return NextResponse.json(
+        { error: "Restaurant not found" },
+        { status: 404 }
+      )
     }
 
     // Return the raw data object
     return NextResponse.json(restaurant.data)
   } catch (error) {
     console.error(`Error fetching data for ${slug}:`, error)
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    )
   }
 }

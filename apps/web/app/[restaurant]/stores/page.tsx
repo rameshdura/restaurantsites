@@ -8,7 +8,11 @@ import { Footer } from "@/components/footer"
 import { SectionHeader } from "@workspace/ui/components/section-header"
 import { CoverSection } from "@workspace/ui/components/cover-section"
 import Image from "next/image"
-import { Location01Icon, Call02Icon, GlobalIcon } from "@hugeicons/core-free-icons"
+import {
+  Location01Icon,
+  Call02Icon,
+  GlobalIcon,
+} from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { cn } from "@workspace/ui/lib/utils"
 
@@ -72,20 +76,22 @@ export default async function StoresPage({ params }: StoresPageProps) {
       <main className={cn("flex-1 pb-24", !coverImage ? "pt-24" : "pt-8")}>
         <div className="container mx-auto px-4 md:px-8">
           {!coverImage && (
-            <SectionHeader 
-              title={title} 
-              subtitle={t.subtitle || "Find a location near you"} 
-              align="center" 
+            <SectionHeader
+              title={title}
+              subtitle={t.subtitle || "Find a location near you"}
+              align="center"
             />
           )}
 
-          <div className={cn("flex flex-col gap-8", !coverImage ? "mt-16" : "")}>
+          <div
+            className={cn("flex flex-col gap-8", !coverImage ? "mt-16" : "")}
+          >
             {stores.map((store) => (
-              <div 
-                key={store.id} 
-                className="flex flex-col md:flex-row overflow-hidden rounded-2xl border bg-background shadow-sm"
+              <div
+                key={store.id}
+                className="flex flex-col overflow-hidden rounded-2xl border bg-background shadow-sm md:flex-row"
               >
-                <div className="relative h-64 md:h-auto md:w-1/3 bg-muted shrink-0">
+                <div className="relative h-64 shrink-0 bg-muted md:h-auto md:w-1/3">
                   <Image
                     src={store.image}
                     alt={store.name}
@@ -93,34 +99,48 @@ export default async function StoresPage({ params }: StoresPageProps) {
                     className="object-cover"
                   />
                 </div>
-                <div className="flex flex-col p-6 md:p-8 justify-center flex-1">
-                  <h2 className="text-2xl font-bold tracking-tight mb-4">
+                <div className="flex flex-1 flex-col justify-center p-6 md:p-8">
+                  <h2 className="mb-4 text-2xl font-bold tracking-tight">
                     {store.name}
                   </h2>
                   <div className="space-y-4 text-muted-foreground">
                     <div className="flex items-start">
-                      <HugeiconsIcon icon={Location01Icon} className="mr-3 h-5 w-5 shrink-0 text-primary mt-0.5" />
+                      <HugeiconsIcon
+                        icon={Location01Icon}
+                        className="mt-0.5 mr-3 h-5 w-5 shrink-0 text-primary"
+                      />
                       <div>
-                        <span className="block font-medium text-foreground">{store.shortLocation}</span>
+                        <span className="block font-medium text-foreground">
+                          {store.shortLocation}
+                        </span>
                         <span>{store.address}</span>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center">
-                      <HugeiconsIcon icon={Call02Icon} className="mr-3 h-5 w-5 shrink-0 text-primary" />
-                      <a href={`tel:${store.phone}`} className="hover:text-primary transition-colors">
+                      <HugeiconsIcon
+                        icon={Call02Icon}
+                        className="mr-3 h-5 w-5 shrink-0 text-primary"
+                      />
+                      <a
+                        href={`tel:${store.phone}`}
+                        className="transition-colors hover:text-primary"
+                      >
                         {store.phone}
                       </a>
                     </div>
 
                     {store.website && (
                       <div className="flex items-center">
-                        <HugeiconsIcon icon={GlobalIcon} className="mr-3 h-5 w-5 shrink-0 text-primary" />
-                        <a 
-                          href={store.website} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="hover:text-primary transition-colors underline underline-offset-4"
+                        <HugeiconsIcon
+                          icon={GlobalIcon}
+                          className="mr-3 h-5 w-5 shrink-0 text-primary"
+                        />
+                        <a
+                          href={store.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline underline-offset-4 transition-colors hover:text-primary"
                         >
                           Visit Website
                         </a>
@@ -133,7 +153,7 @@ export default async function StoresPage({ params }: StoresPageProps) {
           </div>
         </div>
       </main>
-      
+
       <ContactSection
         isHomePage={true}
         restaurantSlug={slug}

@@ -577,8 +577,12 @@ export function SiteBuilderForm({
       <div className="border-t pt-6">
         <div className="mb-4 flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label className="text-lg font-bold">Multiple Locations / Stores</Label>
-            <p className="text-xs text-muted-foreground">Enable to list multiple store locations on your site.</p>
+            <Label className="text-lg font-bold">
+              Multiple Locations / Stores
+            </Label>
+            <p className="text-xs text-muted-foreground">
+              Enable to list multiple store locations on your site.
+            </p>
           </div>
           <Switch
             checked={formData.showStores || false}

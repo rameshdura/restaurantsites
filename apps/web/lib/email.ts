@@ -4,23 +4,23 @@ import { getRestaurant } from "@/lib/restaurant"
 const resend = new Resend(process.env.RESEND_API_KEY || "re_123456789")
 
 export interface OrderItem {
-  item_id: string;
-  qty: number;
-  notes?: string;
+  item_id: string
+  qty: number
+  notes?: string
 }
 
 export interface OrderSession {
-  table_number: number | string;
+  table_number: number | string
   orders?: {
     customer_info?: {
-      name: string;
-      phone: string;
-      email: string;
-      address?: string;
-    };
-    items?: OrderItem[];
-    total?: number;
-  };
+      name: string
+      phone: string
+      email: string
+      address?: string
+    }
+    items?: OrderItem[]
+    total?: number
+  }
 }
 
 export async function sendOrderConfirmationEmail(

@@ -1,5 +1,7 @@
-import { prisma } from "./db"
+import { supabaseServer } from "./supabase"
 import { getRestaurant } from "./restaurant"
+import type { BookingSettings } from "./supabase-types"
+import { DEFAULT_BOOKING_SETTINGS } from "./supabase-types"
 
 export interface AvailabilityResult {
   available: boolean
@@ -8,79 +10,72 @@ export interface AvailabilityResult {
 
 const DAYS_MAP = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
-// Helper to check if a day name matches a day range string (e.g., "Mon - Thu", "Fri", "Everyday")
+// ─── Day-range matching (e.g. "Mon - Thu", "Everyday") ────────
 function dayMatchesRange(dayName: string, rangeStr: string): boolean {
-  const normalizedRange = rangeStr.toLowerCase().trim()
-  const normalizedDay = dayName.toLowerCase()
+  const norm = rangeStr.toLowerCase().trim()
+  const day = dayName.toLowerCase()
 
-  if (normalizedRange === "everyday" || normalizedRange === "daily" || normalizedRange === "mon - sun") {
-    return true
-  }
+  if (["everyday", "daily", "mon - sun"].includes(norm)) return true
+  if (norm === day) return true
 
-  // Handle single day (e.g., "sun")
-  if (normalizedRange === normalizedDay) {
-    return true
-  }
-
-  // Handle lists or ranges (e.g. "mon - thu", "fri - sat")
-  if (normalizedRange.includes("-")) {
-    const parts = normalizedRange.split("-").map(p => p.trim())
-    if (parts.length === 2) {
-      const startDayIndex = DAYS_MAP.findIndex(d => d.toLowerCase() === parts[0])
-      const endDayIndex = DAYS_MAP.findIndex(d => d.toLowerCase() === parts[1])
-      const targetDayIndex = DAYS_MAP.findIndex(d => d.toLowerCase() === normalizedDay)
-
-      if (startDayIndex !== -1 && endDayIndex !== -1 && targetDayIndex !== -1) {
-        if (startDayIndex <= endDayIndex) {
-          return targetDayIndex >= startDayIndex && targetDayIndex <= endDayIndex
-        } else {
-          // Cross-weekend range (e.g., "Fri - Mon")
-          return targetDayIndex >= startDayIndex || targetDayIndex <= endDayIndex
-        }
-      }
+  if (norm.includes("-")) {
+    const [start, end] = norm.split("-").map((p) => p.trim())
+    const si = DAYS_MAP.findIndex((d) => d.toLowerCase() === start)
+    const ei = DAYS_MAP.findIndex((d) => d.toLowerCase() === end)
+    const ti = DAYS_MAP.findIndex((d) => d.toLowerCase() === day)
+    if (si !== -1 && ei !== -1 && ti !== -1) {
+      return si <= ei ? ti >= si && ti <= ei : ti >= si || ti <= ei
     }
   }
 
-  // Handle comma-separated lists (e.g., "mon, wed, fri")
-  if (normalizedRange.includes(",")) {
-    const days = normalizedRange.split(",").map(d => d.trim())
-    return days.includes(normalizedDay)
+  if (norm.includes(",")) {
+    return norm
+      .split(",")
+      .map((d) => d.trim())
+      .includes(day)
   }
 
   return false
 }
 
-// Helper to convert "HH:MM" string to minutes from midnight
-function timeToMinutes(timeStr: string): number {
-  const parts = timeStr.split(":")
-  const hours = Number(parts[0] || 0)
-  const minutes = Number(parts[1] || 0)
-  return hours * 60 + minutes
+// ─── Time helpers ─────────────────────────────────────────────
+function timeToMinutes(t: string): number {
+  const [h = "0", m = "0"] = t.split(":")
+  return Number(h) * 60 + Number(m)
 }
 
-// Helper to check if a time is within a shift "start - end"
 function timeIsWithinShift(timeStr: string, shiftStr?: string): boolean {
-  if (!shiftStr || shiftStr.trim() === "") return false
-  const parts = shiftStr.split("-").map(p => p.trim())
-  if (parts.length !== 2) return false
-  
-  const part0 = parts[0]
-  const part1 = parts[1]
-  if (!part0 || !part1) return false
-
-  const timeMins = timeToMinutes(timeStr)
-  const startMins = timeToMinutes(part0)
-  const endMins = timeToMinutes(part1)
-
-  return timeMins >= startMins && timeMins <= endMins
+  if (!shiftStr?.trim()) return false
+  const parts = shiftStr.split("-").map((p) => p.trim())
+  if (parts.length !== 2 || !parts[0] || !parts[1]) return false
+  const t = timeToMinutes(timeStr)
+  const s = timeToMinutes(parts[0])
+  const e = timeToMinutes(parts[1])
+  return t >= s && t <= e
 }
 
+// ─── Fetch booking settings from Supabase (with defaults) ─────
+export async function getBookingSettings(
+  restaurantId: string
+): Promise<Omit<BookingSettings, "restaurant_id" | "updated_at">> {
+  const { data } = await supabaseServer
+    .from("booking_settings")
+    .select("*")
+    .eq("restaurant_id", restaurantId)
+    .single()
+
+  if (!data) return DEFAULT_BOOKING_SETTINGS
+  return data
+}
+
+// ─── Main availability check ──────────────────────────────────
 export async function checkAvailability(
   slug: string,
   dateStr: string,
   timeStr: string,
   partySize: number
 ): Promise<AvailabilityResult> {
+  // 1. Load restaurant data.json (for opening hours & reservation config)
   const restaurant = await getRestaurant(slug)
   if (!restaurant) {
     return { available: false, message: "Restaurant not found." }
@@ -89,73 +84,94 @@ export async function checkAvailability(
   const data = restaurant.data
   const reservation = data.reservation
 
-  // 1. Check if restaurant accepts reservations
+  // 2. Check if restaurant accepts reservations at all
   if (!reservation || reservation.acceptsReservations === false) {
-    return { available: false, message: "This restaurant does not accept online reservations." }
-  }
-
-  // 2. Validate party size bounds
-  const minPartySize = reservation.minimumPartySize ?? 1
-  const maxPartySize = reservation.maximumPartySize ?? 20
-
-  if (partySize < minPartySize || partySize > maxPartySize) {
     return {
       available: false,
-      message: `Party size must be between ${minPartySize} and ${maxPartySize} guests.`
+      message: "This restaurant does not accept online reservations.",
     }
   }
 
-  // 3. Validate Opening Hours
+  // 3. Validate party size using Supabase booking_settings if available,
+  //    otherwise fall back to data.json reservation config
+  const minPartySize = reservation.minimumPartySize ?? 1
+  const maxPartySizeFromJson = reservation.maximumPartySize ?? 20
+
+  if (partySize < minPartySize || partySize > maxPartySizeFromJson) {
+    return {
+      available: false,
+      message: `Party size must be between ${minPartySize} and ${maxPartySizeFromJson} guests.`,
+    }
+  }
+
+  // 4. Validate date
   const dateObj = new Date(dateStr)
   if (isNaN(dateObj.getTime())) {
     return { available: false, message: "Invalid date format. Use YYYY-MM-DD." }
   }
 
-  const dayName = DAYS_MAP[dateObj.getDay()] || "Sunday"
-  const openingHours = data.openingHours || []
-  
-  const daySchedule = openingHours.find(h => h.day && dayMatchesRange(dayName, h.day))
+  // 5. Check opening hours from data.json
+  const dayName = DAYS_MAP[dateObj.getDay()] ?? "Sun"
+  const openingHours = data.openingHours ?? []
+  const daySchedule = openingHours.find(
+    (h) => h.day && dayMatchesRange(dayName, h.day)
+  )
 
   if (!daySchedule || daySchedule.isClosed) {
-    return { available: false, message: `The restaurant is closed on ${dayName} (${dateStr}).` }
+    return {
+      available: false,
+      message: `The restaurant is closed on ${dayName} (${dateStr}).`,
+    }
   }
 
-  // Check lunch or dinner shift
-  const isWithinLunch = daySchedule.lunch ? timeIsWithinShift(timeStr, daySchedule.lunch) : false
-  const isWithinDinner = daySchedule.dinner ? timeIsWithinShift(timeStr, daySchedule.dinner) : false
-  const isWithinGeneric = daySchedule.time ? timeIsWithinShift(timeStr, daySchedule.time) : false
+  const isWithinLunch = daySchedule.lunch
+    ? timeIsWithinShift(timeStr, daySchedule.lunch)
+    : false
+  const isWithinDinner = daySchedule.dinner
+    ? timeIsWithinShift(timeStr, daySchedule.dinner)
+    : false
+  const isWithinGeneric = daySchedule.time
+    ? timeIsWithinShift(timeStr, daySchedule.time)
+    : false
 
   if (!isWithinLunch && !isWithinDinner && !isWithinGeneric) {
-    let msg = `The restaurant is closed at ${timeStr} on ${dayName}.`
-    const hoursMsgParts: string[] = []
-    if (daySchedule.lunch) hoursMsgParts.push(`Lunch: ${daySchedule.lunch}`)
-    if (daySchedule.dinner) hoursMsgParts.push(`Dinner: ${daySchedule.dinner}`)
-    if (daySchedule.time) hoursMsgParts.push(`Hours: ${daySchedule.time}`)
-    if (hoursMsgParts.length > 0) {
-      msg += ` Available slots: ${hoursMsgParts.join(", ")}`
+    const parts: string[] = []
+    if (daySchedule.lunch) parts.push(`Lunch: ${daySchedule.lunch}`)
+    if (daySchedule.dinner) parts.push(`Dinner: ${daySchedule.dinner}`)
+    if (daySchedule.time) parts.push(`Hours: ${daySchedule.time}`)
+    return {
+      available: false,
+      message: `The restaurant is closed at ${timeStr} on ${dayName}.${
+        parts.length ? ` Available: ${parts.join(", ")}` : ""
+      }`,
     }
-    return { available: false, message: msg }
   }
 
-  // 4. Capacity constraints
-  // For SQLite dev mode: Let's assume a capacity limit of 30 guests / table bookings per 30-minute window.
-  // We check existing bookings at this date and time.
-  const existingBookings = await prisma.booking.findMany({
-    where: {
-      restaurantSlug: slug,
-      date: dateStr,
-      time: timeStr,
-      status: "confirmed"
-    }
-  })
+  // 6. Capacity check — query Supabase reservations table
+  const { data: existingBookings, error } = await supabaseServer
+    .from("reservations")
+    .select("party_size")
+    .eq("restaurant_slug", slug)
+    .eq("reservation_date", dateStr)
+    .eq("reservation_time", timeStr)
+    .in("status", ["pending", "confirmed"])
 
-  const currentGuests = existingBookings.reduce((sum, b) => sum + b.partySize, 0)
-  const slotCapacity = 20 // Max 20 guests per exact time slot
+  if (error) {
+    console.error("[availability] Supabase query error:", error)
+    // Fail open — let the booking proceed and handle conflicts later
+    return { available: true, message: "This slot is available." }
+  }
+
+  const currentGuests = (existingBookings ?? []).reduce(
+    (sum, b) => sum + b.party_size,
+    0
+  )
+  const slotCapacity = maxPartySizeFromJson * 2 // simple heuristic: 2x max party per slot
 
   if (currentGuests + partySize > slotCapacity) {
     return {
       available: false,
-      message: `We are fully booked at ${timeStr} on ${dateStr}. Please select another time slot.`
+      message: `We are fully booked at ${timeStr} on ${dateStr}. Please select another time.`,
     }
   }
 

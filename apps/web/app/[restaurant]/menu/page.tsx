@@ -121,7 +121,6 @@ export default async function MenuPage({ params }: MenuPageProps) {
             </div>
           )}
         </section>
-
       </main>
 
       <ContactSection
