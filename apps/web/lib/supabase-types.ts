@@ -123,6 +123,13 @@ export interface KnowledgeBaseEntry {
   updated_at: string
 }
 
+export interface ChatMessage {
+  role: "user" | "bot" | "assistant" | "system" | "model"
+  content: string
+  created_at?: string
+  showContactButtons?: boolean
+}
+
 export interface ConversationSession {
   id: string
   store_id: string
@@ -135,6 +142,7 @@ export interface ConversationSession {
   status: SessionStatus
   created_at: string
   updated_at: string
+  messages?: ChatMessage[]
 }
 
 export interface Profile {

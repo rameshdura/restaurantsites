@@ -135,9 +135,7 @@ export async function POST(request: Request) {
     }
 
     const db = await getDbTables()
-    const insert: any = {
-      [db.storeIdCol]: restaurantId,
-      [db.storeSlugCol]: restaurantSlug,
+    const insert: InsertReservation = {
       customer_name: customerName,
       customer_email: customerEmail ?? null,
       customer_phone: customerPhone ?? null,

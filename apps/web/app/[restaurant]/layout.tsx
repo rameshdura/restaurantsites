@@ -51,7 +51,7 @@ export default async function RestaurantLayout({
   return (
     <div style={customStyles} className="contents">
       {children}
-      <FloatingChat restaurantSlug={decodedSlug} />
+      <FloatingChat key={decodedSlug} restaurantSlug={decodedSlug} />
     </div>
   )
 }

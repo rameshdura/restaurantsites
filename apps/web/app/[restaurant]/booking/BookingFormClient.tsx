@@ -3,18 +3,25 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 
+interface SuccessBooking {
+  id: string
+  customerName: string
+  date: string
+  time: string
+  partySize: number
+}
+
 interface BookingFormClientProps {
   restaurantSlug: string
   minPartySize: number
   maxPartySize: number
-  openingHours: any[]
+  openingHours: unknown[]
 }
 
 export default function BookingFormClient({
   restaurantSlug,
   minPartySize,
   maxPartySize,
-  openingHours,
 }: BookingFormClientProps) {
   const router = useRouter()
 
@@ -33,13 +40,12 @@ export default function BookingFormClient({
     message: string
   } | null>(null)
   const [submitting, setSubmitting] = React.useState(false)
-  const [successBooking, setSuccessBooking] = React.useState<any>(null)
+  const [successBooking, setSuccessBooking] = React.useState<SuccessBooking | null>(null)
   const [errorMsg, setErrorMsg] = React.useState("")
 
   // Auto availability check when date, time, or partySize changes
   React.useEffect(() => {
     if (!date || !time) {
-      setAvailability(null)
       return
     }
 
@@ -94,8 +100,9 @@ export default function BookingFormClient({
       }
 
       setSuccessBooking(data.booking)
-    } catch (err: any) {
-      setErrorMsg(err.message || "An unexpected error occurred.")
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : "An unexpected error occurred."
+      setErrorMsg(errMsg)
     } finally {
       setSubmitting(false)
     }
@@ -168,7 +175,10 @@ export default function BookingFormClient({
             type="date"
             required
             value={date}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={(e) => {
+              setDate(e.target.value)
+              if (!e.target.value) setAvailability(null)
+            }}
             className="w-full rounded-xl border border-neutral-800 bg-neutral-950/40 px-4 py-2.5 text-xs text-neutral-200 transition-all duration-200 focus:border-indigo-500/80 focus:outline-hidden"
           />
         </div>
@@ -181,7 +191,10 @@ export default function BookingFormClient({
             type="time"
             required
             value={time}
-            onChange={(e) => setTime(e.target.value)}
+            onChange={(e) => {
+              setTime(e.target.value)
+              if (!e.target.value) setAvailability(null)
+            }}
             className="w-full rounded-xl border border-neutral-800 bg-neutral-950/40 px-4 py-2.5 text-xs text-neutral-200 transition-all duration-200 focus:border-indigo-500/80 focus:outline-hidden"
           />
         </div>

@@ -1,26 +1,4 @@
-import dotenv from 'dotenv';
-import path from 'path';
-
-// Load environment variables relative to this directory at the very top
-// so that local modules (like ./supabase) have access to them during import-time initialization.
-const envPaths = [
-  path.join(__dirname, '../.env'),
-  path.join(process.cwd(), '.env'),
-  path.join(process.cwd(), 'apps/mcp-server/.env')
-];
-
-let envLoaded = false;
-for (const p of envPaths) {
-  const res = dotenv.config({ path: p });
-  if (!res.error) {
-    console.log(`Loaded environment from: ${p}`);
-    envLoaded = true;
-    break;
-  }
-}
-if (!envLoaded) {
-  console.warn('Warning: Could not load .env file from any expected path.');
-}
+import './env';
 
 import express from 'express';
 import cors from 'cors';
@@ -145,9 +123,10 @@ app.post('/calendar/create', async (req, res) => {
     await setCalendarEventId(reservation_id, 'google', eventId);
 
     res.json({ success: true, google_event_id: eventId });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errMsg = err instanceof Error ? err.message : 'Unknown error';
     console.error('[POST /calendar/create]', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: errMsg });
   }
 });
 
@@ -179,9 +158,10 @@ app.post('/calendar/update', async (req, res) => {
     await updateCalendarEvent(accessToken, calendar_event_id, reservation, store);
 
     res.json({ success: true, updated_event_id: calendar_event_id });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errMsg = err instanceof Error ? err.message : 'Unknown error';
     console.error('[POST /calendar/update]', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: errMsg });
   }
 });
 
@@ -205,9 +185,10 @@ app.post('/calendar/delete', async (req, res) => {
     await deleteCalendarEvent(accessToken, calendar_event_id);
 
     res.json({ success: true, deleted_event_id: calendar_event_id });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errMsg = err instanceof Error ? err.message : 'Unknown error';
     console.error('[POST /calendar/delete]', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: errMsg });
   }
 });
 
@@ -231,9 +212,10 @@ app.post('/calendar/list', async (req, res) => {
     const events = await listCalendarEvents(accessToken, 'primary', max_results);
 
     res.json({ events });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errMsg = err instanceof Error ? err.message : 'Unknown error';
     console.error('[POST /calendar/list]', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: errMsg });
   }
 });
 

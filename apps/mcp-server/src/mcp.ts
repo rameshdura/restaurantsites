@@ -86,8 +86,9 @@ export const setupMcpServer = (slug: string) => {
             },
           ],
         };
-      } catch (error: any) {
-        throw new Error(`Resource read error: ${error.message}`);
+      } catch (error: unknown) {
+        const errMsg = error instanceof Error ? error.message : 'Unknown error';
+        throw new Error(`Resource read error: ${errMsg}`);
       }
     }
     throw new Error(`Resource not found: ${request.params.uri}`);
@@ -281,7 +282,15 @@ export const setupMcpServer = (slug: string) => {
       }
 
       if (name === 'create_booking') {
-        const { date, time, partySize, customerName, customerEmail, customerPhone, notes } = args as any;
+        const { date, time, partySize, customerName, customerEmail, customerPhone, notes } = args as {
+          date: string;
+          time: string;
+          partySize: number;
+          customerName: string;
+          customerEmail: string;
+          customerPhone: string;
+          notes?: string;
+        };
         if (!date || !time || !partySize || !customerName || !customerEmail || !customerPhone) throw new Error('Missing required booking fields');
         const url = getApiUrl('/api/bookings');
         const res = await fetch(url, {
@@ -324,7 +333,7 @@ export const setupMcpServer = (slug: string) => {
       // ── Calendar tools ────────────────────────────────────
 
       if (name === 'calendar.create') {
-        const store_id = (args as any).store_id || (args as any).restaurant_id;
+        const store_id = ((args as Record<string, unknown>).store_id || (args as Record<string, unknown>).restaurant_id) as string;
         const { reservation_id } = args as { reservation_id: string };
         if (!store_id || !reservation_id) throw new Error('Missing store_id or reservation_id');
 
@@ -346,7 +355,7 @@ export const setupMcpServer = (slug: string) => {
       }
 
       if (name === 'calendar.update') {
-        const store_id = (args as any).store_id || (args as any).restaurant_id;
+        const store_id = ((args as Record<string, unknown>).store_id || (args as Record<string, unknown>).restaurant_id) as string;
         const { reservation_id, calendar_event_id } = args as { reservation_id: string; calendar_event_id: string };
         if (!store_id || !reservation_id || !calendar_event_id) throw new Error('Missing required arguments');
 
@@ -366,7 +375,7 @@ export const setupMcpServer = (slug: string) => {
       }
 
       if (name === 'calendar.delete') {
-        const store_id = (args as any).store_id || (args as any).restaurant_id;
+        const store_id = ((args as Record<string, unknown>).store_id || (args as Record<string, unknown>).restaurant_id) as string;
         const { calendar_event_id } = args as { calendar_event_id: string };
         if (!store_id || !calendar_event_id) throw new Error('Missing store_id or calendar_event_id');
 
@@ -380,7 +389,7 @@ export const setupMcpServer = (slug: string) => {
       }
 
       if (name === 'calendar.list') {
-        const store_id = (args as any).store_id || (args as any).restaurant_id;
+        const store_id = ((args as Record<string, unknown>).store_id || (args as Record<string, unknown>).restaurant_id) as string;
         const { max_results } = args as { max_results?: number };
         if (!store_id) throw new Error('Missing store_id');
 
@@ -394,10 +403,11 @@ export const setupMcpServer = (slug: string) => {
       }
 
       throw new Error(`Unknown tool: ${name}`);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errMsg = error instanceof Error ? error.message : 'Unknown error';
       return {
         isError: true,
-        content: [{ type: 'text', text: `Tool error: ${error.message}` }],
+        content: [{ type: 'text', text: `Tool error: ${errMsg}` }],
       };
     }
   });

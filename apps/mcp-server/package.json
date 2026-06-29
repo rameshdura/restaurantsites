@@ -3,20 +3,20 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "tsx src/index.ts",
     "lint": "eslint src/"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.4.1",
     "@supabase/supabase-js": "^2.108.2",
+    "@workspace/booking-engine": "*",
+    "@workspace/integrations": "*",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "googleapis": "^173.0.0",
-    "@workspace/booking-engine": "*",
-    "@workspace/integrations": "*"
+    "googleapis": "^173.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -27,6 +27,7 @@
     "eslint": "^9.39.2",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
+    "tsx": "^4.22.4",
     "typescript": "5.9.3"
   }
 }

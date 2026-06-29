@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import type { Reservation, ReservationStatus } from "@/lib/supabase-types"
 import { Button } from "@workspace/ui/components/button"
 import {
@@ -71,27 +71,53 @@ export function OwnerBookingsClient({
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const [dateFilter, setDateFilter] = useState("")
 
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async (showLoading = false) => {
     try {
-      setLoading(true)
+      if (showLoading) setLoading(true)
       const res = await fetch(`/api/bookings?restaurantSlug=${restaurantSlug}`)
       if (!res.ok) throw new Error("Failed to fetch bookings")
       const data = await res.json()
       setBookings(data.bookings || [])
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : "An error occurred"
       toast({
         title: "Error fetching bookings",
-        description: err.message || "An error occurred",
+        description: errMsg,
         variant: "destructive",
       })
     } finally {
       setLoading(false)
     }
-  }
+  }, [restaurantSlug, toast])
 
   useEffect(() => {
-    fetchBookings()
-  }, [restaurantSlug])
+    let active = true
+    async function load() {
+      try {
+        const res = await fetch(`/api/bookings?restaurantSlug=${restaurantSlug}`)
+        if (!res.ok) throw new Error("Failed to fetch bookings")
+        const data = await res.json()
+        if (active) {
+          setBookings(data.bookings || [])
+        }
+      } catch (err: unknown) {
+        const errMsg = err instanceof Error ? err.message : "An error occurred"
+        toast({
+          title: "Error fetching bookings",
+          description: errMsg,
+          variant: "destructive",
+        })
+      } finally {
+        if (active) {
+          setLoading(false)
+        }
+      }
+    }
+    load()
+    return () => {
+      active = false
+    }
+  }, [restaurantSlug, toast])
 
   const updateBookingStatus = async (
     id: string,
@@ -115,10 +141,11 @@ export function OwnerBookingsClient({
           prev.map((b) => (b.id === id ? { ...b, status: newStatus } : b))
         )
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : "An error occurred"
       toast({
         title: "Failed to update",
-        description: err.message || "An error occurred",
+        description: errMsg,
         variant: "destructive",
       })
     } finally {
@@ -163,10 +190,11 @@ export function OwnerBookingsClient({
       setIsAddOpen(false)
 
       fetchBookings()
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : "An error occurred"
       toast({
         title: "Failed to create booking",
-        description: err.message || "An error occurred",
+        description: errMsg,
         variant: "destructive",
       })
     } finally {
@@ -200,10 +228,11 @@ export function OwnerBookingsClient({
             : b
         )
       )
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : "An error occurred during sync"
       toast({
         title: "Sync failed",
-        description: err.message || "An error occurred during sync",
+        description: errMsg,
         variant: "destructive",
       })
     } finally {
@@ -227,10 +256,11 @@ export function OwnerBookingsClient({
         })
         setBookings((prev) => prev.filter((b) => b.id !== id))
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : "An error occurred"
       toast({
         title: "Failed to delete",
-        description: err.message || "An error occurred",
+        description: errMsg,
         variant: "destructive",
       })
     } finally {
@@ -439,7 +469,7 @@ export function OwnerBookingsClient({
           </Dialog>
 
           <Button
-            onClick={fetchBookings}
+            onClick={() => fetchBookings(true)}
             disabled={loading}
             variant="outline"
             className="gap-2"

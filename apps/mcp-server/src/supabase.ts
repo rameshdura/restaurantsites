@@ -107,10 +107,10 @@ export async function getOAuthConnection(
 
   if (error || !data) return null;
   
-  const row = data as any;
+  const row = data as Record<string, unknown>;
   return {
     ...row,
-    store_id: row.store_id || row.restaurant_id,
+    store_id: (row.store_id || row.restaurant_id) as string,
   } as OAuthConnection;
 }
 
@@ -144,11 +144,11 @@ export async function getReservation(
 
   if (error || !data) return null;
   
-  const row = data as any;
+  const row = data as Record<string, unknown>;
   return {
     ...row,
-    store_id: row.store_id || row.restaurant_id,
-    store_slug: row.store_slug || row.restaurant_slug,
+    store_id: (row.store_id || row.restaurant_id) as string,
+    store_slug: (row.store_slug || row.restaurant_slug) as string,
   } as ReservationRow;
 }
 

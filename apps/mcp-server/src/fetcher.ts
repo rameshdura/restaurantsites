@@ -16,10 +16,10 @@ export const getRestaurantData = async (slug: string): Promise<RestaurantData> =
   const cleanBaseUrl = rootApiUrl.replace(/\/$/, "");
 
   // Helper to dynamically rewrite all "/images/..." paths to absolute URLs
-  const makeAbsolute = (obj: any): any => {
+  const makeAbsolute = <T>(obj: T): T => {
     return JSON.parse(
       JSON.stringify(obj).replace(/"\/images\/([^"]+)"/g, `"${cleanBaseUrl}/images/$1"`)
-    );
+    ) as T;
   };
 
   // Cache hit: Read from local storage

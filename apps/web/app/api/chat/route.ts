@@ -2,9 +2,11 @@ import { NextResponse } from "next/server"
 import { GoogleGenerativeAI, Content, Part } from "@google/generative-ai"
 import OpenAI from "openai"
 import { supabaseServer, getDbTables } from "@/lib/supabase"
-import { getRestaurant } from "@/lib/restaurant"
+import { getRestaurant, RestaurantData } from "@/lib/restaurant"
 import { checkAvailability } from "@/lib/availability"
 import { geminiTools, openAiTools, buildSystemPrompt } from "@workspace/ai-chat"
+import { resolveContactLinks } from "@/lib/chat-social"
+import type { ChatMessage } from "@/lib/supabase-types"
 
 // Initialize Gemini SDK safely
 const getGeminiClient = () => {
@@ -26,11 +28,38 @@ async function getRestaurantId(slug: string): Promise<string | null> {
 
 // Tool definitions are imported from @workspace/ai-chat
 
+async function saveChatSession(
+  sessionId: string | undefined,
+  restaurantSlug: string,
+  restaurantId: string | null,
+  messages: ChatMessage[],
+  botReply: string
+) {
+  if (!sessionId || !restaurantId) return
+  try {
+    const db = await getDbTables()
+    const allMessages = [...messages, { role: "bot", content: botReply }]
+    await supabaseServer.from(db.conversation_sessions).upsert(
+      {
+        [db.storeIdCol]: restaurantId,
+        [db.storeSlugCol]: restaurantSlug,
+        session_id: sessionId,
+        last_message_at: new Date().toISOString(),
+        status: "active",
+        messages: allMessages,
+      } as never,
+      { onConflict: `${db.storeSlugCol},session_id` }
+    )
+  } catch (error) {
+    console.error("[saveChatSession] Error saving session history:", error)
+  }
+}
+
 // ─── Tool Call Router / Executor ──────────────────────────────
 async function executeTool(
   name: string,
-  args: any,
-  restaurantData: any,
+  args: Record<string, unknown>,
+  restaurantData: RestaurantData,
   slug: string,
   origin: string
 ) {
@@ -52,9 +81,9 @@ async function executeTool(
   } else if (name === "check_booking_availability") {
     return await checkAvailability(
       slug,
-      args.date,
-      args.time,
-      Number(args.partySize)
+      args.date as string,
+      args.time as string,
+      Number(args.partySize as string | number)
     )
   } else if (name === "create_booking") {
     const bookingRes = await fetch(`${origin}/api/bookings`, {
@@ -62,16 +91,21 @@ async function executeTool(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         restaurantSlug: slug,
-        date: args.date,
-        time: args.time,
-        partySize: args.partySize,
-        customerName: args.customerName,
-        customerEmail: args.customerEmail,
-        customerPhone: args.customerPhone,
-        notes: args.notes || "",
+        date: args.date as string,
+        time: args.time as string,
+        partySize: args.partySize as string | number,
+        customerName: args.customerName as string,
+        customerEmail: args.customerEmail as string,
+        customerPhone: args.customerPhone as string,
+        notes: (args.notes as string) || "",
       }),
     })
     return await bookingRes.json()
+  } else if (name === "escalate_to_human") {
+    return {
+      status: "success",
+      message: "Direct contact channels have been displayed to the user.",
+    }
   }
   throw new Error(`Unknown tool: ${name}`)
 }
@@ -80,7 +114,7 @@ async function executeTool(
 export async function POST(request: Request) {
   try {
     const provider = process.env.CHAT_PROVIDER || "gemini"
-    const { restaurantSlug, messages } = await request.json()
+    const { restaurantSlug, messages, sessionId } = await request.json()
 
     if (!restaurantSlug || !messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -144,8 +178,8 @@ export async function POST(request: Request) {
         )
       }
 
-      const formattedHistory: Content[] = messages.map((m: any) => ({
-        role: m.role === "bot" || m.role === "model" ? "model" : "user",
+      const formattedHistory: Content[] = messages.map((m: ChatMessage) => ({
+        role: m.role === "bot" || m.role === "model" || m.role === "assistant" ? "model" : "user",
         parts: [{ text: m.content || "" }],
       }))
 
@@ -173,6 +207,8 @@ export async function POST(request: Request) {
         ? response.response.functionCalls()
         : undefined
 
+      let shouldShowContactButtons = false
+
       while (functionCalls && functionCalls.length > 0 && loops < 6) {
         loops++
         const candidate = response.response.candidates?.[0]
@@ -181,7 +217,10 @@ export async function POST(request: Request) {
 
         const functionResponseParts: Part[] = []
         for (const call of functionCalls) {
-          const { name, args } = call as { name: string; args: any }
+          const { name, args } = call as { name: string; args: Record<string, unknown> }
+          if (name === "escalate_to_human") {
+            shouldShowContactButtons = true
+          }
           const result = await executeTool(
             name,
             args,
@@ -201,15 +240,31 @@ export async function POST(request: Request) {
           : undefined
       }
 
+      const botReply =
+        typeof response.response.text === "function"
+          ? response.response.text()
+          : "I was unable to generate a response."
+      await saveChatSession(
+        sessionId,
+        restaurantSlug,
+        restaurantId,
+        messages,
+        botReply
+      )
+
       return NextResponse.json({
-        reply: response.response.text || "I was unable to generate a response.",
+        reply: botReply,
+        showContactButtons: shouldShowContactButtons,
+        contactLinks: shouldShowContactButtons
+          ? resolveContactLinks(restaurantData, sessionId)
+          : null,
       })
     }
 
     // ─── OpenAI-Compatible Providers (NVIDIA NIM / Ollama) ────
     if (provider === "nvidia" || provider === "ollama") {
       let endpoint = ""
-      let headers: HeadersInit = { "Content-Type": "application/json" }
+      const headers: HeadersInit = { "Content-Type": "application/json" }
       let modelId = ""
 
       if (provider === "nvidia") {
@@ -229,10 +284,10 @@ export async function POST(request: Request) {
       }
 
       // Convert messages to OpenAI chat format
-      const openAiMessages: any[] = [
+      const openAiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
         { role: "system", content: systemPrompt },
-        ...messages.map((m: any) => ({
-          role: m.role === "bot" ? "assistant" : "user",
+        ...messages.map((m: ChatMessage) => ({
+          role: (m.role === "bot" || m.role === "assistant" || m.role === "model" ? "assistant" : "user") as "assistant" | "user",
           content: m.content,
         })),
       ]
@@ -240,6 +295,7 @@ export async function POST(request: Request) {
       let loops = 0
       let active = true
       let finalReply = ""
+      let shouldShowContactButtons = false
 
       while (active && loops < 6) {
         loops++
@@ -273,10 +329,14 @@ export async function POST(request: Request) {
         if (message.tool_calls && message.tool_calls.length > 0) {
           for (const call of message.tool_calls) {
             const { name, arguments: argsString } = call.function
-            const args =
+            if (name === "escalate_to_human") {
+              shouldShowContactButtons = true
+            }
+            const args = (
               typeof argsString === "string"
                 ? JSON.parse(argsString)
                 : argsString
+            ) as Record<string, unknown>
             const result = await executeTool(
               name,
               args,
@@ -288,7 +348,6 @@ export async function POST(request: Request) {
             openAiMessages.push({
               role: "tool",
               tool_call_id: call.id,
-              name: name,
               content: JSON.stringify(result),
             })
           }
@@ -298,8 +357,21 @@ export async function POST(request: Request) {
         }
       }
 
+      const botReply = finalReply || "Unable to generate a reply."
+      await saveChatSession(
+        sessionId,
+        restaurantSlug,
+        restaurantId,
+        messages,
+        botReply
+      )
+
       return NextResponse.json({
-        reply: finalReply || "Unable to generate a reply.",
+        reply: botReply,
+        showContactButtons: shouldShowContactButtons,
+        contactLinks: shouldShowContactButtons
+          ? resolveContactLinks(restaurantData, sessionId)
+          : null,
       })
     }
 
@@ -322,10 +394,10 @@ export async function POST(request: Request) {
       })
 
       // Convert messages to OpenAI chat format
-      const openAiMessages: any[] = [
+      const openAiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
         { role: "system", content: systemPrompt },
-        ...messages.map((m: any) => ({
-          role: m.role === "bot" ? "assistant" : "user",
+        ...messages.map((m: ChatMessage) => ({
+          role: (m.role === "bot" || m.role === "assistant" || m.role === "model" ? "assistant" : "user") as "assistant" | "user",
           content: m.content,
         })),
       ]
@@ -333,13 +405,14 @@ export async function POST(request: Request) {
       let loops = 0
       let active = true
       let finalReply = ""
+      let shouldShowContactButtons = false
 
       while (active && loops < 6) {
         loops++
         const completion = await client.chat.completions.create({
           model: modelId,
           messages: openAiMessages,
-          tools: openAiTools as any,
+          tools: openAiTools as OpenAI.Chat.Completions.ChatCompletionTool[],
           tool_choice: "auto",
         })
 
@@ -352,11 +425,16 @@ export async function POST(request: Request) {
 
         if (message.tool_calls && message.tool_calls.length > 0) {
           for (const call of message.tool_calls) {
-            const { name, arguments: argsString } = (call as any).function
-            const args =
+            const toolCall = call as { function: { name: string; arguments: string }; id: string }
+            const { name, arguments: argsString } = toolCall.function
+            if (name === "escalate_to_human") {
+              shouldShowContactButtons = true
+            }
+            const args = (
               typeof argsString === "string"
                 ? JSON.parse(argsString)
                 : argsString
+            ) as Record<string, unknown>
             const result = await executeTool(
               name,
               args,
@@ -368,7 +446,6 @@ export async function POST(request: Request) {
             openAiMessages.push({
               role: "tool",
               tool_call_id: call.id,
-              name: name,
               content: JSON.stringify(result),
             })
           }
@@ -378,8 +455,22 @@ export async function POST(request: Request) {
         }
       }
 
+      const botReply =
+        finalReply || "Unable to generate a response from Bedrock."
+      await saveChatSession(
+        sessionId,
+        restaurantSlug,
+        restaurantId,
+        messages,
+        botReply
+      )
+
       return NextResponse.json({
-        reply: finalReply || "Unable to generate a response from Bedrock.",
+        reply: botReply,
+        showContactButtons: shouldShowContactButtons,
+        contactLinks: shouldShowContactButtons
+          ? resolveContactLinks(restaurantData, sessionId)
+          : null,
       })
     }
 

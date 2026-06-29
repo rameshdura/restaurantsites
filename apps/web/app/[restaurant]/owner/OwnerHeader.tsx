@@ -16,6 +16,7 @@ import {
   ShoppingBag,
   Puzzle,
   Calendar,
+  MessageSquare,
 } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 
@@ -46,6 +47,11 @@ export function OwnerHeader({ decodedSlug }: OwnerHeaderProps) {
       icon: Calendar,
     },
     { href: `/${decodedSlug}/owner/pay`, label: "Pay", icon: CreditCard },
+    {
+      href: `/${decodedSlug}/owner/chats`,
+      label: "Chats",
+      icon: MessageSquare,
+    },
 
     {
       href: `/${decodedSlug}/owner/activity`,

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { supabaseServer } from "@/lib/supabase"
+import { supabaseServer, getDbTables } from "@/lib/supabase"
 import type { Reservation, UpdateReservation } from "@/lib/supabase-types"
 
 // ─── GET /api/bookings/[id] ───────────────────────────────────
@@ -9,8 +9,9 @@ export async function GET(
 ) {
   try {
     const { id } = await params
+    const db = await getDbTables()
     const { data: booking, error } = (await supabaseServer
-      .from("reservations")
+      .from(db.reservations)
       .select("*")
       .eq("id", id)
       .single()) as {
@@ -38,6 +39,7 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params
+    const db = await getDbTables()
     const body = await request.json()
     const {
       status,
@@ -51,14 +53,11 @@ export async function PATCH(
     } = body
 
     const { data: existing, error: fetchError } = (await supabaseServer
-      .from("reservations")
-      .select("id, calendar_event_id, calendar_provider, restaurant_id")
+      .from(db.reservations)
+      .select("*")
       .eq("id", id)
       .single()) as {
-      data: Pick<
-        Reservation,
-        "id" | "calendar_event_id" | "calendar_provider" | "restaurant_id"
-      > | null
+      data: Reservation | null
       error: { message: string } | null
     }
 
@@ -110,7 +109,16 @@ export async function PATCH(
             Authorization: `Bearer ${mcpApiKey}`,
           },
           body: JSON.stringify({
-            restaurant_id: existing.restaurant_id,
+            store_id:
+              existing[db.storeIdCol as keyof Reservation] ||
+              existing.store_id ||
+              existing.restaurant_id ||
+              "",
+            restaurant_id:
+              existing[db.storeIdCol as keyof Reservation] ||
+              existing.store_id ||
+              existing.restaurant_id ||
+              "",
             reservation_id: id,
             calendar_event_id: existing.calendar_event_id,
           }),
@@ -144,16 +152,14 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
+    const db = await getDbTables()
 
     const { data: existing, error: fetchError } = (await supabaseServer
-      .from("reservations")
-      .select("id, calendar_event_id, calendar_provider, restaurant_id")
+      .from(db.reservations)
+      .select("*")
       .eq("id", id)
       .single()) as {
-      data: Pick<
-        Reservation,
-        "id" | "calendar_event_id" | "calendar_provider" | "restaurant_id"
-      > | null
+      data: Reservation | null
       error: { message: string } | null
     }
 
@@ -162,7 +168,7 @@ export async function DELETE(
     }
 
     const { error: deleteError } = await supabaseServer
-      .from("reservations")
+      .from(db.reservations)
       .delete()
       .eq("id", id)
 
@@ -187,7 +193,16 @@ export async function DELETE(
             Authorization: `Bearer ${mcpApiKey}`,
           },
           body: JSON.stringify({
-            restaurant_id: existing.restaurant_id,
+            store_id:
+              existing[db.storeIdCol as keyof Reservation] ||
+              existing.store_id ||
+              existing.restaurant_id ||
+              "",
+            restaurant_id:
+              existing[db.storeIdCol as keyof Reservation] ||
+              existing.store_id ||
+              existing.restaurant_id ||
+              "",
             reservation_id: id,
             calendar_event_id: existing.calendar_event_id,
           }),

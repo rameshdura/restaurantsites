@@ -72,22 +72,67 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const restaurantSlug = searchParams.get("restaurantSlug")
     const sessionId = searchParams.get("sessionId")
+    const limit = searchParams.get("limit")
+      ? Number(searchParams.get("limit"))
+      : 20
+    const offset = searchParams.get("offset")
+      ? Number(searchParams.get("offset"))
+      : 0
+    const search = searchParams.get("search") || ""
 
-    if (!restaurantSlug || !sessionId) {
+    if (!restaurantSlug) {
       return NextResponse.json(
-        { error: "Missing restaurantSlug or sessionId" },
+        { error: "Missing restaurantSlug" },
         { status: 400 }
       )
     }
 
-    const { data: session } = (await supabaseServer
-      .from("conversation_sessions")
-      .select("*")
-      .eq("restaurant_slug", restaurantSlug)
-      .eq("session_id", sessionId)
-      .single()) as { data: ConversationSession | null; error: unknown }
+    const db = await getDbTables()
 
-    return NextResponse.json({ session: session ?? null })
+    if (sessionId) {
+      const { data: session, error } = (await supabaseServer
+        .from(db.conversation_sessions)
+        .select("*")
+        .eq(db.storeSlugCol, restaurantSlug)
+        .eq("session_id", sessionId)
+        .maybeSingle()) as { data: ConversationSession | null; error: { message: string } | null }
+
+      if (error) {
+        return NextResponse.json(
+          { error: "Failed to fetch session", details: error.message },
+          { status: 500 }
+        )
+      }
+
+      return NextResponse.json({ session: session ?? null })
+    } else {
+      let query = supabaseServer
+        .from(db.conversation_sessions)
+        .select("*")
+        .eq(db.storeSlugCol, restaurantSlug)
+
+      if (search) {
+        query = query.or(
+          `session_id.ilike.%${search}%,customer_name.ilike.%${search}%`
+        )
+      }
+
+      const { data: sessions, error } = (await query
+        .order("last_message_at", { ascending: false })
+        .range(offset, offset + limit - 1)) as {
+        data: ConversationSession[] | null
+        error: { message: string } | null
+      }
+
+      if (error) {
+        return NextResponse.json(
+          { error: "Failed to fetch sessions", details: error.message },
+          { status: 500 }
+        )
+      }
+
+      return NextResponse.json({ sessions: sessions || [] })
+    }
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Unknown error"
     return NextResponse.json(

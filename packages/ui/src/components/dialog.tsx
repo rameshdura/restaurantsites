@@ -25,14 +25,16 @@ const Dialog = ({
 const DialogTrigger = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { asChild?: boolean }
->(({ className, asChild, ...props }, ref) => {
+>(({ className, ...props }, ref) => {
   const { onOpenChange } = React.useContext(DialogContext)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { asChild, ...rest } = props
   return (
     <div
       ref={ref}
       className={cn("cursor-pointer", className)}
       onClick={() => onOpenChange?.(true)}
-      {...props}
+      {...rest}
     />
   )
 })

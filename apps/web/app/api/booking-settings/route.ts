@@ -91,11 +91,10 @@ export async function PUT(request: Request) {
       )
     }
 
-    const upsert: any = {
-      [db.storeIdCol]: restaurant.id,
+    const upsert: UpsertBookingSettings = {
       ...DEFAULT_BOOKING_SETTINGS,
       ...settingsFields,
-    }
+    } as UpsertBookingSettings
     if (db.useStores) {
       upsert.store_id = restaurant.id
     } else {

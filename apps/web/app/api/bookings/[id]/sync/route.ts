@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { supabaseServer } from "@/lib/supabase"
+import { supabaseServer, getDbTables } from "@/lib/supabase"
 import type { Reservation } from "@/lib/supabase-types"
 
 export async function POST(
@@ -8,10 +8,11 @@ export async function POST(
 ) {
   try {
     const { id } = await params
+    const db = await getDbTables()
 
     // Fetch the reservation
     const { data: reservation, error: fetchError } = (await supabaseServer
-      .from("reservations")
+      .from(db.reservations)
       .select("*")
       .eq("id", id)
       .single()) as {
@@ -23,11 +24,17 @@ export async function POST(
       return NextResponse.json({ error: "Booking not found" }, { status: 404 })
     }
 
+    const storeId =
+      reservation[db.storeIdCol as keyof Reservation] ||
+      reservation.store_id ||
+      reservation.restaurant_id ||
+      ""
+
     // Check oauth connection
     const { data: oauth } = await supabaseServer
-      .from("oauth_connections")
+      .from(db.oauth_connections)
       .select("id")
-      .eq("restaurant_id", reservation.restaurant_id)
+      .eq(db.storeIdCol, storeId)
       .eq("provider", "google")
       .single()
 
@@ -54,7 +61,8 @@ export async function POST(
         Authorization: `Bearer ${mcpApiKey}`,
       },
       body: JSON.stringify({
-        restaurant_id: reservation.restaurant_id,
+        store_id: storeId,
+        restaurant_id: storeId,
         reservation_id: id,
       }),
     })
@@ -70,7 +78,7 @@ export async function POST(
     const result = await response.json()
     if (result?.google_event_id) {
       await supabaseServer
-        .from("reservations")
+        .from(db.reservations)
         .update({
           calendar_provider: "google",
           calendar_event_id: result.google_event_id,

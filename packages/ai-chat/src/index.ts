@@ -19,6 +19,22 @@ export const getStoreInfoDeclaration = {
 
 export const getRestaurantInfoDeclaration = getStoreInfoDeclaration;
 
+export const escalateToHumanDeclaration = {
+  name: "escalate_to_human",
+  description:
+    "Call this function when you cannot answer the customer's request, when the customer is unsatisfied with your answers, when the customer explicitly asks to speak to a human, or when you cannot proceed with a booking. This will display buttons for direct communication channels (like WhatsApp, Messenger, or LINE) to the user.",
+  parameters: {
+    type: SchemaType.OBJECT,
+    properties: {
+      reason: {
+        type: SchemaType.STRING,
+        description: "The reason why escalation is needed (e.g. 'Customer is unhappy with booking limits' or 'Question about off-menu allergens')",
+      },
+    },
+    required: ["reason"],
+  },
+}
+
 export const getMenuDeclaration = {
   name: "get_menu",
   description:
@@ -120,6 +136,7 @@ export const geminiTools: any = [
       getMenuDeclaration,
       checkBookingAvailabilityDeclaration,
       createBookingDeclaration,
+      escalateToHumanDeclaration,
     ],
   },
 ]
@@ -224,6 +241,24 @@ export const openAiTools = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "escalate_to_human",
+      description:
+        "Call this function when you cannot answer the customer's request, when the customer is unsatisfied with your answers, when the customer explicitly asks to speak to a human, or when you cannot proceed with a booking. This will display buttons for direct communication channels (like WhatsApp, Messenger, or LINE) to the user.",
+      parameters: {
+        type: "object",
+        properties: {
+          reason: {
+            type: "string",
+            description: "The reason why escalation is needed.",
+          },
+        },
+        required: ["reason"],
+      },
+    },
+  },
 ]
 
 // ─── System Prompt builder ────────────────────────────────────
@@ -259,7 +294,8 @@ Rules & Guidelines:
 4. BOOKING FLOW: If they want a booking:
    a. Check availability using check_booking_availability first.
    b. Ask for name, email, and phone number if not already provided.
-   c. Confirm details, then use create_booking to complete the reservation.`
+   c. Confirm details, then use create_booking to complete the reservation.
+5. ESCALATION: If the customer is unsatisfied, asks to talk to a human, or you cannot satisfy their request (e.g. booking size exceeds limit, complex off-menu requests), call the escalate_to_human tool immediately so they can contact the shop directly.`
 }
 
 // Backwards compatibility wrapper
